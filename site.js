@@ -201,7 +201,7 @@
     n.appendChild(a);
   });
   var cb=document.createElement('a');cb.href='/contact';
-  cb.style.cssText='color:#1A1A1A;background:#FFE053;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px;position:relative;overflow:hidden;display:inline-block';
+  cb.style.cssText='color:#1A1A1A;background:#C9A84C;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px;position:relative;overflow:hidden;display:inline-block';
   cb.innerHTML='<span style="position:relative;z-index:1">Contact</span>';
   // Liquid fill pseudo-element via a real div
   var fill=document.createElement('div');
@@ -213,7 +213,7 @@
 
   // Inject global liquid-fill CTA style for all pages
   var ctaCSS=document.createElement('style');
-  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#FFE053;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #FFE053;color:#FFE053}.cta-outline .fill-bg{background:#FFE053}.cta-outline:hover span{color:#1A1A1A}';
+  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#C9A84C;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #C9A84C;color:#C9A84C}.cta-outline .fill-bg{background:#C9A84C}.cta-outline:hover span{color:#1A1A1A}';
   document.head.appendChild(ctaCSS);
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
@@ -279,7 +279,7 @@
   aiSec.setAttribute('style','background:#000;color:#fff;padding:100px 5%;font-family:Inter,sans-serif');
   aiSec.innerHTML='<div style="max-width:1200px;margin:0 auto">'+
     '<div style="text-align:center;margin-bottom:60px">'+
-      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #FFE053;margin-bottom:20px" id="autonomi-badge"><span style="color:#FFE053;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://cdn.jsdelivr.net/gh/lynz-tonomi/macrobrands@8966e34/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
+      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:20px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://cdn.jsdelivr.net/gh/lynz-tonomi/macrobrands@8966e34/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
       '<h2 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px">Supply Chain AI</h2>'+
       '<p style="color:#888;font-size:1.1rem;max-width:640px;margin:0 auto;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics. 29 specialized AI agents working together so nothing falls through the cracks.</p>'+
     '</div>'+
@@ -317,7 +317,7 @@
     '</div>'+
     '<div style="text-align:center">'+
       '<p style="color:#666;font-size:.9rem;margin-bottom:20px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
-      '<a href="/contact" style="display:inline-block;padding:14px 36px;border-radius:50px;border:1.5px solid #FFE053;color:#FFE053;text-decoration:none;font-weight:700;font-size:.95rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#FFE053;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
+      '<a href="/contact" style="display:inline-block;padding:14px 36px;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;text-decoration:none;font-weight:700;font-size:.95rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
     '</div>'+
   '</div>';
 
@@ -331,7 +331,7 @@
     var aiCta=aiSec.querySelector('a[href="/contact"]');
     if(aiCta){
       var fb=aiCta.querySelector('.fill-bg');
-      if(fb){aiCta.onmouseenter=function(){fb.style.height='100%';aiCta.querySelector('span').style.color='#1A1A1A'};aiCta.onmouseleave=function(){fb.style.height='0';aiCta.querySelector('span').style.color='#FFE053'}}
+      if(fb){aiCta.onmouseenter=function(){fb.style.height='100%';aiCta.querySelector('span').style.color='#1A1A1A'};aiCta.onmouseleave=function(){fb.style.height='0';aiCta.querySelector('span').style.color='#C9A84C'}}
     }
   },100);
 
@@ -415,12 +415,12 @@
         '<div id="icon-slot-'+i+'"></div>'+
         '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
         '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">'+tab.desc+'</p>'+
-        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #FFE053;color:#FFE053;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#FFE053;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
       '</div>'+
       '<div style="background:#111;border-radius:16px;padding:32px;border:1px solid #222">'+
         '<div style="font-weight:700;color:#ccc;margin-bottom:16px;font-size:.95rem">What\'s Included</div>'+
         '<ul style="list-style:none;padding:0;margin:0">'+
-          tab.bullets.map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#FFE053">✓</span> '+b+'</li>'}).join('')+
+          tab.bullets.map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
         '</ul>'+
       '</div>'+
     '</div>';
@@ -436,7 +436,7 @@
       buttons.forEach(function(b){b.style.color='#666';b.style.borderBottomColor='transparent'});
       panels.forEach(function(p){p.style.display='none';var cv=p.querySelector('canvas');if(cv)cv._active=false});
       btn.style.color='#fff';
-      btn.style.borderBottomColor='#FFE053';
+      btn.style.borderBottomColor='#C9A84C';
       panel.style.display='block';
       // Start icon animation
       iconCanvas._active=true;iconCanvas._animT=0;
@@ -454,7 +454,7 @@
       // Liquid fill on Get Started buttons
       panel.querySelectorAll('.cta-outline').forEach(function(a){
         var fb=a.querySelector('.fill-bg');
-        if(fb){a.onmouseenter=function(){fb.style.height='100%';a.querySelector('span').style.color='#1A1A1A'};a.onmouseleave=function(){fb.style.height='0';a.querySelector('span').style.color='#FFE053'}}
+        if(fb){a.onmouseenter=function(){fb.style.height='100%';a.querySelector('span').style.color='#1A1A1A'};a.onmouseleave=function(){fb.style.height='0';a.querySelector('span').style.color='#C9A84C'}}
       });
     };
 
@@ -611,7 +611,7 @@
     nav.appendChild(a);
   });
   var cb=document.createElement('a');cb.textContent='Contact';cb.href='/contact';
-  cb.style.cssText='color:#1A1A1A;background:#FFE053;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px';
+  cb.style.cssText='color:#1A1A1A;background:#C9A84C;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px';
   nav.appendChild(cb);
 
   // Find the form
@@ -627,8 +627,8 @@
     var info=document.createElement('div');
     info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#fff;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
       '<p style="font-size:1.1rem;line-height:1.7;color:#999;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Phone</div><a href="tel:4088925844" style="color:#FFE053;text-decoration:none;font-size:1.1rem;font-weight:600">(408) 892-5844</a></div>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Email</div><a href="mailto:weston@macrobrands.llc" style="color:#FFE053;text-decoration:none;font-size:1.1rem;font-weight:600">weston@macrobrands.llc</a></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Phone</div><a href="tel:4088925844" style="color:#C9A84C;text-decoration:none;font-size:1.1rem;font-weight:600">(408) 892-5844</a></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Email</div><a href="mailto:weston@macrobrands.llc" style="color:#C9A84C;text-decoration:none;font-size:1.1rem;font-weight:600">weston@macrobrands.llc</a></div>'+
       '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#888;font-size:1rem">24855 Corbit Pl., Yorba Linda, CA 92887</div></div>'+
       '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#888;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
 
@@ -641,14 +641,14 @@
     // Style form inputs
     form.querySelectorAll('input,textarea').forEach(function(inp){
       inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #333;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#1a1a1a;color:#fff;transition:border-color .2s;outline:none';
-      inp.onfocus=function(){this.style.borderColor='#FFE053'};
+      inp.onfocus=function(){this.style.borderColor='#C9A84C'};
       inp.onblur=function(){this.style.borderColor='#333'};
     });
 
     // Style submit button with liquid fill
     var submit=form.querySelector('[type="submit"],.w-button');
     if(submit){
-      submit.style.cssText='width:100%;padding:16px;background:#FFE053;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:8px;position:relative;overflow:hidden';
+      submit.style.cssText='width:100%;padding:16px;background:#C9A84C;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:8px;position:relative;overflow:hidden';
       submit.value='Send Message →';
       var sf=document.createElement('div');
       sf.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px;pointer-events:none';
