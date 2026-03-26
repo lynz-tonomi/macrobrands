@@ -412,7 +412,7 @@
     // Style bottle #1 — large, positioned left
     var img=document.getElementById('parallax-img');
     if(img){
-      img.style.cssText='position:absolute;left:5%;top:50%;transform:translateY(-50%);z-index:3;height:auto;width:auto;height:60vh';
+      img.style.cssText='position:absolute;left:5%;top:50%;transform:translateY(-50%);z-index:3;height:auto;width:auto;height:80vh';
       var bottleImg=img.querySelector('img');
       if(bottleImg){bottleImg.style.cssText='width:auto;height:100%;object-fit:contain'}
     }
