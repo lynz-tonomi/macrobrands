@@ -1,5 +1,6 @@
 /* MACRO Brands — Master Site Script */
-document.addEventListener('DOMContentLoaded', function(){
+(function run(){
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
 // ============ 1. FRAME SCRUBBER ============
 (function(){
@@ -274,4 +275,4 @@ document.addEventListener('DOMContentLoaded', function(){
   },1000);
 })();
 
-}); // end DOMContentLoaded
+})(); // end run
