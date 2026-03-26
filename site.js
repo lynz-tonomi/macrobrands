@@ -113,19 +113,19 @@
   wrap.id='seg-wrap';
   wrap.style.cssText='position:absolute;left:5%;bottom:12%;z-index:8;pointer-events:none';
   s.appendChild(wrap);
-  var D=['Product Development','Process Development','Process Authority','Tunnel Pasteurization','Retort Canning','Aseptic/ESL Bottling','Aseptic Bag-in-Box','Coffee & Tea Extraction','Turn-Key Manufacturing'];
+  var D=['Creation','Formulation','Validation','Purification','Preservation','Transformation','Concentration','Extraction','Infusion'];
   var els=[];
   D.forEach(function(t,i){
     var e=document.createElement('div');
-    e.style.cssText='position:absolute;bottom:0;left:0;opacity:0;pointer-events:none;transition:opacity .5s,transform .5s';
-    e.innerHTML='<div style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:8px;letter-spacing:.1em">0'+(i+1)+'</div><div style="font-size:clamp(2.2rem,4.5vw,3.8rem);font-weight:800;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.5);letter-spacing:-.02em">'+t+'</div>';
+    e.style.cssText='position:absolute;bottom:0;left:0;opacity:0;pointer-events:none;transition:opacity .6s,transform .6s';
+    e.innerHTML='<div style="font-size:clamp(3rem,7vw,5.5rem);font-weight:900;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.6);letter-spacing:-.03em;font-style:italic">'+t+'</div>';
     wrap.appendChild(e);els.push(e);
   });
   var active=-1;
   function u(){
     var ms=w.offsetHeight-window.innerHeight;if(ms<=0)return;
     var p=window.scrollY/ms;
-    var S=.08,E=.94,n=D.length;
+    var S=.15,E=.94,n=D.length;
     if(p<S||p>E){if(active>=0){els[active].style.opacity='0';els[active].style.transform='translateY(20px)';active=-1}return}
     var idx=Math.floor((p-S)/(E-S)*n);if(idx>=n)idx=n-1;
     if(idx!==active){
