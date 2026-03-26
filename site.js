@@ -199,7 +199,7 @@
     if(img){
       img.style.zIndex='2';
       img.style.position='relative';
-      img.style.height='130vh';
+      img.style.height='180vh';
       img.style.maxWidth='100%';
       img.style.maxHeight='none';
       // Remove placeholder paragraph
