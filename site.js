@@ -237,9 +237,6 @@
   var vm=document.querySelector('.video-hero-media');if(vm)vm.style.display='none';
   var sd=document.querySelector('.section-dark');
   if(sd){
-    sd.style.background='#000';sd.style.color='#fff';
-    sd.querySelectorAll('h2,h3,.section-heading,.service-title').forEach(function(h){h.style.color='#fff'});
-    sd.querySelectorAll('.service-card').forEach(function(c){c.style.background='#111';c.style.border='1px solid #222';c.style.color='#ccc'});
     // Rename heading
     var sdH2=sd.querySelector('h2');
     if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
@@ -285,7 +282,6 @@
   });
 
   // Fix card titles on light sections to dark text
-  document.querySelectorAll('.card-light h3,.card-title').forEach(function(h){h.style.color='#1A1A1A'});
   document.querySelectorAll('.card-light p,.card-text').forEach(function(p){p.style.color='#555'})
 
   // Replace "Products We Manufacture" or add Autonomi AI section
@@ -298,30 +294,6 @@
   });
 
   // Create Autonomi AI Supply Chain section
-  var aiSec=document.createElement('section');
-  aiSec.id='autonomi-ai';
-  aiSec.setAttribute('style','background:#000;color:#fff;padding:0;font-family:Inter,sans-serif');
-  aiSec.innerHTML=
-  '<div style="text-align:center;padding:80px 5% 40px">'+
-    '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:24px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://lynz-tonomi.github.io/macrobrands/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
-    '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px;color:#fff">Supply Chain AI</h2>'+
-    '<p style="color:rgba(255,255,255,.5);font-size:1.1rem;max-width:640px;margin:0 auto;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics.</p>'+
-  '</div>'+
-  '<div style="position:relative;overflow:hidden;margin:0 5%;border-radius:16px;min-height:70vh;display:flex;align-items:flex-end;justify-content:center">'+
-    '<video src="https://lynz-tonomi.github.io/macrobrands/schero-web.mp4" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"></video>'+
-    '<div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.5) 100%);z-index:1"></div>'+
-    '<div style="position:relative;z-index:2;text-align:center;padding:40px 20px 50px">'+
-      '<p style="color:rgba(255,255,255,.5);font-size:1rem;margin-bottom:20px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
-      '<a href="/contact" style="display:inline-block;padding:16px 40px;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;text-decoration:none;font-weight:700;font-size:1rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
-    '</div>'+
-  '</div>'+
-  '<div style="height:60px"></div>';
-
-  // Move services (section-dark) before certs, then AI after services
-  var certsEl=document.getElementById('certifications');
-  if(certsEl&&sd){b.insertBefore(sd,certsEl);b.insertBefore(aiSec,certsEl)}
-  else if(sd&&sd.nextSibling){b.insertBefore(aiSec,sd.nextSibling)}
-
   // Wire up the liquid fill on the CTA
   setTimeout(function(){
     var aiCta=aiSec.querySelector('a[href="/contact"]');
