@@ -201,7 +201,7 @@
   n.appendChild(cb);
   var nl=document.createElement('img');nl.className='nav-logo';
   nl.src=document.querySelector('.hero-logo')?document.querySelector('.hero-logo').src:'';
-  nl.style.cssText='height:28px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:998;opacity:0;transition:opacity .3s;filter:brightness(0) invert(1)';
+  nl.style.cssText='height:28px;position:fixed !important;top:20px !important;left:50% !important;transform:translateX(-50%) !important;z-index:9998 !important;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1);background:transparent !important';
   document.body.appendChild(nl);
   document.body.appendChild(n);
 })();
