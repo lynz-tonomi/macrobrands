@@ -363,6 +363,23 @@
   // Activate first tab
   buttons[0].onclick();
 
+  // Move native service cards into Co-Packing tab (index 5)
+  var nativeGrid=document.querySelector('.services-grid');
+  if(nativeGrid && panels.length>5){
+    var coPackPanel=panels[5];
+    var gridClone=nativeGrid;
+    gridClone.style.display='grid';
+    gridClone.style.gridTemplateColumns='repeat(3,1fr)';
+    gridClone.style.gap='24px';
+    gridClone.style.marginTop='40px';
+    gridClone.style.paddingTop='40px';
+    gridClone.style.borderTop='1px solid #222';
+    gridClone.querySelectorAll('.service-card').forEach(function(c){c.style.display='block'});
+    // Find the grid wrapper inside co-pack panel (after the 2-col layout)
+    coPackPanel.appendChild(gridClone);
+  }
+
+
   // Add fadeIn animation
   var style=document.createElement('style');
   style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
