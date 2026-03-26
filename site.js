@@ -113,7 +113,7 @@
   wrap.id='seg-wrap';
   wrap.style.cssText='position:absolute;left:5%;bottom:12%;z-index:8;pointer-events:none';
   s.appendChild(wrap);
-  var D=['Creation','Formulation','Validation','Purification','Preservation','Transformation','Concentration','Extraction','Infusion'];
+  var D=['Extraction','Formulation','Transformation','Infusion','Validation','Creation'];
   var els=[];
   D.forEach(function(t,i){
     var e=document.createElement('div');
