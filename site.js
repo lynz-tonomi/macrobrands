@@ -279,7 +279,7 @@
   aiSec.setAttribute('style','background:#000;color:#fff;padding:100px 5%;font-family:Inter,sans-serif');
   aiSec.innerHTML='<div style="max-width:1200px;margin:0 auto">'+
     '<div style="text-align:center;margin-bottom:60px">'+
-      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #FFE053;margin-bottom:20px" id="autonomi-badge"><span style="color:#FFE053;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img id="autonomi-logo" src="" alt="Autonomi" style="height:22px;display:none"><span id="autonomi-text-fallback" style="color:#FF6B00;font-size:1rem;font-weight:800;font-style:italic">Autonomi</span></div>'+
+      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #FFE053;margin-bottom:20px" id="autonomi-badge"><span style="color:#FFE053;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://cdn.jsdelivr.net/gh/lynz-tonomi/macrobrands@8966e34/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
       '<h2 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px">Supply Chain AI</h2>'+
       '<p style="color:#888;font-size:1.1rem;max-width:640px;margin:0 auto;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics. 29 specialized AI agents working together so nothing falls through the cracks.</p>'+
     '</div>'+
