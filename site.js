@@ -410,7 +410,6 @@
     sec.style.minHeight='200vh';
 
     // Bottle #1 styled natively in Webflow — no JS override
-    }
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
