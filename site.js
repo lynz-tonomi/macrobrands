@@ -277,14 +277,18 @@
   var aiSec=document.createElement('section');
   aiSec.id='autonomi-ai';
   aiSec.setAttribute('style','position:relative;background:#000;color:#fff;padding:100px 5%;font-family:Inter,sans-serif;overflow:hidden');
-  aiSec.innerHTML='<video src="https://lynz-tonomi.github.io/macrobrands/schero-web.mp4" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.3;z-index:0"></video>'+
-  '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.7) 100%);z-index:1"></div>'+
-  '<div style="max-width:900px;margin:0 auto;position:relative;z-index:2;text-align:center;padding:80px 0">'+
-    '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:24px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://lynz-tonomi.github.io/macrobrands/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
-    '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:20px;color:#fff">Supply Chain AI</h2>'+
-    '<p style="color:rgba(255,255,255,.7);font-size:1.2rem;max-width:640px;margin:0 auto 16px;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics.</p>'+
-    '<p style="color:rgba(255,255,255,.4);font-size:1rem;margin-bottom:40px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
-    '<a href="/contact" style="display:inline-block;padding:16px 40px;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;text-decoration:none;font-weight:700;font-size:1rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
+  aiSec.innerHTML='<video src="https://lynz-tonomi.github.io/macrobrands/schero-web.mp4" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;z-index:0"></video>'+
+  '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.3) 100%);z-index:1"></div>'+
+  '<div style="position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:80vh;padding:40px 5%">'+
+    '<div style="max-width:900px;text-align:left">'+
+      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:24px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://lynz-tonomi.github.io/macrobrands/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
+      '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:20px;color:#fff">Supply Chain AI</h2>'+
+      '<p style="color:rgba(255,255,255,.7);font-size:1.2rem;max-width:640px;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics.</p>'+
+    '</div>'+
+    '<div style="text-align:center;padding-bottom:20px">'+
+      '<p style="color:rgba(255,255,255,.4);font-size:1rem;margin-bottom:20px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
+      '<a href="/contact" style="display:inline-block;padding:16px 40px;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;text-decoration:none;font-weight:700;font-size:1rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
+    '</div>'+
   '</div>';
 
   // Move services (section-dark) before certs, then AI after services
