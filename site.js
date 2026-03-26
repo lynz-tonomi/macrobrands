@@ -182,11 +182,12 @@ document.addEventListener('DOMContentLoaded', function(){
     gsap.registerPlugin(ScrollTrigger);
     var sec=document.getElementById('parallax-hero');
     if(!sec)return;
-    // Hide the old Webflow text elements
-    var oldBack=sec.querySelector('[data-parallax=back]');
-    var oldFront=sec.querySelector('[data-parallax=front]');
-    if(oldBack)oldBack.style.display='none';
-    if(oldFront)oldFront.style.display='none';
+    // Remove ALL old text elements (Webflow-created h2s and any previous JS text)
+    sec.querySelectorAll('[data-parallax]').forEach(function(el){el.remove()});
+    sec.querySelectorAll('.parallax-text-back,.parallax-text-front').forEach(function(el){el.remove()});
+    sec.querySelectorAll('h2').forEach(function(el){el.remove()});
+    // Remove any previous JS-created rows
+    sec.querySelectorAll('[data-row]').forEach(function(el){el.remove()});
 
     // Remove placeholder text from parallax-img div
     var img=document.getElementById('parallax-img');
@@ -239,8 +240,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // Row 1: "FROM CONCEPT" — starts centered, scrolls RIGHT
     var r1=makeRow('FROM CONCEPT','30%','top');
+    r1.wrap.setAttribute('data-row','1');
     // Row 2: "TO COMMERCIALIZATION" — starts centered, scrolls LEFT
     var r2=makeRow('TO COMMERCIALIZATION','22%','bottom');
+    r2.wrap.setAttribute('data-row','2');
 
     // GSAP: both layers inside each wrap move together (perfectly aligned)
     // Row 1 scrolls RIGHT
