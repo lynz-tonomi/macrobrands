@@ -243,9 +243,7 @@
     // Rename heading
     var sdH2=sd.querySelector('h2');
     if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
-    // Hide old cards and build tabs inline
-    sd.querySelectorAll('.services-grid,.grid-3col').forEach(function(g){g.style.display='none'});
-    sd.querySelectorAll('.service-card').forEach(function(c){c.style.display='none'});
+    // Store ref for section 5b
     window._sdRef=sd;
   }
   var b=document.body;var f=b.querySelector('.section-footer');
@@ -256,14 +254,18 @@
   var heroWrap=b.querySelector('.video-hero-wrap');
   var plx=document.getElementById('parallax-hero');
   if(heroWrap&&plx&&heroWrap.nextSibling){b.insertBefore(plx,heroWrap.nextSibling)}
-  var ids=['who-we-serve','team','about','certifications','faq','contact-cta'];
+  var ids=['who-we-serve','team','about','certifications','faq','faq-extra','contact-cta'];
   // Hide sections we don't want
   var pdSec=document.getElementById('process-dev');
   if(pdSec)pdSec.style.display='none';
   var hwSec=document.getElementById('how-it-works');
   if(hwSec)hwSec.style.display='none';
-  // Hide extra unnamed sections that create gaps
-  document.querySelectorAll('.section-light:not([id])').forEach(function(el){el.style.display='none'});
+  // Hide extra unnamed sections that create gaps — but keep ones with FAQ content
+  document.querySelectorAll('.section-light:not([id])').forEach(function(el){
+    var hasFAQ=el.querySelector('.card-title,.card-text');
+    if(!hasFAQ)el.style.display='none';
+    else{el.id='faq-extra'}
+  });
   // Hide any old background video wrappers leaking through
   document.querySelectorAll('.background-video-2,.background-video-3,.background-video-4,.background-video-5,[class*="background-video"]').forEach(function(el){
     if(!el.closest('.video-hero-wrap')&&!el.closest('#autonomi-ai'))el.style.display='none';
@@ -276,10 +278,11 @@
   var ctaFinal=document.getElementById('contact-cta');
   if(ctaFinal&&f){b.insertBefore(ctaFinal,f)}
 
-  // Remove phone numbers, addresses, and emails sitewide
-  document.querySelectorAll('p,div,a').forEach(function(el){
-    var t=el.textContent||'';
-    if(t.match(/\(408\)|892-5844|24855|Corbit|Yorba Linda|weston@macrobrands|Or call us/i)){
+  // Remove phone numbers, addresses, and emails sitewide — only leaf elements
+  document.querySelectorAll('p,a,span').forEach(function(el){
+    var t=(el.textContent||'').trim();
+    if(el.children.length>1)return;// skip containers
+    if(t.match(/^\(408\)|^Or call us|^24855|^weston@macrobrands/i)){
       el.style.display='none';
     }
   });
@@ -344,17 +347,26 @@
   });
 })();
 
-// ============ 5b. SERVICES TAB VIEW ============
+// ============ 5b. SERVICES — show native cards ============
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
   setTimeout(function(){
   var sd=window._sdRef||document.querySelector('.section-dark');
   if(!sd)return;
+  // Show the native service cards grid (unhide it)
+  sd.querySelectorAll('.services-grid,.grid-3col').forEach(function(g){g.style.display='grid';g.style.gridTemplateColumns='repeat(3,1fr)';g.style.gap='24px'});
+  sd.querySelectorAll('.service-card').forEach(function(c){c.style.display='block';c.style.background='#111';c.style.border='1px solid #222';c.style.borderRadius='16px';c.style.padding='28px';c.style.color='#ccc'});
+  sd.querySelectorAll('.card-title,.service-title,h3').forEach(function(h){h.style.color='#fff'});
+  sd.querySelectorAll('.card-desc,p').forEach(function(p){if(p.closest('.section-dark'))p.style.color='#999'});
+  },500);
+})();
 
-  // Find or create content wrapper inside section-dark
-  var cw=sd;
+/* TABS REMOVED — native Webflow cards are now editable in the Editor */
+void(0);
 
-  // Tab data — short names with canvas animated icons
+(function(){
+  // Old tab code removed — using native Webflow cards
+  if(false){
   var tabs=[
     {title:'Formulation',desc:'From kitchen recipe to production-ready formula. Our food scientists optimize your formulation for the target manufacturing process — retort, aseptic, tunnel pasteurization, or cold fill.',bullets:['Formulation optimization','Ingredient sourcing guidance','Flavor & stability profiling','Clean label solutions','Sensory evaluation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#fff';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}}},
     {title:'MicroThermic',desc:'Send us a half-gallon sample. We fill it in cans, process it through our MicroThermic or JBT Retort system, and confirm sensory and emulsion stability before you commit to production.',bullets:['MicroThermic validation','JBT Static Retort testing','Sensory & emulsion stability','High acid & low acid','Can format validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';/* Thermometer */ctx.beginPath();ctx.moveTo(-4,-26);ctx.lineTo(-4,8);ctx.arc(0,14,10,Math.PI*.8,Math.PI*.2);ctx.lineTo(4,8);ctx.lineTo(4,-26);ctx.arc(0,-26,4,0,Math.PI,true);ctx.stroke();/* Mercury rising */var mH=20+Math.sin(t*2)*8;ctx.fillStyle='#fff';ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(0,14,6,0,Math.PI*2);ctx.fill();ctx.fillRect(-2,14-mH,4,mH);/* Heat waves */ctx.globalAlpha=.4;ctx.lineWidth=1.5;for(var i=0;i<3;i++){var wx=14+i*6;var wave=Math.sin(t*4+i*1.5)*3;ctx.beginPath();ctx.moveTo(wx,0);ctx.quadraticCurveTo(wx+wave,-8,wx,-16);ctx.stroke()}}},
@@ -462,7 +474,7 @@
   style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
   document.head.appendChild(style);
 
-  cw.appendChild(tabWrap);
+  }// end if(false) — dead tab code
   },500);
 })();
 
