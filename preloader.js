@@ -62,14 +62,15 @@ function init(){
   for(var i=0;i<all.length;i+=step){
     var pt=all[i];
     var angle=Math.random()*Math.PI*2;
-    var dist=200+Math.random()*500;
+    var dist=150+Math.random()*400;
     particles.push({
+      sx:pt.tx+Math.cos(angle)*dist,
+      sy:pt.ty+Math.sin(angle)*dist,
       x:pt.tx+Math.cos(angle)*dist,
       y:pt.ty+Math.sin(angle)*dist,
       tx:pt.tx,ty:pt.ty,
       size:1+Math.random()*2.5,
-      speed:.018+Math.random()*.04,
-      delay:Math.random()*.4,
+      delay:Math.random()*.3,
       alpha:0
     });
   }
@@ -79,26 +80,25 @@ function init(){
 
 function drawFrame(){
   ctx.clearRect(0,0,W,H);
-  t+=.012; // Faster: ~3 seconds total
+  t+=.025; // ~3 seconds to t=2.5
   if(t>2.5){running=false;t=2.5}
+
+  var CONVERGE=1.0; // particles fully converged by t=1.0
 
   particles.forEach(function(p){
     if(t<p.delay)return;
-    var lt=Math.min((t-p.delay)/.8,1);
-    var ease=1-Math.pow(1-lt,3);
-    p.x+=(p.tx-p.x)*p.speed*4;
-    p.y+=(p.ty-p.y)*p.speed*4;
-    p.alpha=ease;
+    var lt=Math.min((t-p.delay)/(CONVERGE-p.delay),1);
+    var ease=lt<.5?4*lt*lt*lt:1-Math.pow(-2*lt+2,3)/2; // cubicInOut
+    p.x=p.sx+(p.tx-p.sx)*ease;
+    p.y=p.sy+(p.ty-p.sy)*ease;
+    p.alpha=Math.min(lt*2,1);
     ctx.save();
     ctx.fillStyle=COL;
-    if(lt<.85){
-      ctx.globalAlpha=p.alpha*.8;
+    if(lt<.9){
+      ctx.globalAlpha=p.alpha;
       ctx.beginPath();
-      ctx.arc(p.x,p.y,p.size*(1+(.85-lt)*.8),0,Math.PI*2);
+      ctx.arc(p.x,p.y,p.size*(1+(.9-lt)),0,Math.PI*2);
       ctx.fill();
-      var dx=p.tx-p.x,dy=p.ty-p.y;
-      ctx.globalAlpha=p.alpha*.15;
-      ctx.beginPath();ctx.arc(p.x-dx*.08,p.y-dy*.08,p.size*.4,0,Math.PI*2);ctx.fill();
     } else {
       ctx.globalAlpha=p.alpha;
       ctx.fillRect(p.tx,p.ty,2,2);
@@ -107,9 +107,9 @@ function drawFrame(){
   });
 
   // Crisp text overlay after particles settle
-  if(t>1.2){
+  if(t>1.0){
     var T=window._preloaderText;
-    var ta=Math.min((t-1.2)/.4,1);
+    var ta=Math.min((t-1.0)/.3,1);
     ctx.save();
     ctx.globalAlpha=ta;
     ctx.fillStyle=COL;
@@ -124,8 +124,8 @@ function drawFrame(){
     ctx.restore();
 
     // Subtle glow
-    if(t>1.8){
-      var gp=Math.sin((t-1.8)*4)*.15+.15;
+    if(t>1.5){
+      var gp=Math.sin((t-1.5)*4)*.15+.15;
       ctx.save();
       ctx.globalAlpha=gp*.06;
       ctx.shadowColor='#fff';ctx.shadowBlur=40;
