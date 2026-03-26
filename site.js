@@ -247,7 +247,10 @@
   var heroWrap=b.querySelector('.video-hero-wrap');
   var plx=document.getElementById('parallax-hero');
   if(heroWrap&&plx&&heroWrap.nextSibling){b.insertBefore(plx,heroWrap.nextSibling)}
-  var ids=['who-we-serve','how-it-works','about','team','process-dev','certifications','faq','contact-cta'];
+  var ids=['who-we-serve','how-it-works','about','team','certifications','faq','contact-cta'];
+  // Hide Process Development section
+  var pdSec=document.getElementById('process-dev');
+  if(pdSec)pdSec.style.display='none';
   if(f){ids.forEach(function(id){var el=document.getElementById(id);if(el)b.insertBefore(el,f)});
     var ex=document.querySelectorAll('.section-light:not([id])');ex.forEach(function(el){b.insertBefore(el,f)});
   }
@@ -311,9 +314,9 @@
     '</div>'+
   '</div>';
 
-  // Insert right after services section, before certs
+  // Move services (section-dark) before certs, then AI after services
   var certsEl=document.getElementById('certifications');
-  if(certsEl){b.insertBefore(aiSec,certsEl)}
+  if(certsEl&&sd){b.insertBefore(sd,certsEl);b.insertBefore(aiSec,certsEl)}
   else if(sd&&sd.nextSibling){b.insertBefore(aiSec,sd.nextSibling)}
 
   // Wire up the liquid fill on the CTA
