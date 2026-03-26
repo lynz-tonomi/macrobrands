@@ -8,7 +8,7 @@
   var s=document.querySelector('.video-hero-sticky');
   if(!w||!s)return;
   // Trim hero height to reduce dead space after fade-to-black
-  w.style.height='850vh';
+  w.style.height='750vh';
   var c=document.createElement('canvas');
   c.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1';
   s.appendChild(c);
