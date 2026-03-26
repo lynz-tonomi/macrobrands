@@ -188,51 +188,65 @@ document.addEventListener('DOMContentLoaded', function(){
     if(oldBack)oldBack.style.display='none';
     if(oldFront)oldFront.style.display='none';
 
-    // Build two-row parallax text system
-    // Smaller font proportionate to bottles, layers perfectly aligned
-    var TS='font-size:clamp(2.5rem,8.5vw,7rem);font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;';
-
-    // Bottle image setup — sits in the middle layer
+    // Remove placeholder text from parallax-img div
     var img=document.getElementById('parallax-img');
     if(img){
       img.style.zIndex='2';
       img.style.position='relative';
+      // Remove placeholder paragraph
+      var ph=img.querySelector('p,.section-subhead');
+      if(ph)ph.remove();
     }
 
-    // For each row: outline text (z1, behind bottle) + solid text (z3, in front)
-    // The solid text uses mix-blend-mode to become transparent where bottle is
+    // Measure viewport to scale text to fit width
+    var vw=window.innerWidth;
 
-    // Row 1: "FROM CONCEPT" — scrolls RIGHT
-    var r1Wrap=document.createElement('div');
-    r1Wrap.style.cssText='position:absolute;top:30%;left:0;width:100%;pointer-events:none';
-    var r1Outline=document.createElement('div');
-    r1Outline.style.cssText=TS+'position:absolute;top:0;left:0;-webkit-text-stroke:1.5px rgba(255,255,255,0.35);-webkit-text-fill-color:transparent;z-index:1';
-    r1Outline.textContent='FROM CONCEPT';
-    r1Wrap.appendChild(r1Outline);
-    var r1Solid=document.createElement('div');
-    r1Solid.style.cssText=TS+'position:absolute;top:0;left:0;color:#fff;z-index:3;mix-blend-mode:difference';
-    r1Solid.textContent='FROM CONCEPT';
-    r1Wrap.appendChild(r1Solid);
-    sec.appendChild(r1Wrap);
+    // Helper: create a text row with perfectly aligned solid + outline layers
+    function makeRow(text,yPos,yProp){
+      var wrap=document.createElement('div');
+      wrap.style.cssText='position:absolute;'+yProp+':'+yPos+';left:0;width:100%;pointer-events:none;text-align:center';
 
-    // Row 2: "TO COMMERCIALIZATION" — scrolls LEFT
-    var r2Wrap=document.createElement('div');
-    r2Wrap.style.cssText='position:absolute;bottom:22%;left:0;width:100%;pointer-events:none';
-    var r2Outline=document.createElement('div');
-    r2Outline.style.cssText=TS+'position:absolute;top:0;left:0;-webkit-text-stroke:1.5px rgba(255,255,255,0.35);-webkit-text-fill-color:transparent;z-index:1';
-    r2Outline.textContent='TO COMMERCIALIZATION';
-    r2Wrap.appendChild(r2Outline);
-    var r2Solid=document.createElement('div');
-    r2Solid.style.cssText=TS+'position:absolute;top:0;left:0;color:#fff;z-index:3;mix-blend-mode:difference';
-    r2Solid.textContent='TO COMMERCIALIZATION';
-    r2Wrap.appendChild(r2Solid);
-    sec.appendChild(r2Wrap);
+      // Single inner container so both layers share exact same box
+      var inner=document.createElement('div');
+      inner.style.cssText='position:relative;display:inline-block';
 
-    // GSAP scroll — solid + outline scroll at SAME speed (perfectly aligned)
+      // Outline layer (z1, behind bottle)
+      var outline=document.createElement('div');
+      outline.style.cssText='font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;-webkit-text-stroke:1.5px rgba(255,255,255,0.35);-webkit-text-fill-color:transparent;position:relative;z-index:1';
+      outline.textContent=text;
+      inner.appendChild(outline);
+
+      // Solid layer (z3, in front — mix-blend hides over bottle)
+      var solid=document.createElement('div');
+      solid.style.cssText='font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;color:#fff;position:absolute;top:0;left:0;z-index:3;mix-blend-mode:difference';
+      solid.textContent=text;
+      inner.appendChild(solid);
+
+      wrap.appendChild(inner);
+      sec.appendChild(wrap);
+
+      // Scale font so text fits viewport width at start
+      // Temporarily measure
+      outline.style.fontSize='10vw';solid.style.fontSize='10vw';
+      var measured=inner.offsetWidth;
+      var targetW=vw*0.92;
+      var scale=targetW/measured;
+      var finalSize=Math.min(10*scale,12)+'vw';
+      outline.style.fontSize=finalSize;solid.style.fontSize=finalSize;
+
+      return {wrap:wrap,inner:inner};
+    }
+
+    // Row 1: "FROM CONCEPT" — starts centered, scrolls RIGHT
+    var r1=makeRow('FROM CONCEPT','30%','top');
+    // Row 2: "TO COMMERCIALIZATION" — starts centered, scrolls LEFT
+    var r2=makeRow('TO COMMERCIALIZATION','22%','bottom');
+
+    // GSAP: both layers inside each wrap move together (perfectly aligned)
     // Row 1 scrolls RIGHT
-    gsap.fromTo([r1Solid,r1Outline],{x:'-20%'},{x:'15%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r1.wrap,{x:0},{x:'25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
     // Row 2 scrolls LEFT
-    gsap.fromTo([r2Solid,r2Outline],{x:'10%'},{x:'-25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r2.wrap,{x:0},{x:'-25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
 
     // Bottle gentle parallax
     if(img){gsap.fromTo(img,{y:60,scale:.95},{y:-30,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
