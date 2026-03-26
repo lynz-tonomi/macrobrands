@@ -50,7 +50,7 @@
   var lg=null;
   all.forEach(function(l){if(!lg&&l.closest('.video-hero-wrap')){lg=l;l.remove();s.appendChild(l)}});
   all.forEach(function(l){if(l!==lg)l.style.display='none'});
-  var nl=document.querySelector('.nav-logo');
+  var nl=document.querySelector('.mb-nav-logo');
   var fn=document.querySelector('.mb-floating-nav');
   var ob=document.createElement('div');
   ob.style.cssText='position:absolute;inset:0;background:#000;z-index:10;pointer-events:none;opacity:1';
@@ -199,10 +199,12 @@
   cb.onmouseover=function(){this.style.background='#D4B46A'};
   cb.onmouseout=function(){this.style.background='#C4A35A'};
   n.appendChild(cb);
-  var nl=document.createElement('img');nl.className='nav-logo';
+  var nl=document.createElement('img');nl.className='mb-nav-logo';
   nl.src=document.querySelector('.hero-logo')?document.querySelector('.hero-logo').src:'';
-  nl.style.cssText='height:28px;position:fixed !important;top:20px !important;left:50% !important;transform:translateX(-50%) !important;z-index:9998 !important;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1);background:transparent !important';
   document.body.appendChild(nl);
+  nl.setAttribute('style','height:28px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1);background:transparent');
+  // Also hide any Webflow nav-logo elements
+  document.querySelectorAll('.nav-logo').forEach(function(el){el.style.display='none'});
   document.body.appendChild(n);
 })();
 
