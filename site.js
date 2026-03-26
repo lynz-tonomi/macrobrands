@@ -175,19 +175,64 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 })();
 
-// ============ 6. PARALLAX TEXT ANIMATION ============
+// ============ 6. DUAL TEXT OUTLINE PARALLAX ============
 (function(){
   setTimeout(function(){
     if(typeof gsap==='undefined')return;
     gsap.registerPlugin(ScrollTrigger);
     var sec=document.getElementById('parallax-hero');
     if(!sec)return;
-    var back=sec.querySelector('[data-parallax=back]');
-    var front=sec.querySelector('[data-parallax=front]');
+    // Hide the old Webflow text elements
+    var oldBack=sec.querySelector('[data-parallax=back]');
+    var oldFront=sec.querySelector('[data-parallax=front]');
+    if(oldBack)oldBack.style.display='none';
+    if(oldFront)oldFront.style.display='none';
+
+    // Build two-row parallax text system
+    var TS='font-size:14vw;font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;position:absolute;';
+
+    // Row 1: "FROM CONCEPT" — scrolls RIGHT
+    var r1Wrap=document.createElement('div');
+    r1Wrap.style.cssText='position:absolute;top:25%;left:0;width:100%;overflow:visible;z-index:1;pointer-events:none';
+    // Solid white text
+    var r1Solid=document.createElement('div');
+    r1Solid.style.cssText=TS+'color:#fff;z-index:3';
+    r1Solid.textContent='FROM CONCEPT';
+    r1Wrap.appendChild(r1Solid);
+    // Outline text (same position, only visible through bottle via mix-blend)
+    var r1Outline=document.createElement('div');
+    r1Outline.style.cssText=TS+'-webkit-text-stroke:2px rgba(255,255,255,0.4);-webkit-text-fill-color:transparent;z-index:1';
+    r1Outline.textContent='FROM CONCEPT';
+    r1Wrap.appendChild(r1Outline);
+    sec.appendChild(r1Wrap);
+
+    // Row 2: "TO COMMERCIALIZATION" — scrolls LEFT
+    var r2Wrap=document.createElement('div');
+    r2Wrap.style.cssText='position:absolute;bottom:20%;left:0;width:100%;overflow:visible;z-index:1;pointer-events:none';
+    var r2Solid=document.createElement('div');
+    r2Solid.style.cssText=TS+'color:#fff;z-index:3';
+    r2Solid.textContent='TO COMMERCIALIZATION';
+    r2Wrap.appendChild(r2Solid);
+    var r2Outline=document.createElement('div');
+    r2Outline.style.cssText=TS+'-webkit-text-stroke:2px rgba(255,255,255,0.4);-webkit-text-fill-color:transparent;z-index:1';
+    r2Outline.textContent='TO COMMERCIALIZATION';
+    r2Wrap.appendChild(r2Outline);
+    sec.appendChild(r2Wrap);
+
+    // Bottle image — z-index 2 (between outline z1 and solid z3)
     var img=document.getElementById('parallax-img');
-    if(back){gsap.fromTo(back,{y:150},{y:-250,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
-    if(front){gsap.fromTo(front,{y:-100},{y:200,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
-    if(img){gsap.fromTo(img,{y:80,scale:.9},{y:-40,scale:1,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    if(img)img.style.zIndex='2';
+
+    // GSAP scroll animations
+    // Row 1 scrolls RIGHT, Row 2 scrolls LEFT
+    gsap.fromTo(r1Solid,{x:'-30%'},{x:'20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r1Outline,{x:'-25%'},{x:'25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r2Solid,{x:'20%'},{x:'-30%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r2Outline,{x:'25%'},{x:'-25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+
+    // Bottle gentle parallax
+    if(img){gsap.fromTo(img,{y:60,scale:.95},{y:-30,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=how-it-works],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light');
     sects.forEach(function(sec2){
