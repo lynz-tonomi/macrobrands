@@ -117,18 +117,25 @@
       }
       return false;
     }
+    // Check if over Autonomi AI section — hide nav
+    var aiEl=document.getElementById('autonomi-ai');
+    var overAI=false;
+    if(aiEl){var aiR=aiEl.getBoundingClientRect();overAI=aiR.top<100&&aiR.bottom>100}
     if(nl){
       var logoY=nl.getBoundingClientRect().top+nl.offsetHeight/2;
       var light=isOverLight(logoY);
       nl.style.filter=light?'brightness(0)':'brightness(0) invert(1)';
-      nl.style.transition='filter .3s';
+      nl.style.transition='filter .3s,opacity .3s';
+      nl.style.opacity=overAI?'0':'1';
     }
     if(fn){
       var navY=fn.getBoundingClientRect().top;
       var navLight=isOverLight(navY);
       fn.style.background=navLight?'rgba(255,255,255,.85)':'rgba(20,20,20,.9)';
-      fn.style.transition='background .3s';
+      fn.style.transition='background .3s,opacity .3s,transform .3s';
       fn.querySelectorAll('a:not([href="/contact"])').forEach(function(a){a.style.color=navLight?'#333':'#ccc'});
+      if(overAI){fn.style.opacity='0';fn.style.transform='translateX(-50%) translateY(20px)'}
+      else if(p>=.10){fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
     }
   }
   window.addEventListener('scroll',u,{passive:true});
@@ -146,10 +153,9 @@
   wrap.style.cssText='position:absolute;left:5%;bottom:27%;z-index:8;pointer-events:none';
   s.appendChild(wrap);
   var D=[
-    {text:'Extraction',start:.15,end:.40},
-    {text:'Formulation',start:.35,end:.58},
-    {text:'Transformation',start:.53,end:.75},
-    {text:'Infusion',start:.80,end:.94}
+    {text:'Extraction',start:.15,end:.42},
+    {text:'Formulation',start:.38,end:.65},
+    {text:'Infusion',start:.70,end:.94}
   ];
   var els=[];
   D.forEach(function(d){
@@ -276,10 +282,10 @@
   // Create Autonomi AI Supply Chain section
   var aiSec=document.createElement('section');
   aiSec.id='autonomi-ai';
-  aiSec.setAttribute('style','position:relative;background:#000;color:#fff;padding:100px 5%;font-family:Inter,sans-serif;overflow:hidden');
+  aiSec.setAttribute('style','position:relative;background:#000;color:#fff;padding:0;font-family:Inter,sans-serif;overflow:hidden;min-height:100vh');
   aiSec.innerHTML='<video src="https://lynz-tonomi.github.io/macrobrands/schero-web.mp4" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;z-index:0"></video>'+
   '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.3) 100%);z-index:1"></div>'+
-  '<div style="position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:80vh;padding:40px 5%">'+
+  '<div style="position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh;padding:60px 5%">'+
     '<div style="max-width:900px;text-align:left">'+
       '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:24px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://lynz-tonomi.github.io/macrobrands/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
       '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:20px;color:#fff">Supply Chain AI</h2>'+
