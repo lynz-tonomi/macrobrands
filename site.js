@@ -97,8 +97,7 @@
       if(fn){fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
     }else{
       lg.style.opacity='0';lg.style.display='none';
-      if(nl)nl.style.opacity='1';
-      if(fn){fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
+      // Don't set opacity here — let overAI check below handle it
     }
     // Detect if nav logo is over a light section (hardcoded IDs)
     var lightIds=['about','certifications','faq','who-we-serve'];
@@ -121,21 +120,21 @@
     var aiEl=document.getElementById('autonomi-ai');
     var overAI=false;
     if(aiEl){var aiR=aiEl.getBoundingClientRect();overAI=aiR.top<100&&aiR.bottom>100}
-    if(nl){
+    if(nl&&p>=.10){
       var logoY=nl.getBoundingClientRect().top+nl.offsetHeight/2;
       var light=isOverLight(logoY);
       nl.style.filter=light?'brightness(0)':'brightness(0) invert(1)';
       nl.style.transition='filter .3s,opacity .3s';
       nl.style.opacity=overAI?'0':'1';
     }
-    if(fn){
+    if(fn&&p>=.10){
       var navY=fn.getBoundingClientRect().top;
       var navLight=isOverLight(navY);
       fn.style.background=navLight?'rgba(255,255,255,.85)':'rgba(20,20,20,.9)';
       fn.style.transition='background .3s,opacity .3s,transform .3s';
       fn.querySelectorAll('a:not([href="/contact"])').forEach(function(a){a.style.color=navLight?'#333':'#ccc'});
       if(overAI){fn.style.opacity='0';fn.style.transform='translateX(-50%) translateY(20px)'}
-      else if(p>=.10){fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
+      else{fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
     }
   }
   window.addEventListener('scroll',u,{passive:true});
@@ -197,7 +196,7 @@
   n.className='mb-floating-nav';
   document.body.appendChild(n);
   n.setAttribute('style','position:fixed;bottom:24px;top:auto;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3);opacity:0;transition:opacity .4s,transform .4s');
-  var links=[['Home','#'],['Services','.section-dark'],['About','#about'],['Certs','#certifications'],['FAQ','#faq']];
+  var links=[['Home','#'],['About','#about'],['Services','.section-dark'],['Certs','#certifications'],['FAQ','#faq']];
   links.forEach(function(l){
     var a=document.createElement('a');a.textContent=l[0];a.href=l[1];
     a.style.cssText='color:#ccc;text-decoration:none;padding:10px 16px;font-size:.9rem;font-weight:500;transition:color .2s;white-space:nowrap';
@@ -253,12 +252,15 @@
   var heroWrap=b.querySelector('.video-hero-wrap');
   var plx=document.getElementById('parallax-hero');
   if(heroWrap&&plx&&heroWrap.nextSibling){b.insertBefore(plx,heroWrap.nextSibling)}
-  var ids=['who-we-serve','how-it-works','about','team','certifications','faq','contact-cta'];
-  // Hide Process Development section
+  var ids=['who-we-serve','team','about','certifications','faq','contact-cta'];
+  // Hide sections we don't want
   var pdSec=document.getElementById('process-dev');
   if(pdSec)pdSec.style.display='none';
+  var hwSec=document.getElementById('how-it-works');
+  if(hwSec)hwSec.style.display='none';
+  // Hide extra unnamed sections that create gaps
+  document.querySelectorAll('.section-light:not([id])').forEach(function(el){el.style.display='none'});
   if(f){ids.forEach(function(id){var el=document.getElementById(id);if(el)b.insertBefore(el,f)});
-    var ex=document.querySelectorAll('.section-light:not([id])');ex.forEach(function(el){b.insertBefore(el,f)});
   }
   // Move footer to absolute last position
   if(f){b.appendChild(f)}
@@ -282,20 +284,22 @@
   // Create Autonomi AI Supply Chain section
   var aiSec=document.createElement('section');
   aiSec.id='autonomi-ai';
-  aiSec.setAttribute('style','position:relative;background:#000;color:#fff;padding:0;font-family:Inter,sans-serif;overflow:hidden;min-height:100vh');
-  aiSec.innerHTML='<video src="https://lynz-tonomi.github.io/macrobrands/schero-web.mp4" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;z-index:0"></video>'+
-  '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.3) 100%);z-index:1"></div>'+
-  '<div style="position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh;padding:60px 5%">'+
-    '<div style="max-width:900px;text-align:left">'+
-      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:24px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://lynz-tonomi.github.io/macrobrands/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
-      '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:20px;color:#fff">Supply Chain AI</h2>'+
-      '<p style="color:rgba(255,255,255,.7);font-size:1.2rem;max-width:640px;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics.</p>'+
-    '</div>'+
-    '<div style="text-align:center;padding-bottom:20px">'+
-      '<p style="color:rgba(255,255,255,.4);font-size:1rem;margin-bottom:20px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
+  aiSec.setAttribute('style','background:#000;color:#fff;padding:0;font-family:Inter,sans-serif');
+  aiSec.innerHTML=
+  '<div style="text-align:center;padding:80px 5% 40px">'+
+    '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #C9A84C;margin-bottom:24px" id="autonomi-badge"><span style="color:#C9A84C;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img src="https://lynz-tonomi.github.io/macrobrands/AI-small.png" alt="Autonomi" style="height:24px"></div>'+
+    '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px;color:#fff">Supply Chain AI</h2>'+
+    '<p style="color:rgba(255,255,255,.5);font-size:1.1rem;max-width:640px;margin:0 auto;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics.</p>'+
+  '</div>'+
+  '<div style="position:relative;overflow:hidden;margin:0 5%;border-radius:16px;min-height:70vh;display:flex;align-items:flex-end;justify-content:center">'+
+    '<video src="https://lynz-tonomi.github.io/macrobrands/schero-web.mp4" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"></video>'+
+    '<div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.5) 100%);z-index:1"></div>'+
+    '<div style="position:relative;z-index:2;text-align:center;padding:40px 20px 50px">'+
+      '<p style="color:rgba(255,255,255,.5);font-size:1rem;margin-bottom:20px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
       '<a href="/contact" style="display:inline-block;padding:16px 40px;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;text-decoration:none;font-weight:700;font-size:1rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
     '</div>'+
-  '</div>';
+  '</div>'+
+  '<div style="height:60px"></div>';
 
   // Move services (section-dark) before certs, then AI after services
   var certsEl=document.getElementById('certifications');
