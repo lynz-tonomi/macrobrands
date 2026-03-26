@@ -404,7 +404,7 @@
     sec.querySelectorAll('[data-row]').forEach(function(el){el.remove()});
 
     // Style parallax section with AURA background
-    sec.style.backgroundImage="url('https://cdn.prod.website-files.com/6996d33f78af008f4952e0b0/69c5a19aa09aefd9d21c5827_Aura-Bottle-bg.png')";
+    sec.style.backgroundImage="url('https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg.png')";
     sec.style.backgroundSize='cover';
     sec.style.backgroundPosition='center';
     sec.style.minHeight='200vh';
