@@ -143,7 +143,7 @@
   var old=document.getElementById('seg-wrap');if(old)old.remove();
   var wrap=document.createElement('div');
   wrap.id='seg-wrap';
-  wrap.style.cssText='position:absolute;left:5%;bottom:12%;z-index:8;pointer-events:none';
+  wrap.style.cssText='position:absolute;left:5%;bottom:27%;z-index:8;pointer-events:none';
   s.appendChild(wrap);
   var D=[
     {text:'Extraction',start:.15,end:.40},
@@ -189,7 +189,8 @@
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
   var n=document.createElement('div');
   n.className='mb-floating-nav';
-  n.style.cssText='position:fixed !important;bottom:24px !important;top:auto !important;left:50% !important;transform:translateX(-50%) !important;z-index:9999 !important;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3);opacity:0;transition:opacity .4s,transform .4s';
+  document.body.appendChild(n);
+  n.setAttribute('style','position:fixed;bottom:24px;top:auto;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3);opacity:0;transition:opacity .4s,transform .4s');
   var links=[['Home','#'],['Services','.section-dark'],['About','#about'],['Certs','#certifications'],['FAQ','#faq']];
   links.forEach(function(l){
     var a=document.createElement('a');a.textContent=l[0];a.href=l[1];
@@ -214,7 +215,6 @@
       nlParent.setAttribute('style','background:transparent;border:none;box-shadow:none;position:static');
     }
   }
-  document.body.appendChild(n);
 })();
 
 // ============ 5. PAGE INIT (reorder sections, theme) ============
