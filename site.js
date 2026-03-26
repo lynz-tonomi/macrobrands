@@ -205,7 +205,7 @@
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:28px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
+    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
     // Make any parent container transparent
     var nlParent=nl.parentElement;
     if(nlParent&&nlParent!==document.body){
