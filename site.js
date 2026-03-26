@@ -199,7 +199,7 @@
     if(img){
       img.style.zIndex='2';
       img.style.position='relative';
-      img.style.height='180vh';
+      img.style.height='130vh';
       img.style.maxWidth='100%';
       img.style.maxHeight='none';
       // Remove placeholder paragraph
@@ -211,21 +211,19 @@
     var vw=window.innerWidth;
 
     // Helper: create a text row with perfectly aligned solid + outline layers
-    function makeRow(text,yPos,yProp){
+    function makeRow(text,yPos,yProp,widthPct){
+      var wp=widthPct||0.92;
       var wrap=document.createElement('div');
       wrap.style.cssText='position:absolute;'+yProp+':'+yPos+';left:0;width:100%;pointer-events:none;text-align:center';
 
-      // Single inner container so both layers share exact same box
       var inner=document.createElement('div');
       inner.style.cssText='position:relative;display:inline-block';
 
-      // Outline layer (z1, behind bottle)
       var outline=document.createElement('div');
       outline.style.cssText='font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;-webkit-text-stroke:1.5px rgba(255,255,255,0.35);-webkit-text-fill-color:transparent;position:relative;z-index:1';
       outline.textContent=text;
       inner.appendChild(outline);
 
-      // Solid layer (z3, in front — mix-blend hides over bottle)
       var solid=document.createElement('div');
       solid.style.cssText='font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;color:#fff;position:absolute;top:0;left:0;z-index:3;mix-blend-mode:difference';
       solid.textContent=text;
@@ -234,11 +232,9 @@
       wrap.appendChild(inner);
       sec.appendChild(wrap);
 
-      // Scale font so text fits viewport width at start
-      // Temporarily measure
       outline.style.fontSize='10vw';solid.style.fontSize='10vw';
       var measured=inner.offsetWidth;
-      var targetW=vw*0.92;
+      var targetW=vw*wp;
       var scale=targetW/measured;
       var finalSize=Math.min(10*scale,12)+'vw';
       outline.style.fontSize=finalSize;solid.style.fontSize=finalSize;
@@ -246,11 +242,11 @@
       return {wrap:wrap,inner:inner};
     }
 
-    // Row 1: "FROM CONCEPT" — starts centered, scrolls RIGHT
-    var r1=makeRow('FROM CONCEPT','30%','top');
+    // Row 1: "FROM CONCEPT" — 25% smaller, starts centered, scrolls RIGHT
+    var r1=makeRow('FROM CONCEPT','30%','top',0.69);
     r1.wrap.setAttribute('data-row','1');
-    // Row 2: "TO COMMERCIALIZATION" — starts centered, scrolls LEFT, IN FRONT of bottle
-    var r2=makeRow('TO COMMERCIALIZATION','22%','bottom');
+    // Row 2: "TO COMMERCIALIZATION" — full width, starts centered, scrolls LEFT, IN FRONT of bottle
+    var r2=makeRow('TO COMMERCIALIZATION','22%','bottom',0.92);
     r2.wrap.setAttribute('data-row','2');
     r2.wrap.style.zIndex='4';
 
