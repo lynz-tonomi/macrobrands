@@ -113,24 +113,36 @@
   wrap.id='seg-wrap';
   wrap.style.cssText='position:absolute;left:5%;bottom:12%;z-index:8;pointer-events:none';
   s.appendChild(wrap);
-  var D=['Extraction','Formulation','Transformation','Infusion','Validation','Creation'];
+  var D=[
+    {text:'Extraction',start:.15,end:.40},
+    {text:'Formulation',start:.35,end:.58},
+    {text:'Transformation',start:.53,end:.75},
+    {text:'Infusion',start:.80,end:.94}
+  ];
   var els=[];
-  D.forEach(function(t,i){
+  D.forEach(function(d){
     var e=document.createElement('div');
-    e.style.cssText='position:absolute;bottom:0;left:0;opacity:0;pointer-events:none;transition:opacity .6s,transform .6s';
-    e.innerHTML='<div style="font-size:clamp(3rem,7vw,5.5rem);font-weight:900;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.6);letter-spacing:-.03em;font-style:italic">'+t+'</div>';
+    e.style.cssText='position:absolute;bottom:0;left:0;opacity:0;pointer-events:none;transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)';
+    e.innerHTML='<div style="font-family:Inter,Helvetica Neue,Arial,sans-serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:800;color:#fff;text-shadow:0 4px 40px rgba(0,0,0,.6);letter-spacing:-.04em;text-transform:uppercase">'+d.text+'</div>';
     wrap.appendChild(e);els.push(e);
   });
   var active=-1;
   function u(){
     var ms=w.offsetHeight-window.innerHeight;if(ms<=0)return;
     var p=window.scrollY/ms;
-    var S=.15,E=.94,n=D.length;
-    if(p<S||p>E){if(active>=0){els[active].style.opacity='0';els[active].style.transform='translateY(20px)';active=-1}return}
-    var idx=Math.floor((p-S)/(E-S)*n);if(idx>=n)idx=n-1;
+    // Find which segment is active based on custom ranges
+    var idx=-1;
+    for(var i=0;i<D.length;i++){
+      var mid=(D[i].start+D[i].end)/2;
+      var fadeIn=D[i].start;
+      var fadeOut=D[i].end;
+      if(p>=fadeIn&&p<=fadeOut)idx=i;
+    }
+    if(idx<0&&active>=0){els[active].style.opacity='0';els[active].style.transform='translateY(20px)';active=-1;return}
     if(idx!==active){
       if(active>=0){els[active].style.opacity='0';els[active].style.transform='translateY(-20px)'}
-      els[idx].style.opacity='1';els[idx].style.transform='translateY(0)';active=idx;
+      if(idx>=0){els[idx].style.opacity='1';els[idx].style.transform='translateY(0)'}
+      active=idx;
     }
   }
   window.addEventListener('scroll',u,{passive:true});u();
