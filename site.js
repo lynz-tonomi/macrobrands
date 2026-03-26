@@ -200,11 +200,21 @@
     a.onclick=function(e){if(l[1].startsWith('.')||l[1].startsWith('#')){e.preventDefault();var t=l[1]==='#'?document.body:document.querySelector(l[1]);if(t)t.scrollIntoView({behavior:'smooth'})}};
     n.appendChild(a);
   });
-  var cb=document.createElement('a');cb.textContent='Contact';cb.href='/contact';
-  cb.style.cssText='color:#1A1A1A;background:#C4A35A;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px;transition:background .2s;position:relative;overflow:hidden';
-  cb.onmouseover=function(){this.style.background='#D4B46A'};
-  cb.onmouseout=function(){this.style.background='#C4A35A'};
+  var cb=document.createElement('a');cb.href='/contact';
+  cb.style.cssText='color:#1A1A1A;background:#C4A35A;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px;position:relative;overflow:hidden;display:inline-block';
+  cb.innerHTML='<span style="position:relative;z-index:1">Contact</span>';
+  // Liquid fill pseudo-element via a real div
+  var fill=document.createElement('div');
+  fill.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px';
+  cb.appendChild(fill);
+  cb.onmouseenter=function(){fill.style.height='100%';cb.querySelector('span').style.color='#1A1A1A'};
+  cb.onmouseleave=function(){fill.style.height='0';cb.querySelector('span').style.color='#1A1A1A'};
   n.appendChild(cb);
+
+  // Inject global liquid-fill CTA style for all pages
+  var ctaCSS=document.createElement('style');
+  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#C4A35A;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #C4A35A;color:#C4A35A}.cta-outline .fill-bg{background:#C4A35A}.cta-outline:hover span{color:#1A1A1A}';
+  document.head.appendChild(ctaCSS);
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
   if(nl){
@@ -240,6 +250,18 @@
   }
   // Move footer to absolute last position
   if(f){b.appendChild(f)}
+
+  // Upgrade all CTA buttons to liquid-fill
+  document.querySelectorAll('.cta-button,a[href="/contact"].get-started-link,.button-primary-2').forEach(function(btn){
+    btn.style.cssText+='position:relative;overflow:hidden;border-radius:50px;';
+    var existingText=btn.textContent;
+    btn.innerHTML='<span style="position:relative;z-index:1">'+existingText+'</span>';
+    var bf=document.createElement('div');
+    bf.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px;pointer-events:none';
+    btn.appendChild(bf);
+    btn.onmouseenter=function(){bf.style.height='100%'};
+    btn.onmouseleave=function(){bf.style.height='0'};
+  });
 })();
 
 // ============ 6. DUAL TEXT OUTLINE PARALLAX ============
@@ -354,10 +376,36 @@
   var sub=document.querySelector('.subtitle');
   if(sub)sub.textContent="Tell us about your product and we'll get back to you within 24 hours.";
 
-  // Style the page
+  // Style the page — match home screen dark theme
   var body=document.body;
-  body.style.background='#F8F7F4';
+  body.style.background='#000';
+  body.style.color='#fff';
   body.style.fontFamily='Inter,Helvetica Neue,Arial,sans-serif';
+
+  // Add centered nav logo at top (matching home page)
+  var heroLogo=document.querySelector('.hero-logo')||document.querySelector('.nav-logo');
+  if(heroLogo){
+    var logo=document.createElement('img');
+    logo.src=heroLogo.src;
+    logo.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;filter:brightness(0) invert(1)');
+    document.body.appendChild(logo);
+  }
+  // Hide old Webflow nav elements
+  document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
+
+  // Add floating nav bar (matching home page)
+  var nav=document.createElement('div');
+  document.body.appendChild(nav);
+  nav.setAttribute('style','position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3)');
+  [['Home','/'],['Services','/#services'],['About','/#about'],['FAQ','/#faq']].forEach(function(l){
+    var a=document.createElement('a');a.textContent=l[0];a.href=l[1];
+    a.style.cssText='color:#ccc;text-decoration:none;padding:10px 16px;font-size:.9rem;font-weight:500;transition:color .2s;white-space:nowrap';
+    a.onmouseover=function(){this.style.color='#fff'};a.onmouseout=function(){this.style.color='#ccc'};
+    nav.appendChild(a);
+  });
+  var cb=document.createElement('a');cb.textContent='Contact';cb.href='/contact';
+  cb.style.cssText='color:#1A1A1A;background:#C4A35A;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px';
+  nav.appendChild(cb);
 
   // Find the form
   var form=document.querySelector('form');
@@ -370,33 +418,37 @@
 
     // Left column: contact info
     var info=document.createElement('div');
-    info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#1A1A1A;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
-      '<p style="font-size:1.1rem;line-height:1.7;color:#555;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Phone</div><a href="tel:4088925844" style="color:#C4A35A;text-decoration:none;font-size:1.1rem;font-weight:600">(408) 892-5844</a></div>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Email</div><a href="mailto:weston@macrobrands.llc" style="color:#C4A35A;text-decoration:none;font-size:1.1rem;font-weight:600">weston@macrobrands.llc</a></div>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#555;font-size:1rem">24855 Corbit Pl., Yorba Linda, CA 92887</div></div>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#555;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
+    info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#fff;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
+      '<p style="font-size:1.1rem;line-height:1.7;color:#999;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Phone</div><a href="tel:4088925844" style="color:#C4A35A;text-decoration:none;font-size:1.1rem;font-weight:600">(408) 892-5844</a></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Email</div><a href="mailto:weston@macrobrands.llc" style="color:#C4A35A;text-decoration:none;font-size:1.1rem;font-weight:600">weston@macrobrands.llc</a></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#888;font-size:1rem">24855 Corbit Pl., Yorba Linda, CA 92887</div></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#888;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
 
     // Right column: styled form
     var formWrap=document.createElement('div');
-    formWrap.style.cssText='background:#fff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.06)';
-    formWrap.innerHTML='<h3 style="font-size:1.4rem;font-weight:700;color:#1A1A1A;margin-bottom:24px">Request a Free Consultation</h3>';
+    formWrap.style.cssText='background:#111;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.3);border:1px solid #222';
+    formWrap.innerHTML='<h3 style="font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:24px">Request a Free Consultation</h3>';
     formWrap.appendChild(form);
 
     // Style form inputs
     form.querySelectorAll('input,textarea').forEach(function(inp){
-      inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#fafafa;transition:border-color .2s;outline:none';
+      inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #333;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#1a1a1a;color:#fff;transition:border-color .2s;outline:none';
       inp.onfocus=function(){this.style.borderColor='#C4A35A'};
-      inp.onblur=function(){this.style.borderColor='#ddd'};
+      inp.onblur=function(){this.style.borderColor='#333'};
     });
 
-    // Style submit button
+    // Style submit button with liquid fill
     var submit=form.querySelector('[type="submit"],.w-button');
     if(submit){
-      submit.style.cssText='width:100%;padding:16px;background:#C4A35A;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:background .2s;margin-top:8px';
-      submit.onmouseover=function(){this.style.background='#D4B46A'};
-      submit.onmouseout=function(){this.style.background='#C4A35A'};
+      submit.style.cssText='width:100%;padding:16px;background:#C4A35A;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:8px;position:relative;overflow:hidden';
       submit.value='Send Message →';
+      var sf=document.createElement('div');
+      sf.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px;pointer-events:none';
+      submit.style.position='relative';
+      submit.appendChild(sf);
+      submit.onmouseenter=function(){sf.style.height='100%'};
+      submit.onmouseleave=function(){sf.style.height='0'};
     }
 
     wrapper.appendChild(info);
@@ -412,7 +464,7 @@
 
   // Style h1
   if(h1){
-    h1.style.cssText='text-align:center;font-size:3.5rem;font-weight:800;color:#1A1A1A;padding:60px 5% 0;letter-spacing:-.03em;font-family:Inter,sans-serif';
+    h1.style.cssText='text-align:center;font-size:3.5rem;font-weight:800;color:#fff;padding:80px 5% 0;letter-spacing:-.03em;font-family:Inter,sans-serif';
   }
 
   // Hide old background image
