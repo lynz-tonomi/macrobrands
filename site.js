@@ -243,6 +243,10 @@
     // Rename heading
     var sdH2=sd.querySelector('h2');
     if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
+    // Hide old cards and build tabs inline
+    sd.querySelectorAll('.services-grid,.grid-3col').forEach(function(g){g.style.display='none'});
+    sd.querySelectorAll('.service-card').forEach(function(c){c.style.display='none'});
+    window._sdRef=sd;
   }
   var b=document.body;var f=b.querySelector('.section-footer');
   // Fix footer: remove sticky positioning
@@ -260,6 +264,10 @@
   if(hwSec)hwSec.style.display='none';
   // Hide extra unnamed sections that create gaps
   document.querySelectorAll('.section-light:not([id])').forEach(function(el){el.style.display='none'});
+  // Hide any old background video wrappers leaking through
+  document.querySelectorAll('.background-video-2,.background-video-3,.background-video-4,.background-video-5,[class*="background-video"]').forEach(function(el){
+    if(!el.closest('.video-hero-wrap')&&!el.closest('#autonomi-ai'))el.style.display='none';
+  });
   if(f){ids.forEach(function(id){var el=document.getElementById(id);if(el)b.insertBefore(el,f)});
   }
   // Move footer to absolute last position
@@ -340,16 +348,11 @@
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
   setTimeout(function(){
-  var sd=document.querySelector('.section-dark');
+  var sd=window._sdRef||document.querySelector('.section-dark');
   if(!sd)return;
 
-  // Hide old service cards grid
-  sd.querySelectorAll('.services-grid,.grid-3col').forEach(function(g){g.style.display='none'});
-  // Also hide old individual service cards
-  sd.querySelectorAll('.service-card').forEach(function(c){c.style.display='none'});
-
   // Find or create content wrapper inside section-dark
-  var cw=sd.querySelector('.content-wrapper')||sd;
+  var cw=sd;
 
   // Tab data — short names with canvas animated icons
   var tabs=[
