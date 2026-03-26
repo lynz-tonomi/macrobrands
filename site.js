@@ -264,6 +264,105 @@
   });
 })();
 
+// ============ 5b. SERVICES TAB VIEW ============
+(function(){
+  if(window.location.pathname.match(/\/contact/))return;
+  var sd=document.querySelector('.section-dark');
+  if(!sd)return;
+
+  // Hide old service cards grid
+  sd.querySelectorAll('.services-grid,.grid-3col').forEach(function(g){g.style.display='none'});
+  // Also hide old individual service cards
+  sd.querySelectorAll('.service-card').forEach(function(c){c.style.display='none'});
+
+  // Find or create content wrapper inside section-dark
+  var cw=sd.querySelector('.content-wrapper')||sd;
+
+  // Tab data
+  var tabs=[
+    {title:'Product Development',desc:'From kitchen recipe to production-ready formula. Our food scientists optimize your formulation for the target manufacturing process — retort, aseptic, tunnel pasteurization, or cold fill.',bullets:['Formulation optimization','Ingredient sourcing guidance','Flavor & stability profiling','Clean label solutions','Sensory evaluation'],icon:'🧪'},
+    {title:'MicroThermic / Retort Validation',desc:'Send us a half-gallon sample. We fill it in cans, process it through our MicroThermic or JBT Retort system, and confirm sensory and emulsion stability before you commit to production.',bullets:['MicroThermic validation','JBT Static Retort testing','Sensory & emulsion stability','High acid & low acid','Can format validation'],icon:'🔥'},
+    {title:'Process Development',desc:'We determine the right thermal process for your product. Scale-up from bench to pilot to production with validated parameters at every step.',bullets:['Thermal process design','Scale-up protocols','Emulsion & stability testing','Shelf life studies','Process validation'],icon:'⚙️'},
+    {title:'Process Authority / Heat Penetration',desc:'Our Process Authority (30 years experience) conducts heat penetration studies and validates your thermal process for FDA compliance. Required for all shelf-stable low-acid beverages.',bullets:['Heat penetration testing','21 CFR 113/114 compliance','Scheduled process filing','Inoculated pack studies','LACF validation'],icon:'🔬'},
+    {title:'Commercialization',desc:'Bridge the gap between pilot and full production. We handle packaging specs, label compliance, supply chain setup, and production scheduling to get your product to market.',bullets:['Packaging development','Label & regulatory review','Supply chain coordination','Production scheduling','First run management'],icon:'🚀'},
+    {title:'Co-Packing',desc:'You bring the formula and materials — we handle production. Flexible co-packing for cans, bottles, and bag-in-box. Strict quality control, low MOQs for pilot runs, and full SQF-certified production.',bullets:['Retort canning: 12oz, 8oz, 8.4oz','Aseptic PET: 2-64oz bottles','Aseptic Bag-in-Box: 2-25L','Cold brew & tea extraction','Carbonation & nitro infusion'],icon:'📦'},
+    {title:'Turn-Key Manufacturing',desc:'End-to-end beverage manufacturing from formulation to filled, labeled, and shipped product. We handle everything — sourcing, production, QC, packaging, and logistics coordination.',bullets:['Formula to finished product','Ingredient sourcing & procurement','Full production management','Labeling & packaging','Logistics coordination'],icon:'🏭'}
+  ];
+
+  // Build tab container
+  var tabWrap=document.createElement('div');
+  tabWrap.style.cssText='margin-top:40px';
+
+  // Tab buttons row
+  var tabRow=document.createElement('div');
+  tabRow.style.cssText='display:flex;gap:4px;flex-wrap:wrap;margin-bottom:32px;border-bottom:1px solid #222;padding-bottom:0';
+  tabWrap.appendChild(tabRow);
+
+  // Tab content area
+  var tabContent=document.createElement('div');
+  tabContent.style.cssText='min-height:300px';
+  tabWrap.appendChild(tabContent);
+
+  var panels=[];
+  var buttons=[];
+
+  tabs.forEach(function(tab,i){
+    // Button
+    var btn=document.createElement('button');
+    btn.textContent=tab.title;
+    btn.style.cssText='padding:12px 20px;background:transparent;color:#666;border:none;border-bottom:2px solid transparent;font-size:.9rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .3s;white-space:nowrap';
+    tabRow.appendChild(btn);
+    buttons.push(btn);
+
+    // Panel
+    var panel=document.createElement('div');
+    panel.style.cssText='display:none;animation:tabFadeIn .4s ease-out';
+    panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
+      '<div>'+
+        '<div style="font-size:3rem;margin-bottom:16px">'+tab.icon+'</div>'+
+        '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
+        '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">'+tab.desc+'</p>'+
+        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C4A35A;color:#C4A35A;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C4A35A;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+      '</div>'+
+      '<div style="background:#111;border-radius:16px;padding:32px;border:1px solid #222">'+
+        '<div style="font-weight:700;color:#ccc;margin-bottom:16px;font-size:.95rem">What\'s Included</div>'+
+        '<ul style="list-style:none;padding:0;margin:0">'+
+          tab.bullets.map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C4A35A">✓</span> '+b+'</li>'}).join('')+
+        '</ul>'+
+      '</div>'+
+    '</div>';
+    tabContent.appendChild(panel);
+    panels.push(panel);
+
+    // Click handler
+    btn.onclick=function(){
+      buttons.forEach(function(b){b.style.color='#666';b.style.borderBottomColor='transparent'});
+      panels.forEach(function(p){p.style.display='none'});
+      btn.style.color='#fff';
+      btn.style.borderBottomColor='#C4A35A';
+      panel.style.display='block';
+      // Liquid fill on Get Started buttons
+      panel.querySelectorAll('.cta-outline').forEach(function(a){
+        var fb=a.querySelector('.fill-bg');
+        if(fb){a.onmouseenter=function(){fb.style.height='100%';a.querySelector('span').style.color='#1A1A1A'};a.onmouseleave=function(){fb.style.height='0';a.querySelector('span').style.color='#C4A35A'}}
+      });
+    };
+
+    btn.onmouseenter=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#ccc'};
+    btn.onmouseleave=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#666'};
+  });
+
+  // Activate first tab
+  buttons[0].onclick();
+
+  // Add fadeIn animation
+  var style=document.createElement('style');
+  style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+
+  cw.appendChild(tabWrap);
+})();
+
 // ============ 6. DUAL TEXT OUTLINE PARALLAX ============
 (function(){
   setTimeout(function(){
