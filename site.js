@@ -64,7 +64,7 @@
     setTimeout(function(){lg.style.opacity='1'},100);
   }
   if(nl)nl.style.opacity='0';
-  if(fn){fn.style.opacity='0';fn.style.transform='translateY(20px)'}
+  if(fn){fn.style.opacity='0';fn.style.transform='translateX(-50%) translateY(20px)'}
   function u(){
     var h=window.innerHeight;var ms=w.offsetHeight-h;if(ms<=0)return;
     var p=window.scrollY/ms;if(p<0)p=0;if(p>1)p=1;
@@ -90,15 +90,15 @@
     if(p<.085){
       lg.style.opacity='1';lg.style.display='block';
       if(nl)nl.style.opacity='0';
-      if(fn){var np=Math.min(lp*1.2,1);fn.style.opacity=String(np);fn.style.transform='translateY('+String(20*(1-np))+'px)'}
+      if(fn){var np=Math.min(lp*1.2,1);fn.style.opacity=String(np);fn.style.transform='translateX(-50%) translateY('+String(20*(1-np))+'px)'}
     }else if(p<.10){
       var fo=(p-.085)/.015;lg.style.opacity=String(1-fo);
       if(nl)nl.style.opacity=String(fo);
-      if(fn){fn.style.opacity='1';fn.style.transform='translateY(0)'}
+      if(fn){fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
     }else{
       lg.style.opacity='0';lg.style.display='none';
       if(nl)nl.style.opacity='1';
-      if(fn){fn.style.opacity='1';fn.style.transform='translateY(0)'}
+      if(fn){fn.style.opacity='1';fn.style.transform='translateX(-50%) translateY(0)'}
     }
     // Detect if nav logo is over a light section (hardcoded IDs)
     var lightIds=['about','certifications','faq','who-we-serve'];
