@@ -232,89 +232,23 @@
   }
 })();
 
-// ============ 5. PAGE INIT (reorder sections, theme) ============
+// ============ 5. PAGE INIT (minimal — native order is correct) ============
 (function(){
+  // Hide video-hero-media (replaced by canvas frame scrubber)
   var vm=document.querySelector('.video-hero-media');if(vm)vm.style.display='none';
+
+  // Rename services heading
   var sd=document.querySelector('.section-dark');
   if(sd){
-    // Rename heading
     var sdH2=sd.querySelector('h2');
     if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
-    // Hide old cards and build tabs inline
-    sd.querySelectorAll('.services-grid,.grid-3col').forEach(function(g){g.style.display='none'});
-    sd.querySelectorAll('.service-card').forEach(function(c){c.style.display='none'});
-    window._sdRef=sd;
   }
-  var b=document.body;var f=b.querySelector('.section-footer');
-  // Fix footer: remove sticky positioning
+
+  // Fix footer positioning
+  var f=document.querySelector('.section-footer');
   if(f){f.style.position='relative';f.style.zIndex='1';f.style.top='auto'}
-  var c2=b.querySelector('.cta-section');if(c2)c2.style.display='none';
-  // Move parallax section right after the video hero wrap
-  var heroWrap=b.querySelector('.video-hero-wrap');
-  var plx=document.getElementById('parallax-hero');
-  if(heroWrap&&plx&&heroWrap.nextSibling){b.insertBefore(plx,heroWrap.nextSibling)}
-  var ids=['who-we-serve','team','about','certifications','faq','contact-cta'];
-  // Hide sections we don't want
-  var pdSec=document.getElementById('process-dev');
-  if(pdSec)pdSec.style.display='none';
-  var hwSec=document.getElementById('how-it-works');
-  if(hwSec)hwSec.style.display='none';
-  // Hide extra unnamed sections that create gaps
-  document.querySelectorAll('.section-light:not([id])').forEach(function(el){el.style.display='none'});
-  // Hide any old background video wrappers leaking through
-  document.querySelectorAll('.background-video-2,.background-video-3,.background-video-4,.background-video-5,[class*="background-video"]').forEach(function(el){
-    if(!el.closest('.video-hero-wrap')&&!el.closest('#autonomi-ai'))el.style.display='none';
-  });
-  if(f){ids.forEach(function(id){var el=document.getElementById(id);if(el)b.insertBefore(el,f)});
-  }
-  // Move footer to absolute last position
-  if(f){b.appendChild(f)}
-  // Ensure contact-cta is right before footer (after all other reordering)
-  var ctaFinal=document.getElementById('contact-cta');
-  if(ctaFinal&&f){b.insertBefore(ctaFinal,f)}
-
-  // Remove phone numbers, addresses, and emails sitewide
-  document.querySelectorAll('p,div,a').forEach(function(el){
-    var t=el.textContent||'';
-    if(t.match(/\(408\)|892-5844|24855|Corbit|Yorba Linda|weston@macrobrands|Or call us/i)){
-      el.style.display='none';
-    }
-  });
-
-  // Fix card titles on light sections to dark text
-  document.querySelectorAll('.card-light p,.card-text').forEach(function(p){p.style.color='#555'})
-
-  // Replace "Products We Manufacture" or add Autonomi AI section
-  // Find and hide any existing "products" section
-  document.querySelectorAll('h2').forEach(function(h){
-    if(h.textContent.match(/Products We|We Make Beverages/i)){
-      var sec=h.closest('section')||h.closest('[id]')||h.parentElement.parentElement;
-      if(sec)sec.style.display='none';
-    }
-  });
-
-  // Create Autonomi AI Supply Chain section
-  // Wire up the liquid fill on the CTA
-  setTimeout(function(){
-    var aiCta=aiSec.querySelector('a[href="/contact"]');
-    if(aiCta){
-      var fb=aiCta.querySelector('.fill-bg');
-      if(fb){aiCta.onmouseenter=function(){fb.style.height='100%';aiCta.querySelector('span').style.color='#1A1A1A'};aiCta.onmouseleave=function(){fb.style.height='0';aiCta.querySelector('span').style.color='#C9A84C'}}
-    }
-  },100);
-
-  // Upgrade all CTA buttons to liquid-fill
-  document.querySelectorAll('.cta-button,a[href="/contact"].get-started-link,.button-primary-2').forEach(function(btn){
-    btn.style.cssText+='position:relative;overflow:hidden;border-radius:50px;';
-    var existingText=btn.textContent;
-    btn.innerHTML='<span style="position:relative;z-index:1">'+existingText+'</span>';
-    var bf=document.createElement('div');
-    bf.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px;pointer-events:none';
-    btn.appendChild(bf);
-    btn.onmouseenter=function(){bf.style.height='100%'};
-    btn.onmouseleave=function(){bf.style.height='0'};
-  });
 })();
+
 
 // ============ 5b. SERVICES TAB VIEW ============
 (function(){
