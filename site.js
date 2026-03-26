@@ -235,6 +235,9 @@
     sd.style.background='#000';sd.style.color='#fff';
     sd.querySelectorAll('h2,h3,.section-heading,.service-title').forEach(function(h){h.style.color='#fff'});
     sd.querySelectorAll('.service-card').forEach(function(c){c.style.background='#111';c.style.border='1px solid #222';c.style.color='#ccc'});
+    // Rename heading
+    var sdH2=sd.querySelector('h2');
+    if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
   }
   var b=document.body;var f=b.querySelector('.section-footer');
   // Fix footer: remove sticky positioning
@@ -250,6 +253,77 @@
   }
   // Move footer to absolute last position
   if(f){b.appendChild(f)}
+
+  // Replace "Products We Manufacture" or add Autonomi AI section
+  // Find and hide any existing "products" section
+  document.querySelectorAll('h2').forEach(function(h){
+    if(h.textContent.match(/Products We|We Make Beverages/i)){
+      var sec=h.closest('section')||h.closest('[id]')||h.parentElement.parentElement;
+      if(sec)sec.style.display='none';
+    }
+  });
+
+  // Create Autonomi AI Supply Chain section
+  var aiSec=document.createElement('section');
+  aiSec.id='autonomi-ai';
+  aiSec.setAttribute('style','background:#000;color:#fff;padding:100px 5%;font-family:Inter,sans-serif');
+  aiSec.innerHTML='<div style="max-width:1200px;margin:0 auto">'+
+    '<div style="text-align:center;margin-bottom:60px">'+
+      '<div style="display:inline-block;padding:6px 16px;border-radius:50px;border:1px solid #C4A35A;color:#C4A35A;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px">Powered by AI</div>'+
+      '<h2 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px">Supply Chain AI</h2>'+
+      '<p style="color:#888;font-size:1.1rem;max-width:640px;margin:0 auto;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics. 29 specialized AI agents working together so nothing falls through the cracks.</p>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:48px">'+
+      '<div style="background:#111;border:1px solid #222;border-radius:16px;padding:28px">'+
+        '<div style="font-size:1.5rem;margin-bottom:12px">🔗</div>'+
+        '<h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px">Procurement Agent</h3>'+
+        '<p style="color:#888;font-size:.9rem;line-height:1.6">Automated PO generation, vendor scoring, price tracking, and lead time optimization. Monitors 200+ ingredient suppliers in real-time.</p>'+
+      '</div>'+
+      '<div style="background:#111;border:1px solid #222;border-radius:16px;padding:28px">'+
+        '<div style="font-size:1.5rem;margin-bottom:12px">📊</div>'+
+        '<h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px">Production Scheduler</h3>'+
+        '<p style="color:#888;font-size:.9rem;line-height:1.6">AI-optimized production scheduling across retort, aseptic, and cold brew lines. Minimizes changeover time and maximizes OEE.</p>'+
+      '</div>'+
+      '<div style="background:#111;border:1px solid #222;border-radius:16px;padding:28px">'+
+        '<div style="font-size:1.5rem;margin-bottom:12px">🔬</div>'+
+        '<h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px">Quality Intelligence</h3>'+
+        '<p style="color:#888;font-size:.9rem;line-height:1.6">Real-time QC monitoring, automated COA generation, deviation detection, and CAPA tracking. SQF audit-ready documentation at all times.</p>'+
+      '</div>'+
+      '<div style="background:#111;border:1px solid #222;border-radius:16px;padding:28px">'+
+        '<div style="font-size:1.5rem;margin-bottom:12px">📦</div>'+
+        '<h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px">Inventory & FEFO</h3>'+
+        '<p style="color:#888;font-size:.9rem;line-height:1.6">First-Expired-First-Out tracking, safety stock alerts, shelf life monitoring, and automated reorder triggers across all SKUs.</p>'+
+      '</div>'+
+      '<div style="background:#111;border:1px solid #222;border-radius:16px;padding:28px">'+
+        '<div style="font-size:1.5rem;margin-bottom:12px">🚚</div>'+
+        '<h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px">Logistics Coordinator</h3>'+
+        '<p style="color:#888;font-size:.9rem;line-height:1.6">Carrier selection, shipment tracking, BOL generation, and delivery confirmation. Integrated with major 3PLs and freight platforms.</p>'+
+      '</div>'+
+      '<div style="background:#111;border:1px solid #222;border-radius:16px;padding:28px">'+
+        '<div style="font-size:1.5rem;margin-bottom:12px">📈</div>'+
+        '<h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:8px">Demand Forecasting</h3>'+
+        '<p style="color:#888;font-size:.9rem;line-height:1.6">ML-powered demand prediction, seasonal planning, and S&OP intelligence. Reduces overstock by 30% and stockouts by 85%.</p>'+
+      '</div>'+
+    '</div>'+
+    '<div style="text-align:center">'+
+      '<p style="color:#666;font-size:.9rem;margin-bottom:20px">29 AI agents · Real-time visibility · Zero manual data entry</p>'+
+      '<a href="/contact" style="display:inline-block;padding:14px 36px;border-radius:50px;border:1.5px solid #C4A35A;color:#C4A35A;text-decoration:none;font-weight:700;font-size:.95rem;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Learn More About Autonomi →</span><div style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C4A35A;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px" class="fill-bg"></div></a>'+
+    '</div>'+
+  '</div>';
+
+  // Insert after services section (section-dark) or before who-we-serve
+  var whoServe=document.getElementById('who-we-serve');
+  if(whoServe){b.insertBefore(aiSec,whoServe)}
+  else if(sd&&sd.nextSibling){b.insertBefore(aiSec,sd.nextSibling)}
+
+  // Wire up the liquid fill on the CTA
+  setTimeout(function(){
+    var aiCta=aiSec.querySelector('a[href="/contact"]');
+    if(aiCta){
+      var fb=aiCta.querySelector('.fill-bg');
+      if(fb){aiCta.onmouseenter=function(){fb.style.height='100%';aiCta.querySelector('span').style.color='#1A1A1A'};aiCta.onmouseleave=function(){fb.style.height='0';aiCta.querySelector('span').style.color='#C4A35A'}}
+    }
+  },100);
 
   // Upgrade all CTA buttons to liquid-fill
   document.querySelectorAll('.cta-button,a[href="/contact"].get-started-link,.button-primary-2').forEach(function(btn){
@@ -278,15 +352,14 @@
   // Find or create content wrapper inside section-dark
   var cw=sd.querySelector('.content-wrapper')||sd;
 
-  // Tab data
+  // Tab data — short names with canvas animated icons
   var tabs=[
-    {title:'Product Development',desc:'From kitchen recipe to production-ready formula. Our food scientists optimize your formulation for the target manufacturing process — retort, aseptic, tunnel pasteurization, or cold fill.',bullets:['Formulation optimization','Ingredient sourcing guidance','Flavor & stability profiling','Clean label solutions','Sensory evaluation'],icon:'🧪'},
-    {title:'MicroThermic / Retort Validation',desc:'Send us a half-gallon sample. We fill it in cans, process it through our MicroThermic or JBT Retort system, and confirm sensory and emulsion stability before you commit to production.',bullets:['MicroThermic validation','JBT Static Retort testing','Sensory & emulsion stability','High acid & low acid','Can format validation'],icon:'🔥'},
-    {title:'Process Development',desc:'We determine the right thermal process for your product. Scale-up from bench to pilot to production with validated parameters at every step.',bullets:['Thermal process design','Scale-up protocols','Emulsion & stability testing','Shelf life studies','Process validation'],icon:'⚙️'},
-    {title:'Process Authority / Heat Penetration',desc:'Our Process Authority (30 years experience) conducts heat penetration studies and validates your thermal process for FDA compliance. Required for all shelf-stable low-acid beverages.',bullets:['Heat penetration testing','21 CFR 113/114 compliance','Scheduled process filing','Inoculated pack studies','LACF validation'],icon:'🔬'},
-    {title:'Commercialization',desc:'Bridge the gap between pilot and full production. We handle packaging specs, label compliance, supply chain setup, and production scheduling to get your product to market.',bullets:['Packaging development','Label & regulatory review','Supply chain coordination','Production scheduling','First run management'],icon:'🚀'},
-    {title:'Co-Packing',desc:'You bring the formula and materials — we handle production. Flexible co-packing for cans, bottles, and bag-in-box. Strict quality control, low MOQs for pilot runs, and full SQF-certified production.',bullets:['Retort canning: 12oz, 8oz, 8.4oz','Aseptic PET: 2-64oz bottles','Aseptic Bag-in-Box: 2-25L','Cold brew & tea extraction','Carbonation & nitro infusion'],icon:'📦'},
-    {title:'Turn-Key Manufacturing',desc:'End-to-end beverage manufacturing from formulation to filled, labeled, and shipped product. We handle everything — sourcing, production, QC, packaging, and logistics coordination.',bullets:['Formula to finished product','Ingredient sourcing & procurement','Full production management','Labeling & packaging','Logistics coordination'],icon:'🏭'}
+    {title:'Formulation',desc:'From kitchen recipe to production-ready formula. Our food scientists optimize your formulation for the target manufacturing process — retort, aseptic, tunnel pasteurization, or cold fill.',bullets:['Formulation optimization','Ingredient sourcing guidance','Flavor & stability profiling','Clean label solutions','Sensory evaluation'],drawIcon:function(ctx,t){ctx.strokeStyle='#C4A35A';ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#C4A35A';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}}},
+    {title:'MicroThermic',desc:'Send us a half-gallon sample. We fill it in cans, process it through our MicroThermic or JBT Retort system, and confirm sensory and emulsion stability before you commit to production.',bullets:['MicroThermic validation','JBT Static Retort testing','Sensory & emulsion stability','High acid & low acid','Can format validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#C4A35A';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(0,-24);ctx.lineTo(-8,-8);ctx.lineTo(-18,-8);ctx.lineTo(-6,4);ctx.lineTo(-10,20);ctx.lineTo(0,12);ctx.lineTo(10,20);ctx.lineTo(6,4);ctx.lineTo(18,-8);ctx.lineTo(8,-8);ctx.closePath();ctx.stroke();ctx.fillStyle='#C4A35A';ctx.globalAlpha=Math.sin(t*5)*.15+.1;ctx.fill();var pulse=Math.sin(t*6)*.3+.3;ctx.globalAlpha=pulse*.2;ctx.beginPath();ctx.arc(0,0,22+Math.sin(t*4)*4,0,Math.PI*2);ctx.fill()}},
+    {title:'Process Dev',desc:'We determine the right thermal process for your product. Scale-up from bench to pilot to production with validated parameters at every step.',bullets:['Thermal process design','Scale-up protocols','Emulsion & stability testing','Shelf life studies','Process validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#C4A35A';ctx.lineWidth=2.5;ctx.rotate(t*.8);var teeth=8,oR=20,iR=14;ctx.beginPath();for(var i=0;i<teeth;i++){var a1=i/teeth*Math.PI*2,a2=(i+.3)/teeth*Math.PI*2,a3=(i+.5)/teeth*Math.PI*2,a4=(i+.8)/teeth*Math.PI*2;if(i===0)ctx.moveTo(Math.cos(a1)*iR,Math.sin(a1)*iR);ctx.lineTo(Math.cos(a2)*oR,Math.sin(a2)*oR);ctx.lineTo(Math.cos(a3)*oR,Math.sin(a3)*oR);ctx.lineTo(Math.cos(a4)*iR,Math.sin(a4)*iR)}ctx.closePath();ctx.stroke();ctx.beginPath();ctx.arc(0,0,6,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#C4A35A';ctx.globalAlpha=.3;ctx.beginPath();ctx.arc(0,0,3,0,Math.PI*2);ctx.fill()}},
+    {title:'PAL / Heat Pen',desc:'Our Process Authority (30 years experience) conducts heat penetration studies and validates your thermal process for FDA compliance. Required for all shelf-stable low-acid beverages.',bullets:['Heat penetration testing','21 CFR 113/114 compliance','Scheduled process filing','Inoculated pack studies','LACF validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#C4A35A';ctx.lineWidth=2.5;ctx.lineCap='round';var sc=1+Math.sin(t*2)*.04;ctx.scale(sc,sc);ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(20,-16);ctx.lineTo(20,6);ctx.quadraticCurveTo(20,26,0,30);ctx.quadraticCurveTo(-20,26,-20,6);ctx.lineTo(-20,-16);ctx.closePath();ctx.stroke();ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-9,2);ctx.lineTo(-3,12);ctx.lineTo(12,-8);ctx.stroke();ctx.globalAlpha=Math.sin(t*4)*.1+.06;ctx.strokeStyle='#C4A35A';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(20,-16);ctx.lineTo(20,6);ctx.quadraticCurveTo(20,26,0,30);ctx.quadraticCurveTo(-20,26,-20,6);ctx.lineTo(-20,-16);ctx.closePath();ctx.stroke()}},
+    {title:'Scale-Up',desc:'Bridge the gap between pilot and full production. We handle packaging specs, process optimization, supply chain setup, and production scheduling to scale your product.',bullets:['Pilot to production transition','Packaging development','Supply chain coordination','Production scheduling','Launch management'],drawIcon:function(ctx,t){ctx.strokeStyle='#C4A35A';ctx.lineWidth=2.5;ctx.lineCap='round';var grow=Math.sin(t*2)*.08;ctx.beginPath();ctx.moveTo(-18,18);ctx.lineTo(-18,18-12);ctx.stroke();ctx.beginPath();ctx.moveTo(-8,18);ctx.lineTo(-8,18-22*(1+grow));ctx.stroke();ctx.beginPath();ctx.moveTo(2,18);ctx.lineTo(2,18-30*(1+grow));ctx.stroke();ctx.beginPath();ctx.moveTo(12,18);ctx.lineTo(12,18-38*(1+grow));ctx.stroke();ctx.beginPath();ctx.moveTo(-22,18);ctx.lineTo(18,18);ctx.stroke();ctx.fillStyle='#C4A35A';ctx.globalAlpha=.6;var ay=-20-Math.sin(t*3)*3;ctx.beginPath();ctx.moveTo(14,ay);ctx.lineTo(18,ay+5);ctx.lineTo(10,ay+5);ctx.closePath();ctx.fill()}},
+    {title:'Co-Packing',desc:'You bring the formula and materials — we handle production. Flexible co-packing for cans, bottles, and bag-in-box. Strict quality control, low MOQs, and full SQF-certified production.',bullets:['Retort canning: 12oz, 8oz, 8.4oz','Aseptic PET: 2-64oz bottles','Aseptic Bag-in-Box: 2-25L','Cold brew & tea extraction','Carbonation & nitro infusion'],drawIcon:function(ctx,t){ctx.strokeStyle='#C4A35A';ctx.lineWidth=2.5;ctx.lineCap='round';var tilt=Math.sin(t*2)*.04;ctx.rotate(tilt);ctx.strokeRect(-16,-14,32,32);ctx.beginPath();ctx.moveTo(-16,-14);ctx.lineTo(-8,-24);ctx.lineTo(24,-24);ctx.lineTo(16,-14);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(16,-14);ctx.lineTo(24,-24);ctx.lineTo(24,4);ctx.lineTo(16,18);ctx.closePath();ctx.stroke();ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-8,2);ctx.lineTo(-2,8);ctx.lineTo(8,-2);ctx.stroke()}}
   ];
 
   // Build tab container
@@ -317,9 +390,18 @@
     // Panel
     var panel=document.createElement('div');
     panel.style.cssText='display:none;animation:tabFadeIn .4s ease-out';
+
+    // Create canvas icon
+    var iconCanvas=document.createElement('canvas');
+    iconCanvas.width=70;iconCanvas.height=70;
+    iconCanvas.style.cssText='display:block;margin-bottom:16px';
+    iconCanvas._draw=tab.drawIcon;
+    iconCanvas._animT=0;
+    iconCanvas._active=false;
+
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
-        '<div style="font-size:3rem;margin-bottom:16px">'+tab.icon+'</div>'+
+        '<div id="icon-slot-'+i+'"></div>'+
         '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
         '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">'+tab.desc+'</p>'+
         '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C4A35A;color:#C4A35A;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C4A35A;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
@@ -334,13 +416,30 @@
     tabContent.appendChild(panel);
     panels.push(panel);
 
+    // Insert canvas into icon slot
+    var slot=panel.querySelector('#icon-slot-'+i);
+    if(slot)slot.appendChild(iconCanvas);
+
     // Click handler
     btn.onclick=function(){
       buttons.forEach(function(b){b.style.color='#666';b.style.borderBottomColor='transparent'});
-      panels.forEach(function(p){p.style.display='none'});
+      panels.forEach(function(p){p.style.display='none';var cv=p.querySelector('canvas');if(cv)cv._active=false});
       btn.style.color='#fff';
       btn.style.borderBottomColor='#C4A35A';
       panel.style.display='block';
+      // Start icon animation
+      iconCanvas._active=true;iconCanvas._animT=0;
+      function animIcon(){
+        if(!iconCanvas._active)return;
+        iconCanvas._animT+=.016;
+        var ictx=iconCanvas.getContext('2d');
+        ictx.clearRect(0,0,70,70);
+        ictx.save();ictx.translate(35,35);
+        iconCanvas._draw(ictx,iconCanvas._animT);
+        ictx.restore();
+        requestAnimationFrame(animIcon);
+      }
+      animIcon();
       // Liquid fill on Get Started buttons
       panel.querySelectorAll('.cta-outline').forEach(function(a){
         var fb=a.querySelector('.fill-bg');
