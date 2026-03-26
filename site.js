@@ -55,7 +55,11 @@
   var ow=document.createElement('div');
   ow.style.cssText='position:absolute;inset:0;background:#F8F7F4;z-index:10;pointer-events:none;opacity:0';
   s.appendChild(ow);
-  if(lg)lg.style.cssText='position:absolute;z-index:20;width:42vw;max-width:550px;filter:brightness(0) invert(1);transform-origin:center center;opacity:1';
+  if(lg){
+    lg.style.cssText='position:absolute;z-index:20;width:42vw;max-width:550px;filter:brightness(0) invert(1);transform-origin:center center;opacity:0;transition:opacity 1.2s ease-out';
+    // Fade in the logo on page load
+    setTimeout(function(){lg.style.opacity='1'},100);
+  }
   if(nl)nl.style.opacity='0';
   if(fn){fn.style.opacity='0';fn.style.transform='translateY(20px)'}
   function u(){
@@ -246,14 +250,14 @@
     var r2=makeRow('TO COMMERCIALIZATION','22%','bottom');
     r2.wrap.setAttribute('data-row','2');
 
-    // GSAP: both layers inside each wrap move together (perfectly aligned)
-    // Row 1 scrolls RIGHT
-    gsap.fromTo(r1.wrap,{x:0},{x:'25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
-    // Row 2 scrolls LEFT
-    gsap.fromTo(r2.wrap,{x:0},{x:'-25%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    // GSAP: centered at midpoint (50% scroll), spreading outward
+    // Row 1: starts left, crosses center, ends right
+    gsap.fromTo(r1.wrap,{x:'-20%'},{x:'20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    // Row 2: starts right, crosses center, ends left
+    gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
 
     // Bottle gentle parallax
-    if(img){gsap.fromTo(img,{y:60,scale:.95},{y:-30,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    if(img){gsap.fromTo(img,{y:80,scale:.9},{y:-40,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=how-it-works],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light');
