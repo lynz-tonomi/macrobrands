@@ -403,19 +403,19 @@
     // Remove any previous JS-created rows
     sec.querySelectorAll('[data-row]').forEach(function(el){el.remove()});
 
-    // Remove placeholder text from parallax-img div
+    // Style parallax section with AURA background
+    sec.style.backgroundImage="url('https://cdn.prod.website-files.com/6996d33f78af008f4952e0b0/69c5a19aa09aefd9d21c5827_Aura-Bottle-bg.png')";
+    sec.style.backgroundSize='cover';
+    sec.style.backgroundPosition='center';
+    sec.style.minHeight='200vh';
+
+    // Style bottle #1 — large, positioned left
     var img=document.getElementById('parallax-img');
     if(img){
-      img.style.zIndex='2';
-      img.style.position='relative';
-      img.style.height='130vh';
-      img.style.maxWidth='100%';
-      img.style.maxHeight='none';
-      // Remove placeholder paragraph
-      var ph=img.querySelector('p,.section-subhead');
-      if(ph)ph.remove();
+      img.style.cssText='position:absolute;left:5%;top:50%;transform:translateY(-50%);z-index:3;height:auto;width:35%;max-width:500px';
+      var bottleImg=img.querySelector('img');
+      if(bottleImg){bottleImg.style.cssText='width:100%;height:auto;object-fit:contain'}
     }
-
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
