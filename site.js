@@ -248,7 +248,7 @@
     var r1=makeRow('FROM CONCEPT','30%','top',0.69);
     r1.wrap.setAttribute('data-row','1');
     // Row 2: "TO COMMERCIALIZATION" — full width, starts centered, scrolls LEFT, IN FRONT of bottle
-    var r2=makeRow('TO COMMERCIALIZATION','22%','bottom',0.92);
+    var r2=makeRow('TO COMMERCIALIZATION','65%','top',0.92);
     r2.wrap.setAttribute('data-row','2');
     r2.wrap.style.zIndex='4';
 
