@@ -98,6 +98,36 @@
       if(nl)nl.style.opacity='1';
       if(fn){fn.style.opacity='1';fn.style.transform='translateY(0)'}
     }
+    // Detect if nav logo is over a light section (hardcoded IDs)
+    var lightIds=['about','certifications','faq','who-we-serve'];
+    function isOverLight(yPos){
+      for(var li=0;li<lightIds.length;li++){
+        var el=document.getElementById(lightIds[li]);
+        if(!el)continue;
+        var r=el.getBoundingClientRect();
+        if(yPos>=r.top&&yPos<=r.bottom)return true;
+      }
+      // Also check section-light class elements without IDs
+      var sls=document.querySelectorAll('.section-light:not([id])');
+      for(var si=0;si<sls.length;si++){
+        var r2=sls[si].getBoundingClientRect();
+        if(yPos>=r2.top&&yPos<=r2.bottom)return true;
+      }
+      return false;
+    }
+    if(nl){
+      var logoY=nl.getBoundingClientRect().top+nl.offsetHeight/2;
+      var light=isOverLight(logoY);
+      nl.style.filter=light?'brightness(0)':'brightness(0) invert(1)';
+      nl.style.transition='filter .3s';
+    }
+    if(fn){
+      var navY=fn.getBoundingClientRect().top;
+      var navLight=isOverLight(navY);
+      fn.style.background=navLight?'rgba(255,255,255,.85)':'rgba(20,20,20,.9)';
+      fn.style.transition='background .3s';
+      fn.querySelectorAll('a:not([href="/contact"])').forEach(function(a){a.style.color=navLight?'#333':'#ccc'});
+    }
   }
   window.addEventListener('scroll',u,{passive:true});
   requestAnimationFrame(function(){requestAnimationFrame(u)});
@@ -184,6 +214,8 @@
     sd.querySelectorAll('.service-card').forEach(function(c){c.style.background='#111';c.style.border='1px solid #222';c.style.color='#ccc'});
   }
   var b=document.body;var f=b.querySelector('.section-footer');
+  // Fix footer: remove sticky positioning
+  if(f){f.style.position='relative';f.style.zIndex='1';f.style.top='auto'}
   var c2=b.querySelector('.cta-section');if(c2)c2.style.display='none';
   // Move parallax section right after the video hero wrap
   var heroWrap=b.querySelector('.video-hero-wrap');
