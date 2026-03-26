@@ -341,4 +341,87 @@
   },1000);
 })();
 
+// ============ 7. CONTACT PAGE ENHANCEMENTS ============
+(function(){
+  // Only run on /contact page
+  if(!window.location.pathname.match(/\/contact/))return;
+
+  // Update heading text
+  var h1=document.querySelector('h1');
+  if(h1)h1.textContent="Let's Build Your Beverage";
+
+  // Update subtitle
+  var sub=document.querySelector('.subtitle');
+  if(sub)sub.textContent="Tell us about your product and we'll get back to you within 24 hours.";
+
+  // Style the page
+  var body=document.body;
+  body.style.background='#F8F7F4';
+  body.style.fontFamily='Inter,Helvetica Neue,Arial,sans-serif';
+
+  // Find the form
+  var form=document.querySelector('form');
+  if(form){
+    var formParent=form.parentElement;
+
+    // Create a 2-column layout: info on left, form on right
+    var wrapper=document.createElement('div');
+    wrapper.style.cssText='max-width:1100px;margin:60px auto;padding:0 5%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start';
+
+    // Left column: contact info
+    var info=document.createElement('div');
+    info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#1A1A1A;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
+      '<p style="font-size:1.1rem;line-height:1.7;color:#555;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Phone</div><a href="tel:4088925844" style="color:#C4A35A;text-decoration:none;font-size:1.1rem;font-weight:600">(408) 892-5844</a></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Email</div><a href="mailto:weston@macrobrands.llc" style="color:#C4A35A;text-decoration:none;font-size:1.1rem;font-weight:600">weston@macrobrands.llc</a></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#555;font-size:1rem">24855 Corbit Pl., Yorba Linda, CA 92887</div></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#1A1A1A;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#555;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
+
+    // Right column: styled form
+    var formWrap=document.createElement('div');
+    formWrap.style.cssText='background:#fff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.06)';
+    formWrap.innerHTML='<h3 style="font-size:1.4rem;font-weight:700;color:#1A1A1A;margin-bottom:24px">Request a Free Consultation</h3>';
+    formWrap.appendChild(form);
+
+    // Style form inputs
+    form.querySelectorAll('input,textarea').forEach(function(inp){
+      inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#fafafa;transition:border-color .2s;outline:none';
+      inp.onfocus=function(){this.style.borderColor='#C4A35A'};
+      inp.onblur=function(){this.style.borderColor='#ddd'};
+    });
+
+    // Style submit button
+    var submit=form.querySelector('[type="submit"],.w-button');
+    if(submit){
+      submit.style.cssText='width:100%;padding:16px;background:#C4A35A;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:background .2s;margin-top:8px';
+      submit.onmouseover=function(){this.style.background='#D4B46A'};
+      submit.onmouseout=function(){this.style.background='#C4A35A'};
+      submit.value='Send Message →';
+    }
+
+    wrapper.appendChild(info);
+    wrapper.appendChild(formWrap);
+
+    // Insert wrapper after the h1
+    if(h1&&h1.parentElement){
+      h1.parentElement.insertBefore(wrapper,h1.nextSibling);
+      // Hide old subtitle since we have new layout
+      if(sub)sub.style.display='none';
+    }
+  }
+
+  // Style h1
+  if(h1){
+    h1.style.cssText='text-align:center;font-size:3.5rem;font-weight:800;color:#1A1A1A;padding:60px 5% 0;letter-spacing:-.03em;font-family:Inter,sans-serif';
+  }
+
+  // Hide old background image
+  var bgImg=document.querySelector('.heading-18');
+  if(bgImg){var imgParent=bgImg.closest('div');if(imgParent)imgParent.style.background='none'}
+  document.querySelectorAll('img[alt="__wf_reserved_inherit"]').forEach(function(img){
+    if(img.closest('form'))return;
+    img.style.display='none';
+  });
+})();
+
 })(); // end run
