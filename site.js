@@ -53,7 +53,7 @@
   ob.style.cssText='position:absolute;inset:0;background:#000;z-index:10;pointer-events:none;opacity:1';
   s.appendChild(ob);
   var ow=document.createElement('div');
-  ow.style.cssText='position:absolute;inset:0;background:#F8F7F4;z-index:10;pointer-events:none;opacity:0';
+  ow.style.cssText='position:absolute;inset:0;background:#000;z-index:10;pointer-events:none;opacity:0';
   s.appendChild(ow);
   if(lg){
     lg.style.cssText='position:absolute;z-index:20;width:42vw;max-width:550px;filter:brightness(0) invert(1);transform-origin:center center;opacity:0;transition:opacity 1.2s ease-out';
@@ -164,9 +164,9 @@
   var vm=document.querySelector('.video-hero-media');if(vm)vm.style.display='none';
   var sd=document.querySelector('.section-dark');
   if(sd){
-    sd.style.background='#F8F7F4';sd.style.color='#1A1A1A';
-    sd.querySelectorAll('h2,h3,.section-heading,.service-title').forEach(function(h){h.style.color='#1A1A1A'});
-    sd.querySelectorAll('.service-card').forEach(function(c){c.style.background='#fff';c.style.border='1px solid #eee'});
+    sd.style.background='#000';sd.style.color='#fff';
+    sd.querySelectorAll('h2,h3,.section-heading,.service-title').forEach(function(h){h.style.color='#fff'});
+    sd.querySelectorAll('.service-card').forEach(function(c){c.style.background='#111';c.style.border='1px solid #222';c.style.color='#ccc'});
   }
   var b=document.body;var f=b.querySelector('.section-footer');
   var c2=b.querySelector('.cta-section');if(c2)c2.style.display='none';
@@ -199,6 +199,9 @@
     if(img){
       img.style.zIndex='2';
       img.style.position='relative';
+      img.style.height='130vh';
+      img.style.maxWidth='100%';
+      img.style.maxHeight='none';
       // Remove placeholder paragraph
       var ph=img.querySelector('p,.section-subhead');
       if(ph)ph.remove();
@@ -246,9 +249,10 @@
     // Row 1: "FROM CONCEPT" — starts centered, scrolls RIGHT
     var r1=makeRow('FROM CONCEPT','30%','top');
     r1.wrap.setAttribute('data-row','1');
-    // Row 2: "TO COMMERCIALIZATION" — starts centered, scrolls LEFT
+    // Row 2: "TO COMMERCIALIZATION" — starts centered, scrolls LEFT, IN FRONT of bottle
     var r2=makeRow('TO COMMERCIALIZATION','22%','bottom');
     r2.wrap.setAttribute('data-row','2');
+    r2.wrap.style.zIndex='4';
 
     // GSAP: centered at midpoint (50% scroll), spreading outward
     // Row 1: starts left, crosses center, ends right
