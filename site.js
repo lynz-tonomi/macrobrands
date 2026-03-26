@@ -404,7 +404,6 @@
     sec.querySelectorAll('[data-row]').forEach(function(el){el.remove()});
 
     // Style parallax section with AURA background
-    sec.style.backgroundImage="url('https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-tall2.png')";
     sec.style.backgroundSize='cover';
     sec.style.backgroundPosition='center';
     sec.style.minHeight='200vh';
