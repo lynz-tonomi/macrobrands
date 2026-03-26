@@ -165,7 +165,11 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   var b=document.body;var f=b.querySelector('.section-footer');
   var c2=b.querySelector('.cta-section');if(c2)c2.style.display='none';
-  var ids=['parallax-hero','who-we-serve','how-it-works','about','team','certifications','process-dev','faq','contact-cta'];
+  // Move parallax section right after the video hero wrap
+  var heroWrap=b.querySelector('.video-hero-wrap');
+  var plx=document.getElementById('parallax-hero');
+  if(heroWrap&&plx&&heroWrap.nextSibling){b.insertBefore(plx,heroWrap.nextSibling)}
+  var ids=['who-we-serve','how-it-works','about','team','certifications','process-dev','faq','contact-cta'];
   if(f){ids.forEach(function(id){var el=document.getElementById(id);if(el)b.insertBefore(el,f)});
     var ex=document.querySelectorAll('.section-light:not([id])');ex.forEach(function(el){b.insertBefore(el,f)});
   }
