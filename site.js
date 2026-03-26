@@ -180,7 +180,10 @@
 
 // ============ 4. FLOATING NAV BAR ============
 (function(){
-  // Hide any Webflow-created fixed-nav elements
+  // Move nav-logo out of fixed-nav BEFORE hiding it
+  var existingNavLogo = document.querySelector('.fixed-nav .nav-logo');
+  if(existingNavLogo){document.body.appendChild(existingNavLogo)}
+  // Now hide the Webflow fixed-nav container
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
   var n=document.createElement('div');
   n.className='mb-floating-nav';
