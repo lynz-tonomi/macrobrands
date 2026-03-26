@@ -7,6 +7,8 @@
   var w=document.querySelector('.video-hero-wrap');
   var s=document.querySelector('.video-hero-sticky');
   if(!w||!s)return;
+  // Trim hero height to reduce dead space after fade-to-black
+  w.style.height='850vh';
   var c=document.createElement('canvas');
   c.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1';
   s.appendChild(c);
@@ -66,7 +68,7 @@
     var h=window.innerHeight;var ms=w.offsetHeight-h;if(ms<=0)return;
     var p=window.scrollY/ms;if(p<0)p=0;if(p>1)p=1;
     ob.style.opacity=p<.05?String(1-p*20):'0';
-    ow.style.opacity=p>.92?String((p-.92)*12.5):'0';
+    ow.style.opacity=p>.96?String((p-.96)*25):'0';
     if(!lg)return;
     var nr=nl?nl.getBoundingClientRect():null;
     var nCx=nr?nr.left+nr.width/2:window.innerWidth/2;
