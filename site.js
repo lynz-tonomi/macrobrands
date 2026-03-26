@@ -268,6 +268,14 @@
   var ctaFinal=document.getElementById('contact-cta');
   if(ctaFinal&&f){b.insertBefore(ctaFinal,f)}
 
+  // Remove phone numbers, addresses, and emails sitewide
+  document.querySelectorAll('p,div,a').forEach(function(el){
+    var t=el.textContent||'';
+    if(t.match(/\(408\)|892-5844|24855|Corbit|Yorba Linda|weston@macrobrands|Or call us/i)){
+      el.style.display='none';
+    }
+  });
+
   // Fix card titles on light sections to dark text
   document.querySelectorAll('.card-light h3,.card-title').forEach(function(h){h.style.color='#1A1A1A'});
   document.querySelectorAll('.card-light p,.card-text').forEach(function(p){p.style.color='#555'})
@@ -331,6 +339,7 @@
 // ============ 5b. SERVICES TAB VIEW ============
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
+  setTimeout(function(){
   var sd=document.querySelector('.section-dark');
   if(!sd)return;
 
@@ -451,6 +460,7 @@
   document.head.appendChild(style);
 
   cw.appendChild(tabWrap);
+  },500);
 })();
 
 // ============ 6. DUAL TEXT OUTLINE PARALLAX ============
@@ -607,9 +617,7 @@
     var info=document.createElement('div');
     info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#fff;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
       '<p style="font-size:1.1rem;line-height:1.7;color:#999;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Phone</div><a href="tel:4088925844" style="color:#C9A84C;text-decoration:none;font-size:1.1rem;font-weight:600">(408) 892-5844</a></div>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Email</div><a href="mailto:weston@macrobrands.llc" style="color:#C9A84C;text-decoration:none;font-size:1.1rem;font-weight:600">weston@macrobrands.llc</a></div>'+
-      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#888;font-size:1rem">24855 Corbit Pl., Yorba Linda, CA 92887</div></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#888;font-size:1rem">California, USA</div></div>'+
       '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#888;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
 
     // Right column: styled form
