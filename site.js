@@ -51,7 +51,7 @@
   all.forEach(function(l){if(!lg&&l.closest('.video-hero-wrap')){lg=l;l.remove();s.appendChild(l)}});
   all.forEach(function(l){if(l!==lg)l.style.display='none'});
   var nl=document.querySelector('.nav-logo');
-  var fn=document.querySelector('.mb-floating-nav');
+  var fn=null; // will be looked up dynamically since it's created later
   var ob=document.createElement('div');
   ob.style.cssText='position:absolute;inset:0;background:#000;z-index:10;pointer-events:none;opacity:1';
   s.appendChild(ob);
@@ -70,6 +70,8 @@
     var p=window.scrollY/ms;if(p<0)p=0;if(p>1)p=1;
     ob.style.opacity=p<.05?String(1-p*20):'0';
     ow.style.opacity=p>.96?String((p-.96)*25):'0';
+    // Look up floating nav dynamically (created after this section runs)
+    if(!fn)fn=document.querySelector('.mb-floating-nav');
     if(!lg)return;
     var nr=nl?nl.getBoundingClientRect():null;
     var nCx=nr?nr.left+nr.width/2:window.innerWidth/2;
