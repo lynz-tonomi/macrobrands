@@ -256,6 +256,13 @@
   }
   // Move footer to absolute last position
   if(f){b.appendChild(f)}
+  // Ensure contact-cta is right before footer (after all other reordering)
+  var ctaFinal=document.getElementById('contact-cta');
+  if(ctaFinal&&f){b.insertBefore(ctaFinal,f)}
+
+  // Fix card titles on light sections to dark text
+  document.querySelectorAll('.card-light h3,.card-title').forEach(function(h){h.style.color='#1A1A1A'});
+  document.querySelectorAll('.card-light p,.card-text').forEach(function(p){p.style.color='#555'})
 
   // Replace "Products We Manufacture" or add Autonomi AI section
   // Find and hide any existing "products" section
@@ -272,7 +279,7 @@
   aiSec.setAttribute('style','background:#000;color:#fff;padding:100px 5%;font-family:Inter,sans-serif');
   aiSec.innerHTML='<div style="max-width:1200px;margin:0 auto">'+
     '<div style="text-align:center;margin-bottom:60px">'+
-      '<div style="display:inline-block;padding:6px 16px;border-radius:50px;border:1px solid #FFE053;color:#FFE053;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px">Powered by AI</div>'+
+      '<div style="display:inline-flex;align-items:center;gap:10px;padding:6px 20px;border-radius:50px;border:1px solid #FFE053;margin-bottom:20px" id="autonomi-badge"><span style="color:#FFE053;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Powered by</span><img id="autonomi-logo" src="" alt="Autonomi" style="height:22px;display:none"><span id="autonomi-text-fallback" style="color:#FF6B00;font-size:1rem;font-weight:800;font-style:italic">Autonomi</span></div>'+
       '<h2 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px">Supply Chain AI</h2>'+
       '<p style="color:#888;font-size:1.1rem;max-width:640px;margin:0 auto;line-height:1.7">Autonomi is our proprietary AI platform that manages every stage of beverage production — from raw material procurement through finished goods logistics. 29 specialized AI agents working together so nothing falls through the cracks.</p>'+
     '</div>'+
@@ -584,16 +591,14 @@
   body.style.color='#fff';
   body.style.fontFamily='Inter,Helvetica Neue,Arial,sans-serif';
 
-  // Add centered nav logo at top (matching home page)
-  var heroLogo=document.querySelector('.hero-logo')||document.querySelector('.nav-logo');
-  if(heroLogo){
-    var logo=document.createElement('img');
-    logo.src=heroLogo.src;
-    logo.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;filter:brightness(0) invert(1)');
-    document.body.appendChild(logo);
-  }
-  // Hide old Webflow nav elements
+  // Match home page navbar: move nav-logo out of fixed-nav, make transparent
+  var existingLogo=document.querySelector('.fixed-nav .nav-logo');
+  if(existingLogo){document.body.appendChild(existingLogo)}
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
+  var nl=document.querySelector('.nav-logo');
+  if(nl){
+    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:brightness(0) invert(1);background:transparent');
+  }
 
   // Add floating nav bar (matching home page)
   var nav=document.createElement('div');
