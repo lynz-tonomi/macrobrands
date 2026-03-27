@@ -244,6 +244,17 @@
     if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
   }
 
+  // Fix "Our Services" heading legibility — make it white
+  if(sd){
+    var sdH2s=sd.querySelectorAll('h2');
+    sdH2s.forEach(function(h){h.style.color='#fff'});
+  }
+
+  // Fix light section card titles — dark text on light backgrounds
+  document.querySelectorAll('.section-light .card-title').forEach(function(el){
+    el.style.color='#1a1a1a';
+  });
+
   // Fix footer positioning
   var f=document.querySelector('.section-footer');
   if(f){f.style.position='relative';f.style.zIndex='1';f.style.top='auto'}
