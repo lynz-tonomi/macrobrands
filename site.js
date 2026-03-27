@@ -255,6 +255,10 @@
     el.style.color='#1a1a1a';
   });
 
+  // Hide old services-grid (replaced by tabs)
+  var oldGrid=document.querySelector('.services-grid');
+  if(oldGrid)oldGrid.style.display='none';
+
   // Fix footer positioning
   var f=document.querySelector('.section-footer');
   if(f){f.style.position='relative';f.style.zIndex='1';f.style.top='auto'}
@@ -551,14 +555,27 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
-  // Video container below header with CTA pinned at bottom center
-  var vidWrap=document.createElement('div');
-  vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
-  var vid=document.createElement('video');
-  vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
-  vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-  vid.style.cssText='width:100%;height:auto;display:block;opacity:1';
-  vidWrap.appendChild(vid);
+  // Use existing native video container (don't create duplicate)
+  var existingVids=sec.querySelectorAll('video');
+  var vidWrap=null;
+  if(existingVids.length>0){
+    var nativeVid=existingVids[0];
+    nativeVid.style.cssText='width:100%;height:auto;display:block;opacity:1';
+    nativeVid.autoplay=true;nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
+    if(!nativeVid.src||nativeVid.src.indexOf('schero')===-1)nativeVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
+    vidWrap=nativeVid.parentElement;
+    vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
+    nativeVid.play().catch(function(){});
+  } else {
+    vidWrap=document.createElement('div');
+    vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
+    var vid=document.createElement('video');
+    vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
+    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+    vid.style.cssText='width:100%;height:auto;display:block;opacity:1';
+    vidWrap.appendChild(vid);
+    sec.appendChild(vidWrap);
+  }
   // CTA button pinned to center bottom of video
   var ctaWrap=document.createElement('div');
   ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px';
@@ -594,8 +611,11 @@
   cta.onmouseenter=function(){this.style.background='rgb(221,188,96)';this.style.transform='scale(1.05)';hoverLottie.style.display='inline-block'};
   cta.onmouseleave=function(){this.style.background='rgb(201,168,76)';this.style.transform='scale(1)';hoverLottie.style.display='none'};
   ctaWrap.appendChild(cta);
-  vidWrap.appendChild(ctaWrap);
-  sec.appendChild(vidWrap);
+  if(vidWrap){
+    // Remove any existing CTA divs in vidWrap before adding new one
+    vidWrap.querySelectorAll('div').forEach(function(d){if(d!==ctaWrap)d.remove()});
+    vidWrap.appendChild(ctaWrap);
+  }
 })();
 
 // ============ 7b. DELETE HOW IT WORKS SECTION ============
