@@ -523,7 +523,7 @@
     if(bulb){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
     // Apple parallax on content sections
-    var sects=document.querySelectorAll('[id=who-we-serve],[id=how-it-works],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light');
+    var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
     sects.forEach(function(sec2){
       if(sec2.closest('.video-hero-wrap'))return;
       sec2.querySelectorAll('h2').forEach(function(h){
@@ -556,10 +556,12 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
-  // Look for native Webflow bg video in sc-section, how-it-works section, or next sibling
+  // Look for native Webflow bg video in sc-section or the section-dark-alt sibling below it
   var vidWrap=null;var scVid=null;
-  var hwSec=document.getElementById('how-it-works');
-  var nativeVid=sec.querySelector('video')||(hwSec?hwSec.querySelector('video'):null)||((sec.nextElementSibling&&sec.nextElementSibling.querySelector)?sec.nextElementSibling.querySelector('video'):null);
+  var darkAlt=sec.nextElementSibling;
+  // Walk siblings to find section-dark-alt with a video
+  while(darkAlt&&!darkAlt.querySelector('video')){darkAlt=darkAlt.nextElementSibling}
+  var nativeVid=sec.querySelector('video')||(darkAlt?darkAlt.querySelector('video'):null);
   if(nativeVid){
     scVid=nativeVid;
     nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
@@ -620,15 +622,15 @@
   cta.onmouseleave=function(){this.style.background='rgb(201,168,76)';this.style.transform='scale(1)';hoverLottie.style.display='none'};
   ctaWrap.appendChild(cta);
   if(vidWrap){
-    // Remove any existing CTA divs in vidWrap before adding new one
-    vidWrap.querySelectorAll('div').forEach(function(d){if(d!==ctaWrap)d.remove()});
+    // Append CTA to vidWrap — do NOT remove any native Webflow elements
+    vidWrap.style.position='relative';
     vidWrap.appendChild(ctaWrap);
   }
   },500);
 })();
 
-// ============ 7b. HOW IT WORKS SECTION (now SC video container) ============
-// Preserved — contains native Webflow Background Video
+// ============ 7b. SECTION-DARK-ALT (native Webflow Background Video) ============
+// Video lives natively in Webflow's section-dark-alt — JS must NOT touch/remove it
 
 // ============ 8. CONTACT PAGE ENHANCEMENTS ============
 (function(){
