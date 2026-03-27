@@ -596,16 +596,21 @@
     });
   },{threshold:0.2});
   observer.observe(vidWrap);
-  // CTA button pinned to center bottom of video
+  // CTA button pinned to center bottom of video — liquid fill like Contact pill
   var ctaWrap=document.createElement('div');
   ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;align-items:center';
   var cta=document.createElement('a');
   cta.href='https://autonomi.dev';
   cta.target='_blank';
-  cta.textContent='Learn More';
-  cta.style.cssText='display:inline-block;padding:16px 40px;border:none;border-radius:50px;color:#1a1a1a;text-decoration:none;font-size:17.6px;font-weight:600;letter-spacing:.02em;transition:all .3s;background:rgb(201,168,76);cursor:pointer';
-  cta.onmouseenter=function(){this.style.background='rgb(221,188,96)';this.style.transform='scale(1.05)'};
-  cta.onmouseleave=function(){this.style.background='rgb(201,168,76)';this.style.transform='scale(1)'};
+  cta.className='cta-liquid-fill cta-gold';
+  cta.style.cssText='text-decoration:none;letter-spacing:.02em;font-size:17.6px';
+  var ctaSpan=document.createElement('span');
+  ctaSpan.textContent='Learn More';
+  ctaSpan.style.cssText='position:relative;z-index:1';
+  cta.appendChild(ctaSpan);
+  var ctaFill=document.createElement('div');
+  ctaFill.className='fill-bg';
+  cta.appendChild(ctaFill);
   ctaWrap.appendChild(cta);
   if(vidWrap){
     // Append CTA to vidWrap — do NOT remove any native Webflow elements
