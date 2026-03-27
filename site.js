@@ -555,18 +555,24 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
-  // Use existing native video container (don't create duplicate)
+  // Use existing native Webflow background video — don't override its src
   var existingVids=sec.querySelectorAll('video');
   var vidWrap=null;
   if(existingVids.length>0){
     var nativeVid=existingVids[0];
-    nativeVid.style.cssText='width:100%;height:auto;display:block;opacity:1';
+    // Preserve native Webflow video src — just ensure it plays and is visible
+    nativeVid.style.cssText='width:100%;height:auto;display:block;opacity:1;object-fit:cover';
     nativeVid.autoplay=true;nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
-    if(!nativeVid.src||nativeVid.src.indexOf('schero')===-1)nativeVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
+    // Show the native video's parent wrapper (Webflow may hide bg video wrappers)
     vidWrap=nativeVid.parentElement;
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
+    if(vidWrap.parentElement&&vidWrap.parentElement!==sec){
+      vidWrap.parentElement.style.display='block';
+      vidWrap.parentElement.style.position='relative';
+    }
     nativeVid.play().catch(function(){});
   } else {
+    // Fallback: create video if none exists in Webflow
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
     var vid=document.createElement('video');
