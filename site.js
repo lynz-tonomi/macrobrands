@@ -412,18 +412,7 @@
         phaseHTML+='</div>';
       });
       phaseHTML+='</div>';
-      /* Add thermal processing visualization below phase cards */
-      phaseHTML+=
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px">'+
-          '<div style="background:#111;border-radius:12px;padding:20px;border:1px solid #222">'+
-            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Retort Thermal Processing</div>'+
-            '<canvas id="retort-anim" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
-          '</div>'+
-          '<div style="background:#111;border-radius:12px;padding:20px;border:1px solid #222">'+
-            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Temperature Distribution</div>'+
-            '<canvas id="temp-graph" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
-          '</div>'+
-        '</div>';
+      /* Phase cards only — no thermal viz here */
       panel.innerHTML=phaseHTML;
       /* Animate phase cards in on reveal + start canvas icon animations */
       setTimeout(function(){
@@ -442,15 +431,43 @@
             phases[idx].drawIcon(ctx,performance.now()/1000);
             ctx.restore();
           });
-          /* Retort diagram animation */
-          var rc=document.getElementById('retort-anim');
+          requestAnimationFrame(animPhases);
+        }
+        animPhases();
+      },100);
+    } else if(i===3){
+      /* ===== PAL / Heat Pen tab — retort diagram + temp graph ===== */
+      var palHTML=
+        '<div style="margin-bottom:32px">'+
+          '<div id="icon-slot-'+i+'"></div>'+
+          '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
+          '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          tab.bullets.map(function(b){return '<li style="padding:4px 0;color:#bbb;font-size:.95rem"><span style="color:#C9A84C;margin-right:8px">✓</span>'+b+'</li>'}).join('')+
+          '</ul>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+        '</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">'+
+          '<div style="background:#111;border-radius:12px;padding:20px;border:1px solid #222">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Retort Thermal Processing</div>'+
+            '<canvas id="retort-anim" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
+          '</div>'+
+          '<div style="background:#111;border-radius:12px;padding:20px;border:1px solid #222">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Temperature Distribution</div>'+
+            '<canvas id="temp-graph" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
+          '</div>'+
+        '</div>';
+      panel.innerHTML=palHTML;
+      /* Start PAL/Heat Pen canvas animations */
+      (function(){
+        var rc=document.getElementById('retort-anim');
+        var gc=document.getElementById('temp-graph');
+        function animPAL(){
+          var t=performance.now()/1000;
           if(rc){
             var rx=rc.getContext('2d');
-            var t=performance.now()/1000;
             rx.clearRect(0,0,520,280);
-            /* Background */
             rx.fillStyle='#0a0a0a';rx.fillRect(0,0,520,280);
-            /* Draw 6 retort baskets */
             var baskets=['Basket 6','Basket 5','Basket 4','Basket 3','Basket 2','Basket 1'];
             var bw=70,bh=140,by=80,gap=12;
             var startX=20;
@@ -596,10 +613,10 @@
               gx.fillText('Sens '+(li+1),pad.l+gw+4,pad.t+10+li*12);
             }
           }
-          requestAnimationFrame(animPhases);
+          requestAnimationFrame(animPAL);
         }
-        animPhases();
-      },100);
+        animPAL();
+      })();
     } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
