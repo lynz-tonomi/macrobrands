@@ -598,38 +598,14 @@
   observer.observe(vidWrap);
   // CTA button pinned to center bottom of video
   var ctaWrap=document.createElement('div');
-  ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px';
-  // Lottie animation above button
-  var lottieDiv=document.createElement('div');
-  lottieDiv.style.cssText='width:48px;height:48px';
-  var lottieScript=document.createElement('script');
-  lottieScript.src='https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
-  document.head.appendChild(lottieScript);
-  var lottieEl=document.createElement('lottie-player');
-  lottieEl.setAttribute('src','https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/MIoutFnBnR.json');
-  lottieEl.setAttribute('background','transparent');
-  lottieEl.setAttribute('speed','1');
-  lottieEl.setAttribute('loop','');
-  lottieEl.setAttribute('autoplay','');
-  lottieEl.style.cssText='width:48px;height:48px;filter:invert(1)';
-  lottieDiv.appendChild(lottieEl);
-  ctaWrap.appendChild(lottieDiv);
+  ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;align-items:center';
   var cta=document.createElement('a');
   cta.href='https://autonomi.dev';
   cta.target='_blank';
   cta.textContent='Learn More';
   cta.style.cssText='display:inline-block;padding:16px 40px;border:none;border-radius:50px;color:#1a1a1a;text-decoration:none;font-size:17.6px;font-weight:600;letter-spacing:.02em;transition:all .3s;background:rgb(201,168,76);cursor:pointer';
-  // Lottie on hover
-  var hoverLottie=document.createElement('lottie-player');
-  hoverLottie.setAttribute('src','https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/MIoutFnBnR.json');
-  hoverLottie.setAttribute('background','transparent');
-  hoverLottie.setAttribute('speed','1.5');
-  hoverLottie.setAttribute('loop','');
-  hoverLottie.setAttribute('autoplay','');
-  hoverLottie.style.cssText='width:24px;height:24px;display:none;vertical-align:middle;margin-left:8px';
-  cta.appendChild(hoverLottie);
-  cta.onmouseenter=function(){this.style.background='rgb(221,188,96)';this.style.transform='scale(1.05)';hoverLottie.style.display='inline-block'};
-  cta.onmouseleave=function(){this.style.background='rgb(201,168,76)';this.style.transform='scale(1)';hoverLottie.style.display='none'};
+  cta.onmouseenter=function(){this.style.background='rgb(221,188,96)';this.style.transform='scale(1.05)'};
+  cta.onmouseleave=function(){this.style.background='rgb(201,168,76)';this.style.transform='scale(1)'};
   ctaWrap.appendChild(cta);
   if(vidWrap){
     // Append CTA to vidWrap — do NOT remove any native Webflow elements
