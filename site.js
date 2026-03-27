@@ -555,19 +555,17 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
-  // Video lives in the NEXT sibling section (section-dark-alt), not inside sc-section
-  var vidSection=sec.nextElementSibling;
-  var existingVids=vidSection?vidSection.querySelectorAll('video'):[];
+  // Look for native Webflow bg video in sc-section OR its next sibling
   var vidWrap=null;
-  if(existingVids.length>0){
-    var nativeVid=existingVids[0];
-    // Don't override src — use whatever Webflow has natively
+  var nativeVid=sec.querySelector('video')||((sec.nextElementSibling&&sec.nextElementSibling.querySelector)?sec.nextElementSibling.querySelector('video'):null);
+  if(nativeVid){
+    // Use native Webflow video — don't override src
     nativeVid.autoplay=true;nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
     vidWrap=nativeVid.closest('.w-background-video')||nativeVid.parentElement;
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
     nativeVid.play().catch(function(){});
   } else {
-    // Fallback only if no native Webflow video exists
+    // Fallback: create video from GitHub Pages
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
     var vid=document.createElement('video');
@@ -575,7 +573,8 @@
     vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
     vid.style.cssText='width:100%;height:auto;display:block;opacity:1';
     vidWrap.appendChild(vid);
-    if(vidSection)vidSection.appendChild(vidWrap);else sec.appendChild(vidWrap);
+    vid.play().catch(function(){});
+    sec.appendChild(vidWrap);
   }
   // CTA button pinned to center bottom of video
   var ctaWrap=document.createElement('div');
