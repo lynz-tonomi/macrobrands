@@ -571,6 +571,12 @@
     scVid=nativeVid;
     nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
     nativeVid.pause();
+    // Override Webflow's z-index:-100 so video is visible
+    nativeVid.style.position='relative';
+    nativeVid.style.zIndex='0';
+    nativeVid.style.width='100%';
+    nativeVid.style.height='auto';
+    nativeVid.style.display='block';
     vidWrap=nativeVid.closest('.w-background-video')||nativeVid.parentElement;
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
   } else {
