@@ -403,8 +403,11 @@
     // Remove any previous JS-created rows and icon layers
     sec.querySelectorAll('[data-row],[data-layer]').forEach(function(el){el.remove()});
 
-    // Style parallax section with AURA background
-    // Bottle #1 styled natively in Webflow — no JS override
+    // Show more foreground — push bg down to reveal table/floor area
+    sec.style.backgroundPosition='center 60%';
+    // Same for the cutout layer — shift object-position to show more bottom
+    var cutout=sec.querySelector('.parallax-cutout');
+    if(cutout)cutout.style.objectPosition='50% 60%';
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
@@ -457,7 +460,7 @@
 
     // Bottle gentle parallax (parallax-cutout is the native Webflow bottle image)
     var bottleImg=sec.querySelector('.parallax-cutout');
-    if(bottleImg){gsap.fromTo(bottleImg,{y:80,scale:.9},{y:-40,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    if(bottleImg){gsap.fromTo(bottleImg,{y:30,scale:1},{y:-20,scale:1.02,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
 
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
