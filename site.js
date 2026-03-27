@@ -514,6 +514,15 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
+  // CTA button for Autonomi
+  var cta=document.createElement('a');
+  cta.href='https://autonomi.dev';
+  cta.target='_blank';
+  cta.textContent='Learn More →';
+  cta.style.cssText='display:inline-block;margin-top:24px;padding:12px 32px;border:1px solid rgba(255,255,255,0.3);border-radius:50px;color:#fff;text-decoration:none;font-size:1rem;font-weight:500;letter-spacing:.02em;transition:all .3s';
+  cta.onmouseenter=function(){this.style.background='rgba(255,255,255,0.1);this.style.borderColor="#fff"'};
+  cta.onmouseleave=function(){this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.3)'};
+  if(hdr)hdr.appendChild(cta);
   // Video container below header
   var vidWrap=document.createElement('div');
   vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
