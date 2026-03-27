@@ -465,12 +465,13 @@
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
     // Beaker — big, behind text (z:0), base leveled with cutout bottle, left of center
+    var secH=sec.offsetHeight;
     if(beaker){
-      beaker.style.cssText='position:absolute;left:8%;bottom:0;height:75%;z-index:0;pointer-events:none;object-fit:contain';
+      beaker.style.cssText='position:absolute;left:8%;bottom:0;height:'+Math.round(secH*0.75)+'px;width:auto;z-index:0;pointer-events:none';
     }
     // Lightbulb — big, behind text (z:0), left of beaker
     if(bulb){
-      bulb.style.cssText='position:absolute;left:-5%;bottom:5%;height:55%;z-index:0;pointer-events:none;object-fit:contain';
+      bulb.style.cssText='position:absolute;left:-5%;bottom:5%;height:'+Math.round(secH*0.55)+'px;width:auto;z-index:0;pointer-events:none';
     }
     // Beaker fades in from left first — completes at 100vh (top top)
     if(beaker){gsap.fromTo(beaker,{x:-400,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
