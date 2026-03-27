@@ -412,6 +412,18 @@
         phaseHTML+='</div>';
       });
       phaseHTML+='</div>';
+      /* Add thermal processing visualization below phase cards */
+      phaseHTML+=
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px">'+
+          '<div style="background:#111;border-radius:12px;padding:20px;border:1px solid #222">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Retort Thermal Processing</div>'+
+            '<canvas id="retort-anim" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
+          '</div>'+
+          '<div style="background:#111;border-radius:12px;padding:20px;border:1px solid #222">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Temperature Distribution</div>'+
+            '<canvas id="temp-graph" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
+          '</div>'+
+        '</div>';
       panel.innerHTML=phaseHTML;
       /* Animate phase cards in on reveal + start canvas icon animations */
       setTimeout(function(){
@@ -430,6 +442,160 @@
             phases[idx].drawIcon(ctx,performance.now()/1000);
             ctx.restore();
           });
+          /* Retort diagram animation */
+          var rc=document.getElementById('retort-anim');
+          if(rc){
+            var rx=rc.getContext('2d');
+            var t=performance.now()/1000;
+            rx.clearRect(0,0,520,280);
+            /* Background */
+            rx.fillStyle='#0a0a0a';rx.fillRect(0,0,520,280);
+            /* Draw 6 retort baskets */
+            var baskets=['Basket 6','Basket 5','Basket 4','Basket 3','Basket 2','Basket 1'];
+            var bw=70,bh=140,by=80,gap=12;
+            var startX=20;
+            for(var bi=0;bi<6;bi++){
+              var bx=startX+bi*(bw+gap);
+              /* Basket body */
+              rx.strokeStyle='rgba(255,255,255,0.4)';rx.lineWidth=1.5;
+              rx.beginPath();rx.roundRect(bx,by,bw,bh,4);rx.stroke();
+              /* Internal grid lines */
+              rx.strokeStyle='rgba(255,255,255,0.12)';rx.lineWidth=0.5;
+              for(var gi=1;gi<4;gi++){
+                rx.beginPath();rx.moveTo(bx,by+bh*gi/4);rx.lineTo(bx+bw,by+bh*gi/4);rx.stroke();
+              }
+              /* Label */
+              rx.fillStyle='rgba(255,255,255,0.5)';rx.font='9px sans-serif';rx.textAlign='center';
+              rx.fillText(baskets[bi],bx+bw/2,by+bh+14);
+              /* Heat flow arrows — animated */
+              var arrowPhase=t*2+bi*0.5;
+              /* Steam arrows going up (yellow/orange) */
+              rx.strokeStyle='rgba(201,168,76,0.6)';rx.lineWidth=1.5;
+              for(var ai=0;ai<3;ai++){
+                var ay=by+bh-10-((arrowPhase*40+ai*45)%bh);
+                if(ay>by&&ay<by+bh-10){
+                  rx.beginPath();rx.moveTo(bx+15+ai*20,ay+8);rx.lineTo(bx+15+ai*20,ay);
+                  rx.moveTo(bx+12+ai*20,ay+3);rx.lineTo(bx+15+ai*20,ay);rx.lineTo(bx+18+ai*20,ay+3);
+                  rx.stroke();
+                }
+              }
+              /* Temperature glow — pulsing based on zone */
+              var zone=bi<2?0:bi<4?1:2; /* come-up, sterilize, cool */
+              var colors=['rgba(255,200,50,','rgba(255,100,80,','rgba(80,200,120,'];
+              var glowA=0.08+Math.sin(t*1.5+bi)*0.04;
+              rx.fillStyle=colors[zone]+glowA+')';
+              rx.fillRect(bx+1,by+1,bw-2,bh-2);
+            }
+            /* Zone labels at top */
+            rx.font='bold 11px sans-serif';rx.textAlign='center';
+            rx.fillStyle='rgba(255,200,50,0.8)';rx.fillText('COME-UP',startX+bw+gap/2,30);
+            rx.fillStyle='rgba(255,100,80,0.8)';rx.fillText('STERILIZATION',startX+2.5*(bw+gap),30);
+            rx.fillStyle='rgba(80,200,120,0.8)';rx.fillText('COOLING',startX+4.5*(bw+gap),30);
+            /* Zone divider lines */
+            rx.setLineDash([4,4]);rx.strokeStyle='rgba(255,255,255,0.15)';rx.lineWidth=1;
+            rx.beginPath();rx.moveTo(startX+2*(bw+gap)-gap/2,40);rx.lineTo(startX+2*(bw+gap)-gap/2,by+bh+20);rx.stroke();
+            rx.beginPath();rx.moveTo(startX+4*(bw+gap)-gap/2,40);rx.lineTo(startX+4*(bw+gap)-gap/2,by+bh+20);rx.stroke();
+            rx.setLineDash([]);
+            /* Steam pipe at bottom */
+            rx.strokeStyle='rgba(201,168,76,0.3)';rx.lineWidth=3;
+            rx.beginPath();rx.moveTo(startX,by+bh+30);rx.lineTo(startX+6*(bw+gap)-gap,by+bh+30);rx.stroke();
+            /* Animated steam particles */
+            for(var si=0;si<12;si++){
+              var sx=startX+((t*60+si*42)%(6*(bw+gap)));
+              var sy=by+bh+30+Math.sin(t*3+si)*3;
+              rx.fillStyle='rgba(201,168,76,'+(0.3+Math.sin(t*2+si)*0.15)+')';
+              rx.beginPath();rx.arc(sx,sy,2,0,Math.PI*2);rx.fill();
+            }
+            /* Title */
+            rx.fillStyle='rgba(255,255,255,0.6)';rx.font='bold 10px sans-serif';rx.textAlign='left';
+            rx.fillText('RETORT BASKET CONFIGURATION',startX,60);
+          }
+          /* Temperature distribution graph animation */
+          var gc=document.getElementById('temp-graph');
+          if(gc){
+            var gx=gc.getContext('2d');
+            gx.clearRect(0,0,520,280);
+            gx.fillStyle='#0a0a0a';gx.fillRect(0,0,520,280);
+            var pad={l:50,r:20,t:30,b:40};
+            var gw=520-pad.l-pad.r,gh=280-pad.t-pad.b;
+            /* Animated draw progress — cycles 0 to 1 over 6 seconds */
+            var progress=Math.min(1,((t%8)/6));
+            /* Temperature profile data points (normalized 0-1 for x, temp in °C for y) */
+            var profile=[
+              [0,65],[.05,68],[.1,78],[.15,95],[.2,108],[.25,115],[.3,119],[.35,120],
+              [.4,120.5],[.45,120.5],[.5,120.5],[.55,120.5],[.6,120.5],[.65,120.5],
+              [.7,118],[.75,90],[.8,60],[.85,42],[.9,40],[.95,40],[1,40]
+            ];
+            var minT=0,maxT=140;
+            function tempToY(temp){return pad.t+gh*(1-(temp-minT)/(maxT-minT))}
+            function xToPixel(xn){return pad.l+xn*gw}
+            /* Zone backgrounds */
+            var zones=[
+              {x1:0,x2:.35,color:'rgba(255,220,80,0.08)',label:'Come Up Time'},
+              {x1:.35,x2:.65,color:'rgba(255,120,100,0.08)',label:'P.T. Step'},
+              {x1:.65,x2:1,color:'rgba(80,200,120,0.08)',label:'Cooling Step'}
+            ];
+            zones.forEach(function(z){
+              gx.fillStyle=z.color;
+              gx.fillRect(xToPixel(z.x1),pad.t,xToPixel(z.x2)-xToPixel(z.x1),gh);
+              /* Zone label */
+              gx.fillStyle='rgba(255,255,255,0.35)';gx.font='bold 10px sans-serif';gx.textAlign='center';
+              gx.fillText(z.label,xToPixel((z.x1+z.x2)/2),pad.t+gh+30);
+            });
+            /* Grid lines */
+            gx.strokeStyle='rgba(255,255,255,0.08)';gx.lineWidth=0.5;
+            for(var ti=0;ti<=140;ti+=20){
+              var gy2=tempToY(ti);
+              gx.beginPath();gx.moveTo(pad.l,gy2);gx.lineTo(pad.l+gw,gy2);gx.stroke();
+              gx.fillStyle='rgba(255,255,255,0.4)';gx.font='9px sans-serif';gx.textAlign='right';
+              gx.fillText(ti+'.00',pad.l-6,gy2+3);
+            }
+            /* Y-axis label */
+            gx.save();gx.translate(12,pad.t+gh/2);gx.rotate(-Math.PI/2);
+            gx.fillStyle='rgba(255,255,255,0.5)';gx.font='10px sans-serif';gx.textAlign='center';
+            gx.fillText('Temperature (°C)',0,0);gx.restore();
+            /* X-axis label */
+            gx.fillStyle='rgba(255,255,255,0.5)';gx.font='10px sans-serif';gx.textAlign='right';
+            gx.fillText('Time',520-pad.r,280-4);
+            /* Draw multiple sensor lines (21 sensors with slight variation) */
+            var numSensors=21;
+            var drawnPoints=Math.floor(progress*profile.length);
+            for(var si2=0;si2<numSensors;si2++){
+              var hue=(si2/numSensors)*360;
+              gx.strokeStyle='hsla('+hue+',70%,60%,0.5)';gx.lineWidth=1;
+              gx.beginPath();
+              var started=false;
+              for(var pi2=0;pi2<=drawnPoints&&pi2<profile.length;pi2++){
+                var px=xToPixel(profile[pi2][0]);
+                var variation=(Math.sin(si2*7+pi2*3)*2)*(pi2<7?1.5:0.3);
+                var py=tempToY(profile[pi2][1]+variation);
+                if(!started){gx.moveTo(px,py);started=true}else{gx.lineTo(px,py)}
+              }
+              gx.stroke();
+            }
+            /* Main line (thicker, white) */
+            gx.strokeStyle='rgba(255,255,255,0.8)';gx.lineWidth=2;
+            gx.beginPath();
+            for(var pi3=0;pi3<=drawnPoints&&pi3<profile.length;pi3++){
+              var px2=xToPixel(profile[pi3][0]);
+              var py2=tempToY(profile[pi3][1]);
+              if(pi3===0)gx.moveTo(px2,py2);else gx.lineTo(px2,py2);
+            }
+            gx.stroke();
+            /* Drawing cursor dot */
+            if(drawnPoints<profile.length&&progress<1){
+              var cp=profile[drawnPoints];
+              gx.fillStyle='#C9A84C';gx.beginPath();
+              gx.arc(xToPixel(cp[0]),tempToY(cp[1]),4,0,Math.PI*2);gx.fill();
+            }
+            /* Legend */
+            gx.fillStyle='rgba(255,255,255,0.3)';gx.font='8px sans-serif';gx.textAlign='left';
+            for(var li=0;li<Math.min(numSensors,10);li++){
+              var lhue=(li/numSensors)*360;
+              gx.fillStyle='hsla('+lhue+',70%,60%,0.6)';
+              gx.fillText('Sens '+(li+1),pad.l+gw+4,pad.t+10+li*12);
+            }
+          }
           requestAnimationFrame(animPhases);
         }
         animPhases();
