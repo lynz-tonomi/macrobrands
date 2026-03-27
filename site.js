@@ -404,10 +404,10 @@
     sec.querySelectorAll('[data-row],[data-layer]').forEach(function(el){el.remove()});
 
     // Show more foreground — push bg down to reveal table/floor area
-    sec.style.backgroundPosition='center 60%';
-    // Same for the cutout layer — shift object-position to show more bottom
+    sec.style.backgroundPosition='center 80%';
+    // Same for the cutout layer — shift object-position to show more foreground
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout)cutout.style.objectPosition='50% 60%';
+    if(cutout)cutout.style.objectPosition='50% 80%';
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
