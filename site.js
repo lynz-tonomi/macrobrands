@@ -455,8 +455,9 @@
     // Row 2: starts right, crosses center, ends left
     gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
 
-    // Bottle gentle parallax
-    if(img){gsap.fromTo(img,{y:80,scale:.9},{y:-40,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    // Bottle gentle parallax (parallax-cutout is the native Webflow bottle image)
+    var bottleImg=sec.querySelector('.parallax-cutout');
+    if(bottleImg){gsap.fromTo(bottleImg,{y:80,scale:.9},{y:-40,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
 
     // Native Webflow beaker + bulb — slide in from left on scroll
     var beaker=document.getElementById('parallax-beaker');
