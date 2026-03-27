@@ -520,7 +520,7 @@
   var vid=document.createElement('video');
   vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
   vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-  vid.style.cssText='width:100%;height:auto;display:block;opacity:0.6';
+  vid.style.cssText='width:100%;height:auto;display:block;opacity:0';
   vidWrap.appendChild(vid);
   sec.appendChild(vidWrap);
 })();
