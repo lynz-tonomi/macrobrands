@@ -466,66 +466,140 @@
           var t=performance.now()/1000;
           if(rc){
             var rx=rc.getContext('2d');
-            rx.clearRect(0,0,520,280);
-            rx.fillStyle='#0a0a0a';rx.fillRect(0,0,520,280);
-            var baskets=['Basket 6','Basket 5','Basket 4','Basket 3','Basket 2','Basket 1'];
-            var bw=70,bh=140,by=80,gap=12;
-            var startX=20;
-            for(var bi=0;bi<6;bi++){
-              var bx=startX+bi*(bw+gap);
-              /* Basket body */
-              rx.strokeStyle='rgba(255,255,255,0.4)';rx.lineWidth=1.5;
-              rx.beginPath();rx.roundRect(bx,by,bw,bh,4);rx.stroke();
-              /* Internal grid lines */
-              rx.strokeStyle='rgba(255,255,255,0.12)';rx.lineWidth=0.5;
-              for(var gi=1;gi<4;gi++){
-                rx.beginPath();rx.moveTo(bx,by+bh*gi/4);rx.lineTo(bx+bw,by+bh*gi/4);rx.stroke();
-              }
-              /* Label */
-              rx.fillStyle='rgba(255,255,255,0.5)';rx.font='9px sans-serif';rx.textAlign='center';
-              rx.fillText(baskets[bi],bx+bw/2,by+bh+14);
-              /* Heat flow arrows — animated */
-              var arrowPhase=t*2+bi*0.5;
-              /* Steam arrows going up (yellow/orange) */
-              rx.strokeStyle='rgba(201,168,76,0.6)';rx.lineWidth=1.5;
-              for(var ai=0;ai<3;ai++){
-                var ay=by+bh-10-((arrowPhase*40+ai*45)%bh);
-                if(ay>by&&ay<by+bh-10){
-                  rx.beginPath();rx.moveTo(bx+15+ai*20,ay+8);rx.lineTo(bx+15+ai*20,ay);
-                  rx.moveTo(bx+12+ai*20,ay+3);rx.lineTo(bx+15+ai*20,ay);rx.lineTo(bx+18+ai*20,ay+3);
-                  rx.stroke();
-                }
-              }
-              /* Temperature glow — pulsing based on zone */
-              var zone=bi<2?0:bi<4?1:2; /* come-up, sterilize, cool */
-              var colors=['rgba(255,200,50,','rgba(255,100,80,','rgba(80,200,120,'];
-              var glowA=0.08+Math.sin(t*1.5+bi)*0.04;
-              rx.fillStyle=colors[zone]+glowA+')';
-              rx.fillRect(bx+1,by+1,bw-2,bh-2);
+            var W=520,H=280;
+            rx.clearRect(0,0,W,H);
+            rx.fillStyle='#0a0a0a';rx.fillRect(0,0,W,H);
+            /* Helper: draw a 3D cylinder */
+            function drawCyl(cx,cy,rw,rh,bodyH,fillColor,strokeColor){
+              /* Body */
+              var grad=rx.createLinearGradient(cx-rw,cy,cx+rw,cy);
+              grad.addColorStop(0,'rgba(40,40,40,0.9)');
+              grad.addColorStop(0.3,fillColor);
+              grad.addColorStop(0.7,fillColor);
+              grad.addColorStop(1,'rgba(20,20,20,0.9)');
+              rx.fillStyle=grad;
+              rx.beginPath();
+              rx.moveTo(cx-rw,cy);rx.lineTo(cx-rw,cy+bodyH);
+              rx.ellipse(cx,cy+bodyH,rw,rh,0,Math.PI,0,true);
+              rx.lineTo(cx+rw,cy);
+              rx.ellipse(cx,cy,rw,rh,0,0,Math.PI,true);
+              rx.closePath();rx.fill();
+              /* Body outline */
+              rx.strokeStyle=strokeColor;rx.lineWidth=1.5;
+              rx.beginPath();rx.moveTo(cx-rw,cy);rx.lineTo(cx-rw,cy+bodyH);rx.stroke();
+              rx.beginPath();rx.moveTo(cx+rw,cy);rx.lineTo(cx+rw,cy+bodyH);rx.stroke();
+              /* Bottom ellipse */
+              rx.beginPath();rx.ellipse(cx,cy+bodyH,rw,rh,0,0,Math.PI*2);rx.stroke();
+              /* Top ellipse (filled) */
+              var topGrad=rx.createRadialGradient(cx,cy,0,cx,cy,rw);
+              topGrad.addColorStop(0,fillColor);
+              topGrad.addColorStop(1,'rgba(30,30,30,0.8)');
+              rx.fillStyle=topGrad;
+              rx.beginPath();rx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2);rx.fill();
+              rx.strokeStyle=strokeColor;rx.beginPath();rx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2);rx.stroke();
             }
-            /* Zone labels at top */
-            rx.font='bold 11px sans-serif';rx.textAlign='center';
-            rx.fillStyle='rgba(255,200,50,0.8)';rx.fillText('COME-UP',startX+bw+gap/2,30);
-            rx.fillStyle='rgba(255,100,80,0.8)';rx.fillText('STERILIZATION',startX+2.5*(bw+gap),30);
-            rx.fillStyle='rgba(80,200,120,0.8)';rx.fillText('COOLING',startX+4.5*(bw+gap),30);
-            /* Zone divider lines */
-            rx.setLineDash([4,4]);rx.strokeStyle='rgba(255,255,255,0.15)';rx.lineWidth=1;
-            rx.beginPath();rx.moveTo(startX+2*(bw+gap)-gap/2,40);rx.lineTo(startX+2*(bw+gap)-gap/2,by+bh+20);rx.stroke();
-            rx.beginPath();rx.moveTo(startX+4*(bw+gap)-gap/2,40);rx.lineTo(startX+4*(bw+gap)-gap/2,by+bh+20);rx.stroke();
-            rx.setLineDash([]);
-            /* Steam pipe at bottom */
-            rx.strokeStyle='rgba(201,168,76,0.3)';rx.lineWidth=3;
-            rx.beginPath();rx.moveTo(startX,by+bh+30);rx.lineTo(startX+6*(bw+gap)-gap,by+bh+30);rx.stroke();
-            /* Animated steam particles */
-            for(var si=0;si<12;si++){
-              var sx=startX+((t*60+si*42)%(6*(bw+gap)));
-              var sy=by+bh+30+Math.sin(t*3+si)*3;
-              rx.fillStyle='rgba(201,168,76,'+(0.3+Math.sin(t*2+si)*0.15)+')';
-              rx.beginPath();rx.arc(sx,sy,2,0,Math.PI*2);rx.fill();
+            /* Helper: draw arrow */
+            function drawArrow(x1,y1,x2,y2,color,alpha){
+              rx.strokeStyle=color;rx.fillStyle=color;rx.globalAlpha=alpha;rx.lineWidth=2;rx.lineCap='round';
+              rx.beginPath();rx.moveTo(x1,y1);rx.lineTo(x2,y2);rx.stroke();
+              var angle=Math.atan2(y2-y1,x2-x1);var hs=6;
+              rx.beginPath();rx.moveTo(x2,y2);
+              rx.lineTo(x2-hs*Math.cos(angle-0.4),y2-hs*Math.sin(angle-0.4));
+              rx.lineTo(x2-hs*Math.cos(angle+0.4),y2-hs*Math.sin(angle+0.4));
+              rx.closePath();rx.fill();
+              rx.globalAlpha=1;
             }
-            /* Title */
-            rx.fillStyle='rgba(255,255,255,0.6)';rx.font='bold 10px sans-serif';rx.textAlign='left';
-            rx.fillText('RETORT BASKET CONFIGURATION',startX,60);
+            var cRw=80,cRh=24,cBodyH=130;
+            /* ===== LEFT CYLINDER: Heat Penetration — arrows from outside toward center ===== */
+            var lx=140,ly=50;
+            drawCyl(lx,ly,cRw,cRh,cBodyH,'rgba(60,30,10,0.7)','rgba(201,168,76,0.5)');
+            /* Arrows from walls converging to center */
+            var centerY=ly+cBodyH/2;
+            /* Left-side arrows pointing right */
+            for(var ai=0;ai<5;ai++){
+              var ay=ly+20+ai*(cBodyH-30)/4;
+              var progress=(t*1.2+ai*0.3)%1.5;
+              if(progress>1)progress=1;
+              var startAx=lx-cRw-20;
+              var endAx=lx;
+              var curAx=startAx+(endAx-startAx)*progress;
+              var alpha=0.3+progress*0.5;
+              drawArrow(startAx,ay,curAx,ay,'rgba(255,140,40,1)',alpha);
+            }
+            /* Right-side arrows pointing left */
+            for(var ai2=0;ai2<5;ai2++){
+              var ay2=ly+20+ai2*(cBodyH-30)/4;
+              var progress2=(t*1.2+ai2*0.3+0.7)%1.5;
+              if(progress2>1)progress2=1;
+              var startAx2=lx+cRw+20;
+              var endAx2=lx;
+              var curAx2=startAx2+(endAx2-startAx2)*progress2;
+              var alpha2=0.3+progress2*0.5;
+              drawArrow(startAx2,ay2,curAx2,ay2,'rgba(255,140,40,1)',alpha2);
+            }
+            /* Top arrows pointing down */
+            for(var ai3=0;ai3<3;ai3++){
+              var ax3=lx-30+ai3*30;
+              var progress3=(t*1.0+ai3*0.4)%1.5;
+              if(progress3>1)progress3=1;
+              var startAy3=ly-cRh-18;
+              var endAy3=ly+cBodyH/2;
+              var curAy3=startAy3+(endAy3-startAy3)*progress3;
+              drawArrow(ax3,startAy3,ax3,curAy3,'rgba(255,100,30,1)',0.3+progress3*0.4);
+            }
+            /* Center hot spot glow */
+            var glow=rx.createRadialGradient(lx,centerY,0,lx,centerY,40);
+            glow.addColorStop(0,'rgba(255,120,40,'+(.15+Math.sin(t*3)*.08)+')');
+            glow.addColorStop(1,'rgba(255,120,40,0)');
+            rx.fillStyle=glow;rx.fillRect(lx-50,centerY-40,100,80);
+            /* Label */
+            rx.fillStyle='rgba(255,255,255,0.7)';rx.font='bold 11px sans-serif';rx.textAlign='center';
+            rx.fillText('HEAT PENETRATION',lx,ly+cBodyH+cRh+24);
+            rx.fillStyle='rgba(255,255,255,0.4)';rx.font='9px sans-serif';
+            rx.fillText('Conduction to cold spot',lx,ly+cBodyH+cRh+38);
+
+            /* ===== RIGHT CYLINDER: Convection — arrows circulating inside ===== */
+            var rx2=380,ry2=50;
+            drawCyl(rx2,ry2,cRw,cRh,cBodyH,'rgba(10,40,60,0.7)','rgba(80,180,220,0.5)');
+            /* Circulating arrows inside — elliptical path */
+            var numCirc=8;
+            var circRw=cRw*0.6,circRh=cBodyH*0.35;
+            var circCx=rx2,circCy=ry2+cBodyH/2;
+            for(var ci=0;ci<numCirc;ci++){
+              var angle=t*1.8+ci*(Math.PI*2/numCirc);
+              var nextAngle=angle+0.3;
+              var px=circCx+Math.cos(angle)*circRw;
+              var py=circCy+Math.sin(angle)*circRh;
+              var px2c=circCx+Math.cos(nextAngle)*circRw;
+              var py2c=circCy+Math.sin(nextAngle)*circRh;
+              var alpha3=0.4+Math.sin(angle)*0.3;
+              drawArrow(px,py,px2c,py2c,'rgba(80,200,255,1)',alpha3);
+            }
+            /* Second orbit — smaller, opposite direction */
+            var circRw2=cRw*0.3,circRh2=cBodyH*0.18;
+            for(var ci2=0;ci2<5;ci2++){
+              var angle2=-t*2.2+ci2*(Math.PI*2/5);
+              var nextAngle2=angle2-0.35;
+              var ppx=circCx+Math.cos(angle2)*circRw2;
+              var ppy=circCy+Math.sin(angle2)*circRh2;
+              var ppx2=circCx+Math.cos(nextAngle2)*circRw2;
+              var ppy2=circCy+Math.sin(nextAngle2)*circRh2;
+              drawArrow(ppx,ppy,ppx2,ppy2,'rgba(120,220,255,1)',0.3);
+            }
+            /* Rising heat particles inside */
+            rx.globalAlpha=1;
+            for(var pi4=0;pi4<10;pi4++){
+              var ppx3=rx2-cRw*0.5+((t*30+pi4*50)%(cRw));
+              var ppy3=ry2+cBodyH-((t*25+pi4*30)%cBodyH);
+              var pAlpha=0.2+Math.sin(t*2+pi4)*0.15;
+              rx.fillStyle='rgba(80,200,255,'+pAlpha+')';
+              rx.beginPath();rx.arc(ppx3,ppy3,1.5+Math.sin(t+pi4)*0.5,0,Math.PI*2);rx.fill();
+            }
+            /* Label */
+            rx.fillStyle='rgba(255,255,255,0.7)';rx.font='bold 11px sans-serif';rx.textAlign='center';
+            rx.fillText('CONVECTIVE CIRCULATION',rx2,ry2+cBodyH+cRh+24);
+            rx.fillStyle='rgba(255,255,255,0.4)';rx.font='9px sans-serif';
+            rx.fillText('Forced convection heating',rx2,ry2+cBodyH+cRh+38);
           }
           /* Temperature distribution graph animation */
           var gc=document.getElementById('temp-graph');
