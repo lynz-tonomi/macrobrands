@@ -405,9 +405,9 @@
 
     // Show more foreground — push bg down to reveal table/floor area
     sec.style.backgroundPosition='center 80%';
-    // Respect Webflow visibility — don't force cutout visible if user deleted/hid it
+    // Hide cutout (duplicate beaker image) — user deleted from Webflow
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout&&getComputedStyle(cutout).display==='none'){cutout=null}
+    if(cutout){cutout.style.display='none';cutout=null}
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
