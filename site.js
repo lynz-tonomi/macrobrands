@@ -405,9 +405,12 @@
 
     // Show more foreground — push bg down to reveal table/floor area
     sec.style.backgroundPosition='center 80%';
-    // Same for the cutout layer — shift object-position to show more foreground
+    // Cutout layer (beaker bg) — put BEHIND text so beaker is behind text
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout)cutout.style.objectPosition='50% 80%';
+    if(cutout){cutout.style.objectPosition='50% 80%';cutout.style.zIndex='0'}
+    // Unhide parallax-bottles (juice bottle PNG) — put IN FRONT of text so text scrolls behind bottle
+    var bottles=document.getElementById('parallax-img');
+    if(bottles){bottles.style.display='flex';bottles.style.zIndex='3'}
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
@@ -465,12 +468,13 @@
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
-    // Position beaker next to bottle, bases level. Bulb further left.
+    // Beaker — large, behind FROM CONCEPT text area, z-index 0
     if(beaker){
-      beaker.style.cssText='position:absolute;left:22%;bottom:3%;width:28%;max-width:380px;z-index:0;pointer-events:none';
+      beaker.style.cssText='position:absolute;left:5%;top:8%;width:55%;max-width:750px;z-index:0;pointer-events:none';
     }
+    // Lightbulb — large, left side, behind text, z-index 0
     if(bulb){
-      bulb.style.cssText='position:absolute;left:8%;bottom:5%;width:20%;max-width:260px;z-index:0;pointer-events:none';
+      bulb.style.cssText='position:absolute;left:-5%;top:15%;width:45%;max-width:600px;z-index:0;pointer-events:none';
     }
     // Beaker fades in from left first — completes at 100vh (top top)
     if(beaker){gsap.fromTo(beaker,{x:-400,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
