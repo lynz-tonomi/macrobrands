@@ -347,6 +347,32 @@
             '<img src="'+ghBase+'Lab_formulation.png" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.9)" alt="Lab scientist formulating">'+
           '</div>'+
         '</div>';
+    } else if(i===1){
+      // MicroThermic tab — pilot plant photo banner + enriched content
+      var ghBase2='https://lynz-tonomi.github.io/macrobrands/';
+      panel.innerHTML=
+        /* Pilot plant banner — full width, black bg blends seamlessly */
+        '<div style="position:relative;width:100%;height:280px;border-radius:16px;overflow:hidden;margin-bottom:32px;background:#000">'+
+          '<img src="'+ghBase2+'microthermics-ai-line-logo-2025.png" style="width:100%;height:100%;object-fit:contain;object-position:center center" alt="MicroThermics AI Series UHT/HTST Processing Line">'+
+        '</div>'+
+        /* Two-column: description left, specs right */
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
+          '<div>'+
+            '<div id="icon-slot-'+i+'"></div>'+
+            '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">MicroThermic Processing</h3>'+
+            '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">Our in-house MicroThermics AI Series UHT/HTST processor bridges the gap between lab development and commercial production. Fully automated with both direct injection and indirect heat transfer — send us a half-gallon sample and we validate your thermal process before you commit to a full run.</p>'+
+            '<ul style="list-style:none;padding:0;margin:0 0 24px 0">'+
+              tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
+            '</ul>'+
+            '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '</div>'+
+          '<div style="background:#111;border-radius:16px;padding:32px;border:1px solid #222">'+
+            '<div style="font-weight:700;color:#ccc;margin-bottom:16px;font-size:.95rem">Equipment Capabilities</div>'+
+            '<ul style="list-style:none;padding:0;margin:0">'+
+              ['Direct injection UHT processing','Indirect heat transfer HTST','Dual-mode AI DIPW system','Fully automated process control','Lab-to-production formula accuracy','High acid & low acid validation','Aseptic & retort compatibility'].map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
+            '</ul>'+
+          '</div>'+
+        '</div>';
     } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
