@@ -505,7 +505,7 @@
     gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
 
     // Cutout gentle parallax — only if visible
-    if(cutout){gsap.fromTo(cutout,{y:30},{y:-20,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    // Cutout bottle stays locked in position — no parallax movement, must align with background
 
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
