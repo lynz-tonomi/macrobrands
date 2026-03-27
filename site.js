@@ -505,22 +505,24 @@
 (function(){
   var sec=document.getElementById('autonomi-ai');
   if(!sec)return;
-  // Set section to full viewport with dark bg
-  sec.style.cssText='position:relative;min-height:100vh;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center';
-  // Add background video
-  var vid=document.createElement('video');
-  vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
-  vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-  vid.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.4;z-index:0';
-  sec.insertBefore(vid,sec.firstChild);
-  // Style header content
+  // Section layout: header text on top, video below
+  sec.style.cssText='position:relative;overflow:hidden;background:#000';
+  // Style header content — above the video
   var hdr=sec.querySelector('.sc-header');
   if(hdr){
-    hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;padding:60px 40px';
-    // Style children
+    hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px';
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
+  // Video container below header
+  var vidWrap=document.createElement('div');
+  vidWrap.style.cssText='position:relative;width:100%;height:60vh;overflow:hidden';
+  var vid=document.createElement('video');
+  vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
+  vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
+  vid.style.cssText='width:100%;height:100%;object-fit:cover;opacity:0.5';
+  vidWrap.appendChild(vid);
+  sec.appendChild(vidWrap);
 })();
 
 // ============ 7b. DELETE HOW IT WORKS SECTION ============
