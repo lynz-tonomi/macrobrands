@@ -544,9 +544,18 @@
   cta.href='https://autonomi.dev';
   cta.target='_blank';
   cta.textContent='Learn More';
-  cta.style.cssText='display:inline-block;padding:14px 40px;border:1px solid rgba(255,255,255,0.3);border-radius:50px;color:#fff;text-decoration:none;font-size:1rem;font-weight:500;letter-spacing:.02em;transition:all .3s;backdrop-filter:blur(8px);background:rgba(0,0,0,0.3)';
-  cta.onmouseenter=function(){this.style.background='rgba(255,255,255,0.15)';this.style.borderColor='#fff'};
-  cta.onmouseleave=function(){this.style.background='rgba(0,0,0,0.3)';this.style.borderColor='rgba(255,255,255,0.3)'};
+  cta.style.cssText='display:inline-block;padding:16px 40px;border:none;border-radius:50px;color:#1a1a1a;text-decoration:none;font-size:17.6px;font-weight:600;letter-spacing:.02em;transition:all .3s;background:rgb(201,168,76);cursor:pointer';
+  // Lottie on hover
+  var hoverLottie=document.createElement('lottie-player');
+  hoverLottie.setAttribute('src','https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/MIoutFnBnR.json');
+  hoverLottie.setAttribute('background','transparent');
+  hoverLottie.setAttribute('speed','1.5');
+  hoverLottie.setAttribute('loop','');
+  hoverLottie.setAttribute('autoplay','');
+  hoverLottie.style.cssText='width:24px;height:24px;display:none;vertical-align:middle;margin-left:8px';
+  cta.appendChild(hoverLottie);
+  cta.onmouseenter=function(){this.style.background='rgb(221,188,96)';this.style.transform='scale(1.05)';hoverLottie.style.display='inline-block'};
+  cta.onmouseleave=function(){this.style.background='rgb(201,168,76)';this.style.transform='scale(1)';hoverLottie.style.display='none'};
   ctaWrap.appendChild(cta);
   vidWrap.appendChild(ctaWrap);
   sec.appendChild(vidWrap);
