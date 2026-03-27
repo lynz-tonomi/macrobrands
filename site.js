@@ -405,9 +405,9 @@
 
     // Show more foreground — push bg down to reveal table/floor area
     sec.style.backgroundPosition='center 80%';
-    // Hide cutout (duplicate beaker image) — user deleted from Webflow
+    // Cutout bottle — show IN FRONT of text (z:3) so text wraps behind it
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout){cutout.style.display='none';cutout=null}
+    if(cutout){cutout.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:50% 80%;z-index:3;pointer-events:none;display:block'}
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
@@ -464,14 +464,14 @@
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
-    // Beaker — big, behind text (z:0), base leveled with cutout bottle, left of center
+    // Beaker — 40% larger, moved right, behind text (z:0)
     var secH=sec.offsetHeight;
     if(beaker){
-      beaker.style.cssText='position:absolute;left:8%;bottom:0;height:'+Math.round(secH*0.75)+'px;width:auto;z-index:0;pointer-events:none';
+      beaker.style.cssText='position:absolute;right:15%;bottom:0;height:'+Math.round(secH*1.05)+'px;width:auto;z-index:0;pointer-events:none';
     }
-    // Lightbulb — big, behind text (z:0), left of beaker
+    // Lightbulb — 40% larger, moved right, behind text (z:0)
     if(bulb){
-      bulb.style.cssText='position:absolute;left:-5%;bottom:5%;height:'+Math.round(secH*0.55)+'px;width:auto;z-index:0;pointer-events:none';
+      bulb.style.cssText='position:absolute;right:35%;bottom:5%;height:'+Math.round(secH*0.77)+'px;width:auto;z-index:0;pointer-events:none';
     }
     // Beaker fades in from left first — completes at 100vh (top top)
     if(beaker){gsap.fromTo(beaker,{x:-400,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
