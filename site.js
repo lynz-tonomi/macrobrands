@@ -375,10 +375,10 @@
     } else if(i===2){
       // Process Dev tab — 4-phase production pipeline
       var phases=[
-        {title:'Pre-Production',icon:'⚙️',steps:['Warm palm oil 3 days before production','Locate power cable for heat blanket','Plug in warmer to melt palm oil','Transfer melted oil to batch room on production day']},
-        {title:'Batching',icon:'🔬',steps:['Kit and weigh ingredients','Hook up liquefier, shear pump, heat exchanger in loop','Set speed 1200–1900 RPM, add buffers & mix ~2 min','Increase to 2000–2300 RPM, add calcium caseinate 5–8 min','Add sugar, salt, emulsifiers (BFP 75K) — mix 5 min','Heat batch to 115°F, recirculate between tank & liquefier','Pre-mix annatto in palm oil, add to liquefier at 2500–2800 RPM']},
-        {title:'Confirm Spec & Sterilization',icon:'✅',steps:['Add liquid vanilla cream flavor during recirculation','Sample to lab — test pH, total solids, Brix','Adjust water to hit spec (TS: 37.50–39.61)','Pull samples during recirculation, repeat every 10 min','Aseptic indirect steam at 289°F for 2.1 sec','Homogenize at 1800/500 PSI','Cool to <41°F, package into bags aseptically']},
-        {title:'Packaging & Palletizing',icon:'📦',steps:['Apply 4×8 BIB label, front-to-side wraps','Pack 4 BIB per master carton with 4×6 label','Stack cases onto pallet per stacking diagram','Apply corner guards, top slip sheet, wrap pallet','Add pallet label: SKU, lot code, MFG/best-by dates']}
+        {title:'Pre-Production',lottie:'https://lottie.host/embed/e868f4b2-1b2e-4524-98f3-3a23b8cde820/aGMJNlFdSf.lottie',steps:['Raw material staging and preparation','Equipment calibration and setup','Ingredient tempering and pre-treatment','Batch room readiness verification']},
+        {title:'Batching',lottie:'https://lottie.host/embed/2cb677e5-43f8-4c72-84d8-e2e86f07c845/F2GjDdGSbx.lottie',steps:['Precision ingredient weighing and kitting','High-shear mixing and emulsification','Buffer and stabilizer incorporation','Temperature-controlled blending stages']},
+        {title:'QC & Sterilization',lottie:'https://lottie.host/embed/b2b8e4cc-9a71-47ff-ae8f-f7dbd86db2cb/KdYMJGNqpB.lottie',steps:['In-process lab analysis (pH, Brix, total solids)','Spec confirmation and batch adjustment','Thermal sterilization (UHT/HTST/retort)','Homogenization and rapid cooling']},
+        {title:'Packaging & Palletizing',lottie:'https://lottie.host/embed/87e0c9a1-4c38-4b4e-90a2-0f7d75e6e0b8/dHkFpBw7jS.lottie',steps:['Product filling and sealing','Labeling and case packing','Pallet stacking per spec diagram','Final QC, wrapping, and shipment staging']}
       ];
       var phaseCardStyle='background:#111;border-radius:12px;padding:20px;border:1px solid #222;position:relative';
       var phaseHTML=
@@ -393,7 +393,7 @@
       phases.forEach(function(ph,pi){
         phaseHTML+=
           '<div class="proc-phase" data-phase="'+pi+'" style="'+phaseCardStyle+';opacity:0;transform:translateY(20px);transition:all .5s ease '+(.15*pi)+'s">'+
-            '<div style="font-size:1.5rem;margin-bottom:8px">'+ph.icon+'</div>'+
+            '<div style="width:48px;height:48px;margin-bottom:8px;filter:brightness(2) invert(1) brightness(2)"><iframe src="'+ph.lottie+'" style="width:100%;height:100%;border:none;pointer-events:none;background:transparent" loading="lazy"></iframe></div>'+
             '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Phase '+(pi+1)+'</div>'+
             '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:12px">'+ph.title+'</div>'+
             '<ul style="list-style:none;padding:0;margin:0">';
