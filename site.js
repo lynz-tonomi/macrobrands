@@ -405,12 +405,12 @@
 
     // Show more foreground — push bg down to reveal table/floor area
     sec.style.backgroundPosition='center 80%';
-    // Cutout layer (beaker bg) — put BEHIND text so beaker is behind text
+    // Cutout layer (Aura-beaker-bg-transparent.png) — IN FRONT of text so text scrolls behind it
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout){cutout.style.objectPosition='50% 80%';cutout.style.zIndex='0'}
-    // Unhide parallax-bottles (juice bottle PNG) — put IN FRONT of text so text scrolls behind bottle
+    if(cutout){cutout.style.objectPosition='50% 80%';cutout.style.zIndex='3'}
+    // Hide the other bottle (parallax-img / juice-bottle-2) — not needed
     var bottles=document.getElementById('parallax-img');
-    if(bottles){bottles.style.display='flex';bottles.style.zIndex='3'}
+    if(bottles){bottles.style.display='none'}
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
