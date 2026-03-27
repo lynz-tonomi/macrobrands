@@ -409,6 +409,8 @@
     // Cutout — swap to wide transparent bottle PNG, position right side, IN FRONT of text (z:3)
     var cutout=sec.querySelector('.parallax-cutout');
     if(cutout){
+      cutout.srcset='';
+      cutout.sizes='';
       cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
       cutout.style.cssText='position:absolute;top:5%;right:5%;width:45%;height:auto;object-fit:contain;z-index:3;pointer-events:none;display:block'
     }
