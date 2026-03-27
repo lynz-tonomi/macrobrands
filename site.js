@@ -516,11 +516,11 @@
   }
   // Video container below header
   var vidWrap=document.createElement('div');
-  vidWrap.style.cssText='position:relative;width:100%;height:60vh;overflow:hidden';
+  vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
   var vid=document.createElement('video');
   vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
   vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-  vid.style.cssText='width:100%;height:100%;object-fit:cover;opacity:0.5';
+  vid.style.cssText='width:100%;height:auto;display:block;opacity:0.6';
   vidWrap.appendChild(vid);
   sec.appendChild(vidWrap);
 })();
