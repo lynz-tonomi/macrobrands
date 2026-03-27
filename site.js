@@ -544,6 +544,7 @@
 
 // ============ 7. SUPPLY CHAIN AI SECTION FIX ============
 (function(){
+  setTimeout(function(){
   var sec=document.getElementById('autonomi-ai');
   if(!sec)return;
   // Section layout: header text on top, video below
@@ -616,6 +617,7 @@
     vidWrap.querySelectorAll('div').forEach(function(d){if(d!==ctaWrap)d.remove()});
     vidWrap.appendChild(ctaWrap);
   }
+  },500);
 })();
 
 // ============ 7b. DELETE HOW IT WORKS SECTION ============
