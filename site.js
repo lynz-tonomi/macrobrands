@@ -308,6 +308,31 @@
     iconCanvas._animT=0;
     iconCanvas._active=false;
 
+    // Formulation tab (i===0) gets photo-enhanced layout
+    if(i===0){
+      var ghBase='https://lynz-tonomi.github.io/macrobrands/';
+      panel.innerHTML=
+        /* Team banner photo — full width with dark gradient overlay */
+        '<div style="position:relative;width:100%;height:260px;border-radius:16px;overflow:hidden;margin-bottom:32px">'+
+          '<img src="'+ghBase+'lab_team.png" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(0.85)" alt="Lab team">'+
+          '<div style="position:absolute;bottom:0;left:0;width:100%;height:50%;background:linear-gradient(to top,#111,transparent)"></div>'+
+        '</div>'+
+        /* Two-column layout: text+bullets left, scientist photo right */
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
+          '<div>'+
+            '<div id="icon-slot-'+i+'"></div>'+
+            '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
+            '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">'+tab.desc+'</p>'+
+            '<ul style="list-style:none;padding:0;margin:0 0 24px 0">'+
+              tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
+            '</ul>'+
+            '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '</div>'+
+          '<div style="border-radius:16px;overflow:hidden;border:1px solid #222">'+
+            '<img src="'+ghBase+'Lab_formulation.png" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.9)" alt="Lab scientist formulating">'+
+          '</div>'+
+        '</div>';
+    } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
         '<div id="icon-slot-'+i+'"></div>'+
@@ -322,6 +347,7 @@
         '</ul>'+
       '</div>'+
     '</div>';
+    }
     tabContent.appendChild(panel);
     panels.push(panel);
 
