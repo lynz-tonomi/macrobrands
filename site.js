@@ -561,6 +561,11 @@
   var darkAlt=sec.nextElementSibling;
   // Walk siblings to find section-dark-alt with a video
   while(darkAlt&&!darkAlt.querySelector('video')){darkAlt=darkAlt.nextElementSibling}
+  // Hide the old "How It Works" content-wrapper text inside section-dark-alt, keep only the video
+  if(darkAlt){
+    var cw=darkAlt.querySelector('.content-wrapper');
+    if(cw)cw.style.display='none';
+  }
   var nativeVid=sec.querySelector('video')||(darkAlt?darkAlt.querySelector('video'):null);
   if(nativeVid){
     scVid=nativeVid;
