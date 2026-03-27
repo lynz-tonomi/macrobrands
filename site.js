@@ -592,8 +592,11 @@
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:brightness(0) invert(1);background:transparent');
+    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:brightness(0);background:transparent');
   }
+  // White topbar
+  var topbar=document.createElement('div');
+  topbar.style.cssText='position:fixed;top:0;left:0;width:100%;height:60px;background:#fff;z-index:9997;box-shadow:0 1px 8px rgba(0,0,0,.08)';
 
   // Add floating nav bar (matching home page)
   var nav=document.createElement('div');
@@ -633,9 +636,9 @@
 
     // Style form inputs
     form.querySelectorAll('input,textarea').forEach(function(inp){
-      inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #333;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#1a1a1a;color:#fff;transition:border-color .2s;outline:none';
+      inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#fff;color:#1a1a1a;transition:border-color .2s;outline:none';
       inp.onfocus=function(){this.style.borderColor='#C9A84C'};
-      inp.onblur=function(){this.style.borderColor='#333'};
+      inp.onblur=function(){this.style.borderColor='#ddd'};
     });
 
     // Style submit button with liquid fill
