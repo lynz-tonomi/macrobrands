@@ -463,10 +463,10 @@
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
     if(beaker){
-      beaker.style.cssText='position:absolute;left:4%;bottom:0;width:42%;max-width:520px;z-index:3;pointer-events:none';
+      beaker.style.cssText='position:absolute;left:4%;bottom:0;width:42%;max-width:520px;z-index:0;pointer-events:none';
     }
     if(bulb){
-      bulb.style.cssText='position:absolute;left:22%;bottom:0;width:36%;max-width:440px;z-index:3;pointer-events:none';
+      bulb.style.cssText='position:absolute;left:22%;bottom:0;width:36%;max-width:440px;z-index:0;pointer-events:none';
     }
     var swOff=-(window.innerWidth+400);
     // Beaker slides in first — full scroll range, done when section fills viewport
