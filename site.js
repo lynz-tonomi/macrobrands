@@ -577,7 +577,7 @@
     // Override Webflow's background-video CSS (z-index:-100, top/left/right/bottom:-100%)
     nativeVid.style.cssText='position:relative !important;z-index:0 !important;width:100% !important;height:auto !important;display:block !important;top:0 !important;left:0 !important;right:auto !important;bottom:auto !important;min-width:0 !important;min-height:0 !important';
     vidWrap=nativeVid.closest('.w-background-video')||nativeVid.parentElement;
-    vidWrap.style.cssText='position:relative;width:100vw;max-width:100%;overflow:hidden';
+    vidWrap.style.cssText='position:relative;width:100%;overflow:visible;height:auto';
   } else {
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
