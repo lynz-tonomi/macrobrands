@@ -459,20 +459,20 @@
     var bottleImg=sec.querySelector('.parallax-cutout');
     if(bottleImg){gsap.fromTo(bottleImg,{y:80,scale:.9},{y:-40,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
 
-    // Native Webflow beaker + bulb — slide in from left on scroll
+    // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
+    // Position beaker next to bottle, bases level. Bulb further left.
     if(beaker){
-      beaker.style.cssText='position:absolute;left:4%;bottom:0;width:42%;max-width:520px;z-index:0;pointer-events:none';
+      beaker.style.cssText='position:absolute;left:22%;bottom:3%;width:28%;max-width:380px;z-index:0;pointer-events:none';
     }
     if(bulb){
-      bulb.style.cssText='position:absolute;left:22%;bottom:0;width:36%;max-width:440px;z-index:0;pointer-events:none';
+      bulb.style.cssText='position:absolute;left:8%;bottom:5%;width:20%;max-width:260px;z-index:0;pointer-events:none';
     }
-    var swOff=-(window.innerWidth+400);
-    // Beaker slides in first — full scroll range, done when section fills viewport
-    if(beaker){gsap.fromTo(beaker,{x:swOff},{x:0,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
-    // Bulb starts 30% later — visually comes in second
-    if(bulb){gsap.fromTo(bulb,{x:swOff*1.25},{x:0,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
+    // Beaker fades in from left first — completes at 100vh (top top)
+    if(beaker){gsap.fromTo(beaker,{x:-400,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
+    // Bulb fades in from left second — starts later, also completes at 100vh
+    if(bulb){gsap.fromTo(bulb,{x:-500,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=how-it-works],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light');
