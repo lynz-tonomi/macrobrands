@@ -372,6 +372,48 @@
             '</ul>'+
           '</div>'+
         '</div>';
+    } else if(i===2){
+      // Process Dev tab — 4-phase production pipeline
+      var phases=[
+        {title:'Pre-Production',icon:'⚙️',steps:['Warm palm oil 3 days before production','Locate power cable for heat blanket','Plug in warmer to melt palm oil','Transfer melted oil to batch room on production day']},
+        {title:'Batching',icon:'🔬',steps:['Kit and weigh ingredients','Hook up liquefier, shear pump, heat exchanger in loop','Set speed 1200–1900 RPM, add buffers & mix ~2 min','Increase to 2000–2300 RPM, add calcium caseinate 5–8 min','Add sugar, salt, emulsifiers (BFP 75K) — mix 5 min','Heat batch to 115°F, recirculate between tank & liquefier','Pre-mix annatto in palm oil, add to liquefier at 2500–2800 RPM']},
+        {title:'Confirm Spec & Sterilization',icon:'✅',steps:['Add liquid vanilla cream flavor during recirculation','Sample to lab — test pH, total solids, Brix','Adjust water to hit spec (TS: 37.50–39.61)','Pull samples during recirculation, repeat every 10 min','Aseptic indirect steam at 289°F for 2.1 sec','Homogenize at 1800/500 PSI','Cool to <41°F, package into bags aseptically']},
+        {title:'Packaging & Palletizing',icon:'📦',steps:['Apply 4×8 BIB label, front-to-side wraps','Pack 4 BIB per master carton with 4×6 label','Stack cases onto pallet per stacking diagram','Apply corner guards, top slip sheet, wrap pallet','Add pallet label: SKU, lot code, MFG/best-by dates']}
+      ];
+      var phaseCardStyle='background:#111;border-radius:12px;padding:20px;border:1px solid #222;position:relative';
+      var phaseHTML=
+        '<div style="margin-bottom:32px">'+
+          '<div id="icon-slot-'+i+'"></div>'+
+          '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">Process Development</h3>'+
+          '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">We design, validate, and document your complete production process — from ingredient prep through packaging and palletizing. Every step is mapped so your product runs flawlessly at scale.</p>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+        '</div>'+
+        /* 4-phase pipeline with connecting arrows */
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative">';
+      phases.forEach(function(ph,pi){
+        phaseHTML+=
+          '<div class="proc-phase" data-phase="'+pi+'" style="'+phaseCardStyle+';opacity:0;transform:translateY(20px);transition:all .5s ease '+(.15*pi)+'s">'+
+            '<div style="font-size:1.5rem;margin-bottom:8px">'+ph.icon+'</div>'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Phase '+(pi+1)+'</div>'+
+            '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:12px">'+ph.title+'</div>'+
+            '<ul style="list-style:none;padding:0;margin:0">';
+        ph.steps.forEach(function(s){
+          phaseHTML+='<li style="padding:5px 0;color:#888;font-size:.8rem;line-height:1.4;display:flex;gap:8px"><span style="color:#C9A84C;flex-shrink:0">→</span> '+s+'</li>';
+        });
+        phaseHTML+='</ul>';
+        /* Arrow connector between cards (except last) */
+        if(pi<3){
+          phaseHTML+='<div style="position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:#C9A84C;font-size:1.2rem;z-index:1">▶</div>';
+        }
+        phaseHTML+='</div>';
+      });
+      phaseHTML+='</div>';
+      panel.innerHTML=phaseHTML;
+      /* Animate phase cards in on reveal */
+      setTimeout(function(){
+        var cards=panel.querySelectorAll('.proc-phase');
+        cards.forEach(function(c){c.style.opacity='1';c.style.transform='translateY(0)'});
+      },100);
     } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
