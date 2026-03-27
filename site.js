@@ -406,9 +406,12 @@
     // Remove background image (has the big beaker) — keep section pure black
     sec.style.backgroundImage='none';
     sec.style.backgroundColor='#000';
-    // Cutout — crop to RIGHT side only to show JUST the AURA bottle, in front of text (z:3)
+    // Cutout — swap to wide transparent bottle PNG, position right side, IN FRONT of text (z:3)
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout){cutout.style.cssText='position:absolute;top:0;right:0;width:55%;height:100%;object-fit:cover;object-position:right 80%;z-index:3;pointer-events:none;display:block'}
+    if(cutout){
+      cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
+      cutout.style.cssText='position:absolute;top:5%;right:5%;width:45%;height:auto;object-fit:contain;z-index:3;pointer-events:none;display:block'
+    }
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
