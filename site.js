@@ -400,8 +400,8 @@
     sec.querySelectorAll('[data-parallax]').forEach(function(el){el.remove()});
     sec.querySelectorAll('.parallax-text-back,.parallax-text-front').forEach(function(el){el.remove()});
     sec.querySelectorAll('h2').forEach(function(el){el.remove()});
-    // Remove any previous JS-created rows
-    sec.querySelectorAll('[data-row]').forEach(function(el){el.remove()});
+    // Remove any previous JS-created rows and icon layers
+    sec.querySelectorAll('[data-row],[data-layer]').forEach(function(el){el.remove()});
 
     // Style parallax section with AURA background
     // Bottle #1 styled natively in Webflow — no JS override
@@ -457,6 +457,27 @@
 
     // Bottle gentle parallax
     if(img){gsap.fromTo(img,{y:80,scale:.9},{y:-40,scale:1.05,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+
+    // Beaker layer — slides in from left first
+    var beaker=document.createElement('img');
+    beaker.src='https://lynz-tonomi.github.io/macrobrands/beaker.png';
+    beaker.style.cssText='position:absolute;left:6%;bottom:22%;width:150px;z-index:3;pointer-events:none;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4))';
+    beaker.setAttribute('data-layer','beaker');
+    sec.appendChild(beaker);
+
+    // Lightbulb layer — slides in from left second
+    var bulb=document.createElement('img');
+    bulb.src='https://lynz-tonomi.github.io/macrobrands/lightbulb.png';
+    bulb.style.cssText='position:absolute;left:20%;bottom:10%;width:120px;z-index:3;pointer-events:none;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4))';
+    bulb.setAttribute('data-layer','lightbulb');
+    sec.appendChild(bulb);
+
+    // Both complete sliding in by the time section fills the viewport (top top)
+    var swOff=-(window.innerWidth+300);
+    // Beaker starts first — full scroll range
+    gsap.fromTo(beaker,{x:swOff},{x:0,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}});
+    // Lightbulb starts 30% later — appears to slide in second
+    gsap.fromTo(bulb,{x:swOff*1.2},{x:0,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}});
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=how-it-works],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light');
