@@ -556,9 +556,10 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
-  // Look for native Webflow bg video in sc-section OR its next sibling
+  // Look for native Webflow bg video in sc-section, how-it-works section, or next sibling
   var vidWrap=null;var scVid=null;
-  var nativeVid=sec.querySelector('video')||((sec.nextElementSibling&&sec.nextElementSibling.querySelector)?sec.nextElementSibling.querySelector('video'):null);
+  var hwSec=document.getElementById('how-it-works');
+  var nativeVid=sec.querySelector('video')||(hwSec?hwSec.querySelector('video'):null)||((sec.nextElementSibling&&sec.nextElementSibling.querySelector)?sec.nextElementSibling.querySelector('video'):null);
   if(nativeVid){
     scVid=nativeVid;
     nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
@@ -626,11 +627,8 @@
   },500);
 })();
 
-// ============ 7b. DELETE HOW IT WORKS SECTION ============
-(function(){
-  var hw=document.getElementById('how-it-works');
-  if(hw)hw.remove();
-})();
+// ============ 7b. HOW IT WORKS SECTION (now SC video container) ============
+// Preserved — contains native Webflow Background Video
 
 // ============ 8. CONTACT PAGE ENHANCEMENTS ============
 (function(){
