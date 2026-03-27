@@ -557,26 +557,32 @@
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
   // Look for native Webflow bg video in sc-section OR its next sibling
-  var vidWrap=null;
+  var vidWrap=null;var scVid=null;
   var nativeVid=sec.querySelector('video')||((sec.nextElementSibling&&sec.nextElementSibling.querySelector)?sec.nextElementSibling.querySelector('video'):null);
   if(nativeVid){
-    // Use native Webflow video — don't override src
-    nativeVid.autoplay=true;nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
+    scVid=nativeVid;
+    nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
+    nativeVid.pause();
     vidWrap=nativeVid.closest('.w-background-video')||nativeVid.parentElement;
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
-    nativeVid.play().catch(function(){});
   } else {
-    // Fallback: create video from GitHub Pages
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
-    var vid=document.createElement('video');
-    vid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
-    vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
-    vid.style.cssText='width:100%;height:auto;display:block;opacity:1';
-    vidWrap.appendChild(vid);
-    vid.play().catch(function(){});
+    scVid=document.createElement('video');
+    scVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
+    scVid.muted=true;scVid.loop=true;scVid.playsInline=true;
+    scVid.style.cssText='width:100%;height:auto;display:block;opacity:1';
+    vidWrap.appendChild(scVid);
     sec.appendChild(vidWrap);
   }
+  // Only play when scrolled into view, pause when out
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){scVid.play().catch(function(){})}
+      else{scVid.pause()}
+    });
+  },{threshold:0.2});
+  observer.observe(vidWrap);
   // CTA button pinned to center bottom of video
   var ctaWrap=document.createElement('div');
   ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px';
