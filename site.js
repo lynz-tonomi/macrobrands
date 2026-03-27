@@ -412,7 +412,7 @@
       cutout.srcset='';
       cutout.sizes='';
       cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-      cutout.style.cssText='position:absolute;top:5%;right:5%;width:45%;height:auto;object-fit:contain;z-index:3;pointer-events:none;display:block'
+      cutout.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;display:block'
     }
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
@@ -470,19 +470,17 @@
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
-    // Beaker — centered where bg beaker was, behind text (z:0)
-    var secH=sec.offsetHeight;
+    // Beaker + bulb — full-section overlays, same canvas as the original photo, behind text (z:0)
     if(beaker){
-      beaker.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:0;height:'+Math.round(secH*1.05)+'px;width:auto;z-index:0;pointer-events:none';
+      beaker.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
     }
-    // Lightbulb — left of beaker, behind text (z:0)
     if(bulb){
-      bulb.style.cssText='position:absolute;left:5%;bottom:5%;height:'+Math.round(secH*0.77)+'px;width:auto;z-index:0;pointer-events:none';
+      bulb.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
     }
-    // Beaker slides in from left to center — completes at 100vh
-    if(beaker){gsap.fromTo(beaker,{x:'-=600',opacity:0},{x:'+=0',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
-    // Bulb slides in from left — starts later, completes at 100vh
-    if(bulb){gsap.fromTo(bulb,{x:-600,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
+    // Beaker slides full canvas in from left — completes at 100vh
+    if(beaker){gsap.fromTo(beaker,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
+    // Bulb slides full canvas in from left — starts later, completes at 100vh
+    if(bulb){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=how-it-works],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light');
