@@ -514,16 +514,7 @@
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI')h.textContent='Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
-  // CTA button for Autonomi
-  var cta=document.createElement('a');
-  cta.href='https://autonomi.dev';
-  cta.target='_blank';
-  cta.textContent='Learn More →';
-  cta.style.cssText='display:inline-block;margin-top:24px;padding:12px 32px;border:1px solid rgba(255,255,255,0.3);border-radius:50px;color:#fff;text-decoration:none;font-size:1rem;font-weight:500;letter-spacing:.02em;transition:all .3s';
-  cta.onmouseenter=function(){this.style.background='rgba(255,255,255,0.1);this.style.borderColor="#fff"'};
-  cta.onmouseleave=function(){this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.3)'};
-  if(hdr)hdr.appendChild(cta);
-  // Video container below header
+  // Video container below header with CTA pinned at bottom center
   var vidWrap=document.createElement('div');
   vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
   var vid=document.createElement('video');
@@ -531,6 +522,33 @@
   vid.autoplay=true;vid.muted=true;vid.loop=true;vid.playsInline=true;
   vid.style.cssText='width:100%;height:auto;display:block;opacity:1';
   vidWrap.appendChild(vid);
+  // CTA button pinned to center bottom of video
+  var ctaWrap=document.createElement('div');
+  ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px';
+  // Lottie animation above button
+  var lottieDiv=document.createElement('div');
+  lottieDiv.style.cssText='width:48px;height:48px';
+  var lottieScript=document.createElement('script');
+  lottieScript.src='https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
+  document.head.appendChild(lottieScript);
+  var lottieEl=document.createElement('lottie-player');
+  lottieEl.setAttribute('src','https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/MIoutFnBnR.json');
+  lottieEl.setAttribute('background','transparent');
+  lottieEl.setAttribute('speed','1');
+  lottieEl.setAttribute('loop','');
+  lottieEl.setAttribute('autoplay','');
+  lottieEl.style.cssText='width:48px;height:48px;filter:invert(1)';
+  lottieDiv.appendChild(lottieEl);
+  ctaWrap.appendChild(lottieDiv);
+  var cta=document.createElement('a');
+  cta.href='https://autonomi.dev';
+  cta.target='_blank';
+  cta.textContent='Learn More';
+  cta.style.cssText='display:inline-block;padding:14px 40px;border:1px solid rgba(255,255,255,0.3);border-radius:50px;color:#fff;text-decoration:none;font-size:1rem;font-weight:500;letter-spacing:.02em;transition:all .3s;backdrop-filter:blur(8px);background:rgba(0,0,0,0.3)';
+  cta.onmouseenter=function(){this.style.background='rgba(255,255,255,0.15)';this.style.borderColor='#fff'};
+  cta.onmouseleave=function(){this.style.background='rgba(0,0,0,0.3)';this.style.borderColor='rgba(255,255,255,0.3)'};
+  ctaWrap.appendChild(cta);
+  vidWrap.appendChild(ctaWrap);
   sec.appendChild(vidWrap);
 })();
 
