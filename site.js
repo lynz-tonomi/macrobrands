@@ -405,12 +405,12 @@
 
     // Show more foreground — push bg down to reveal table/floor area
     sec.style.backgroundPosition='center 80%';
-    // Cutout layer (Aura-beaker-bg-transparent.png) — IN FRONT of text so text scrolls behind it
+    // Hide cutout layer (center beaker scene) — not needed
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout){cutout.style.objectPosition='50% 80%';cutout.style.zIndex='3'}
-    // Hide the other bottle (parallax-img / juice-bottle-2) — not needed
+    if(cutout){cutout.style.display='none'}
+    // Show Aura bottle (parallax-img) IN FRONT of text so text scrolls behind bottle
     var bottles=document.getElementById('parallax-img');
-    if(bottles){bottles.style.display='none'}
+    if(bottles){bottles.style.display='flex';bottles.style.zIndex='3';bottles.style.position='relative'}
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
@@ -461,20 +461,19 @@
     // Row 2: starts right, crosses center, ends left
     gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
 
-    // Bottle gentle parallax (parallax-cutout is the native Webflow bottle image)
-    var bottleImg=sec.querySelector('.parallax-cutout');
-    if(bottleImg){gsap.fromTo(bottleImg,{y:30,scale:1},{y:-20,scale:1.02,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    // Aura bottle (parallax-img) gentle parallax — in front of text
+    if(bottles){gsap.fromTo(bottles,{y:30,scale:1},{y:-20,scale:1.02,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
 
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
-    // Beaker — large, behind FROM CONCEPT text area, z-index 0
+    // Beaker — large, behind text (z-index 0), positioned left-center
     if(beaker){
-      beaker.style.cssText='position:absolute;left:5%;top:8%;width:55%;max-width:750px;z-index:0;pointer-events:none';
+      beaker.style.cssText='position:absolute;left:15%;bottom:5%;width:38%;max-width:550px;z-index:0;pointer-events:none';
     }
-    // Lightbulb — large, left side, behind text, z-index 0
+    // Lightbulb — large, further left, behind text (z-index 0)
     if(bulb){
-      bulb.style.cssText='position:absolute;left:-5%;top:15%;width:45%;max-width:600px;z-index:0;pointer-events:none';
+      bulb.style.cssText='position:absolute;left:-2%;bottom:10%;width:28%;max-width:400px;z-index:0;pointer-events:none';
     }
     // Beaker fades in from left first — completes at 100vh (top top)
     if(beaker){gsap.fromTo(beaker,{x:-400,opacity:0},{x:0,opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
