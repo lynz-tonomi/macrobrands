@@ -292,7 +292,7 @@
     // Button
     var btn=document.createElement('button');
     btn.textContent=tab.title;
-    btn.style.cssText='padding:12px 8px;background:transparent;color:#666;border:none;border-bottom:2px solid transparent;font-size:.85rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .3s;white-space:nowrap;flex:1;text-align:center';
+    btn.style.cssText='padding:12px 8px;background:transparent;color:#bbb;border:none;border-bottom:2px solid transparent;font-size:.85rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .3s;white-space:nowrap;flex:1;text-align:center';
     tabRow.appendChild(btn);
     buttons.push(btn);
 
@@ -357,7 +357,7 @@
 
     // Click handler
     btn.onclick=function(){
-      buttons.forEach(function(b){b.style.color='#666';b.style.borderBottomColor='transparent'});
+      buttons.forEach(function(b){b.style.color='#bbb';b.style.borderBottomColor='transparent'});
       panels.forEach(function(p){p.style.display='none';var cv=p.querySelector('canvas');if(cv)cv._active=false});
       btn.style.color='#fff';
       btn.style.borderBottomColor='#C9A84C';
@@ -383,7 +383,7 @@
     };
 
     btn.onmouseenter=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#ccc'};
-    btn.onmouseleave=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#666'};
+    btn.onmouseleave=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#bbb'};
   });
 
   // Activate first tab
