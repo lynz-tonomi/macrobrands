@@ -361,10 +361,10 @@
           '</ul>'+
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
-        /* Bottom row: photo left, capabilities right — matched heights */
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch">'+
-          '<div style="border-radius:16px;overflow:hidden;background:#000;border:1px solid #222;display:flex;align-items:center">'+
-            '<img src="'+ghBase2+'microthermics-ai-line-logo-2025.png" style="width:100%;object-fit:contain" alt="MicroThermics AI Series UHT/HTST Processing Line">'+
+        /* Bottom row: photo left (sized to match caps card), capabilities right */
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
+          '<div style="border-radius:16px;overflow:hidden;background:#000;border:1px solid #222">'+
+            '<img src="'+ghBase2+'microthermics-ai-line-logo-2025.png" style="width:100%;height:auto;max-height:380px;object-fit:contain" alt="MicroThermics AI Series UHT/HTST Processing Line">'+
           '</div>'+
           '<div style="background:#111;border-radius:16px;padding:32px;border:1px solid #222">'+
             '<div style="font-weight:700;color:#ccc;margin-bottom:16px;font-size:.95rem">Equipment Capabilities</div>'+
