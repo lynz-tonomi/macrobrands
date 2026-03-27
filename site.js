@@ -412,7 +412,7 @@
       cutout.srcset='';
       cutout.sizes='';
       cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-      cutout.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:auto;z-index:3;pointer-events:none;display:block'
+      cutout.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;z-index:3;pointer-events:none;display:block'
     }
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
@@ -472,10 +472,10 @@
     var bulb=document.getElementById('parallax-bulb');
     // Beaker + bulb — full-width overlays, same canvas as original photo, behind text (z:0)
     if(beaker){
-      beaker.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:auto;z-index:0;pointer-events:none';
+      beaker.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;z-index:0;pointer-events:none';
     }
     if(bulb){
-      bulb.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:auto;z-index:0;pointer-events:none';
+      bulb.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;z-index:0;pointer-events:none';
     }
     // Beaker slides full canvas in from left — completes at 100vh
     if(beaker){gsap.fromTo(beaker,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
