@@ -405,9 +405,9 @@
 
     // Show more foreground — push bg down to reveal table/floor area
     sec.style.backgroundPosition='center 80%';
-    // Cutout layer — IN FRONT of text (z:3) so text scrolls behind bottle+beaker scene
+    // Respect Webflow visibility — don't force cutout visible if user deleted/hid it
     var cutout=sec.querySelector('.parallax-cutout');
-    if(cutout){cutout.style.display='block';cutout.style.objectPosition='50% 80%';cutout.style.zIndex='3'}
+    if(cutout&&getComputedStyle(cutout).display==='none'){cutout=null}
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
 
@@ -458,8 +458,8 @@
     // Row 2: starts right, crosses center, ends left
     gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
 
-    // Cutout gentle parallax — subtle vertical shift
-    if(cutout){gsap.fromTo(cutout,{y:30,scale:1},{y:-20,scale:1.02,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
+    // Cutout gentle parallax — only if visible
+    if(cutout){gsap.fromTo(cutout,{y:30},{y:-20,ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}})}
 
     // Native Webflow beaker + bulb — fade in from left on scroll, behind text
     var beaker=document.getElementById('parallax-beaker');
