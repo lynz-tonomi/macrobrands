@@ -881,99 +881,154 @@
   // Activate first tab
   buttons[0].onclick();
 
-  // Co-Packing process cards with SVG line-draw icons (index 5)
+  // Co-Packing process cards with expandable SVG diagrams (index 5)
   if(panels.length>5){
     var coPackPanel=panels[5];
-    /* SVG line-draw animation CSS */
+    /* CSS for draw-on + expansion */
     var cpStyle=document.createElement('style');
-    cpStyle.textContent='@keyframes cpDraw{from{stroke-dashoffset:var(--l)}to{stroke-dashoffset:0}}.cp-d{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:cpDraw 1.2s ease forwards}.cp-glow{fill:none;stroke:#C9A84C;stroke-width:1;opacity:0;animation:cpGIn .6s ease 1s forwards}@keyframes cpGIn{to{opacity:.5}}';
+    cpStyle.textContent='@keyframes cpDraw{from{stroke-dashoffset:var(--l)}to{stroke-dashoffset:0}}'+
+      '.cp-d{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:cpDraw 1.2s ease forwards}'+
+      '.cp-glow{fill:none;stroke:#C9A84C;stroke-width:1;opacity:0;animation:cpGIn .6s ease 1s forwards}@keyframes cpGIn{to{opacity:.5}}'+
+      '.cp-exp-d{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:cpDraw 1s ease forwards}'+
+      '.cp-exp-lbl{fill:rgba(255,255,255,.5);font-family:monospace;font-size:9px;text-anchor:middle}'+
+      '.cp-exp-pipe{fill:none;stroke:rgba(201,168,76,.4);stroke-width:1.5;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:cpDraw .8s ease forwards}'+
+      '.cp-card{background:rgba(255,255,255,.03);border:1px solid #222;border-radius:14px;padding:24px;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s}'+
+      '.cp-card:hover{border-color:#C9A84C;transform:translateY(-4px)}.cp-card.cp-active{border-color:#C9A84C;box-shadow:0 0 20px rgba(201,168,76,.15)}'+
+      '.cp-expand{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s ease;opacity:0}'+
+      '.cp-expand.cp-open{max-height:400px;opacity:1}';
     document.head.appendChild(cpStyle);
     var cpProcs=[
       {title:'Tunnel Pasteurization',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
-         '<rect x="6" y="14" width="52" height="22" rx="3" class="cp-d" style="--l:160;animation-delay:.2s"/>'+
-         '<line x1="6" y1="25" x2="58" y2="25" class="cp-d" style="--l:52;animation-delay:.5s"/>'+
-         '<rect x="14" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:.7s"/>'+
-         '<rect x="28" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:.85s"/>'+
-         '<rect x="42" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:1s"/>'+
-         '<path d="M18,10 Q18,6 22,6 M32,10 Q32,6 36,6 M46,10 Q46,6 50,6" class="cp-glow" stroke-width="1.2"/>'+
-       '</svg>',
-       desc:'Continuous hot-water tunnel for high-acid beverages — juice, tea, kombucha. Gentle thermal kill preserves flavor while achieving commercial sterility at 185\u00b0F+.',
-       specs:['High-acid (pH < 4.6)','Glass & PET compatible','12\u201364 oz formats','Continuous throughput']},
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><rect x="6" y="14" width="52" height="22" rx="3" class="cp-d" style="--l:160;animation-delay:.2s"/><line x1="6" y1="25" x2="58" y2="25" class="cp-d" style="--l:52;animation-delay:.5s"/><rect x="14" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:.7s"/><rect x="28" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:.85s"/><rect x="42" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:1s"/><path d="M18,10 Q18,6 22,6 M32,10 Q32,6 36,6 M46,10 Q46,6 50,6" class="cp-glow" stroke-width="1.2"/></svg>',
+       desc:'Continuous hot-water tunnel for high-acid beverages \u2014 juice, tea, kombucha.',
+       specs:['High-acid (pH < 4.6)','Glass & PET','12\u201364 oz','Continuous'],
+       diagram:'<svg viewBox="0 0 700 160" width="100%" style="max-height:160px"><defs><marker id="cpa1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(201,168,76,.6)"/></marker></defs>'+
+         '<rect x="10" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.1s"/><text x="50" y="75" class="cp-exp-lbl">PRODUCT<tspan x="50" dy="12">TANK</tspan></text>'+
+         '<line x1="90" y1="70" x2="130" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:.3s" marker-end="url(#cpa1)"/>'+
+         '<rect x="130" y="30" width="120" height="80" rx="8" class="cp-exp-d" style="--l:400;animation-delay:.4s"/><text x="190" y="55" class="cp-exp-lbl">HOT WATER</text><text x="190" y="68" class="cp-exp-lbl">TUNNEL</text>'+
+         '<rect x="145" y="55" width="14" height="28" rx="3" class="cp-exp-d" style="--l:90;animation-delay:.6s" stroke-opacity=".5"/><rect x="175" y="55" width="14" height="28" rx="3" class="cp-exp-d" style="--l:90;animation-delay:.7s" stroke-opacity=".5"/><rect x="205" y="55" width="14" height="28" rx="3" class="cp-exp-d" style="--l:90;animation-delay:.8s" stroke-opacity=".5"/><rect x="235" y="55" width="14" height="28" rx="3" class="cp-exp-d" style="--l:90;animation-delay:.9s" stroke-opacity=".5"/>'+
+         '<path d="M155,48 Q155,42 160,42 M185,48 Q185,42 190,42 M215,48 Q215,42 220,42 M245,48 Q245,42 250,42" stroke="#C9A84C" fill="none" stroke-width="1" stroke-opacity=".4"/>'+
+         '<text x="190" y="100" class="cp-exp-lbl" fill-opacity=".3">185\u00b0F+</text>'+
+         '<line x1="250" y1="70" x2="290" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1s" marker-end="url(#cpa1)"/>'+
+         '<rect x="290" y="35" width="100" height="70" rx="6" class="cp-exp-d" style="--l:340;animation-delay:1.1s"/><text x="340" y="60" class="cp-exp-lbl">COOLING</text><text x="340" y="73" class="cp-exp-lbl">ZONE</text>'+
+         '<path d="M310,50 Q308,45 312,45 M340,50 Q338,45 342,45 M370,50 Q368,45 372,45" stroke="#38bdf8" fill="none" stroke-width="1" stroke-opacity=".4"/>'+
+         '<line x1="390" y1="70" x2="430" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.3s" marker-end="url(#cpa1)"/>'+
+         '<rect x="430" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.4s"/><text x="470" y="68" class="cp-exp-lbl">LABELING</text><text x="470" y="80" class="cp-exp-lbl">&amp; QA</text>'+
+         '<line x1="510" y1="70" x2="550" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.6s" marker-end="url(#cpa1)"/>'+
+         '<rect x="550" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.7s"/><text x="590" y="68" class="cp-exp-lbl">PALLET</text><text x="590" y="80" class="cp-exp-lbl">PACK</text>'+
+       '</svg>'},
       {title:'Retort Processing',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
-         '<ellipse cx="12" cy="24" rx="6" ry="16" class="cp-d" style="--l:100;animation-delay:.2s"/>'+
-         '<rect x="12" y="8" width="40" height="32" rx="2" class="cp-d" style="--l:150;animation-delay:.4s"/>'+
-         '<ellipse cx="52" cy="24" rx="6" ry="16" class="cp-d" style="--l:100;animation-delay:.6s"/>'+
-         '<circle cx="32" cy="24" r="3" class="cp-d" style="--l:20;animation-delay:.9s"/>'+
-         '<path d="M24,16 Q26,12 28,16 M34,16 Q36,12 38,16" class="cp-glow" stroke-width="1.5"/>'+
-         '<line x1="52" y1="8" x2="58" y2="4" class="cp-d" style="--l:10;animation-delay:1s"/>'+
-         '<line x1="52" y1="40" x2="58" y2="44" class="cp-d" style="--l:10;animation-delay:1s"/>'+
-       '</svg>',
-       desc:'Batch pressure-cooking for low-acid shelf-stable products \u2014 soups, broths, plant milks. Full 21 CFR 113 compliance with our FDA-registered retort systems.',
-       specs:['Low-acid (pH \u2265 4.6)','Cans: 8oz, 8.4oz, 12oz','250\u00b0F+ under pressure','FDA filed process']},
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><ellipse cx="12" cy="24" rx="6" ry="16" class="cp-d" style="--l:100;animation-delay:.2s"/><rect x="12" y="8" width="40" height="32" rx="2" class="cp-d" style="--l:150;animation-delay:.4s"/><ellipse cx="52" cy="24" rx="6" ry="16" class="cp-d" style="--l:100;animation-delay:.6s"/><circle cx="32" cy="24" r="3" class="cp-d" style="--l:20;animation-delay:.9s"/><path d="M24,16 Q26,12 28,16 M34,16 Q36,12 38,16" class="cp-glow" stroke-width="1.5"/><line x1="52" y1="8" x2="58" y2="4" class="cp-d" style="--l:10;animation-delay:1s"/><line x1="52" y1="40" x2="58" y2="44" class="cp-d" style="--l:10;animation-delay:1s"/></svg>',
+       desc:'Batch pressure-cooking for low-acid shelf-stable products \u2014 soups, broths, plant milks.',
+       specs:['Low-acid (pH \u2265 4.6)','Cans: 8\u201312oz','250\u00b0F+','FDA filed'],
+       diagram:'<svg viewBox="0 0 700 160" width="100%" style="max-height:160px"><defs><marker id="cpa2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(201,168,76,.6)"/></marker></defs>'+
+         '<rect x="10" y="40" width="70" height="60" rx="6" class="cp-exp-d" style="--l:270;animation-delay:.1s"/><text x="45" y="68" class="cp-exp-lbl">CAN</text><text x="45" y="80" class="cp-exp-lbl">FILLING</text>'+
+         '<line x1="80" y1="70" x2="120" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:.3s" marker-end="url(#cpa2)"/>'+
+         '<rect x="120" y="40" width="70" height="60" rx="6" class="cp-exp-d" style="--l:270;animation-delay:.4s"/><text x="155" y="68" class="cp-exp-lbl">DOUBLE</text><text x="155" y="80" class="cp-exp-lbl">SEAM</text>'+
+         '<line x1="190" y1="70" x2="230" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:.6s" marker-end="url(#cpa2)"/>'+
+         '<ellipse cx="252" cy="70" rx="12" ry="35" class="cp-exp-d" style="--l:150;animation-delay:.7s"/><rect x="252" y="35" width="100" height="70" rx="3" class="cp-exp-d" style="--l:340;animation-delay:.8s"/><ellipse cx="352" cy="70" rx="12" ry="35" class="cp-exp-d" style="--l:150;animation-delay:.9s"/><text x="302" y="65" class="cp-exp-lbl">RETORT</text><text x="302" y="78" class="cp-exp-lbl">250\u00b0F</text>'+
+         '<path d="M275,50 Q277,44 279,50 M300,50 Q302,44 304,50 M325,50 Q327,44 329,50" stroke="#ff5533" fill="none" stroke-width="1.2" stroke-opacity=".4"/>'+
+         '<line x1="364" y1="70" x2="410" y2="70" class="cp-exp-pipe" style="--l:46;animation-delay:1.1s" marker-end="url(#cpa2)"/>'+
+         '<rect x="410" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.2s"/><text x="450" y="68" class="cp-exp-lbl">COOLING</text><path d="M425,55 Q423,50 427,50 M450,55 Q448,50 452,50" stroke="#38bdf8" fill="none" stroke-width="1" stroke-opacity=".4"/>'+
+         '<line x1="490" y1="70" x2="530" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.4s" marker-end="url(#cpa2)"/>'+
+         '<rect x="530" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.5s"/><text x="570" y="68" class="cp-exp-lbl">LABEL</text><text x="570" y="80" class="cp-exp-lbl">&amp; PACK</text>'+
+       '</svg>'},
       {title:'ESL Bottling',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
-         '<path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="cp-d" style="--l:120;animation-delay:.2s"/>'+
-         '<line x1="22" y1="28" x2="42" y2="28" class="cp-d" style="--l:20;animation-delay:.6s"/>'+
-         '<rect x="26" y="1" width="12" height="4" rx="1" class="cp-d" style="--l:36;animation-delay:.4s"/>'+
-         '<path d="M16,12 Q10,24 16,36" class="cp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/>'+
-         '<path d="M48,12 Q54,24 48,36" class="cp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/>'+
-         '<circle cx="10" cy="18" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/>'+
-         '<circle cx="54" cy="30" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/>'+
-       '</svg>',
-       desc:'Extended Shelf Life processing bridges the gap between fresh and shelf-stable. Light pasteurization + clean-fill for refrigerated products with 60\u2013120 day shelf life.',
-       specs:['Refrigerated distribution','60\u2013120 day shelf life','PET & HDPE bottles','Clean-room fill environment']},
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="cp-d" style="--l:120;animation-delay:.2s"/><line x1="22" y1="28" x2="42" y2="28" class="cp-d" style="--l:20;animation-delay:.6s"/><rect x="26" y="1" width="12" height="4" rx="1" class="cp-d" style="--l:36;animation-delay:.4s"/><path d="M16,12 Q10,24 16,36" class="cp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/><path d="M48,12 Q54,24 48,36" class="cp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/><circle cx="10" cy="18" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/><circle cx="54" cy="30" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/></svg>',
+       desc:'Extended Shelf Life \u2014 light pasteurization + clean-fill for 60\u2013120 day refrigerated shelf life.',
+       specs:['Refrigerated','60\u2013120 day','PET & HDPE','Clean-room'],
+       diagram:'<svg viewBox="0 0 700 160" width="100%" style="max-height:160px"><defs><marker id="cpa3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(201,168,76,.6)"/></marker></defs>'+
+         '<rect x="10" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.1s"/><text x="50" y="68" class="cp-exp-lbl">PRODUCT</text><text x="50" y="80" class="cp-exp-lbl">TANK</text>'+
+         '<line x1="90" y1="70" x2="130" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:.3s" marker-end="url(#cpa3)"/>'+
+         '<rect x="130" y="35" width="100" height="70" rx="6" class="cp-exp-d" style="--l:340;animation-delay:.4s"/><text x="180" y="65" class="cp-exp-lbl">LIGHT</text><text x="180" y="78" class="cp-exp-lbl">PASTEURIZER</text><text x="180" y="95" class="cp-exp-lbl" fill-opacity=".3">165\u00b0F / 15s</text>'+
+         '<line x1="230" y1="70" x2="270" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:.7s" marker-end="url(#cpa3)"/>'+
+         '<rect x="270" y="35" width="110" height="70" rx="6" class="cp-exp-d" style="--l:360;animation-delay:.8s" stroke="#38bdf8" stroke-opacity=".6"/><text x="325" y="65" class="cp-exp-lbl">CLEAN-ROOM</text><text x="325" y="78" class="cp-exp-lbl">FILLER</text>'+
+         '<line x1="380" y1="70" x2="420" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.1s" marker-end="url(#cpa3)"/>'+
+         '<rect x="420" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.2s"/><text x="460" y="68" class="cp-exp-lbl">CAPPING</text>'+
+         '<line x1="500" y1="70" x2="540" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.4s" marker-end="url(#cpa3)"/>'+
+         '<rect x="540" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.5s"/><text x="580" y="68" class="cp-exp-lbl">COLD</text><text x="580" y="80" class="cp-exp-lbl">CHAIN</text>'+
+       '</svg>'},
       {title:'Aseptic Bottling',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
-         '<path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="cp-d" style="--l:120;animation-delay:.2s"/>'+
-         '<rect x="26" y="1" width="12" height="4" rx="1" class="cp-d" style="--l:36;animation-delay:.4s"/>'+
-         '<line x1="32" y1="10" x2="32" y2="38" class="cp-d" style="--l:28;animation-delay:.7s" stroke-opacity=".3"/>'+
-         '<path d="M14,6 L20,14 M50,6 L44,14 M14,42 L20,34 M50,42 L44,34" class="cp-glow" stroke-width="1.5"/>'+
-         '<circle cx="32" cy="24" r="10" class="cp-d" style="--l:64;animation-delay:.9s" stroke-opacity=".2" stroke-dasharray="4 4"/>'+
-       '</svg>',
-       desc:'UHT sterilization + aseptic PET filling for ambient shelf-stable beverages. No preservatives needed \u2014 product and package sterilized independently.',
-       specs:['Ambient shelf-stable','PET: 2oz\u201364oz','No preservatives','12+ month shelf life']},
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="cp-d" style="--l:120;animation-delay:.2s"/><rect x="26" y="1" width="12" height="4" rx="1" class="cp-d" style="--l:36;animation-delay:.4s"/><line x1="32" y1="10" x2="32" y2="38" class="cp-d" style="--l:28;animation-delay:.7s" stroke-opacity=".3"/><path d="M14,6 L20,14 M50,6 L44,14 M14,42 L20,34 M50,42 L44,34" class="cp-glow" stroke-width="1.5"/><circle cx="32" cy="24" r="10" class="cp-d" style="--l:64;animation-delay:.9s" stroke-opacity=".2" stroke-dasharray="4 4"/></svg>',
+       desc:'UHT sterilization + aseptic PET filling. No preservatives \u2014 12+ month ambient shelf life.',
+       specs:['Ambient','PET 2\u201364oz','No preservatives','12+ months'],
+       diagram:'<svg viewBox="0 0 700 160" width="100%" style="max-height:160px"><defs><marker id="cpa4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(201,168,76,.6)"/></marker></defs>'+
+         '<rect x="10" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.1s"/><text x="50" y="68" class="cp-exp-lbl">PRODUCT</text><text x="50" y="80" class="cp-exp-lbl">TANK</text>'+
+         '<line x1="90" y1="70" x2="125" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:.3s" marker-end="url(#cpa4)"/>'+
+         '<rect x="125" y="35" width="90" height="70" rx="6" class="cp-exp-d" style="--l:320;animation-delay:.4s"/><text x="170" y="62" class="cp-exp-lbl">UHT</text><text x="170" y="75" class="cp-exp-lbl">280\u00b0F</text><path d="M145,50 Q147,44 149,50 M165,50 Q167,44 169,50 M185,50 Q187,44 189,50" stroke="#ff5533" fill="none" stroke-width="1" stroke-opacity=".4"/>'+
+         '<line x1="215" y1="70" x2="250" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:.7s" marker-end="url(#cpa4)"/>'+
+         '<rect x="250" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.8s"/><text x="290" y="68" class="cp-exp-lbl">STERILE</text><text x="290" y="80" class="cp-exp-lbl">HOLD</text>'+
+         '<line x1="330" y1="70" x2="365" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:1s" marker-end="url(#cpa4)"/>'+
+         '<rect x="365" y="30" width="110" height="80" rx="6" class="cp-exp-d" style="--l:380;animation-delay:1.1s" stroke="#C9A84C" stroke-opacity=".5"/><text x="420" y="62" class="cp-exp-lbl">ASEPTIC</text><text x="420" y="75" class="cp-exp-lbl">PET FILLER</text><text x="420" y="100" class="cp-exp-lbl" fill-opacity=".3">Sterile Zone</text>'+
+         '<line x1="475" y1="70" x2="510" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:1.4s" marker-end="url(#cpa4)"/>'+
+         '<rect x="510" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.5s"/><text x="550" y="68" class="cp-exp-lbl">CAP &amp;</text><text x="550" y="80" class="cp-exp-lbl">LABEL</text>'+
+       '</svg>'},
       {title:'Aseptic Bag-in-Box',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
-         '<rect x="8" y="6" width="48" height="36" rx="2" class="cp-d" style="--l:175;animation-delay:.2s"/>'+
-         '<path d="M16,12 Q32,18 48,12 L46,36 Q32,30 18,36 Z" class="cp-d" style="--l:120;animation-delay:.5s" stroke-opacity=".5"/>'+
-         '<circle cx="44" cy="10" r="3" class="cp-d" style="--l:20;animation-delay:.8s"/>'+
-         '<line x1="44" y1="10" x2="56" y2="4" class="cp-d" style="--l:16;animation-delay:.9s"/>'+
-         '<path d="M8,6 L2,2 M56,6 L62,2" class="cp-d" style="--l:12;animation-delay:.4s" stroke-opacity=".3"/>'+
-       '</svg>',
-       desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail. Sterile bag inside corrugated box \u2014 ideal for concentrates, bases, and ready-to-drink.',
-       specs:['Bag-in-Box: 2L\u201325L','Foodservice & bulk','Concentrate & RTD','Aseptic valve technology']},
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><rect x="8" y="6" width="48" height="36" rx="2" class="cp-d" style="--l:175;animation-delay:.2s"/><path d="M16,12 Q32,18 48,12 L46,36 Q32,30 18,36 Z" class="cp-d" style="--l:120;animation-delay:.5s" stroke-opacity=".5"/><circle cx="44" cy="10" r="3" class="cp-d" style="--l:20;animation-delay:.8s"/><line x1="44" y1="10" x2="56" y2="4" class="cp-d" style="--l:16;animation-delay:.9s"/><path d="M8,6 L2,2 M56,6 L62,2" class="cp-d" style="--l:12;animation-delay:.4s" stroke-opacity=".3"/></svg>',
+       desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail \u2014 2L\u201325L.',
+       specs:['2L\u201325L','Foodservice','Concentrate & RTD','Aseptic valve'],
+       diagram:'<svg viewBox="0 0 700 160" width="100%" style="max-height:160px"><defs><marker id="cpa5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(201,168,76,.6)"/></marker></defs>'+
+         '<rect x="10" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.1s"/><text x="50" y="68" class="cp-exp-lbl">PRODUCT</text><text x="50" y="80" class="cp-exp-lbl">TANK</text>'+
+         '<line x1="90" y1="70" x2="125" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:.3s" marker-end="url(#cpa5)"/>'+
+         '<rect x="125" y="35" width="90" height="70" rx="6" class="cp-exp-d" style="--l:320;animation-delay:.4s"/><text x="170" y="68" class="cp-exp-lbl">UHT</text><path d="M145,50 Q147,44 149,50 M165,50 Q167,44 169,50 M185,50 Q187,44 189,50" stroke="#ff5533" fill="none" stroke-width="1" stroke-opacity=".4"/>'+
+         '<line x1="215" y1="70" x2="250" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:.7s" marker-end="url(#cpa5)"/>'+
+         '<rect x="250" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.8s"/><text x="290" y="68" class="cp-exp-lbl">STERILE</text><text x="290" y="80" class="cp-exp-lbl">HOLD</text>'+
+         '<line x1="330" y1="70" x2="365" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:1s" marker-end="url(#cpa5)"/>'+
+         '<rect x="365" y="30" width="120" height="80" rx="6" class="cp-exp-d" style="--l:400;animation-delay:1.1s" stroke="#C9A84C" stroke-opacity=".5"/><text x="425" y="58" class="cp-exp-lbl">ASEPTIC</text><text x="425" y="71" class="cp-exp-lbl">BAG FILLER</text><path d="M390,82 Q425,92 460,82 L455,100 Q425,90 395,100 Z" class="cp-exp-d" style="--l:160;animation-delay:1.3s" stroke-opacity=".3"/><text x="425" y="96" class="cp-exp-lbl" fill-opacity=".3">bag</text>'+
+         '<line x1="485" y1="70" x2="520" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:1.5s" marker-end="url(#cpa5)"/>'+
+         '<rect x="520" y="35" width="90" height="70" rx="4" class="cp-exp-d" style="--l:320;animation-delay:1.6s"/><text x="565" y="68" class="cp-exp-lbl">BOX &amp;</text><text x="565" y="80" class="cp-exp-lbl">SEAL</text>'+
+       '</svg>'},
       {title:'Tetra Pak',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
-         '<path d="M18,44 L18,8 L32,2 L46,8 L46,44 Z" class="cp-d" style="--l:140;animation-delay:.2s"/>'+
-         '<line x1="18" y1="8" x2="46" y2="8" class="cp-d" style="--l:28;animation-delay:.5s"/>'+
-         '<path d="M18,8 L32,2 L46,8" class="cp-d" style="--l:36;animation-delay:.6s"/>'+
-         '<line x1="32" y1="2" x2="32" y2="8" class="cp-d" style="--l:6;animation-delay:.7s" stroke-opacity=".4"/>'+
-         '<rect x="26" y="14" width="12" height="8" rx="1" class="cp-d" style="--l:44;animation-delay:.8s" stroke-opacity=".4"/>'+
-         '<circle cx="32" cy="18" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/>'+
-         '<path d="M22,30 L42,30 M22,36 L42,36" class="cp-d" style="--l:44;animation-delay:1s" stroke-opacity=".25"/>'+
-       '</svg>',
-       desc:'Shelf-stable carton packaging for dairy alternatives, juice, broth, and plant-based beverages. Multi-layer barrier packaging with tamper-evident opening.',
-       specs:['Multi-layer carton','200mL\u20131L formats','Ambient shelf-stable','Sustainable packaging']}
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M18,44 L18,8 L32,2 L46,8 L46,44 Z" class="cp-d" style="--l:140;animation-delay:.2s"/><line x1="18" y1="8" x2="46" y2="8" class="cp-d" style="--l:28;animation-delay:.5s"/><path d="M18,8 L32,2 L46,8" class="cp-d" style="--l:36;animation-delay:.6s"/><line x1="32" y1="2" x2="32" y2="8" class="cp-d" style="--l:6;animation-delay:.7s" stroke-opacity=".4"/><rect x="26" y="14" width="12" height="8" rx="1" class="cp-d" style="--l:44;animation-delay:.8s" stroke-opacity=".4"/><circle cx="32" cy="18" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/><path d="M22,30 L42,30 M22,36 L42,36" class="cp-d" style="--l:44;animation-delay:1s" stroke-opacity=".25"/></svg>',
+       desc:'Multi-layer carton packaging for dairy alternatives, juice, broth \u2014 200mL\u20131L.',
+       specs:['Carton','200mL\u20131L','Ambient','Sustainable'],
+       diagram:'<svg viewBox="0 0 700 160" width="100%" style="max-height:160px"><defs><marker id="cpa6" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(201,168,76,.6)"/></marker></defs>'+
+         '<rect x="10" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:.1s"/><text x="50" y="68" class="cp-exp-lbl">PRODUCT</text><text x="50" y="80" class="cp-exp-lbl">TANK</text>'+
+         '<line x1="90" y1="70" x2="125" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:.3s" marker-end="url(#cpa6)"/>'+
+         '<rect x="125" y="35" width="90" height="70" rx="6" class="cp-exp-d" style="--l:320;animation-delay:.4s"/><text x="170" y="68" class="cp-exp-lbl">UHT</text><path d="M145,50 Q147,44 149,50 M165,50 Q167,44 169,50 M185,50 Q187,44 189,50" stroke="#ff5533" fill="none" stroke-width="1" stroke-opacity=".4"/>'+
+         '<line x1="215" y1="70" x2="250" y2="70" class="cp-exp-pipe" style="--l:35;animation-delay:.7s" marker-end="url(#cpa6)"/>'+
+         '<rect x="250" y="35" width="110" height="70" rx="6" class="cp-exp-d" style="--l:360;animation-delay:.8s" stroke="#C9A84C" stroke-opacity=".5"/><text x="305" y="58" class="cp-exp-lbl">FORM</text><text x="305" y="71" class="cp-exp-lbl">FILL SEAL</text>'+
+         '<path d="M270,80 L270,95 L285,95 L285,80 Z" class="cp-exp-d" style="--l:50;animation-delay:1s" stroke-opacity=".4"/><path d="M300,80 L300,95 L315,95 L315,80 Z" class="cp-exp-d" style="--l:50;animation-delay:1.1s" stroke-opacity=".4"/><path d="M330,80 L330,95 L345,95 L345,80 Z" class="cp-exp-d" style="--l:50;animation-delay:1.2s" stroke-opacity=".4"/>'+
+         '<line x1="360" y1="70" x2="400" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.3s" marker-end="url(#cpa6)"/>'+
+         '<rect x="400" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.4s"/><text x="440" y="68" class="cp-exp-lbl">CAP &amp;</text><text x="440" y="80" class="cp-exp-lbl">STRAW</text>'+
+         '<line x1="480" y1="70" x2="520" y2="70" class="cp-exp-pipe" style="--l:40;animation-delay:1.6s" marker-end="url(#cpa6)"/>'+
+         '<rect x="520" y="40" width="80" height="60" rx="6" class="cp-exp-d" style="--l:290;animation-delay:1.7s"/><text x="560" y="68" class="cp-exp-lbl">CASE</text><text x="560" y="80" class="cp-exp-lbl">PACK</text>'+
+       '</svg>'}
     ];
-    var cpGrid=document.createElement('div');
-    cpGrid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;padding-top:36px;border-top:1px solid #222';
+    /* Build layout: Row1 → Expansion → Row2 */
+    var cpWrap=document.createElement('div');
+    cpWrap.style.cssText='margin-top:36px;padding-top:36px;border-top:1px solid #222';
+    var row1=document.createElement('div');row1.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px';
+    var expSlot=document.createElement('div');expSlot.className='cp-expand';expSlot.style.cssText='margin:16px 0;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid transparent;padding:0 24px';
+    var row2=document.createElement('div');row2.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px';
+    var activeIdx=-1;
+    var allCards=[];
+    function openSlot(idx){
+      if(activeIdx===idx){expSlot.className='cp-expand';expSlot.style.borderColor='transparent';allCards[idx].classList.remove('cp-active');activeIdx=-1;return;}
+      if(activeIdx>=0)allCards[activeIdx].classList.remove('cp-active');
+      activeIdx=idx;
+      allCards[idx].classList.add('cp-active');
+      expSlot.innerHTML='<div style="padding:20px 0"><div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;letter-spacing:.05em">'+cpProcs[idx].title.toUpperCase()+' \u2014 PROCESS FLOW</div>'+cpProcs[idx].diagram+'</div>';
+      expSlot.style.borderColor='#222';
+      expSlot.className='cp-expand cp-open';
+    }
     cpProcs.forEach(function(p,pi){
       var card=document.createElement('div');
-      card.style.cssText='background:rgba(255,255,255,.03);border:1px solid #222;border-radius:14px;padding:24px;transition:border-color .3s,transform .3s;cursor:default;opacity:0;animation:tabFadeIn .5s ease '+(.15+pi*.1)+'s forwards';
-      card.onmouseenter=function(){card.style.borderColor='#C9A84C';card.style.transform='translateY(-4px)'};
-      card.onmouseleave=function(){card.style.borderColor='#222';card.style.transform='translateY(0)'};
+      card.className='cp-card';
+      card.style.cssText+='opacity:0;animation:tabFadeIn .5s ease '+(.15+pi*.1)+'s forwards';
       card.innerHTML=
         '<div style="margin-bottom:12px">'+p.svg+'</div>'+
-        '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:8px">'+p.title+'</div>'+
-        '<p style="font-size:.85rem;line-height:1.6;color:#888;margin-bottom:14px">'+p.desc+'</p>'+
-        '<ul style="list-style:none;padding:0;margin:0">'+
-          p.specs.map(function(s){return '<li style="padding:3px 0;color:#666;font-size:.8rem"><span style="color:#C9A84C;margin-right:6px">\u25b8</span>'+s+'</li>'}).join('')+
-        '</ul>';
-      cpGrid.appendChild(card);
+        '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px">'+p.title+'</div>'+
+        '<p style="font-size:.82rem;line-height:1.5;color:#888;margin-bottom:10px">'+p.desc+'</p>'+
+        '<ul style="list-style:none;padding:0;margin:0">'+p.specs.map(function(s){return '<li style="padding:2px 0;color:#666;font-size:.78rem"><span style="color:#C9A84C;margin-right:6px">\u25b8</span>'+s+'</li>'}).join('')+'</ul>';
+      card.onclick=function(){openSlot(pi)};
+      allCards.push(card);
+      if(pi<3)row1.appendChild(card);else row2.appendChild(card);
     });
-    coPackPanel.appendChild(cpGrid);
+    cpWrap.appendChild(row1);
+    cpWrap.appendChild(expSlot);
+    cpWrap.appendChild(row2);
+    coPackPanel.appendChild(cpWrap);
     /* Hide native service cards */
     var nativeGrid=document.querySelector('.services-grid');
     if(nativeGrid)nativeGrid.style.display='none';
