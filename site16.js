@@ -644,69 +644,62 @@
           '</div>'+
         '</div>';
       panel.innerHTML=palHTML;
-      /* Start PAL/Heat Pen canvas animations */
+      /* Static temperature distribution chart — drawn once */
       (function(){
-        var gc=null;
-        function animPAL(){
-          if(!gc)gc=document.getElementById('temp-graph');
-          try {
-            var t=performance.now()/1000;
-            /* === TEMPERATURE DISTRIBUTION GRAPH === */
-            if(gc){
-              var gx=gc.getContext('2d');
-              gx.clearRect(0,0,520,280);
-              /* transparent bg — no fill */
-              var pad={l:52,r:90,t:28,b:44};
-              var gw=520-pad.l-pad.r,gh=280-pad.t-pad.b;
-              var minT=0,maxT=5200;
-              function tY(v){return pad.t+gh*(1-(v-minT)/(maxT-minT));}
-              function tX(x){return pad.l+x*gw;}
-              /* Zone backgrounds */
-              var zones=[{x1:0,x2:.35,c:'rgba(255,220,80,.06)',lbl:'Come Up'},{x1:.35,x2:.65,c:'rgba(255,100,80,.07)',lbl:'P.T. Step'},{x1:.65,x2:1,c:'rgba(80,200,120,.06)',lbl:'Cooling'}];
-              zones.forEach(function(z){gx.fillStyle=z.c;gx.fillRect(tX(z.x1),pad.t,tX(z.x2)-tX(z.x1),gh);gx.fillStyle='rgba(255,255,255,.3)';gx.font='bold 9px monospace';gx.textAlign='center';gx.fillText(z.lbl,tX((z.x1+z.x2)/2),pad.t+gh+30);});
-              /* Grid */
-              gx.strokeStyle='rgba(255,255,255,.07)';gx.lineWidth=.5;
-              [0,1000,2000,3000,4000,5000].forEach(function(v){var y=tY(v);gx.beginPath();gx.moveTo(pad.l,y);gx.lineTo(pad.l+gw,y);gx.stroke();gx.fillStyle='rgba(255,255,255,.4)';gx.font='9px monospace';gx.textAlign='right';gx.fillText(v,pad.l-5,y+3);});
-              /* Y axis label */
-              gx.save();gx.translate(11,pad.t+gh/2);gx.rotate(-Math.PI/2);gx.fillStyle='rgba(255,255,255,.45)';gx.font='9px monospace';gx.textAlign='center';gx.fillText('Q (kJ)',0,0);gx.restore();
-              /* X axis label */
-              gx.fillStyle='rgba(255,255,255,.4)';gx.font='9px monospace';gx.textAlign='right';gx.fillText('Time (min)',pad.l+gw,280-6);
-              /* === 6 COLORED LINES matching reference chart === */
-              var prog=Math.min(1,(t%10)/8);
-              var dp=Math.floor(prog*20);
-              /* Data series [x 0-1, Q_kJ] */
-              var series=[
-                {color:'#ef4444',dash:[6,3],lw:2,pts:[[0,0],[.05,800],[.12,5000],[.2,5050],[.35,5050],[.5,5050],[.6,5050],[.65,5020],[.7,4800],[.75,3800],[.8,2800],[.9,2000],[1,1600]],lbl:'Q-Steam input'},
-                {color:'#e2e8f0',dash:[],lw:2,pts:[[0,0],[.1,200],[.2,800],[.3,2400],[.35,3600],[.4,3700],[.5,3750],[.6,3700],[.65,3200],[.7,1400],[.8,600],[.9,350],[1,200]],lbl:'Q-Product+container'},
-                {color:'#22d3ee',dash:[],lw:1.5,pts:[[0,0],[.07,4200],[.12,3000],[.2,1200],[.3,400],[.4,200],[.5,150],[.65,120],[.8,200],[.9,350],[1,500]],lbl:'Q-Retort+basket'},
-                {color:'#f59e0b',dash:[],lw:1.5,pts:[[0,0],[.05,80],[.1,120],[.2,200],[.3,350],[.4,420],[.5,440],[.6,420],[.65,380],[.7,300],[.8,150],[.9,60],[1,0]],lbl:'Q-Venting'},
-                {color:'#7c3aed',dash:[],lw:1.5,pts:[[0,0],[.1,20],[.2,40],[.35,60],[.5,80],[.65,60],[.8,30],[1,10]],lbl:'Q-Drainage'},
-                {color:'#22c55e',dash:[],lw:1.5,pts:[[0,0],[.1,30],[.2,80],[.35,180],[.5,320],[.6,500],[.7,650],[.8,700],[.9,720],[1,730]],lbl:'Q-Losses/walls'}
-              ];
-              series.forEach(function(s){
-                gx.strokeStyle=s.color;gx.lineWidth=s.lw;
-                gx.setLineDash(s.dash);
-                gx.beginPath();
-                var drawn=0;
-                for(var pi=0;pi<s.pts.length;pi++){
-                  if(s.pts[pi][0]>prog)break;
-                  var px=tX(s.pts[pi][0]),py=tY(s.pts[pi][1]);
-                  if(pi===0||drawn===0){gx.moveTo(px,py);}else{gx.lineTo(px,py);}
-                  drawn++;
-                }
-                gx.stroke();
-                gx.setLineDash([]);
-                /* Legend dot + label */
-                var li=series.indexOf(s);
-                gx.fillStyle=s.color;gx.beginPath();gx.arc(pad.l+gw+8,pad.t+8+li*22,4,0,Math.PI*2);gx.fill();
-                gx.fillStyle='rgba(255,255,255,.7)';gx.font='8px monospace';gx.textAlign='left';
-                gx.fillText(s.lbl,pad.l+gw+16,pad.t+11+li*22);
-              });
-            }
-          } catch(e){ console.error('animPAL error:',e); }
-          requestAnimationFrame(animPAL);
+        var gc=document.getElementById('temp-graph');
+        if(!gc)return;
+        var gx=gc.getContext('2d');
+        var W=520,H=280;
+        var pad={l:44,r:100,t:32,b:38};
+        var gw=W-pad.l-pad.r,gh=H-pad.t-pad.b;
+        var maxQ=5200;
+        function qY(v){return pad.t+gh*(1-v/maxQ);}
+        function tX(x){return pad.l+x*gw;}
+        /* Title */
+        gx.fillStyle='rgba(255,255,255,.5)';gx.font='bold 9px monospace';gx.textAlign='center';
+        gx.fillText('TDVC = 105\u00b0C \u00b7 IPT = 4\u00b0C \u00b7 208 x 109',W/2,14);
+        /* Grid lines + Y labels */
+        gx.strokeStyle='rgba(255,255,255,.08)';gx.lineWidth=.5;
+        [0,1000,2000,3000,4000,5000].forEach(function(v){
+          var y=qY(v);gx.beginPath();gx.moveTo(pad.l,y);gx.lineTo(pad.l+gw,y);gx.stroke();
+          gx.fillStyle='rgba(255,255,255,.45)';gx.font='9px monospace';gx.textAlign='right';
+          gx.fillText(v.toLocaleString(),pad.l-6,y+3);
+        });
+        /* X axis ticks: 0-8 min */
+        for(var xi=0;xi<=8;xi++){
+          var xx=tX(xi/8);
+          gx.beginPath();gx.moveTo(xx,pad.t+gh);gx.lineTo(xx,pad.t+gh+4);gx.strokeStyle='rgba(255,255,255,.2)';gx.stroke();
+          gx.fillStyle='rgba(255,255,255,.45)';gx.font='9px monospace';gx.textAlign='center';
+          gx.fillText(xi+'.0',xx,pad.t+gh+16);
         }
-        animPAL();
+        /* Axis labels */
+        gx.save();gx.translate(10,pad.t+gh/2);gx.rotate(-Math.PI/2);gx.fillStyle='rgba(255,255,255,.5)';gx.font='bold 9px monospace';gx.textAlign='center';gx.fillText('Q (kJ)',0,0);gx.restore();
+        gx.fillStyle='rgba(255,255,255,.5)';gx.font='9px monospace';gx.textAlign='center';gx.fillText('Time (min)',pad.l+gw/2,H-4);
+        /* === 6 data series — x in minutes (0-8), y in kJ === */
+        var series=[
+          {color:'#ef4444',dash:[6,3],lw:2.5,pts:[[0,0],[.3,1200],[.6,4800],[.8,5050],[1,5100],[1.5,5050],[2,4900],[2.5,4200],[3,3800],[3.5,3200],[4,3600],[4.5,4000],[5,3900],[5.5,3400],[6,2800],[6.5,1800],[7,1200],[7.5,800],[8,500]],lbl:'Q-Steam input'},
+          {color:'#ffffff',dash:[],lw:2.5,pts:[[0,0],[.3,400],[.6,2800],[.8,4400],[1,4200],[1.3,2800],[1.5,1400],[2,500],[2.5,300],[3,200],[3.5,400],[4,1200],[4.5,2600],[5,3800],[5.5,3600],[6,2400],[6.5,1200],[7,600],[7.5,300],[8,200]],lbl:'Q-Product+container'},
+          {color:'#22d3ee',dash:[],lw:2,pts:[[0,0],[.2,1800],[.4,4400],[.6,3600],[.8,2000],[1,800],[1.5,300],[2,100],[2.5,80],[3,50],[4,40],[5,50],[6,100],[7,200],[8,400]],lbl:'Q-Retort+basket'},
+          {color:'#f59e0b',dash:[],lw:1.5,pts:[[0,0],[.5,50],[1,120],[1.5,180],[2,200],[3,250],[4,300],[5,350],[6,400],[6.5,500],[7,700],[7.5,850],[8,900]],lbl:'Q-Venting'},
+          {color:'#a855f7',dash:[],lw:1.5,pts:[[0,0],[1,10],[2,20],[3,30],[4,40],[5,60],[5.5,80],[6,200],[6.5,500],[7,800],[7.5,600],[8,300]],lbl:'Q-Drainage'},
+          {color:'#22c55e',dash:[],lw:1.5,pts:[[0,0],[.5,10],[1,30],[2,60],[3,100],[4,150],[5,200],[6,280],[7,350],[8,400]],lbl:'Q-Losses/walls'}
+        ];
+        /* Draw each series as smooth lines */
+        series.forEach(function(s,si){
+          gx.strokeStyle=s.color;gx.lineWidth=s.lw;gx.setLineDash(s.dash||[]);
+          gx.beginPath();
+          for(var pi=0;pi<s.pts.length;pi++){
+            var px=tX(s.pts[pi][0]/8),py=qY(s.pts[pi][1]);
+            if(pi===0)gx.moveTo(px,py);else gx.lineTo(px,py);
+          }
+          gx.stroke();gx.setLineDash([]);
+          /* Legend — colored line + label */
+          var ly=pad.t+6+si*20;
+          gx.strokeStyle=s.color;gx.lineWidth=s.lw;gx.setLineDash(s.dash||[]);
+          gx.beginPath();gx.moveTo(pad.l+gw+8,ly);gx.lineTo(pad.l+gw+28,ly);gx.stroke();gx.setLineDash([]);
+          gx.fillStyle=s.color;gx.font='8px monospace';gx.textAlign='left';
+          gx.fillText(s.lbl,pad.l+gw+32,ly+3);
+        });
       })();
     } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
