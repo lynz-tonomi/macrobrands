@@ -510,7 +510,7 @@
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         '<div id="pal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
-          '<div style="background:#0e0f11;border-radius:12px;padding:12px 16px 8px;border:1px solid #222;overflow:hidden">'+
+          '<div style="background:transparent;border-radius:12px;padding:12px 16px 8px;border:1px solid #222;overflow:hidden">'+
             '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Heat Penetration Study</div>'+
             '<style>'+
             '@keyframes rsvg-draw{to{stroke-dashoffset:0}}'+
@@ -638,7 +638,7 @@
             '<div style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase"><div style="width:22px;height:2px;background:#fff;opacity:.35"></div>Vessel structure</div>'+
             '</div>'+
           '</div>'+
-          '<div id="pal-right" style="background:#111;border-radius:12px;padding:20px;border:1px solid #222;overflow:hidden">'+
+          '<div id="pal-right" style="background:transparent;border-radius:12px;padding:20px;border:1px solid #222;overflow:hidden">'+
             '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Temperature Distribution</div>'+
             '<canvas id="temp-graph" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
           '</div>'+
@@ -655,7 +655,7 @@
             if(gc){
               var gx=gc.getContext('2d');
               gx.clearRect(0,0,520,280);
-              gx.fillStyle='#0a0a0a';gx.fillRect(0,0,520,280);
+              /* transparent bg — no fill */
               var pad={l:52,r:90,t:28,b:44};
               var gw=520-pad.l-pad.r,gh=280-pad.t-pad.b;
               var minT=0,maxT=5200;
