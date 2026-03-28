@@ -821,20 +821,11 @@
     // Cutout gentle parallax — only if visible
     // Cutout bottle stays locked in position — no parallax movement, must align with background
 
-    // Native Webflow beaker + bulb — fade in from left on scroll, behind text
+    // Native Webflow beaker + bulb — HIDDEN (user request)
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
-    // Beaker + bulb — full-width overlays, same canvas as original photo, behind text (z:0)
-    if(beaker){
-      beaker.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:0;pointer-events:none';
-    }
-    if(bulb){
-      bulb.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:0;pointer-events:none';
-    }
-    // Beaker slides full canvas in from left — completes at 100vh
-    if(beaker&&hasGsap){gsap.fromTo(beaker,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
-    // Bulb slides full canvas in from left — starts later, completes at 100vh
-    if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
+    if(beaker){beaker.style.display='none';}
+    if(bulb){bulb.style.display='none';}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
