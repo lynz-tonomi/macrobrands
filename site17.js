@@ -841,66 +841,138 @@
             '</div>'+
           '</div>'+
         '</div>'+
-        /* Animated SVG — network mesh with 29 agent nodes converging */
+        /* Supply Chain process flow — matching beverage-process equipment style */
         '<div style="display:flex;justify-content:center;margin-bottom:32px">'+
-          '<svg viewBox="0 0 700 200" width="100%" style="max-width:700px;max-height:200px">'+
+          '<svg viewBox="0 0 900 300" width="100%" style="max-width:900px">'+
             '<defs>'+
               '<filter id="scgo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
-              '<radialGradient id="scpulse"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".5"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></radialGradient>'+
+              '<filter id="scgb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+              '<marker id="scm" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0,6 3,0 6" fill="#C9A84C"/></marker>'+
             '</defs>'+
-            /* Guide line */
-            '<line x1="40" y1="180" x2="660" y2="180" stroke="white" stroke-width=".6" stroke-opacity=".05" class="cp-d" style="--l:620;animation-delay:0s"/>'+
-            /* Left cluster: Procurement */
-            '<circle cx="80" cy="60" r="18" stroke="#f97316" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.2s"/>'+
-            '<circle cx="80" cy="60" r="4" fill="#f97316" fill-opacity=".6" class="cp-fi" style="animation-delay:1.2s"/>'+
-            '<text x="80" y="95" class="cp-lbl" style="font-size:7px">PROCUREMENT</text>'+
-            '<circle cx="40" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.4s"/>'+
-            '<circle cx="50" cy="80" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.5s"/>'+
-            '<circle cx="120" cy="50" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.6s"/>'+
-            '<line x1="40" y1="45" x2="80" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:45;animation-delay:.6s"/>'+
-            '<line x1="50" y1="80" x2="80" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:.65s"/>'+
-            '<line x1="120" y1="50" x2="80" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:.7s"/>'+
-            /* Center-left: Production */
-            '<circle cx="230" cy="55" r="18" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.35s"/>'+
-            '<circle cx="230" cy="55" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.3s"/>'+
-            '<text x="230" y="90" class="cp-lbl" style="font-size:7px">PRODUCTION</text>'+
-            '<circle cx="190" cy="40" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.7s"/>'+
-            '<circle cx="200" cy="75" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.8s"/>'+
-            '<circle cx="270" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.9s"/>'+
-            '<line x1="190" y1="40" x2="230" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:44;animation-delay:.8s"/>'+
-            '<line x1="200" y1="75" x2="230" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:.85s"/>'+
-            '<line x1="270" y1="45" x2="230" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:.9s"/>'+
-            /* Center: AUTONOMI hub */
-            '<circle cx="350" cy="100" r="28" stroke="#C9A84C" stroke-width="2" fill="none" stroke-opacity=".4" class="cp-d" style="--l:176;animation-delay:.1s"/>'+
-            '<circle cx="350" cy="100" r="40" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".1" class="cp-d" style="--l:252;animation-delay:.15s"/>'+
-            '<circle cx="350" cy="100" r="8" fill="#C9A84C" fill-opacity=".7" class="cp-fi" style="animation-delay:1s" filter="url(#scgo)"/>'+
-            '<text x="350" y="148" class="cp-lbl" style="font-size:8px;fill:#C9A84C;fill-opacity:.8">AUTONOMI</text>'+
-            '<text x="350" y="158" class="cp-lbl" style="font-size:6.5px;fill:#C9A84C;fill-opacity:.4">29 AI AGENTS</text>'+
-            /* Center-right: Quality */
-            '<circle cx="470" cy="55" r="18" stroke="#38bdf8" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.4s"/>'+
-            '<circle cx="470" cy="55" r="4" fill="#38bdf8" fill-opacity=".6" class="cp-fi" style="animation-delay:1.35s"/>'+
-            '<text x="470" y="90" class="cp-lbl" style="font-size:7px">QUALITY</text>'+
-            '<circle cx="430" cy="40" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2s"/>'+
-            '<circle cx="440" cy="75" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.1s"/>'+
-            '<circle cx="510" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.2s"/>'+
-            '<line x1="430" y1="40" x2="470" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:44;animation-delay:.95s"/>'+
-            '<line x1="440" y1="75" x2="470" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:1s"/>'+
-            '<line x1="510" y1="45" x2="470" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:1.05s"/>'+
-            /* Right cluster: Logistics */
-            '<circle cx="620" cy="60" r="18" stroke="#4ade80" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.45s"/>'+
-            '<circle cx="620" cy="60" r="4" fill="#4ade80" fill-opacity=".6" class="cp-fi" style="animation-delay:1.4s"/>'+
-            '<text x="620" y="95" class="cp-lbl" style="font-size:7px">LOGISTICS</text>'+
-            '<circle cx="580" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/>'+
-            '<circle cx="590" cy="80" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.4s"/>'+
-            '<circle cx="660" cy="50" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.5s"/>'+
-            '<line x1="580" y1="45" x2="620" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:44;animation-delay:1.1s"/>'+
-            '<line x1="590" y1="80" x2="620" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:1.15s"/>'+
-            '<line x1="660" y1="50" x2="620" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:1.2s"/>'+
-            /* Hub connections — flowing pipes from clusters to center */
-            '<line x1="98" y1="60" x2="322" y2="100" stroke="#f97316" stroke-width="2" stroke-dasharray="10 6" class="cp-pO" filter="url(#scgo)"/>'+
-            '<line x1="248" y1="55" x2="322" y2="100" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="10 6" fill="none" style="animation:cpFlow .5s linear infinite;animation-delay:2s"/>'+
-            '<line x1="452" y1="55" x2="378" y2="100" stroke="#38bdf8" stroke-width="2" stroke-dasharray="10 6" class="cp-pB" filter="url(#scgo)"/>'+
-            '<line x1="602" y1="60" x2="378" y2="100" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="10 6" fill="none" style="animation:cpFlow .6s linear infinite;animation-delay:2s"/>'+
+            /* ─── AUTONOMI INTELLIGENCE BAR (top) ─── */
+            '<rect x="60" y="16" width="780" height="42" rx="21" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".2" class="cp-d" style="--l:1640;animation-delay:.05s"/>'+
+            '<rect x="66" y="22" width="768" height="30" rx="15" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".08" class="cp-fi" style="animation-delay:1.2s"/>'+
+            /* Neural pulse line inside bar */
+            '<line x1="90" y1="37" x2="810" y2="37" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 8" class="cp-pO" style="stroke:#C9A84C" filter="url(#scgo)"/>'+
+            /* Hub nodes along the bar */
+            '<circle cx="140" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.4s" filter="url(#scgo)"/>'+
+            '<circle cx="290" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.5s" filter="url(#scgo)"/>'+
+            '<circle cx="450" cy="37" r="6" fill="#C9A84C" fill-opacity=".8" class="cp-fi" style="animation-delay:1.3s" filter="url(#scgo)"/>'+
+            '<circle cx="610" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.6s" filter="url(#scgo)"/>'+
+            '<circle cx="760" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.7s" filter="url(#scgo)"/>'+
+            '<text x="450" y="27" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.7;letter-spacing:3px">AUTONOMI \u00b7 29 AI AGENTS \u00b7 REAL-TIME</text>'+
+            /* ─── VERTICAL DATA FEEDS (bar → stages) ─── */
+            '<line x1="140" y1="58" x2="140" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.8s"/>'+
+            '<line x1="290" y1="58" x2="290" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.9s"/>'+
+            '<line x1="450" y1="58" x2="450" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1s"/>'+
+            '<line x1="610" y1="58" x2="610" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.1s"/>'+
+            '<line x1="760" y1="58" x2="760" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.2s"/>'+
+            /* ─── GUIDELINE ─── */
+            '<line x1="40" y1="270" x2="860" y2="270" stroke="white" stroke-width=".6" stroke-opacity=".05" class="cp-d" style="--l:820;animation-delay:0s"/>'+
+            /* ═══ STAGE 1: VENDOR SOURCING (database icon) ═══ */
+            '<rect x="100" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.15s"/>'+
+            '<path d="M100,108 Q140,94 180,108" class="cp-d" style="--l:88;animation-delay:.2s"/>'+
+            /* server/database shelves */
+            '<line x1="112" y1="132" x2="168" y2="132" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.5s"/>'+
+            '<line x1="112" y1="152" x2="168" y2="152" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.55s"/>'+
+            '<line x1="112" y1="172" x2="168" y2="172" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.6s"/>'+
+            /* status lights */
+            '<circle cx="122" cy="125" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.8s"/>'+
+            '<circle cx="122" cy="145" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.9s"/>'+
+            '<circle cx="122" cy="165" r="2" fill="#f97316" fill-opacity=".5" class="cp-fi" style="animation-delay:2s"/>'+
+            /* data rows */
+            '<rect x="130" y="122" width="30" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2s"/>'+
+            '<rect x="130" y="142" width="24" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.1s"/>'+
+            '<rect x="130" y="162" width="28" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.2s"/>'+
+            '<text x="140" y="230" class="cp-lbl">VENDOR</text>'+
+            '<text x="140" y="241" class="cp-lbl" fill-opacity=".4">SOURCING</text>'+
+            /* ─── PIPE: vendor → procurement ─── */
+            '<line x1="180" y1="158" x2="240" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:.7s"/>'+
+            '<line x1="180" y1="158" x2="240" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+            '<polygon points="225,158 215,154 215,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+            /* ═══ STAGE 2: PROCUREMENT (PO document) ═══ */
+            '<rect x="250" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.3s"/>'+
+            /* document icon inside */
+            '<rect x="268" y="120" width="44" height="56" rx="3" stroke="white" stroke-width=".8" stroke-opacity=".25" fill="none" class="cp-d" style="--l:200;animation-delay:.65s"/>'+
+            /* corner fold */
+            '<path d="M298,120 L312,120 L312,134 Z" stroke="white" stroke-width=".7" fill="none" stroke-opacity=".2" class="cp-d" style="--l:50;animation-delay:.75s"/>'+
+            /* text lines on doc */
+            '<line x1="274" y1="140" x2="300" y2="140" stroke="white" stroke-width=".8" stroke-opacity=".15" class="cp-fi" style="animation-delay:2.1s"/>'+
+            '<line x1="274" y1="148" x2="306" y2="148" stroke="white" stroke-width=".8" stroke-opacity=".12" class="cp-fi" style="animation-delay:2.15s"/>'+
+            '<line x1="274" y1="156" x2="296" y2="156" stroke="white" stroke-width=".8" stroke-opacity=".1" class="cp-fi" style="animation-delay:2.2s"/>'+
+            /* approval checkmark */
+            '<path d="M280,164 L286,170 L300,158" stroke="#4ade80" stroke-width="1.5" fill="none" class="cp-d" style="--l:32;animation-delay:1.6s" filter="url(#scgb)"/>'+
+            '<text x="290" y="230" class="cp-lbl">PROCUREMENT</text>'+
+            '<text x="290" y="241" class="cp-lbl" fill-opacity=".4">AI AGENTS</text>'+
+            /* ─── PIPE: procurement → production ─── */
+            '<line x1="330" y1="158" x2="400" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:.9s"/>'+
+            '<line x1="330" y1="158" x2="400" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+            '<polygon points="385,158 375,154 375,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+            /* ═══ STAGE 3: PRODUCTION (factory w/ gear) ═══ */
+            '<rect x="410" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.4s"/>'+
+            /* factory roof line */
+            '<path d="M410,108 L430,94 L450,108 L470,94 L490,108" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.45s"/>'+
+            /* gear */
+            '<circle cx="450" cy="150" r="16" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.8s"/>'+
+            '<circle cx="450" cy="150" r="6" stroke="white" stroke-width="1" fill="none" class="cp-imp"/>'+
+            /* gear teeth */
+            '<line x1="450" y1="132" x2="450" y2="126" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.85s"/>'+
+            '<line x1="450" y1="168" x2="450" y2="174" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.87s"/>'+
+            '<line x1="432" y1="150" x2="426" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.89s"/>'+
+            '<line x1="468" y1="150" x2="474" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.91s"/>'+
+            /* smokestack */
+            '<rect x="422" y="94" width="8" height="18" rx="1" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-d" style="--l:52;animation-delay:.7s"/>'+
+            /* steam from stack */
+            '<path d="M426,90 Q428,84 430,90" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-ws"/>'+
+            '<path d="M424,84 Q427,78 430,84" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-ws1"/>'+
+            '<text x="450" y="230" class="cp-lbl">PRODUCTION</text>'+
+            '<text x="450" y="241" class="cp-lbl" fill-opacity=".4">SCHEDULING</text>'+
+            /* ─── PIPE: production → quality ─── */
+            '<line x1="490" y1="158" x2="560" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:1.1s"/>'+
+            '<line x1="490" y1="158" x2="560" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+            '<polygon points="545,158 535,154 535,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+            /* ═══ STAGE 4: QUALITY (shield + checkmark) ═══ */
+            '<rect x="570" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.5s"/>'+
+            /* shield outline */
+            '<path d="M610,118 L632,126 L632,154 Q632,172 610,178 Q588,172 588,154 L588,126 Z" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:180;animation-delay:.85s"/>'+
+            /* inner shield fill */
+            '<path d="M610,124 L626,130 L626,152 Q626,166 610,172 Q594,166 594,152 L594,130 Z" fill="white" fill-opacity=".03" class="cp-fi" style="animation-delay:2s"/>'+
+            /* checkmark inside shield */
+            '<path d="M600,148 L607,156 L622,140" stroke="#4ade80" stroke-width="2" fill="none" stroke-linecap="round" class="cp-d" style="--l:36;animation-delay:1.4s" filter="url(#scgb)"/>'+
+            /* COA badge */
+            '<text x="610" y="195" class="cp-lbl" style="font-size:7px;fill:#4ade80;fill-opacity:.5">COA \u2713</text>'+
+            '<text x="610" y="230" class="cp-lbl">QUALITY</text>'+
+            '<text x="610" y="241" class="cp-lbl" fill-opacity=".4">INTELLIGENCE</text>'+
+            /* ─── PIPE: quality → logistics ─── */
+            '<line x1="650" y1="158" x2="710" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:1.3s"/>'+
+            '<line x1="650" y1="158" x2="710" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+            '<polygon points="698,158 688,154 688,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+            /* ═══ STAGE 5: LOGISTICS (truck + route) ═══ */
+            '<rect x="720" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.6s"/>'+
+            /* truck body */
+            '<rect x="734" y="140" width="36" height="24" rx="3" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:120;animation-delay:.95s"/>'+
+            /* truck cab */
+            '<path d="M770,148 L782,148 L786,156 L786,164 L770,164" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:60;animation-delay:1s"/>'+
+            /* wheels */
+            '<circle cx="744" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.1s"/>'+
+            '<circle cx="778" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.15s"/>'+
+            /* hub caps */
+            '<circle cx="744" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/>'+
+            '<circle cx="778" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.35s"/>'+
+            /* route dots (GPS path) */
+            '<circle cx="740" cy="126" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.4s"/>'+
+            '<circle cx="752" cy="122" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.5s"/>'+
+            '<circle cx="764" cy="126" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.6s"/>'+
+            '<circle cx="776" cy="122" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.7s"/>'+
+            '<path d="M740,126 Q746,120 752,122 Q758,124 764,126 Q770,120 776,122" stroke="#f97316" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-d" style="--l:40;animation-delay:1.5s"/>'+
+            '<text x="760" y="230" class="cp-lbl">LOGISTICS</text>'+
+            '<text x="760" y="241" class="cp-lbl" fill-opacity=".4">&amp; 3PL</text>'+
+            /* ─── STAGE NUMBERS ─── */
+            '<text x="140" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">01</text>'+
+            '<text x="290" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">02</text>'+
+            '<text x="450" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">03</text>'+
+            '<text x="610" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">04</text>'+
+            '<text x="760" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">05</text>'+
           '</svg>'+
         '</div>'+
         /* Bullet capabilities in 2 columns */
