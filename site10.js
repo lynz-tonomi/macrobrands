@@ -1,4 +1,4 @@
-(function(){if(window._macroLoaded)return;window._macroLoaded=true;
+(function(){if(window._macroVersion>=10)return;window._macroVersion=10;
 /* MACRO Brands — Master Site Script */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
