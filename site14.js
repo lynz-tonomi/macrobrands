@@ -341,8 +341,8 @@
         /* Bottom row: beaker left, parallax scientist right */
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
           '<div id="carousel-wrap" style="border-radius:16px;overflow:hidden;background:#000;border:1px solid #222;height:380px;position:relative">'+
-            '<img id="carousel-img-a" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center top;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
-            '<img id="carousel-img-b" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center top;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
+            '<img id="carousel-img-a" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
+            '<img id="carousel-img-b" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
           '</div>'+
           '<div id="parallax-form-wrap" style="border-radius:16px;overflow:hidden;border:1px solid #222;height:380px;position:relative">'+
             '<img id="parallax-form-img" src="'+ghBase+'Lab_formulation.png" style="width:100%;height:140%;object-fit:cover;object-position:center top;position:absolute;top:-20%;will-change:transform" alt="Lab scientist formulating">'+
