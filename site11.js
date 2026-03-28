@@ -481,8 +481,8 @@
       panel.innerHTML=palHTML;
       /* Start PAL/Heat Pen canvas animations */
       (function(){
-        var rc=document.getElementById('retort-anim');
-        var gc=document.getElementById('temp-graph');
+        var rc=panel.querySelector('#retort-anim');
+        var gc=panel.querySelector('#temp-graph');
         function animPAL(){
           try {
             var t=performance.now()/1000;
