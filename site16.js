@@ -881,20 +881,37 @@
   // Activate first tab
   buttons[0].onclick();
 
-  // Move native service cards into Co-Packing tab (index 5)
-  var nativeGrid=document.querySelector('.services-grid');
-  if(nativeGrid && panels.length>5){
+  // Co-Packing process cards (index 5)
+  if(panels.length>5){
     var coPackPanel=panels[5];
-    var gridClone=nativeGrid;
-    gridClone.style.display='grid';
-    gridClone.style.gridTemplateColumns='repeat(3,1fr)';
-    gridClone.style.gap='24px';
-    gridClone.style.marginTop='40px';
-    gridClone.style.paddingTop='40px';
-    gridClone.style.borderTop='1px solid #222';
-    gridClone.querySelectorAll('.service-card').forEach(function(c){c.style.display='block'});
-    // Find the grid wrapper inside co-pack panel (after the 2-col layout)
-    coPackPanel.appendChild(gridClone);
+    var cpProcs=[
+      {title:'Tunnel Pasteurization',icon:'\u2248',desc:'Continuous hot-water tunnel for high-acid beverages — juice, tea, kombucha. Gentle thermal kill preserves flavor while achieving commercial sterility at 185°F+.', specs:['High-acid (pH < 4.6)','Glass & PET compatible','12–64 oz formats','Continuous throughput']},
+      {title:'Retort Processing',icon:'\uD83D\uDD25',desc:'Batch pressure-cooking for low-acid shelf-stable products — soups, broths, plant milks. Full 21 CFR 113 compliance with our FDA-registered retort systems.', specs:['Low-acid (pH ≥ 4.6)','Cans: 8oz, 8.4oz, 12oz','250°F+ under pressure','FDA filed process']},
+      {title:'ESL Bottling',icon:'\u26A1',desc:'Extended Shelf Life processing bridges the gap between fresh and shelf-stable. Light pasteurization + clean-fill for refrigerated products with 60–120 day shelf life.', specs:['Refrigerated distribution','60–120 day shelf life','PET & HDPE bottles','Clean-room fill environment']},
+      {title:'Aseptic Bottling',icon:'\u2727',desc:'UHT sterilization + aseptic PET filling for ambient shelf-stable beverages. No preservatives needed — product and package sterilized independently.', specs:['Ambient shelf-stable','PET: 2oz–64oz','No preservatives','12+ month shelf life']},
+      {title:'Aseptic Bag-in-Box',icon:'\uD83D\uDCE6',desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail. Sterile bag inside corrugated box — ideal for concentrates, bases, and ready-to-drink.', specs:['Bag-in-Box: 2L–25L','Foodservice & bulk','Concentrate & RTD','Aseptic valve technology']},
+      {title:'Tetra Pak',icon:'\u25A0',desc:'Shelf-stable carton packaging for dairy alternatives, juice, broth, and plant-based beverages. Multi-layer barrier packaging with tamper-evident opening.', specs:['Multi-layer carton','200mL–1L formats','Ambient shelf-stable','Sustainable packaging']}
+    ];
+    var cpGrid=document.createElement('div');
+    cpGrid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;padding-top:36px;border-top:1px solid #222';
+    cpProcs.forEach(function(p,pi){
+      var card=document.createElement('div');
+      card.style.cssText='background:rgba(255,255,255,.03);border:1px solid #222;border-radius:14px;padding:24px;transition:border-color .3s,transform .3s;cursor:default;opacity:0;animation:tabFadeIn .5s ease '+(.15+pi*.1)+'s forwards';
+      card.onmouseenter=function(){card.style.borderColor='#C9A84C';card.style.transform='translateY(-4px)'};
+      card.onmouseleave=function(){card.style.borderColor='#222';card.style.transform='translateY(0)'};
+      card.innerHTML=
+        '<div style="font-size:1.5rem;margin-bottom:10px">'+p.icon+'</div>'+
+        '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:8px">'+p.title+'</div>'+
+        '<p style="font-size:.85rem;line-height:1.6;color:#888;margin-bottom:14px">'+p.desc+'</p>'+
+        '<ul style="list-style:none;padding:0;margin:0">'+
+          p.specs.map(function(s){return '<li style="padding:3px 0;color:#666;font-size:.8rem"><span style="color:#C9A84C;margin-right:6px">▸</span>'+s+'</li>'}).join('')+
+        '</ul>';
+      cpGrid.appendChild(card);
+    });
+    coPackPanel.appendChild(cpGrid);
+    /* Hide native service cards */
+    var nativeGrid=document.querySelector('.services-grid');
+    if(nativeGrid)nativeGrid.style.display='none';
   }
 
 
