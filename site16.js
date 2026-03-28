@@ -661,18 +661,180 @@
           },300+idx*400);
         });
       })();
+    } else if(i===4){
+      /* ===== Scale-Up tab — production line SVG + animated bullets ===== */
+      var suHTML=
+        '<div style="margin-bottom:32px">'+
+          '<div id="icon-slot-'+i+'"></div>'+
+          '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
+          '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          tab.bullets.map(function(b){return '<li style="padding:4px 0;color:#bbb;font-size:.95rem"><span style="color:#C9A84C;margin-right:8px">\u2713</span>'+b+'</li>'}).join('')+
+          '</ul>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+        '</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
+          /* Left: animated production line SVG */
+          '<div style="background:transparent;border-radius:12px;padding:16px;border:1px solid #222;overflow:hidden">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Production Line</div>'+
+            '<style>'+
+            '@keyframes su-draw{to{stroke-dashoffset:0}}'+
+            '@keyframes su-fadeIn{from{opacity:0}to{opacity:1}}'+
+            '.su-d{stroke-dasharray:var(--l,800);stroke-dashoffset:var(--l,800);animation:su-draw 1.2s cubic-bezier(.4,0,.2,1) forwards}'+
+            '.su-d2{animation-delay:.2s}.su-d3{animation-delay:.4s}.su-d4{animation-delay:.6s}.su-d5{animation-delay:.8s}.su-d6{animation-delay:1s}.su-d7{animation-delay:1.2s}'+
+            '.su-fi{opacity:0;animation:su-fadeIn .5s ease forwards}'+
+            '.su-fi2{animation-delay:.6s}.su-fi3{animation-delay:.9s}.su-fi4{animation-delay:1.2s}.su-fi5{animation-delay:1.5s}.su-fi6{animation-delay:1.8s}.su-fi7{animation-delay:2.1s}'+
+            '@keyframes su-flow{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}'+
+            '.su-pipe{stroke:#C9A84C;stroke-width:2;stroke-dasharray:8 4;fill:none;animation:su-flow .6s linear infinite}'+
+            '@keyframes su-pulse{0%,100%{opacity:.3}50%{opacity:.9}}'+
+            '.su-glow{animation:su-pulse 2s ease-in-out infinite}'+
+            '@keyframes su-agitate{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}'+
+            '.su-stir{transform-box:fill-box;transform-origin:center top;animation:su-agitate .6s ease-in-out infinite;animation-delay:1.5s}'+
+            '@keyframes su-fillUp{from{height:0}to{height:24px}}'+
+            '.su-liquid{animation:su-fillUp 1.5s ease forwards;animation-delay:1.8s}'+
+            '</style>'+
+            '<svg width="100%" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible">'+
+            '<defs>'+
+              '<marker id="su-ma" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0,6 3,0 6" fill="#C9A84C"/></marker>'+
+            '</defs>'+
+            /* Stage 1: Ingredient Tank */
+            '<g class="su-fi su-fi2">'+
+              '<rect x="20" y="80" width="70" height="100" rx="6" fill="none" stroke="#fff" stroke-width="2" class="su-d" style="--l:350"/>'+
+              '<ellipse cx="55" cy="80" rx="35" ry="10" fill="none" stroke="#fff" stroke-width="2" class="su-d" style="--l:220"/>'+
+              '<rect x="40" y="130" width="30" height="24" rx="2" fill="#C9A84C" fill-opacity=".15" class="su-liquid"/>'+
+              '<text x="55" y="200" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">INGREDIENTS</text>'+
+            '</g>'+
+            /* Pipe 1→2 */
+            '<line x1="90" y1="130" x2="140" y2="130" class="su-pipe su-fi su-fi3" marker-end="url(#su-ma)"/>'+
+            /* Stage 2: Mixing Vessel */
+            '<g class="su-fi su-fi3">'+
+              '<path d="M150,90 L145,170 Q148,180 170,180 Q192,180 195,170 L190,90 Z" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d3" style="--l:300"/>'+
+              '<line x1="170" y1="70" x2="170" y2="110" stroke="#fff" stroke-width="2" class="su-d su-d3" style="--l:40"/>'+
+              '<g class="su-stir"><line x1="160" y1="110" x2="180" y2="120" stroke="#fff" stroke-width="1.5" stroke-opacity=".7"/><line x1="180" y1="110" x2="160" y2="120" stroke="#fff" stroke-width="1.5" stroke-opacity=".7"/></g>'+
+              '<text x="170" y="200" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">BLENDING</text>'+
+            '</g>'+
+            /* Pipe 2→3 */
+            '<line x1="195" y1="130" x2="245" y2="130" class="su-pipe su-fi su-fi4" marker-end="url(#su-ma)"/>'+
+            /* Stage 3: Filler */
+            '<g class="su-fi su-fi4">'+
+              '<rect x="250" y="90" width="60" height="80" rx="4" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d4" style="--l:290"/>'+
+              /* Nozzles */
+              '<line x1="265" y1="170" x2="265" y2="185" stroke="#fff" stroke-width="1.5" stroke-opacity=".6"/>'+
+              '<line x1="280" y1="170" x2="280" y2="185" stroke="#fff" stroke-width="1.5" stroke-opacity=".6"/>'+
+              '<line x1="295" y1="170" x2="295" y2="185" stroke="#fff" stroke-width="1.5" stroke-opacity=".6"/>'+
+              /* Cans below nozzles */
+              '<rect x="258" y="186" width="14" height="20" rx="2" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<rect x="273" y="186" width="14" height="20" rx="2" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<rect x="288" y="186" width="14" height="20" rx="2" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<text x="280" y="222" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">FILLING</text>'+
+            '</g>'+
+            /* Pipe 3→4 */
+            '<line x1="310" y1="130" x2="355" y2="130" class="su-pipe su-fi su-fi5" marker-end="url(#su-ma)"/>'+
+            /* Stage 4: Seamer */
+            '<g class="su-fi su-fi5">'+
+              '<rect x="360" y="95" width="50" height="65" rx="4" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d5" style="--l:240"/>'+
+              '<circle cx="385" cy="90" r="12" fill="none" stroke="#fff" stroke-width="1.5" stroke-opacity=".6"/>'+
+              '<line x1="385" y1="78" x2="385" y2="102" stroke="#fff" stroke-width="1" stroke-opacity=".4"/>'+
+              '<line x1="373" y1="90" x2="397" y2="90" stroke="#fff" stroke-width="1" stroke-opacity=".4"/>'+
+              '<text x="385" y="178" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">SEAMING</text>'+
+            '</g>'+
+            /* Pipe 4→5 */
+            '<line x1="410" y1="130" x2="445" y2="130" class="su-pipe su-fi su-fi6" marker-end="url(#su-ma)"/>'+
+            /* Stage 5: Retort/Thermal */
+            '<g class="su-fi su-fi6">'+
+              '<ellipse cx="455" cy="130" rx="12" ry="40" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d6" style="--l:320"/>'+
+              '<rect x="455" y="90" width="80" height="80" rx="3" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d6" style="--l:330"/>'+
+              '<ellipse cx="535" cy="130" rx="12" ry="40" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d6" style="--l:320"/>'+
+              /* Heat waves */
+              '<g class="su-glow"><text x="470" y="125" fill="#ff5533" font-size="14" fill-opacity=".5">\u2248</text><text x="500" y="140" fill="#ff5533" font-size="14" fill-opacity=".4">\u2248</text><text x="515" y="120" fill="#ff5533" font-size="12" fill-opacity=".35">\u2248</text></g>'+
+              '<text x="495" y="190" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">THERMAL</text>'+
+            '</g>'+
+            /* Second row: Cooling → Labeling → Palletizer */
+            /* Pipe down from Retort */
+            '<path d="M535,170 L535,260 L500,260" fill="none" class="su-pipe su-fi su-fi7" marker-end="url(#su-ma)"/>'+
+            /* Stage 6: Cooling */
+            '<g class="su-fi su-fi7">'+
+              '<rect x="420" y="240" width="75" height="55" rx="6" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d7" style="--l:270"/>'+
+              '<g class="su-glow"><text x="440" y="270" fill="#38bdf8" font-size="14" fill-opacity=".5">\u2744</text><text x="465" y="262" fill="#38bdf8" font-size="11" fill-opacity=".4">\u2744</text><text x="478" y="278" fill="#38bdf8" font-size="9" fill-opacity=".35">\u2744</text></g>'+
+              '<text x="457" y="312" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">COOLING</text>'+
+            '</g>'+
+            /* Pipe Cooling → Labeling */
+            '<line x1="420" y1="268" x2="370" y2="268" fill="none" class="su-pipe su-fi su-fi7" marker-end="url(#su-ma)"/>'+
+            /* Stage 7: Labeling/QC */
+            '<g class="su-fi su-fi7">'+
+              '<rect x="290" y="245" width="75" height="48" rx="4" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d7" style="--l:255"/>'+
+              '<rect x="305" y="252" width="18" height="26" rx="2" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<rect x="330" y="252" width="18" height="26" rx="2" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<line x1="308" y1="260" x2="320" y2="260" stroke="#C9A84C" stroke-width="1" stroke-opacity=".6"/>'+
+              '<line x1="308" y1="265" x2="318" y2="265" stroke="#C9A84C" stroke-width="1" stroke-opacity=".4"/>'+
+              '<line x1="333" y1="260" x2="345" y2="260" stroke="#C9A84C" stroke-width="1" stroke-opacity=".6"/>'+
+              '<line x1="333" y1="265" x2="343" y2="265" stroke="#C9A84C" stroke-width="1" stroke-opacity=".4"/>'+
+              '<text x="327" y="312" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">LABELING + QC</text>'+
+            '</g>'+
+            /* Pipe Labeling → Palletizer */
+            '<line x1="290" y1="268" x2="230" y2="268" fill="none" class="su-pipe su-fi su-fi7" marker-end="url(#su-ma)"/>'+
+            /* Stage 8: Palletizer */
+            '<g class="su-fi su-fi7">'+
+              '<rect x="130" y="240" width="95" height="60" rx="4" fill="none" stroke="#fff" stroke-width="2" class="su-d su-d7" style="--l:320"/>'+
+              /* Stacked boxes */
+              '<rect x="145" y="270" width="18" height="16" rx="1" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<rect x="165" y="270" width="18" height="16" rx="1" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<rect x="185" y="270" width="18" height="16" rx="1" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".5"/>'+
+              '<rect x="155" y="254" width="18" height="16" rx="1" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".35"/>'+
+              '<rect x="175" y="254" width="18" height="16" rx="1" fill="none" stroke="#fff" stroke-width="1" stroke-opacity=".35"/>'+
+              '<text x="177" y="318" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" fill-opacity=".5">PALLETIZING</text>'+
+            '</g>'+
+            /* Output arrow */
+            '<g class="su-fi su-fi7">'+
+              '<line x1="130" y1="270" x2="80" y2="270" stroke="#C9A84C" stroke-width="2" marker-end="url(#su-ma)"/>'+
+              '<text x="55" y="265" fill="#C9A84C" font-family="monospace" font-size="9" font-weight="600" text-anchor="middle" fill-opacity=".7">SHIP</text>'+
+              '<text x="55" y="278" fill="#C9A84C" font-family="monospace" font-size="7" text-anchor="middle" fill-opacity=".5">READY</text>'+
+            '</g>'+
+            /* Legend */
+            '<g style="font-family:monospace;font-size:8px">'+
+              '<line x1="20" y1="380" x2="50" y2="380" class="su-pipe"/><text x="55" y="383" fill="rgba(255,255,255,.4)">Product flow</text>'+
+              '<line x1="140" y1="380" x2="170" y2="380" stroke="#fff" stroke-width="2" stroke-opacity=".5"/><text x="175" y="383" fill="rgba(255,255,255,.4)">Equipment</text>'+
+              '<text x="270" y="383" fill="#ff5533" fill-opacity=".5" font-size="10">\u2248</text><text x="283" y="383" fill="rgba(255,255,255,.4)">Heat</text>'+
+              '<text x="330" y="383" fill="#38bdf8" fill-opacity=".5" font-size="10">\u2744</text><text x="343" y="383" fill="rgba(255,255,255,.4)">Cooling</text>'+
+            '</g>'+
+            '</svg>'+
+          '</div>'+
+          /* Right: animated scale-up bullet points */
+          '<div style="background:transparent;border-radius:12px;padding:24px 28px;border:1px solid #222;overflow:hidden;display:flex;flex-direction:column;justify-content:center">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em">Scale-Up Process</div>'+
+            '<ul id="su-bullets" style="list-style:none;padding:0;margin:0">'+
+              '<li class="su-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Equipment Qualification</strong><br><span style="color:#999;font-size:.85rem">Verify filler speeds, seamer specs, retort capacity, and cooling tunnel throughput match production targets</span></div></li>'+
+              '<li class="su-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Line Speed Optimization</strong><br><span style="color:#999;font-size:.85rem">Dial in CPM (cans per minute), fill weights, headspace, and seam dimensions for your specific product viscosity</span></div></li>'+
+              '<li class="su-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">First Article Inspection</strong><br><span style="color:#999;font-size:.85rem">Full QC on initial production units \u2014 seam teardown, vacuum check, net weight, Brix, pH, and visual inspection</span></div></li>'+
+              '<li class="su-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">CIP & Sanitation Validation</strong><br><span style="color:#999;font-size:.85rem">Clean-in-place protocols verified with ATP swabs and micro testing between product changeovers</span></div></li>'+
+              '<li class="su-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Shelf Life Confirmation</strong><br><span style="color:#999;font-size:.85rem">Accelerated and real-time stability studies on production samples to validate shelf life claims before commercial launch</span></div></li>'+
+              '<li class="su-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Production SOP Package</strong><br><span style="color:#999;font-size:.85rem">Complete documentation: batch records, process parameters, QC checkpoints, packaging specs, and HACCP integration</span></div></li>'+
+            '</ul>'+
+          '</div>'+
+        '</div>';
+      panel.innerHTML=suHTML;
+      /* Animate scale-up bullets in one at a time */
+      (function(){
+        var bullets=panel.querySelectorAll('.su-bp');
+        bullets.forEach(function(b,idx){
+          setTimeout(function(){
+            b.style.opacity='1';
+            b.style.transform='translateY(0)';
+          },300+idx*400);
+        });
+      })();
     } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
         '<div id="icon-slot-'+i+'"></div>'+
         '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
         '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">'+tab.desc+'</p>'+
-        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
       '</div>'+
       '<div style="background:#111;border-radius:16px;padding:32px;border:1px solid #222">'+
         '<div style="font-weight:700;color:#ccc;margin-bottom:16px;font-size:.95rem">What\'s Included</div>'+
         '<ul style="list-style:none;padding:0;margin:0">'+
-          tab.bullets.map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
+          tab.bullets.map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
         '</ul>'+
       '</div>'+
     '</div>';
