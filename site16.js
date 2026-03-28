@@ -984,11 +984,15 @@
     // Cutout gentle parallax — only if visible
     // Cutout bottle stays locked in position — no parallax movement, must align with background
 
-    // Native Webflow beaker + bulb — HIDDEN (user request)
+    // Native Webflow beaker hidden, bulb restored
     var beaker=document.getElementById('parallax-beaker');
     var bulb=document.getElementById('parallax-bulb');
     if(beaker){beaker.style.display='none';}
-    if(bulb){bulb.style.display='none';}
+    if(bulb){
+      bulb.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:0;pointer-events:none';
+    }
+    // Bulb slides full canvas in from left on scroll
+    if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
