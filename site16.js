@@ -646,7 +646,7 @@
       panel.innerHTML=palHTML;
       /* Static temperature distribution chart — drawn once */
       (function(){
-        var gc=document.getElementById('temp-graph');
+        var gc=panel.querySelector('#temp-graph');
         if(!gc)return;
         var gx=gc.getContext('2d');
         var W=520,H=280;
