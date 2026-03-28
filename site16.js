@@ -510,10 +510,8 @@
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">'+
-          '<div style="background:#0e0f11;border-radius:12px;padding:16px 20px 10px;border:1px solid #222;overflow:hidden">'+
-            '<div style="font-size:.75rem;font-weight:400;letter-spacing:4px;color:rgba(255,255,255,.18);text-transform:uppercase;margin-bottom:2px;font-family:monospace">21 CFR 113 \u00b7 Low-Acid Canned Foods \u00b7 Batch Retort</div>'+
+          '<div style="background:#0e0f11;border-radius:12px;padding:12px 16px 8px;border:1px solid #222;overflow:hidden;transform:scale(.75);transform-origin:top left;width:133.33%">'+
             '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Come-Up Time (CUT)</div>'+
-            '<div style="font-size:.7rem;color:rgba(255,255,255,.18);letter-spacing:2px;font-family:monospace;margin-bottom:8px">Phase 1 of 3 \u00b7 Pressurization &amp; Initial Heating</div>'+
             '<style>'+
             '@keyframes rsvg-draw{to{stroke-dashoffset:0}}'+
             '@keyframes rsvg-fadeIn{from{opacity:0}to{opacity:1}}'+
