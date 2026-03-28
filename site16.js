@@ -551,7 +551,7 @@
             '@keyframes rsvg-blink{0%,90%,100%{opacity:1}93%{opacity:0}96%{opacity:.8}}'+
             '.rsvg-temp{animation:rsvg-blink 8s ease-in-out infinite;animation-delay:2s}'+
             '</style>'+
-            '<svg width="100%" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible">'+
+            '<svg width="70%" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;margin:0 auto">'+
             '<defs>'+
             '<marker id="rsvg-mh" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="#ff5533"/></marker>'+
             '<marker id="rsvg-mw" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="#38bdf8"/></marker>'+
@@ -631,7 +631,7 @@
             '<g class="rsvg-fi rsvg-fi-7"><line x1="168" y1="470" x2="148" y2="482" stroke="#fff" stroke-width="1" stroke-opacity=".25" stroke-dasharray="2 2"/><text x="28" y="480" fill="#38bdf8" font-family="monospace" font-size="8" fill-opacity=".55" letter-spacing=".5">HEATING MEDIUM</text></g>'+
             '<g class="rsvg-fi rsvg-fi-8"><text x="340" y="50" fill="#fff" font-family="monospace" font-size="9" fill-opacity=".3" letter-spacing="2" text-anchor="middle">T : 0 \u2192 F\u2080 HOLD</text></g>'+
             '</svg>'+
-            '<div style="display:flex;gap:20px;margin-top:10px;flex-wrap:wrap;justify-content:center">'+
+            '<div style="display:flex;gap:14px;margin-top:6px;flex-wrap:wrap;justify-content:center;transform:scale(.85);transform-origin:center top">'+
             '<div style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase"><div style="width:22px;height:0;border-top:2px dashed #ff5533"></div><span style="color:#ff5533">Heat flow</span></div>'+
             '<div style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase"><div style="width:22px;height:0;border-top:2px dashed #38bdf8"></div><span style="color:#38bdf8">Water / steam</span></div>'+
             '<div style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase"><div style="width:22px;height:0;border-top:2px dashed #cbd5e1"></div><span style="color:#cbd5e1">Air vent</span></div>'+
