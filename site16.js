@@ -511,7 +511,7 @@
         '</div>'+
         '<div id="pal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch">'+
           '<div style="background:#0e0f11;border-radius:12px;padding:10px 14px 6px;border:1px solid #222;overflow:hidden;transform:scale(.5625);transform-origin:top left;width:177.78%">'+
-            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Come-Up Time (CUT)</div>'+
+            '<div style="font-size:1.51rem;font-weight:700;color:#C9A84C;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Heat Penetration Study</div>'+
             '<style>'+
             '@keyframes rsvg-draw{to{stroke-dashoffset:0}}'+
             '@keyframes rsvg-fadeIn{from{opacity:0}to{opacity:1}}'+
@@ -659,7 +659,7 @@
               if(W<100||H<100){requestAnimationFrame(animPAL);return;}
               if(gc.width!==W||gc.height!==H){gc.width=W;gc.height=H;}
               var gx=gc.getContext('2d');
-              gx.scale(2,2);/* retina */
+              gx.setTransform(2,0,0,2,0,0);/* retina — absolute, not cumulative */
               var dW=Math.round(rect.width),dH=Math.round(rect.height);
               gx.clearRect(0,0,dW,dH);
               gx.fillStyle='#0a0a0a';gx.fillRect(0,0,dW,dH);
