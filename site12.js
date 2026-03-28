@@ -1,4 +1,4 @@
-(function(){if(window._macroVersion>=11)return;window._macroVersion=11;
+(function(){if(window._macroVersion>=12)return;window._macroVersion=12;
 /* MACRO Brands — Master Site Script */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
@@ -340,8 +340,9 @@
         '</div>'+
         /* Bottom row: beaker left, parallax scientist right */
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
-          '<div style="border-radius:16px;overflow:hidden;background:#000;border:1px solid #222;display:flex;align-items:center;justify-content:center;min-height:380px">'+
-            '<img src="'+ghBase+'beaker.png" style="width:70%;max-width:320px;height:auto;object-fit:contain;padding:24px;mix-blend-mode:lighten" alt="Formulation beaker">'+
+          '<div id="carousel-wrap" style="border-radius:16px;overflow:hidden;background:#000;border:1px solid #222;display:flex;align-items:center;justify-content:center;min-height:380px;position:relative">'+
+            '<img id="carousel-img-a" src="'+ghBase+'Aura-Bottle-bg-tall.png" style="position:absolute;width:70%;max-width:300px;height:auto;object-fit:contain;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:1" alt="Product">'+
+            '<img id="carousel-img-b" src="'+ghBase+'Aura-Bottle-bg-tall2.png" style="position:absolute;width:70%;max-width:300px;height:auto;object-fit:contain;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
           '</div>'+
           '<div id="parallax-form-wrap" style="border-radius:16px;overflow:hidden;border:1px solid #222;height:380px;position:relative">'+
             '<img id="parallax-form-img" src="'+ghBase+'Lab_formulation.png" style="width:100%;height:140%;object-fit:cover;object-position:center top;position:absolute;top:-20%;will-change:transform" alt="Lab scientist formulating">'+
@@ -366,6 +367,46 @@
           if(!ticking){requestAnimationFrame(update);ticking=true;}
         },{passive:true});
         update();
+      })();
+      /* Carousel — fetch image list from GitHub carousel/ folder dynamically.
+         To add images: drop any .png/.jpg into the repo's carousel/ folder.
+         They will appear automatically on next page load (no code changes needed). */
+      (function(){
+        var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel';
+        fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
+          .then(function(r){return r.json();})
+          .then(function(files){
+            /* Filter to image files only, grab the raw download URL */
+            var urls=files
+              .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
+              .map(function(f){return f.download_url;});
+            if(!urls.length)return;
+            /* Fisher-Yates shuffle for random order every load */
+            for(var i=urls.length-1;i>0;i--){
+              var j=Math.floor(Math.random()*(i+1));
+              var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;
+            }
+            var idx=0,aActive=true;
+            var a=document.getElementById('carousel-img-a');
+            var b=document.getElementById('carousel-img-b');
+            if(!a||!b)return;
+            /* Seed first image */
+            a.src=urls[0];a.style.opacity='1';
+            if(urls[1])b.src=urls[1];
+            /* Crossfade every 500 ms */
+            setInterval(function(){
+              idx=(idx+1)%urls.length;
+              if(aActive){
+                b.src=urls[idx];
+                b.style.opacity='1';a.style.opacity='0';
+              }else{
+                a.src=urls[idx];
+                a.style.opacity='1';b.style.opacity='0';
+              }
+              aActive=!aActive;
+            },500);
+          })
+          .catch(function(e){console.warn('Carousel fetch failed:',e);});
       })();
     } else if(i===1){
       // MicroThermic tab — full-width top info, then photo left + specs right
@@ -481,8 +522,8 @@
       panel.innerHTML=palHTML;
       /* Start PAL/Heat Pen canvas animations */
       (function(){
-        var rc=panel.querySelector('#retort-anim');
-        var gc=panel.querySelector('#temp-graph');
+        var rc=document.getElementById('retort-anim');
+        var gc=document.getElementById('temp-graph');
         function animPAL(){
           try {
             var t=performance.now()/1000;
