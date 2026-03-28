@@ -824,6 +824,98 @@
           },300+idx*400);
         });
       })();
+    } else if(i===6){
+      /* ═══ SUPPLY CHAIN TAB — teaser pointing to Agentic Supply Chain section ═══ */
+      panel.innerHTML=
+        '<div style="text-align:center;max-width:720px;margin:0 auto;padding:20px 0">'+
+          '<div id="icon-slot-'+i+'" style="margin-bottom:12px"></div>'+
+          '<h3 style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.02em">Agentic Supply Chain</h3>'+
+          '<p style="font-size:1.1rem;line-height:1.7;color:#999;margin-bottom:36px;max-width:600px;margin-left:auto;margin-right:auto">'+tab.desc+'</p>'+
+        '</div>'+
+        /* Animated SVG — network mesh with 29 agent nodes converging */
+        '<div style="display:flex;justify-content:center;margin-bottom:32px">'+
+          '<svg viewBox="0 0 700 200" width="100%" style="max-width:700px;max-height:200px">'+
+            '<defs>'+
+              '<filter id="scgo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+              '<radialGradient id="scpulse"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".5"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></radialGradient>'+
+            '</defs>'+
+            /* Guide line */
+            '<line x1="40" y1="180" x2="660" y2="180" stroke="white" stroke-width=".6" stroke-opacity=".05" class="cp-d" style="--l:620;animation-delay:0s"/>'+
+            /* Left cluster: Procurement */
+            '<circle cx="80" cy="60" r="18" stroke="#f97316" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.2s"/>'+
+            '<circle cx="80" cy="60" r="4" fill="#f97316" fill-opacity=".6" class="cp-fi" style="animation-delay:1.2s"/>'+
+            '<text x="80" y="95" class="cp-lbl" style="font-size:7px">PROCUREMENT</text>'+
+            '<circle cx="40" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.4s"/>'+
+            '<circle cx="50" cy="80" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.5s"/>'+
+            '<circle cx="120" cy="50" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.6s"/>'+
+            '<line x1="40" y1="45" x2="80" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:45;animation-delay:.6s"/>'+
+            '<line x1="50" y1="80" x2="80" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:.65s"/>'+
+            '<line x1="120" y1="50" x2="80" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:.7s"/>'+
+            /* Center-left: Production */
+            '<circle cx="230" cy="55" r="18" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.35s"/>'+
+            '<circle cx="230" cy="55" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.3s"/>'+
+            '<text x="230" y="90" class="cp-lbl" style="font-size:7px">PRODUCTION</text>'+
+            '<circle cx="190" cy="40" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.7s"/>'+
+            '<circle cx="200" cy="75" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.8s"/>'+
+            '<circle cx="270" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:1.9s"/>'+
+            '<line x1="190" y1="40" x2="230" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:44;animation-delay:.8s"/>'+
+            '<line x1="200" y1="75" x2="230" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:.85s"/>'+
+            '<line x1="270" y1="45" x2="230" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:.9s"/>'+
+            /* Center: AUTONOMI hub */
+            '<circle cx="350" cy="100" r="28" stroke="#C9A84C" stroke-width="2" fill="none" stroke-opacity=".4" class="cp-d" style="--l:176;animation-delay:.1s"/>'+
+            '<circle cx="350" cy="100" r="40" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".1" class="cp-d" style="--l:252;animation-delay:.15s"/>'+
+            '<circle cx="350" cy="100" r="8" fill="#C9A84C" fill-opacity=".7" class="cp-fi" style="animation-delay:1s" filter="url(#scgo)"/>'+
+            '<text x="350" y="148" class="cp-lbl" style="font-size:8px;fill:#C9A84C;fill-opacity:.8">AUTONOMI</text>'+
+            '<text x="350" y="158" class="cp-lbl" style="font-size:6.5px;fill:#C9A84C;fill-opacity:.4">29 AI AGENTS</text>'+
+            /* Center-right: Quality */
+            '<circle cx="470" cy="55" r="18" stroke="#38bdf8" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.4s"/>'+
+            '<circle cx="470" cy="55" r="4" fill="#38bdf8" fill-opacity=".6" class="cp-fi" style="animation-delay:1.35s"/>'+
+            '<text x="470" y="90" class="cp-lbl" style="font-size:7px">QUALITY</text>'+
+            '<circle cx="430" cy="40" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2s"/>'+
+            '<circle cx="440" cy="75" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.1s"/>'+
+            '<circle cx="510" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.2s"/>'+
+            '<line x1="430" y1="40" x2="470" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:44;animation-delay:.95s"/>'+
+            '<line x1="440" y1="75" x2="470" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:1s"/>'+
+            '<line x1="510" y1="45" x2="470" y2="55" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:1.05s"/>'+
+            /* Right cluster: Logistics */
+            '<circle cx="620" cy="60" r="18" stroke="#4ade80" stroke-width="1.2" fill="none" stroke-opacity=".3" class="cp-d" style="--l:114;animation-delay:.45s"/>'+
+            '<circle cx="620" cy="60" r="4" fill="#4ade80" fill-opacity=".6" class="cp-fi" style="animation-delay:1.4s"/>'+
+            '<text x="620" y="95" class="cp-lbl" style="font-size:7px">LOGISTICS</text>'+
+            '<circle cx="580" cy="45" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/>'+
+            '<circle cx="590" cy="80" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.4s"/>'+
+            '<circle cx="660" cy="50" r="3" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.5s"/>'+
+            '<line x1="580" y1="45" x2="620" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:44;animation-delay:1.1s"/>'+
+            '<line x1="590" y1="80" x2="620" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:35;animation-delay:1.15s"/>'+
+            '<line x1="660" y1="50" x2="620" y2="60" stroke="white" stroke-width=".5" stroke-opacity=".15" class="cp-d" style="--l:42;animation-delay:1.2s"/>'+
+            /* Hub connections — flowing pipes from clusters to center */
+            '<line x1="98" y1="60" x2="322" y2="100" stroke="#f97316" stroke-width="2" stroke-dasharray="10 6" class="cp-pO" filter="url(#scgo)"/>'+
+            '<line x1="248" y1="55" x2="322" y2="100" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="10 6" fill="none" style="animation:cpFlow .5s linear infinite;animation-delay:2s"/>'+
+            '<line x1="452" y1="55" x2="378" y2="100" stroke="#38bdf8" stroke-width="2" stroke-dasharray="10 6" class="cp-pB" filter="url(#scgo)"/>'+
+            '<line x1="602" y1="60" x2="378" y2="100" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="10 6" fill="none" style="animation:cpFlow .6s linear infinite;animation-delay:2s"/>'+
+          '</svg>'+
+        '</div>'+
+        /* Bullet capabilities in 2 columns */
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 40px;max-width:640px;margin:0 auto 36px">'+
+          tab.bullets.map(function(b){return '<div style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1a1a"><span style="color:#C9A84C">\u2713</span> '+b+'</div>'}).join('')+
+        '</div>'+
+        /* CTA — scroll to Agentic Supply Chain section */
+        '<div style="text-align:center;padding-bottom:8px">'+
+          '<a id="sc-explore-btn" href="#autonomi-ai" style="display:inline-flex;align-items:center;gap:10px;padding:14px 36px;font-size:1rem;font-weight:700;border-radius:50px;border:2px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;transition:all .4s ease;letter-spacing:.03em;cursor:pointer">'+
+            '<span>Explore Agentic Supply Chain</span>'+
+            '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3L9 15M9 15L4 10M9 15L14 10" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+          '</a>'+
+        '</div>';
+      /* Smooth scroll for the explore button */
+      (function(){
+        setTimeout(function(){
+          var btn=document.getElementById('sc-explore-btn');
+          if(btn)btn.addEventListener('click',function(e){
+            e.preventDefault();
+            var target=document.getElementById('autonomi-ai');
+            if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+          });
+        },100);
+      })();
     } else {
     panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
       '<div>'+
