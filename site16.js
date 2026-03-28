@@ -881,16 +881,81 @@
   // Activate first tab
   buttons[0].onclick();
 
-  // Co-Packing process cards (index 5)
+  // Co-Packing process cards with SVG line-draw icons (index 5)
   if(panels.length>5){
     var coPackPanel=panels[5];
+    /* SVG line-draw animation CSS */
+    var cpStyle=document.createElement('style');
+    cpStyle.textContent='@keyframes cpDraw{from{stroke-dashoffset:var(--l)}to{stroke-dashoffset:0}}.cp-d{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:cpDraw 1.2s ease forwards}.cp-glow{fill:none;stroke:#C9A84C;stroke-width:1;opacity:0;animation:cpGIn .6s ease 1s forwards}@keyframes cpGIn{to{opacity:.5}}';
+    document.head.appendChild(cpStyle);
     var cpProcs=[
-      {title:'Tunnel Pasteurization',icon:'\u2248',desc:'Continuous hot-water tunnel for high-acid beverages — juice, tea, kombucha. Gentle thermal kill preserves flavor while achieving commercial sterility at 185°F+.', specs:['High-acid (pH < 4.6)','Glass & PET compatible','12–64 oz formats','Continuous throughput']},
-      {title:'Retort Processing',icon:'\uD83D\uDD25',desc:'Batch pressure-cooking for low-acid shelf-stable products — soups, broths, plant milks. Full 21 CFR 113 compliance with our FDA-registered retort systems.', specs:['Low-acid (pH ≥ 4.6)','Cans: 8oz, 8.4oz, 12oz','250°F+ under pressure','FDA filed process']},
-      {title:'ESL Bottling',icon:'\u26A1',desc:'Extended Shelf Life processing bridges the gap between fresh and shelf-stable. Light pasteurization + clean-fill for refrigerated products with 60–120 day shelf life.', specs:['Refrigerated distribution','60–120 day shelf life','PET & HDPE bottles','Clean-room fill environment']},
-      {title:'Aseptic Bottling',icon:'\u2727',desc:'UHT sterilization + aseptic PET filling for ambient shelf-stable beverages. No preservatives needed — product and package sterilized independently.', specs:['Ambient shelf-stable','PET: 2oz–64oz','No preservatives','12+ month shelf life']},
-      {title:'Aseptic Bag-in-Box',icon:'\uD83D\uDCE6',desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail. Sterile bag inside corrugated box — ideal for concentrates, bases, and ready-to-drink.', specs:['Bag-in-Box: 2L–25L','Foodservice & bulk','Concentrate & RTD','Aseptic valve technology']},
-      {title:'Tetra Pak',icon:'\u25A0',desc:'Shelf-stable carton packaging for dairy alternatives, juice, broth, and plant-based beverages. Multi-layer barrier packaging with tamper-evident opening.', specs:['Multi-layer carton','200mL–1L formats','Ambient shelf-stable','Sustainable packaging']}
+      {title:'Tunnel Pasteurization',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
+         '<rect x="6" y="14" width="52" height="22" rx="3" class="cp-d" style="--l:160;animation-delay:.2s"/>'+
+         '<line x1="6" y1="25" x2="58" y2="25" class="cp-d" style="--l:52;animation-delay:.5s"/>'+
+         '<rect x="14" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:.7s"/>'+
+         '<rect x="28" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:.85s"/>'+
+         '<rect x="42" y="18" width="8" height="14" rx="2" class="cp-d" style="--l:48;animation-delay:1s"/>'+
+         '<path d="M18,10 Q18,6 22,6 M32,10 Q32,6 36,6 M46,10 Q46,6 50,6" class="cp-glow" stroke-width="1.2"/>'+
+       '</svg>',
+       desc:'Continuous hot-water tunnel for high-acid beverages — juice, tea, kombucha. Gentle thermal kill preserves flavor while achieving commercial sterility at 185\u00b0F+.',
+       specs:['High-acid (pH < 4.6)','Glass & PET compatible','12\u201364 oz formats','Continuous throughput']},
+      {title:'Retort Processing',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
+         '<ellipse cx="12" cy="24" rx="6" ry="16" class="cp-d" style="--l:100;animation-delay:.2s"/>'+
+         '<rect x="12" y="8" width="40" height="32" rx="2" class="cp-d" style="--l:150;animation-delay:.4s"/>'+
+         '<ellipse cx="52" cy="24" rx="6" ry="16" class="cp-d" style="--l:100;animation-delay:.6s"/>'+
+         '<circle cx="32" cy="24" r="3" class="cp-d" style="--l:20;animation-delay:.9s"/>'+
+         '<path d="M24,16 Q26,12 28,16 M34,16 Q36,12 38,16" class="cp-glow" stroke-width="1.5"/>'+
+         '<line x1="52" y1="8" x2="58" y2="4" class="cp-d" style="--l:10;animation-delay:1s"/>'+
+         '<line x1="52" y1="40" x2="58" y2="44" class="cp-d" style="--l:10;animation-delay:1s"/>'+
+       '</svg>',
+       desc:'Batch pressure-cooking for low-acid shelf-stable products \u2014 soups, broths, plant milks. Full 21 CFR 113 compliance with our FDA-registered retort systems.',
+       specs:['Low-acid (pH \u2265 4.6)','Cans: 8oz, 8.4oz, 12oz','250\u00b0F+ under pressure','FDA filed process']},
+      {title:'ESL Bottling',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
+         '<path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="cp-d" style="--l:120;animation-delay:.2s"/>'+
+         '<line x1="22" y1="28" x2="42" y2="28" class="cp-d" style="--l:20;animation-delay:.6s"/>'+
+         '<rect x="26" y="1" width="12" height="4" rx="1" class="cp-d" style="--l:36;animation-delay:.4s"/>'+
+         '<path d="M16,12 Q10,24 16,36" class="cp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/>'+
+         '<path d="M48,12 Q54,24 48,36" class="cp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/>'+
+         '<circle cx="10" cy="18" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/>'+
+         '<circle cx="54" cy="30" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/>'+
+       '</svg>',
+       desc:'Extended Shelf Life processing bridges the gap between fresh and shelf-stable. Light pasteurization + clean-fill for refrigerated products with 60\u2013120 day shelf life.',
+       specs:['Refrigerated distribution','60\u2013120 day shelf life','PET & HDPE bottles','Clean-room fill environment']},
+      {title:'Aseptic Bottling',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
+         '<path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="cp-d" style="--l:120;animation-delay:.2s"/>'+
+         '<rect x="26" y="1" width="12" height="4" rx="1" class="cp-d" style="--l:36;animation-delay:.4s"/>'+
+         '<line x1="32" y1="10" x2="32" y2="38" class="cp-d" style="--l:28;animation-delay:.7s" stroke-opacity=".3"/>'+
+         '<path d="M14,6 L20,14 M50,6 L44,14 M14,42 L20,34 M50,42 L44,34" class="cp-glow" stroke-width="1.5"/>'+
+         '<circle cx="32" cy="24" r="10" class="cp-d" style="--l:64;animation-delay:.9s" stroke-opacity=".2" stroke-dasharray="4 4"/>'+
+       '</svg>',
+       desc:'UHT sterilization + aseptic PET filling for ambient shelf-stable beverages. No preservatives needed \u2014 product and package sterilized independently.',
+       specs:['Ambient shelf-stable','PET: 2oz\u201364oz','No preservatives','12+ month shelf life']},
+      {title:'Aseptic Bag-in-Box',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
+         '<rect x="8" y="6" width="48" height="36" rx="2" class="cp-d" style="--l:175;animation-delay:.2s"/>'+
+         '<path d="M16,12 Q32,18 48,12 L46,36 Q32,30 18,36 Z" class="cp-d" style="--l:120;animation-delay:.5s" stroke-opacity=".5"/>'+
+         '<circle cx="44" cy="10" r="3" class="cp-d" style="--l:20;animation-delay:.8s"/>'+
+         '<line x1="44" y1="10" x2="56" y2="4" class="cp-d" style="--l:16;animation-delay:.9s"/>'+
+         '<path d="M8,6 L2,2 M56,6 L62,2" class="cp-d" style="--l:12;animation-delay:.4s" stroke-opacity=".3"/>'+
+       '</svg>',
+       desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail. Sterile bag inside corrugated box \u2014 ideal for concentrates, bases, and ready-to-drink.',
+       specs:['Bag-in-Box: 2L\u201325L','Foodservice & bulk','Concentrate & RTD','Aseptic valve technology']},
+      {title:'Tetra Pak',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48">'+
+         '<path d="M18,44 L18,8 L32,2 L46,8 L46,44 Z" class="cp-d" style="--l:140;animation-delay:.2s"/>'+
+         '<line x1="18" y1="8" x2="46" y2="8" class="cp-d" style="--l:28;animation-delay:.5s"/>'+
+         '<path d="M18,8 L32,2 L46,8" class="cp-d" style="--l:36;animation-delay:.6s"/>'+
+         '<line x1="32" y1="2" x2="32" y2="8" class="cp-d" style="--l:6;animation-delay:.7s" stroke-opacity=".4"/>'+
+         '<rect x="26" y="14" width="12" height="8" rx="1" class="cp-d" style="--l:44;animation-delay:.8s" stroke-opacity=".4"/>'+
+         '<circle cx="32" cy="18" r="2" class="cp-glow" fill="#C9A84C" stroke="none"/>'+
+         '<path d="M22,30 L42,30 M22,36 L42,36" class="cp-d" style="--l:44;animation-delay:1s" stroke-opacity=".25"/>'+
+       '</svg>',
+       desc:'Shelf-stable carton packaging for dairy alternatives, juice, broth, and plant-based beverages. Multi-layer barrier packaging with tamper-evident opening.',
+       specs:['Multi-layer carton','200mL\u20131L formats','Ambient shelf-stable','Sustainable packaging']}
     ];
     var cpGrid=document.createElement('div');
     cpGrid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;padding-top:36px;border-top:1px solid #222';
@@ -900,11 +965,11 @@
       card.onmouseenter=function(){card.style.borderColor='#C9A84C';card.style.transform='translateY(-4px)'};
       card.onmouseleave=function(){card.style.borderColor='#222';card.style.transform='translateY(0)'};
       card.innerHTML=
-        '<div style="font-size:1.5rem;margin-bottom:10px">'+p.icon+'</div>'+
+        '<div style="margin-bottom:12px">'+p.svg+'</div>'+
         '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:8px">'+p.title+'</div>'+
         '<p style="font-size:.85rem;line-height:1.6;color:#888;margin-bottom:14px">'+p.desc+'</p>'+
         '<ul style="list-style:none;padding:0;margin:0">'+
-          p.specs.map(function(s){return '<li style="padding:3px 0;color:#666;font-size:.8rem"><span style="color:#C9A84C;margin-right:6px">▸</span>'+s+'</li>'}).join('')+
+          p.specs.map(function(s){return '<li style="padding:3px 0;color:#666;font-size:.8rem"><span style="color:#C9A84C;margin-right:6px">\u25b8</span>'+s+'</li>'}).join('')+
         '</ul>';
       cpGrid.appendChild(card);
     });
