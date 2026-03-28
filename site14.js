@@ -723,8 +723,8 @@
 // ============ 6. DUAL TEXT OUTLINE PARALLAX ============
 (function(){
   setTimeout(function(){
-    if(typeof gsap==='undefined')return;
-    gsap.registerPlugin(ScrollTrigger);
+    var hasGsap=(typeof gsap!=='undefined');
+    if(hasGsap)gsap.registerPlugin(ScrollTrigger);
     var sec=document.getElementById('parallax-hero');
     if(!sec)return;
     // Remove ALL old text elements (Webflow-created h2s and any previous JS text)
@@ -808,13 +808,13 @@
       bulb.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:0;pointer-events:none';
     }
     // Beaker slides full canvas in from left — completes at 100vh
-    if(beaker){gsap.fromTo(beaker,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
+    if(beaker&&hasGsap){gsap.fromTo(beaker,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top bottom',end:'top top',scrub:true}})}
     // Bulb slides full canvas in from left — starts later, completes at 100vh
-    if(bulb){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
+    if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
-    sects.forEach(function(sec2){
+    if(hasGsap)sects.forEach(function(sec2){
       if(sec2.closest('.video-hero-wrap'))return;
       sec2.querySelectorAll('h2').forEach(function(h){
         gsap.fromTo(h,{y:80,opacity:0},{y:0,opacity:1,duration:1,ease:'power3.out',scrollTrigger:{trigger:h,start:'top 90%',end:'top 50%',scrub:.8}});
