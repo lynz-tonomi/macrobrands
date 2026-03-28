@@ -638,67 +638,27 @@
             '<div style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase"><div style="width:22px;height:2px;background:#fff;opacity:.35"></div>Vessel structure</div>'+
             '</div>'+
           '</div>'+
-          '<div id="pal-right" style="background:transparent;border-radius:12px;padding:20px;border:1px solid #222;overflow:hidden">'+
-            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Temperature Distribution</div>'+
-            '<canvas id="temp-graph" width="520" height="280" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>'+
+          '<div id="pal-right" style="background:transparent;border-radius:12px;padding:24px 28px;border:1px solid #222;overflow:hidden;display:flex;flex-direction:column;justify-content:center">'+
+            '<div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em">Heat Penetration Studies</div>'+
+            '<ul id="pal-bullets" style="list-style:none;padding:0;margin:0">'+
+              '<li class="pal-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Thermocouple Placement</strong><br><span style="color:#999;font-size:.85rem">Sensors inserted at the cold spot of each container to record real-time temperature data throughout the thermal process</span></div></li>'+
+              '<li class="pal-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Lethality Calculation (F\u2080)</strong><br><span style="color:#999;font-size:.85rem">Cumulative sterilization value computed from time-temperature data to ensure commercial sterility (F\u2080 \u2265 3.0 min)</span></div></li>'+
+              '<li class="pal-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Come-Up Time (CUT)</strong><br><span style="color:#999;font-size:.85rem">Time for retort to reach processing temperature \u2014 only the final 58% of CUT counts toward lethality per 21 CFR 113</span></div></li>'+
+              '<li class="pal-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Worst-Case Container</strong><br><span style="color:#999;font-size:.85rem">Testing identifies the slowest-heating container position in the retort to establish the scheduled process</span></div></li>'+
+              '<li class="pal-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">Temperature Distribution</strong><br><span style="color:#999;font-size:.85rem">Mapping retort temperature uniformity to verify consistent heat delivery across all container positions</span></div></li>'+
+              '<li class="pal-bp" style="opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;padding:12px 0;color:#ccc;font-size:.95rem;display:flex;align-items:flex-start;gap:12px"><span style="color:#C9A84C;font-size:1.1rem;line-height:1">&#9670;</span><div><strong style="color:#fff">FDA Scheduled Process Filing</strong><br><span style="color:#999;font-size:.85rem">Process Authority files validated thermal process with FDA for each product/container/retort combination</span></div></li>'+
+            '</ul>'+
           '</div>'+
         '</div>';
       panel.innerHTML=palHTML;
-      /* Static temperature distribution chart — drawn once */
+      /* Animate bullet points in one at a time */
       (function(){
-        var gc=panel.querySelector('#temp-graph');
-        if(!gc)return;
-        var gx=gc.getContext('2d');
-        var W=520,H=280;
-        var pad={l:44,r:100,t:32,b:38};
-        var gw=W-pad.l-pad.r,gh=H-pad.t-pad.b;
-        var maxQ=5200;
-        function qY(v){return pad.t+gh*(1-v/maxQ);}
-        function tX(x){return pad.l+x*gw;}
-        /* Title */
-        gx.fillStyle='rgba(255,255,255,.5)';gx.font='bold 9px monospace';gx.textAlign='center';
-        gx.fillText('TDVC = 105\u00b0C \u00b7 IPT = 4\u00b0C \u00b7 208 x 109',W/2,14);
-        /* Grid lines + Y labels */
-        gx.strokeStyle='rgba(255,255,255,.08)';gx.lineWidth=.5;
-        [0,1000,2000,3000,4000,5000].forEach(function(v){
-          var y=qY(v);gx.beginPath();gx.moveTo(pad.l,y);gx.lineTo(pad.l+gw,y);gx.stroke();
-          gx.fillStyle='rgba(255,255,255,.45)';gx.font='9px monospace';gx.textAlign='right';
-          gx.fillText(v.toLocaleString(),pad.l-6,y+3);
-        });
-        /* X axis ticks: 0-8 min */
-        for(var xi=0;xi<=8;xi++){
-          var xx=tX(xi/8);
-          gx.beginPath();gx.moveTo(xx,pad.t+gh);gx.lineTo(xx,pad.t+gh+4);gx.strokeStyle='rgba(255,255,255,.2)';gx.stroke();
-          gx.fillStyle='rgba(255,255,255,.45)';gx.font='9px monospace';gx.textAlign='center';
-          gx.fillText(xi+'.0',xx,pad.t+gh+16);
-        }
-        /* Axis labels */
-        gx.save();gx.translate(10,pad.t+gh/2);gx.rotate(-Math.PI/2);gx.fillStyle='rgba(255,255,255,.5)';gx.font='bold 9px monospace';gx.textAlign='center';gx.fillText('Q (kJ)',0,0);gx.restore();
-        gx.fillStyle='rgba(255,255,255,.5)';gx.font='9px monospace';gx.textAlign='center';gx.fillText('Time (min)',pad.l+gw/2,H-4);
-        /* === 6 data series — x in minutes (0-8), y in kJ === */
-        var series=[
-          {color:'#ef4444',dash:[6,3],lw:2.5,pts:[[0,0],[.3,1200],[.6,4800],[.8,5050],[1,5100],[1.5,5050],[2,4900],[2.5,4200],[3,3800],[3.5,3200],[4,3600],[4.5,4000],[5,3900],[5.5,3400],[6,2800],[6.5,1800],[7,1200],[7.5,800],[8,500]],lbl:'Q-Steam input'},
-          {color:'#ffffff',dash:[],lw:2.5,pts:[[0,0],[.3,400],[.6,2800],[.8,4400],[1,4200],[1.3,2800],[1.5,1400],[2,500],[2.5,300],[3,200],[3.5,400],[4,1200],[4.5,2600],[5,3800],[5.5,3600],[6,2400],[6.5,1200],[7,600],[7.5,300],[8,200]],lbl:'Q-Product+container'},
-          {color:'#22d3ee',dash:[],lw:2,pts:[[0,0],[.2,1800],[.4,4400],[.6,3600],[.8,2000],[1,800],[1.5,300],[2,100],[2.5,80],[3,50],[4,40],[5,50],[6,100],[7,200],[8,400]],lbl:'Q-Retort+basket'},
-          {color:'#f59e0b',dash:[],lw:1.5,pts:[[0,0],[.5,50],[1,120],[1.5,180],[2,200],[3,250],[4,300],[5,350],[6,400],[6.5,500],[7,700],[7.5,850],[8,900]],lbl:'Q-Venting'},
-          {color:'#a855f7',dash:[],lw:1.5,pts:[[0,0],[1,10],[2,20],[3,30],[4,40],[5,60],[5.5,80],[6,200],[6.5,500],[7,800],[7.5,600],[8,300]],lbl:'Q-Drainage'},
-          {color:'#22c55e',dash:[],lw:1.5,pts:[[0,0],[.5,10],[1,30],[2,60],[3,100],[4,150],[5,200],[6,280],[7,350],[8,400]],lbl:'Q-Losses/walls'}
-        ];
-        /* Draw each series as smooth lines */
-        series.forEach(function(s,si){
-          gx.strokeStyle=s.color;gx.lineWidth=s.lw;gx.setLineDash(s.dash||[]);
-          gx.beginPath();
-          for(var pi=0;pi<s.pts.length;pi++){
-            var px=tX(s.pts[pi][0]/8),py=qY(s.pts[pi][1]);
-            if(pi===0)gx.moveTo(px,py);else gx.lineTo(px,py);
-          }
-          gx.stroke();gx.setLineDash([]);
-          /* Legend — colored line + label */
-          var ly=pad.t+6+si*20;
-          gx.strokeStyle=s.color;gx.lineWidth=s.lw;gx.setLineDash(s.dash||[]);
-          gx.beginPath();gx.moveTo(pad.l+gw+8,ly);gx.lineTo(pad.l+gw+28,ly);gx.stroke();gx.setLineDash([]);
-          gx.fillStyle=s.color;gx.font='8px monospace';gx.textAlign='left';
-          gx.fillText(s.lbl,pad.l+gw+32,ly+3);
+        var bullets=panel.querySelectorAll('.pal-bp');
+        bullets.forEach(function(b,idx){
+          setTimeout(function(){
+            b.style.opacity='1';
+            b.style.transform='translateY(0)';
+          },300+idx*400);
         });
       })();
     } else {
