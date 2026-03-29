@@ -1531,26 +1531,7 @@
     });
   },{threshold:0.2});
   observer.observe(vidWrap);
-  // CTA button pinned to center bottom of video — liquid fill like Contact pill
-  var ctaWrap=document.createElement('div');
-  ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;align-items:center';
-  var cta=document.createElement('a');
-  cta.href='/autonomi';
-  cta.className='cta-liquid-fill cta-gold';
-  cta.style.cssText='text-decoration:none;letter-spacing:.02em;font-size:17.6px';
-  var ctaSpan=document.createElement('span');
-  ctaSpan.textContent='Learn More';
-  ctaSpan.style.cssText='position:relative;z-index:1';
-  cta.appendChild(ctaSpan);
-  var ctaFill=document.createElement('div');
-  ctaFill.className='fill-bg';
-  cta.appendChild(ctaFill);
-  ctaWrap.appendChild(cta);
-  if(vidWrap){
-    // Append CTA to vidWrap — do NOT remove any native Webflow elements
-    vidWrap.style.position='relative';
-    vidWrap.appendChild(ctaWrap);
-  }
+  // Learn More CTA is now a native Webflow element in sc-header — no JS needed
   },500);
 })();
 
