@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.8 (fix: Lottie hover fill + preserve blue pills + text color) */
+/* MACRO Brands — Master Site Script v18.9 (fix: Lottie hover fill + preserve blue pills + text color) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1692,42 +1692,44 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     var btn=document.querySelector('.w-button,[type="submit"]');
     if(!btn)return;
 
+    // Wrap the button in a tight container so absolute children stay aligned
+    var wrapper=document.createElement('div');
+    wrapper.style.cssText='position:relative;display:inline-block;width:100%';
+    btn.parentNode.insertBefore(wrapper,btn);
+    wrapper.appendChild(btn);
+
     btn.style.position='relative';
     btn.style.overflow='hidden';
     btn.style.zIndex='1';
+    btn.style.width='100%';
 
+    var label=btn.value||btn.textContent||'Send email';
     var textSpan=document.createElement('span');
-    textSpan.style.cssText='position:relative;z-index:2;pointer-events:none';
-    textSpan.textContent=btn.value||btn.textContent;
+    textSpan.textContent=label;
+    textSpan.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;color:#1A1A1A;font-size:1.1rem;font-weight:700;font-family:Inter,sans-serif';
+    wrapper.appendChild(textSpan);
+
     if(btn.tagName==='INPUT'){
       btn.style.color='transparent';
-      btn.parentElement.style.position='relative';
-      textSpan.style.cssText+=';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#1A1A1A;font-size:1.1rem;font-weight:700;font-family:Inter,sans-serif';
-      btn.parentElement.appendChild(textSpan);
     }else{
       btn.textContent='';
-      btn.appendChild(textSpan);
     }
 
     var lottieDiv=document.createElement('div');
-    lottieDiv.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit';
-    if(btn.tagName==='INPUT'){
-      btn.parentElement.insertBefore(lottieDiv,btn);
-    }else{
-      btn.insertBefore(lottieDiv,textSpan);
-    }
+    lottieDiv.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit;overflow:hidden';
+    wrapper.insertBefore(lottieDiv,btn);
 
     var anim=lottie.loadAnimation({
       container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
-      path:BASE+'liquid-fill.json'
+      path:BASE+'liquid-fill.json',
+      rendererSettings:{preserveAspectRatio:'none'}
     });
     anim.setSpeed(1.4);
 
-    var target=btn.tagName==='INPUT'?btn.parentElement:btn;
-    target.addEventListener('mouseenter',function(){
-      anim.setDirection(1);anim.play();textSpan.style.color='#1A1A1A';
+    wrapper.addEventListener('mouseenter',function(){
+      anim.setDirection(1);anim.goToAndPlay(0,true);textSpan.style.color='#1A1A1A';
     });
-    target.addEventListener('mouseleave',function(){
+    wrapper.addEventListener('mouseleave',function(){
       anim.setDirection(-1);anim.play();textSpan.style.color='#1A1A1A';
     });
   }
