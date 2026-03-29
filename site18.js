@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.9 (fix: Lottie hover fill + preserve blue pills + text color) */
+/* MACRO Brands — Master Site Script v18.10 (fix: Lottie hover fill + preserve blue pills + text color) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1687,37 +1687,32 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   }
 
   // --- 8g. LIQUID FILL BUTTON ---
+  // Native Webflow handles text, color, centering. JS only adds Lottie animation layer.
   function initButton(){
     if(!window.lottie)return;
     var btn=document.querySelector('.w-button,[type="submit"]');
     if(!btn)return;
 
-    // Wrap the button in a tight container so absolute children stay aligned
-    var wrapper=document.createElement('div');
-    wrapper.style.cssText='position:relative;display:inline-block;width:100%';
-    btn.parentNode.insertBefore(wrapper,btn);
-    wrapper.appendChild(btn);
-
     btn.style.position='relative';
     btn.style.overflow='hidden';
-    btn.style.zIndex='1';
-    btn.style.width='100%';
 
-    var label=btn.value||btn.textContent||'Send email';
-    var textSpan=document.createElement('span');
-    textSpan.textContent=label;
-    textSpan.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;color:#1A1A1A;font-size:1.1rem;font-weight:700;font-family:Inter,sans-serif';
-    wrapper.appendChild(textSpan);
+    // For INPUT elements we can't put children inside — wrap in a positioned container
+    var wrapper, lottieDiv=document.createElement('div');
+    lottieDiv.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit;overflow:hidden';
 
     if(btn.tagName==='INPUT'){
-      btn.style.color='transparent';
+      wrapper=document.createElement('div');
+      wrapper.style.cssText='position:relative;display:block;width:100%';
+      btn.parentNode.insertBefore(wrapper,btn);
+      wrapper.appendChild(btn);
+      wrapper.appendChild(lottieDiv);
+      btn.style.position='relative';
+      btn.style.zIndex='1';
+      btn.style.width='100%';
     }else{
-      btn.textContent='';
+      btn.insertBefore(lottieDiv,btn.firstChild);
+      wrapper=btn;
     }
-
-    var lottieDiv=document.createElement('div');
-    lottieDiv.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit;overflow:hidden';
-    wrapper.insertBefore(lottieDiv,btn);
 
     var anim=lottie.loadAnimation({
       container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
@@ -1726,11 +1721,12 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     });
     anim.setSpeed(1.4);
 
+    // Hover only triggers Lottie — no text DOM manipulation
     wrapper.addEventListener('mouseenter',function(){
-      anim.setDirection(1);anim.goToAndPlay(0,true);textSpan.style.color='#1A1A1A';
+      anim.setDirection(1);anim.goToAndPlay(0,true);
     });
     wrapper.addEventListener('mouseleave',function(){
-      anim.setDirection(-1);anim.play();textSpan.style.color='#1A1A1A';
+      anim.setDirection(-1);anim.play();
     });
   }
 
