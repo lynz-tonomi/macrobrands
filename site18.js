@@ -108,8 +108,16 @@
 
   // --- 8. Parallax Hero ---
   var pxh=mk('section',{id:'parallax-hero',css:'position:relative;min-height:100vh;overflow:hidden;background:#000'});
-  var cutout=mk('div',{cls:'parallax-cutout'});
+  var bulb=mk('img',{id:'parallax-bulb'});
+  bulb.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
+  bulb.alt='';
+  pxh.appendChild(bulb);
+  var cutout=mk('img',{cls:'parallax-cutout'});
+  cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
+  cutout.alt='';
   pxh.appendChild(cutout);
+  var beaker=mk('img',{id:'parallax-beaker',css:'display:none'});
+  pxh.appendChild(beaker);
   frag.appendChild(pxh);
 
   // --- 9. Autonomi AI ---
