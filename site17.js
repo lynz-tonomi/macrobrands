@@ -1408,12 +1408,12 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   document.querySelectorAll('section,.w-section,.content-wrapper,.w-container').forEach(function(s){s.style.background='transparent'});
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
 
-  // White MACRO Brands logo centered at top (actual white PNG, no filter)
-  var nl=document.querySelector('.nav-logo');
-  if(nl){
-    nl.src='https://lynz-tonomi.github.io/macrobrands/MACRO-Brands-white.png';
-    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;background:transparent');
-  }
+  // White MACRO Brands logo centered at top
+  var wl=document.createElement('img');
+  wl.src='https://lynz-tonomi.github.io/macrobrands/MACRO-Brands-white.png';
+  wl.alt='MACRO Brands';
+  wl.style.cssText='height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;background:transparent';
+  document.body.appendChild(wl);
 
   // Add floating nav bar (matching home page)
   var nav=document.createElement('div');
