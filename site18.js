@@ -5,8 +5,8 @@
 
 // ============ 0. SCAFFOLD ============
 (function(){
-  // Skip scaffold on /contact page
-  if(window.location.pathname.match(/\/contact/))return;
+  // Skip scaffold on /contact and /autonomi pages (native Webflow content)
+  if(window.location.pathname.match(/\/(contact|autonomi)/))return;
 
   // Disable Webflow Interactions (IX2) — conflicts with our scroll handlers
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
@@ -379,13 +379,16 @@
   n.className='mb-floating-nav';
   document.body.appendChild(n);
   n.setAttribute('style','position:fixed;bottom:24px;top:auto;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3);opacity:0;transition:opacity .4s,transform .4s');
+  var isHome=window.location.pathname==='/'||window.location.pathname==='/index.html';
   var links=[['Home','#'],['About','#about'],['Services','.section-dark'],['Certs','#certifications'],['FAQ','#faq']];
   links.forEach(function(l){
-    var a=document.createElement('a');a.textContent=l[0];a.href=l[1];
+    var a=document.createElement('a');a.textContent=l[0];
+    // On non-home pages, link back to homepage with anchor
+    if(!isHome){a.href=l[1]==='#'?'/':'/'+(l[1].startsWith('.')?'':l[1])}else{a.href=l[1]}
     a.style.cssText='color:#ccc;text-decoration:none;padding:10px 16px;font-size:.9rem;font-weight:500;transition:color .2s;white-space:nowrap';
     a.onmouseover=function(){this.style.color='#fff'};
     a.onmouseout=function(){this.style.color='#ccc'};
-    a.onclick=function(e){if(l[1].startsWith('.')||l[1].startsWith('#')){e.preventDefault();var t=l[1]==='#'?document.body:document.querySelector(l[1]);if(t)t.scrollIntoView({behavior:'smooth'})}};
+    if(isHome){a.onclick=function(e){if(l[1].startsWith('.')||l[1].startsWith('#')){e.preventDefault();var t=l[1]==='#'?document.body:document.querySelector(l[1]);if(t)t.scrollIntoView({behavior:'smooth'})}}}
     n.appendChild(a);
   });
   var cb=document.createElement('a');cb.href='/contact';
@@ -398,6 +401,9 @@
   cb.onmouseenter=function(){fill.style.height='100%';cb.querySelector('span').style.color='#1A1A1A'};
   cb.onmouseleave=function(){fill.style.height='0';cb.querySelector('span').style.color='#1A1A1A'};
   n.appendChild(cb);
+
+  // On non-home pages, show nav immediately (no scroll-based reveal)
+  if(!isHome){n.style.opacity='1';n.style.transform='translateX(-50%) translateY(0)'}
 
   // Inject global liquid-fill CTA style for all pages
   var ctaCSS=document.createElement('style');
