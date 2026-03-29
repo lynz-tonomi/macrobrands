@@ -8,6 +8,9 @@
   // Skip scaffold on /contact page
   if(window.location.pathname.match(/\/contact/))return;
 
+  // Disable Webflow Interactions (IX2) — conflicts with our scroll handlers
+  try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
+
   // Apply base body styling
   document.body.style.cssText='margin:0;font-family:Inter,Helvetica Neue,Arial,sans-serif;background:#000;color:#fff;overflow-x:hidden';
 
