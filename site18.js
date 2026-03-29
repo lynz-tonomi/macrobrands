@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.7 (outline pill buttons + white Lottie fill + horizontal bullets) */
+/* MACRO Brands — Master Site Script v18.8 (fix: Lottie hover fill + preserve blue pills + text color) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1743,55 +1743,68 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   });
 })();
 
-// ============ 9. LOTTIE LIQUID FILL HOVER — All pill buttons ============
+// ============ 9. LOTTIE LIQUID FILL HOVER — Service tab Get Started buttons only ============
+// Blue pill buttons (au-cta-btn, sc-learn-more-btn) are NOT touched — they stay as designed.
 (function(){
   var BASE='https://lynz-tonomi.github.io/macrobrands/';
 
-  // Wire a button with Lottie liquid fill hover
-  // type: 'blue' (blue fill, text white on hover, #00BFFF on leave)
-  //       'white' (white fill, text #1A1A1A on hover, #fff on leave)
-  function wireBtn(btn,type){
-    var lottiePath=BASE+(type==='blue'?'liquid-fill-blue.json':'liquid-fill.json');
-    var hoverColor=type==='blue'?'#FFFFFF':'#1A1A1A';
-    var restColor=type==='blue'?'#00BFFF':'#fff';
+  function wireBtn(btn){
+    // Skip if already wired
+    if(btn.dataset.lottieWired) return;
+    btn.dataset.lottieWired='1';
 
-    // If text is already wrapped in a span, use it; otherwise wrap
-    var textSpan=btn.querySelector('span[style*="z-index:2"]')||btn.querySelector('span[style*="z-index: 2"]');
+    var lottiePath=BASE+'liquid-fill.json';
+
+    // Ensure button can contain absolute children
+    btn.style.position='relative';
+    btn.style.overflow='hidden';
+
+    // Find or create text span
+    var textSpan=btn.querySelector('span[style*="z-index"]');
     if(!textSpan){
       textSpan=document.createElement('span');
-      textSpan.style.cssText='position:relative;z-index:2;transition:color .3s ease';
-      while(btn.firstChild)textSpan.appendChild(btn.firstChild);
+      textSpan.style.cssText='position:relative;z-index:2';
+      while(btn.firstChild) textSpan.appendChild(btn.firstChild);
       btn.appendChild(textSpan);
     }
+    textSpan.style.position='relative';
+    textSpan.style.zIndex='2';
     textSpan.style.transition='color .3s ease';
+    textSpan.style.color='#fff';
 
-    // Lottie container
+    // Lottie container — absolute fill, behind text
     var lottieDiv=document.createElement('div');
-    lottieDiv.style.cssText='position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:100px;overflow:hidden';
-    btn.insertBefore(lottieDiv,textSpan);
+    lottieDiv.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden';
+    btn.insertBefore(lottieDiv,btn.firstChild);
 
     var anim=lottie.loadAnimation({
-      container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
-      path:lottiePath
+      container:lottieDiv,
+      renderer:'svg',
+      loop:false,
+      autoplay:false,
+      path:lottiePath,
+      rendererSettings:{preserveAspectRatio:'none'}
     });
     anim.setSpeed(1.4);
 
     btn.addEventListener('mouseenter',function(){
-      anim.setDirection(1);anim.play();
-      textSpan.style.color=hoverColor;
+      anim.setDirection(1);
+      anim.goToAndPlay(0,true);
+      textSpan.style.color='#1A1A1A';
+      btn.style.borderColor='rgba(255,255,255,0.8)';
     });
     btn.addEventListener('mouseleave',function(){
-      anim.setDirection(-1);anim.play();
-      textSpan.style.color=restColor;
+      anim.setDirection(-1);
+      anim.play();
+      textSpan.style.color='#fff';
+      btn.style.borderColor='rgba(255,255,255,0.3)';
     });
   }
 
   function init(){
     function go(){
-      // Blue pill buttons (Autonomi CTA + homepage Learn More)
-      document.querySelectorAll('.au-cta-btn,.sc-learn-more-btn').forEach(function(b){wireBtn(b,'blue')});
-      // White pill buttons (all service tab Get Started + any cta-outline)
-      document.querySelectorAll('.svc-cta-btn').forEach(function(b){wireBtn(b,'white')});
+      // Only wire white pill buttons in service tabs — leave blue pills alone
+      document.querySelectorAll('.svc-cta-btn').forEach(function(b){wireBtn(b)});
     }
     if(typeof lottie==='undefined'){
       var s=document.createElement('script');
@@ -1801,8 +1814,8 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     }else{go()}
   }
 
-  // Delay slightly so service tab panels are built first
-  setTimeout(init,800);
+  // Delay so service tab panels are built first
+  setTimeout(init,1000);
 })();
 
 })(); // end run
