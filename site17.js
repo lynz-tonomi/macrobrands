@@ -1292,7 +1292,7 @@
     hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px';
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI'||h.textContent.trim()==='The Agentic Integration')h.textContent='The Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto';
-      if(p.textContent.indexOf('Autonomi')!==-1){p.innerHTML=p.innerHTML.replace('Autonomi','<span style=\"color:#00BFFF;font-weight:700\">AUTONOMI</span>')}
+      if(p.textContent.indexOf('Autonomi')!==-1){p.innerHTML=p.innerHTML.replace('Autonomi','<img src=\"https://lynz-tonomi.github.io/macrobrands/Autonomi-logo-blue.png\" alt=\"Autonomi\" style=\"height:52px;vertical-align:-12px;margin:0 4px\">')}
     });
     /* Electric-blue badge */
     var badge=hdr.querySelector('.sc-badge');
