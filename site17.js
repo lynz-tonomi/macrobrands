@@ -829,7 +829,7 @@
       panel.innerHTML=
         '<div style="text-align:center;max-width:760px;margin:0 auto;padding:20px 0">'+
           '<div id="icon-slot-'+i+'" style="margin-bottom:12px"></div>'+
-          '<h3 style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">Agentic Supply Chain</h3>'+
+          '<h3 style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">The Agentic Integration</h3>'+
           '<p style="font-size:1.1rem;line-height:1.8;color:#999;margin-bottom:20px;max-width:640px;margin-left:auto;margin-right:auto">The food and beverage industry loses billions every year to manual coordination \u2014 reordering ingredients too late, missing quality flags, filing compliance paperwork after the fact.</p>'+
           '<p style="font-size:1.15rem;line-height:1.8;color:#ccc;margin-bottom:28px;max-width:640px;margin-left:auto;margin-right:auto;font-weight:600">Agentic AI changes that. <span style="color:#C9A84C">Autonomous agents that monitor, decide, and act</span> across your entire operation in real time.</p>'+
           /* ROI callout */
@@ -982,7 +982,7 @@
         /* CTA — scroll to Agentic Supply Chain section */
         '<div style="text-align:center;padding-bottom:8px">'+
           '<a id="sc-explore-btn" href="#autonomi-ai" style="display:inline-flex;align-items:center;gap:10px;padding:14px 36px;font-size:1rem;font-weight:700;border-radius:50px;border:2px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;transition:all .4s ease;letter-spacing:.03em;cursor:pointer">'+
-            '<span>Explore Agentic Supply Chain</span>'+
+            '<span>Explore The Agentic Supply Chain</span>'+
             '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3L9 15M9 15L4 10M9 15L14 10" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
           '</a>'+
         '</div>';
@@ -1290,7 +1290,7 @@
   var hdr=sec.querySelector('.sc-header');
   if(hdr){
     hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px';
-    hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI'||h.textContent.trim()==='Agentic Supply Chain')h.textContent='The Agentic Integration'});
+    hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI'||h.textContent.trim()==='The Agentic Integration')h.textContent='The Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
   }
   // Look for native Webflow bg video in sc-section or the section-dark-alt sibling below it
