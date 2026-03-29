@@ -38,7 +38,7 @@
 
   // --- 1. Video Hero ---
   var heroLogo='https://cdn.prod.website-files.com/65d843430c6e27c634035fdb/65ecfddc155259a6d0efdfd8_MACRO-Brands-long-transparent.png';
-  var vhw=mk('div',{cls:'video-hero-wrap',css:'position:relative;width:100%;overflow:hidden'});
+  var vhw=mk('div',{cls:'video-hero-wrap',css:'position:relative;width:100%'});
   var vhs=mk('div',{cls:'video-hero-sticky',css:'position:sticky;top:0;width:100%;height:100vh;overflow:hidden'});
   var hLogo=mk('img',{cls:'hero-logo',css:'display:block'});
   hLogo.src=heroLogo;hLogo.alt='MACRO Brands';
