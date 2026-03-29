@@ -1,4 +1,4 @@
-(function(){if(window._macroVersion>=17)return;window._macroVersion=17;
+(function(){if(window._macroVersion>=17)return;/* v17 deprecated — site18.js is active */return;window._macroVersion=17;
 /* MACRO Brands — Master Site Script */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
