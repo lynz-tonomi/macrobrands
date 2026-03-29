@@ -1407,30 +1407,31 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   body.style.color='#fff';
   body.style.fontFamily='Inter,Helvetica Neue,Arial,sans-serif';
 
-  // Match home page navbar: move nav-logo out of fixed-nav, make transparent
-  var existingLogo=document.querySelector('.fixed-nav .nav-logo');
-  if(existingLogo){document.body.appendChild(existingLogo)}
+  // Match home page navbar: hide native fixed-nav, show logo white on transparent topbar
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:brightness(0);background:transparent');
+    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:brightness(100);background:transparent');
   }
-  // White topbar
-  var topbar=document.createElement('div');
-  topbar.style.cssText='position:fixed;top:0;left:0;width:100%;height:60px;background:#fff;z-index:9997;box-shadow:0 1px 8px rgba(0,0,0,.08)';
 
   // Add floating nav bar (matching home page)
   var nav=document.createElement('div');
   document.body.appendChild(nav);
   nav.setAttribute('style','position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3)');
-  [['Home','/'],['Services','/#services'],['About','/#about'],['FAQ','/#faq']].forEach(function(l){
+  [['Home','/'],['About','/#about'],['Services','/#services'],['Certs','/#certifications'],['FAQ','/#faq']].forEach(function(l){
     var a=document.createElement('a');a.textContent=l[0];a.href=l[1];
     a.style.cssText='color:#ccc;text-decoration:none;padding:10px 16px;font-size:.9rem;font-weight:500;transition:color .2s;white-space:nowrap';
     a.onmouseover=function(){this.style.color='#fff'};a.onmouseout=function(){this.style.color='#ccc'};
     nav.appendChild(a);
   });
-  var cb=document.createElement('a');cb.textContent='Contact';cb.href='/contact';
-  cb.style.cssText='color:#1A1A1A;background:#C9A84C;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px';
+  var cb=document.createElement('a');cb.href='/contact';
+  cb.style.cssText='color:#1A1A1A;background:#C9A84C;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px;position:relative;overflow:hidden;display:inline-block';
+  cb.innerHTML='<span style="position:relative;z-index:1">Contact</span>';
+  var fill=document.createElement('div');
+  fill.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px';
+  cb.appendChild(fill);
+  cb.onmouseenter=function(){fill.style.height='100%';cb.querySelector('span').style.color='#1A1A1A'};
+  cb.onmouseleave=function(){fill.style.height='0';cb.querySelector('span').style.color='#1A1A1A'};
   nav.appendChild(cb);
 
   // Find the form
