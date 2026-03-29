@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.4 (contact page: SVG line-draw, GSAP entrances, Lottie badges, particle mesh) */
+/* MACRO Brands — Master Site Script v18.5 (contact anims + autonomi blue liquid-fill hover) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1707,6 +1707,53 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     initBadges();
     initButton();
   });
+})();
+
+// ============ 9. AUTONOMI PAGE — BLUE LIQUID FILL HOVER ============
+(function(){
+  if(!window.location.pathname.match(/\/autonomi/))return;
+  var BASE='https://lynz-tonomi.github.io/macrobrands/';
+  var btn=document.querySelector('.au-cta-btn');
+  if(!btn)return;
+
+  // Wrap existing text in a span for z-index layering
+  var textSpan=document.createElement('span');
+  textSpan.style.cssText='position:relative;z-index:2;transition:color .3s ease';
+  while(btn.firstChild)textSpan.appendChild(btn.firstChild);
+  btn.appendChild(textSpan);
+
+  // Lottie container — fills button, sits behind text
+  var lottieDiv=document.createElement('div');
+  lottieDiv.style.cssText='position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:100px;overflow:hidden';
+  btn.insertBefore(lottieDiv,textSpan);
+
+  function initAnim(){
+    if(typeof lottie==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
+      s.onload=function(){boot()};
+      document.head.appendChild(s);
+    }else{boot()}
+  }
+
+  function boot(){
+    var anim=lottie.loadAnimation({
+      container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
+      path:BASE+'liquid-fill-blue.json'
+    });
+    anim.setSpeed(1.4);
+
+    btn.addEventListener('mouseenter',function(){
+      anim.setDirection(1);anim.play();
+      textSpan.style.color='#FFFFFF';
+    });
+    btn.addEventListener('mouseleave',function(){
+      anim.setDirection(-1);anim.play();
+      textSpan.style.color='#00BFFF';
+    });
+  }
+
+  initAnim();
 })();
 
 })(); // end run
