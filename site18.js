@@ -54,7 +54,21 @@
   nl.src=heroLogo;nl.alt='MACRO Brands';
   frag.appendChild(nl);
 
-  // --- 2. Fixed Nav (placeholder, will be hidden by enhancement code) ---
+  // --- 2. Parallax Hero (right after video scrub) ---
+  var pxh=mk('section',{id:'parallax-hero',css:'position:relative;min-height:100vh;overflow:hidden;background:#000'});
+  var bulb=mk('img',{id:'parallax-bulb'});
+  bulb.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
+  bulb.alt='';
+  pxh.appendChild(bulb);
+  var cutout=mk('img',{cls:'parallax-cutout'});
+  cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
+  cutout.alt='';
+  pxh.appendChild(cutout);
+  var beaker=mk('img',{id:'parallax-beaker',css:'display:none'});
+  pxh.appendChild(beaker);
+  frag.appendChild(pxh);
+
+  // --- 3. Fixed Nav (placeholder, will be hidden by enhancement code) ---
   var fn=mk('div',{cls:'fixed-nav',css:'display:none'});
   frag.appendChild(fn);
 
@@ -106,21 +120,7 @@
     '</div>';
   frag.appendChild(certs);
 
-  // --- 8. Parallax Hero ---
-  var pxh=mk('section',{id:'parallax-hero',css:'position:relative;min-height:100vh;overflow:hidden;background:#000'});
-  var bulb=mk('img',{id:'parallax-bulb'});
-  bulb.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-  bulb.alt='';
-  pxh.appendChild(bulb);
-  var cutout=mk('img',{cls:'parallax-cutout'});
-  cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-  cutout.alt='';
-  pxh.appendChild(cutout);
-  var beaker=mk('img',{id:'parallax-beaker',css:'display:none'});
-  pxh.appendChild(beaker);
-  frag.appendChild(pxh);
-
-  // --- 9. Autonomi AI ---
+  // --- 8. Autonomi AI ---
   var aiSec=mk('section',{id:'autonomi-ai',cls:'section-dark-alt',css:'position:relative;overflow:hidden;background:#000'});
   aiSec.innerHTML='<div class="sc-header" style="text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px">'+
     '<div class="sc-badge" style="display:inline-flex;align-items:center;gap:8px;border:1px solid #00BFFF;border-radius:50px;padding:6px 16px;margin-bottom:16px;font-size:.85rem;color:#00BFFF"><img src="https://lynz-tonomi.github.io/macrobrands/AI-small-blue.png" alt="AI" style="height:22px;width:auto"> POWERED BY</div>'+
