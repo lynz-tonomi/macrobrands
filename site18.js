@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.3 (native Webflow + Lottie liquid fill button) */
+/* MACRO Brands — Master Site Script v18.4 (contact page: SVG line-draw, GSAP entrances, Lottie badges, particle mesh) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1391,11 +1391,13 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   });
 })();
 
-// ============ 8. CONTACT BUTTON LOTTIE LIQUID FILL ============
+// ============ 8. CONTACT PAGE ANIMATIONS ============
+// SVG line-draw hero, GSAP entrances, Lottie cert badges, particle mesh, liquid fill button
 (function(){
   if(!window.location.pathname.match(/\/contact/))return;
+  var BASE='https://lynz-tonomi.github.io/macrobrands/';
 
-  // Load lottie-web if not present
+  // --- 8a. Load lottie-web ---
   function loadLottie(cb){
     if(window.lottie)return cb();
     var s=document.createElement('script');
@@ -1404,59 +1406,307 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     document.head.appendChild(s);
   }
 
-  function init(){
+  // --- 8b. SVG HERO LINE-DRAW ILLUSTRATION ---
+  function initHeroSVG(){
+    var heading=document.querySelector('.contact-info-h2')||document.querySelector('h2');
+    if(!heading)return;
+    var svgWrap=document.createElement('div');
+    svgWrap.style.cssText='width:100%;max-width:360px;margin:0 auto 30px;opacity:0';
+    svgWrap.id='contact-hero-svg';
+
+    var obj=document.createElement('object');
+    obj.type='image/svg+xml';
+    obj.data=BASE+'contact-hero-illustration.svg';
+    obj.style.cssText='width:100%;height:auto;pointer-events:none';
+    obj.onload=function(){
+      try{
+        var svgDoc=obj.contentDocument;
+        var paths=svgDoc.querySelectorAll('path,circle,ellipse,line,polyline,polygon,rect');
+        paths.forEach(function(p){
+          var len=p.getTotalLength?p.getTotalLength():300;
+          p.style.strokeDasharray=len;
+          p.style.strokeDashoffset=len;
+          p.style.transition='none';
+        });
+        // Animate draw-on with GSAP if available
+        if(window.gsap){
+          gsap.to(svgWrap,{opacity:1,duration:0.3});
+          paths.forEach(function(p,i){
+            var len=p.getTotalLength?p.getTotalLength():300;
+            gsap.to(p,{strokeDashoffset:0,duration:1.5,delay:0.2*i,ease:'power2.inOut'});
+          });
+        }else{
+          svgWrap.style.opacity='1';
+          paths.forEach(function(p,i){
+            var len=p.getTotalLength?p.getTotalLength():300;
+            setTimeout(function(){
+              p.style.transition='stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)';
+              p.style.strokeDashoffset='0';
+            },200*i);
+          });
+        }
+      }catch(e){}
+    };
+    svgWrap.appendChild(obj);
+    // Insert above the contact-info column
+    var infoCol=document.querySelector('.contact-info');
+    if(infoCol)infoCol.insertBefore(svgWrap,infoCol.firstChild);
+  }
+
+  // --- 8c. GSAP STAGGERED ENTRANCES ---
+  function initEntrances(){
+    if(!window.gsap||!window.ScrollTrigger)return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    // H1 + subtitle entrance
+    var h1=document.querySelector('h1');
+    var sub=document.querySelector('.subtitle')||document.querySelector('[class*="subtitle"]')||document.querySelector('[class*="Subtitle"]');
+    if(h1){
+      gsap.from(h1,{y:40,opacity:0,duration:0.8,ease:'power3.out'});
+    }
+    if(sub){
+      gsap.from(sub,{y:30,opacity:0,duration:0.8,delay:0.15,ease:'power3.out'});
+    }
+
+    // Contact grid columns entrance
+    var infoCol=document.querySelector('.contact-info');
+    var formCard=document.querySelector('.contact-form-card');
+    if(infoCol){
+      gsap.from(infoCol,{x:-50,opacity:0,duration:0.9,delay:0.3,ease:'power3.out',
+        scrollTrigger:{trigger:infoCol,start:'top 85%',once:true}});
+    }
+    if(formCard){
+      gsap.from(formCard,{x:50,opacity:0,duration:0.9,delay:0.4,ease:'power3.out',
+        scrollTrigger:{trigger:formCard,start:'top 85%',once:true}});
+    }
+
+    // Form fields cascade
+    var fields=document.querySelectorAll('.contact-form-card input,.contact-form-card textarea');
+    fields.forEach(function(f,i){
+      gsap.from(f,{y:20,opacity:0,duration:0.5,delay:0.5+i*0.08,ease:'power2.out',
+        scrollTrigger:{trigger:f,start:'top 90%',once:true}});
+    });
+
+    // Detail labels/values
+    var details=document.querySelectorAll('.contact-detail-label,.contact-detail-value');
+    details.forEach(function(d,i){
+      gsap.from(d,{y:15,opacity:0,duration:0.5,delay:0.4+i*0.1,ease:'power2.out',
+        scrollTrigger:{trigger:d,start:'top 90%',once:true}});
+    });
+  }
+
+  // --- 8d. CERTIFICATION BADGE LOTTIES ---
+  function initBadges(){
+    if(!window.lottie)return;
+    var valEl=document.querySelectorAll('.contact-detail-value');
+    var certEl=null;
+    valEl.forEach(function(v){if(v.textContent&&v.textContent.indexOf('USDA')!==-1)certEl=v;});
+    if(!certEl)return;
+
+    // Hide text, replace with badge row
+    certEl.style.display='none';
+    var badgeRow=document.createElement('div');
+    badgeRow.style.cssText='display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:28px';
+    certEl.parentElement.insertBefore(badgeRow,certEl.nextSibling);
+
+    var badges=[
+      {file:'lottie-usda-organic.json',label:'USDA Organic'},
+      {file:'lottie-sqf.json',label:'SQF Level 2'},
+      {file:'lottie-fda.json',label:'FDA'}
+    ];
+
+    var certs=['HACCP','GMP','Kosher','NSF'];
+
+    badges.forEach(function(b,i){
+      var wrap=document.createElement('div');
+      wrap.style.cssText='display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0';
+      var lotDiv=document.createElement('div');
+      lotDiv.style.cssText='width:52px;height:52px';
+      var lbl=document.createElement('span');
+      lbl.style.cssText='font-size:0.7rem;color:#999;font-family:Inter,sans-serif;font-weight:600;text-align:center';
+      lbl.textContent=b.label;
+      wrap.appendChild(lotDiv);
+      wrap.appendChild(lbl);
+      badgeRow.appendChild(wrap);
+
+      var anim=lottie.loadAnimation({
+        container:lotDiv,renderer:'svg',loop:false,autoplay:false,
+        path:BASE+b.file
+      });
+
+      // Trigger on scroll into view
+      var observer=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            setTimeout(function(){
+              wrap.style.transition='opacity 0.4s ease';
+              wrap.style.opacity='1';
+              anim.play();
+            },i*200);
+            observer.disconnect();
+          }
+        });
+      },{threshold:0.3});
+      observer.observe(wrap);
+    });
+
+    // Text badges for the rest
+    certs.forEach(function(c,i){
+      var tag=document.createElement('div');
+      tag.style.cssText='display:inline-flex;align-items:center;justify-content:center;padding:6px 14px;border:1px solid #ddd;border-radius:20px;font-size:0.75rem;color:#666;font-family:Inter,sans-serif;font-weight:600;opacity:0;transition:opacity 0.4s ease';
+      tag.textContent=c;
+      badgeRow.appendChild(tag);
+      setTimeout(function(){tag.style.opacity='1';},800+i*150);
+    });
+  }
+
+  // --- 8e. PARTICLE MESH BACKGROUND ---
+  function initParticles(){
+    var canvas=document.createElement('canvas');
+    canvas.id='contact-particles';
+    canvas.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4';
+    document.body.insertBefore(canvas,document.body.firstChild);
+    // Ensure page content is above
+    var sections=document.querySelectorAll('section,.w-section,nav,.w-nav,[class*="Section"],[class*="NAVBar"],.contact-grid,[class*="container"],[class*="Container"],footer,.w-footer');
+    sections.forEach(function(s){if(s.style)s.style.position=s.style.position||'relative';if(s.style)s.style.zIndex=s.style.zIndex||'1';});
+
+    var ctx=canvas.getContext('2d');
+    var particles=[];
+    var PARTICLE_COUNT=35;
+    var CONNECT_DIST=140;
+
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    resize();
+    window.addEventListener('resize',resize);
+
+    for(var i=0;i<PARTICLE_COUNT;i++){
+      particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        vx:(Math.random()-0.5)*0.3,
+        vy:(Math.random()-0.5)*0.3,
+        r:1.5+Math.random()*1
+      });
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // Lines
+      for(var i=0;i<particles.length;i++){
+        for(var j=i+1;j<particles.length;j++){
+          var dx=particles[i].x-particles[j].x;
+          var dy=particles[i].y-particles[j].y;
+          var dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<CONNECT_DIST){
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x,particles[i].y);
+            ctx.lineTo(particles[j].x,particles[j].y);
+            ctx.strokeStyle='rgba(201,168,76,'+(0.12*(1-dist/CONNECT_DIST))+')';
+            ctx.lineWidth=0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      // Dots
+      for(var i=0;i<particles.length;i++){
+        var p=particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle='rgba(201,168,76,0.2)';
+        ctx.fill();
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>canvas.width)p.vx*=-1;
+        if(p.y<0||p.y>canvas.height)p.vy*=-1;
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // --- 8f. GOLD ACCENT DIVIDER ---
+  function initDivider(){
+    var grid=document.querySelector('.contact-grid');
+    if(!grid)return;
+    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 1100 4');
+    svg.style.cssText='width:100%;max-width:1100px;height:4px;display:block;margin:0 auto 0;overflow:visible';
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1','0');line.setAttribute('y1','2');
+    line.setAttribute('x2','1100');line.setAttribute('y2','2');
+    line.setAttribute('stroke','#C9A84C');line.setAttribute('stroke-width','1.5');
+    line.setAttribute('stroke-linecap','round');
+    line.setAttribute('stroke-dasharray','1100');
+    line.setAttribute('stroke-dashoffset','1100');
+    svg.appendChild(line);
+    grid.parentElement.insertBefore(svg,grid);
+
+    // Animate
+    if(window.gsap){
+      gsap.to(line,{attr:{'stroke-dashoffset':0},duration:1.8,delay:0.5,ease:'power2.inOut',
+        scrollTrigger:{trigger:svg,start:'top 85%',once:true}});
+    }else{
+      setTimeout(function(){
+        line.style.transition='stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1)';
+        line.setAttribute('stroke-dashoffset','0');
+      },500);
+    }
+  }
+
+  // --- 8g. LIQUID FILL BUTTON ---
+  function initButton(){
+    if(!window.lottie)return;
     var btn=document.querySelector('.w-button,[type="submit"]');
     if(!btn)return;
 
-    // Style button for overlay
     btn.style.position='relative';
     btn.style.overflow='hidden';
     btn.style.zIndex='1';
 
-    // Ensure button text is above the animation
     var textSpan=document.createElement('span');
     textSpan.style.cssText='position:relative;z-index:2;pointer-events:none';
     textSpan.textContent=btn.value||btn.textContent;
     if(btn.tagName==='INPUT'){
       btn.style.color='transparent';
       btn.parentElement.style.position='relative';
-      textSpan.style.cssText+= ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#1A1A1A;font-size:1.1rem;font-weight:700;font-family:Inter,sans-serif';
+      textSpan.style.cssText+=';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#1A1A1A;font-size:1.1rem;font-weight:700;font-family:Inter,sans-serif';
       btn.parentElement.appendChild(textSpan);
     }else{
       btn.textContent='';
       btn.appendChild(textSpan);
     }
 
-    // Lottie container
     var lottieDiv=document.createElement('div');
     lottieDiv.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit';
-    btn.parentElement.insertBefore(lottieDiv, btn.tagName==='INPUT'? btn : null);
-    if(btn.tagName!=='INPUT') btn.insertBefore(lottieDiv, textSpan);
+    if(btn.tagName==='INPUT'){
+      btn.parentElement.insertBefore(lottieDiv,btn);
+    }else{
+      btn.insertBefore(lottieDiv,textSpan);
+    }
 
     var anim=lottie.loadAnimation({
-      container:lottieDiv,
-      renderer:'svg',
-      loop:false,
-      autoplay:false,
-      path:'https://lynz-tonomi.github.io/macrobrands/liquid-fill.json'
+      container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
+      path:BASE+'liquid-fill.json'
     });
-
     anim.setSpeed(1.4);
 
-    var hoverTarget=btn.tagName==='INPUT'? btn.parentElement : btn;
-    hoverTarget.addEventListener('mouseenter',function(){
-      anim.setDirection(1);
-      anim.play();
-      textSpan.style.color='#1A1A1A';
+    var target=btn.tagName==='INPUT'?btn.parentElement:btn;
+    target.addEventListener('mouseenter',function(){
+      anim.setDirection(1);anim.play();textSpan.style.color='#1A1A1A';
     });
-    hoverTarget.addEventListener('mouseleave',function(){
-      anim.setDirection(-1);
-      anim.play();
-      textSpan.style.color='#1A1A1A';
+    target.addEventListener('mouseleave',function(){
+      anim.setDirection(-1);anim.play();textSpan.style.color='#1A1A1A';
     });
   }
 
-  loadLottie(init);
+  // --- INIT ALL ---
+  initParticles();
+  initHeroSVG();
+  initDivider();
+  initEntrances();
+  loadLottie(function(){
+    initBadges();
+    initButton();
+  });
 })();
 
 })(); // end run

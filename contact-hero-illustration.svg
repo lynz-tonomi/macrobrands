@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+
+  <!-- Path 1: Central supplement bottle -->
+  <path
+    d="M370 320 L370 295 Q360 290 355 278 L350 220 Q348 210 348 200 L348 160 Q348 150 352 145 L355 140 L355 120 Q355 110 365 108 L370 107 L370 95 Q370 88 375 85 Q380 82 385 85 L390 87 L390 95 L395 107 Q405 109 405 120 L405 140 L408 145 Q412 150 412 160 L412 200 Q412 210 410 220 L405 278 Q400 290 390 295 L390 320 Z
+    M362 140 L388 140
+    M362 108 L388 108"
+    stroke="#C9A84C"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Path 2: Left large botanical branch -->
+  <path
+    d="M348 220 Q310 215 285 195 Q268 182 260 165
+    M285 195 Q278 172 288 155 Q296 175 285 195
+    M260 165 Q248 148 255 128 Q268 145 260 165
+    M310 215 Q295 235 278 248 Q268 238 272 222 Q288 228 310 215
+    M278 248 Q265 262 252 268 Q248 255 258 245 Q268 245 278 248"
+    stroke="#C9A84C"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Path 3: Right large botanical branch -->
+  <path
+    d="M412 220 Q450 215 475 195 Q492 182 500 165
+    M475 195 Q482 172 472 155 Q464 175 475 195
+    M500 165 Q512 148 505 128 Q492 145 500 165
+    M450 215 Q465 235 482 248 Q492 238 488 222 Q472 228 450 215
+    M482 248 Q495 262 508 268 Q512 255 502 245 Q492 245 482 248"
+    stroke="#C9A84C"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Path 4: Upper left sweeping leaf arc -->
+  <path
+    d="M362 160 Q330 140 305 110 Q292 92 295 72
+    M295 72 Q318 85 330 108 Q340 128 362 160
+    M305 110 Q285 100 270 82 Q268 65 282 58
+    M282 58 Q295 72 295 85 Q298 100 305 110
+    M330 108 Q322 88 328 68 Q340 62 348 72
+    M348 72 Q342 88 330 108"
+    stroke="#C9A84C"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Path 5: Upper right sweeping leaf arc -->
+  <path
+    d="M398 160 Q430 140 455 110 Q468 92 465 72
+    M465 72 Q442 85 430 108 Q420 128 398 160
+    M455 110 Q475 100 490 82 Q492 65 478 58
+    M478 58 Q465 72 465 85 Q462 100 455 110
+    M430 108 Q438 88 432 68 Q420 62 412 72
+    M412 72 Q418 88 430 108"
+    stroke="#C9A84C"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Path 6: Ground trailing stems and small accent leaves -->
+  <path
+    d="M370 320 Q340 325 312 318 Q288 310 275 295
+    M275 295 Q270 280 280 270 Q290 278 275 295
+    M312 318 Q298 330 288 345 Q278 342 278 330 Q292 325 312 318
+    M390 320 Q418 325 446 318 Q470 310 485 295
+    M485 295 Q490 280 480 270 Q470 278 485 295
+    M446 318 Q460 330 470 345 Q480 342 480 330 Q466 325 446 318
+    M380 320 L380 355 Q380 365 375 370 Q370 365 370 355 L370 320"
+    stroke="#C9A84C"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+</svg>
