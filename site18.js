@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.2 (no scaffold, no contact page JS — all native Webflow) */
+/* MACRO Brands — Master Site Script v18.3 (native Webflow + Lottie liquid fill button) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1391,7 +1391,73 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   });
 })();
 
-// Section 8 removed — contact page layout is now fully native Webflow.
+// ============ 8. CONTACT BUTTON LOTTIE LIQUID FILL ============
+(function(){
+  if(!window.location.pathname.match(/\/contact/))return;
+
+  // Load lottie-web if not present
+  function loadLottie(cb){
+    if(window.lottie)return cb();
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
+    s.onload=cb;
+    document.head.appendChild(s);
+  }
+
+  function init(){
+    var btn=document.querySelector('.w-button,[type="submit"]');
+    if(!btn)return;
+
+    // Style button for overlay
+    btn.style.position='relative';
+    btn.style.overflow='hidden';
+    btn.style.zIndex='1';
+
+    // Ensure button text is above the animation
+    var textSpan=document.createElement('span');
+    textSpan.style.cssText='position:relative;z-index:2;pointer-events:none';
+    textSpan.textContent=btn.value||btn.textContent;
+    if(btn.tagName==='INPUT'){
+      btn.style.color='transparent';
+      btn.parentElement.style.position='relative';
+      textSpan.style.cssText+= ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#1A1A1A;font-size:1.1rem;font-weight:700;font-family:Inter,sans-serif';
+      btn.parentElement.appendChild(textSpan);
+    }else{
+      btn.textContent='';
+      btn.appendChild(textSpan);
+    }
+
+    // Lottie container
+    var lottieDiv=document.createElement('div');
+    lottieDiv.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit';
+    btn.parentElement.insertBefore(lottieDiv, btn.tagName==='INPUT'? btn : null);
+    if(btn.tagName!=='INPUT') btn.insertBefore(lottieDiv, textSpan);
+
+    var anim=lottie.loadAnimation({
+      container:lottieDiv,
+      renderer:'svg',
+      loop:false,
+      autoplay:false,
+      path:'https://lynz-tonomi.github.io/macrobrands/liquid-fill.json'
+    });
+
+    anim.setSpeed(1.4);
+
+    var hoverTarget=btn.tagName==='INPUT'? btn.parentElement : btn;
+    hoverTarget.addEventListener('mouseenter',function(){
+      anim.setDirection(1);
+      anim.play();
+      textSpan.style.color='#1A1A1A';
+    });
+    hoverTarget.addEventListener('mouseleave',function(){
+      anim.setDirection(-1);
+      anim.play();
+      textSpan.style.color='#1A1A1A';
+    });
+  }
+
+  loadLottie(init);
+})();
 
 })(); // end run
 
