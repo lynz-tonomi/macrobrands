@@ -1368,6 +1368,25 @@
 // ============ 7b. SECTION-DARK-ALT (native Webflow Background Video) ============
 // Video lives natively in Webflow's section-dark-alt — JS must NOT touch/remove it
 
+// ============ 7c. HIDE PHONE NUMBER FROM CTA ============
+document.querySelectorAll('.section-subhead').forEach(function(p){if(p.textContent.indexOf('call us')!==-1)p.style.display='none'});
+
+// ============ 7d. FAQ COPY UPDATES ============
+(function(){
+  var faqMap={
+    'What are your minimum order quantities?':'It depends on the process. For pilot trials, we can test 500-gallon batches. For full production runs, MOQs vary by line \u2014 contact us to discuss your specific product and we\u2019ll give you a straight answer.',
+    'How long from first contact to first production run?':'For brands with a finished, validated formula with all commercialization process in place, 4\u20138 weeks is typical for scheduling and producing your first run. If you need formulation support, process development, or pilot trials first, add 8\u201312 weeks depending on complexity. We\u2019ll give you a realistic timeline on our first call.',
+    'Do you help with formulation or just fill?':'Both. We have in-house food product development teams with 30+ years of experience at companies like Gerber, Pepsi, Tropicana, KDP, La Colomb, Kellogg, and Kraft Heinz. Whether you need a formula built from scratch, optimized for a specific process, or just validated through thermal processing \u2014 we can help.',
+    'What\u2019s the difference between retort and aseptic?':'Retort processing sterilizes the product after it\u2019s sealed in the container (can or glass bottle). Aseptic processing sterilizes the product and the container separately, then fills in a sterile environment. Both produce shelf-stable products. Retort is ideal for cans and denser products. Aseptic is ideal for PET bottles and products where fresh flavor retention is critical. We offer both \u2014 we can help you determine which is right for your product.',
+    'Can you do organic production runs?':'Yes. Our facilities are USDA Organic certified. We can produce organic beverages across all of our manufacturing processes \u2014 retort, aseptic, and cold brew. We follow strict organic handling protocols including dedicated cleaning procedures and full batch documentation for organic traceability.',
+    'What certifications do you hold?':'USDA Organic, SQF Level 2, HACCP, FDA Registered, GMP Certified, Kosher, and NSF Certified. Our Process Authority has 30 years of experience in thermal process validation and LACF compliance. These certifications mean your product meets the standards required by major retailers, natural food stores, and foodservice distributors.'
+  };
+  document.querySelectorAll('.card-title').forEach(function(h){
+    var q=h.textContent.trim();
+    if(faqMap[q]){var p=h.nextElementSibling;if(p&&p.classList.contains('card-text'))p.textContent=faqMap[q]}
+  });
+})();
+
 // ============ 8. CONTACT PAGE ENHANCEMENTS ============
 (function(){
   // Only run on /contact page
