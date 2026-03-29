@@ -1327,7 +1327,7 @@
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
     scVid=document.createElement('video');
-    scVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web.mp4';
+    scVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web2.mp4';
     scVid.muted=true;scVid.loop=true;scVid.playsInline=true;
     scVid.style.cssText='width:100%;height:auto;display:block;opacity:1';
     vidWrap.appendChild(scVid);
