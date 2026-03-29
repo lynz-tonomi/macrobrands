@@ -189,13 +189,23 @@
   var ctx=c.getContext('2d');
   var tot=850;
   var base='https://lynz-tonomi.github.io/macrobrands/frames/frame_';
-  var imgs=[];var loaded=0;
+  var imgs=new Array(tot);
   function pad(n){return('0000'+n).slice(-4)}
-  for(var i=1;i<=tot;i++){
-    var img=new Image();img.src=base+pad(i)+'.jpg';
-    img.onload=function(){loaded++;if(loaded===1)draw(0)};
-    imgs.push(img);
+  // Lazy loader — only fetch frames near current scroll position (not all 850 at once)
+  var loadedSet={};
+  var loadBuf=40;
+  function loadFrame(idx){
+    if(idx<0||idx>=tot||loadedSet[idx])return;
+    loadedSet[idx]=true;
+    var img=new Image();
+    img.onload=function(){imgs[idx]=img;if(idx===0)draw(0)};
+    img.src=base+pad(idx+1)+'.jpg';
   }
+  function loadRange(center){
+    for(var j=Math.max(0,center-loadBuf);j<Math.min(tot,center+loadBuf);j++)loadFrame(j);
+  }
+  // Load first 20 frames immediately for fast first paint
+  for(var i=0;i<20;i++)loadFrame(i);
   function draw(idx){
     if(!imgs[idx]||!imgs[idx].complete)return;
     c.width=s.offsetWidth;c.height=s.offsetHeight;
@@ -208,7 +218,7 @@
   function up(){
     var h=window.innerHeight;var p=window.scrollY/(w.offsetHeight-h);
     if(p<0)p=0;if(p>1)p=1;
-    var idx=Math.min(Math.floor(p*tot),tot-1);draw(idx);
+    var idx=Math.min(Math.floor(p*tot),tot-1);loadRange(idx);draw(idx);
   }
   window.addEventListener('scroll',up,{passive:true});
   window.addEventListener('resize',up);up();
