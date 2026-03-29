@@ -1292,6 +1292,12 @@
     hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px';
     hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI'||h.textContent.trim()==='The Agentic Integration')h.textContent='The Agentic Supply Chain'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto'});
+    /* Electric-blue badge */
+    var badge=hdr.querySelector('.sc-badge');
+    if(badge){badge.style.borderColor='#00BFFF';badge.style.color='#00BFFF';
+      var bImg=badge.querySelector('img');
+      if(bImg){bImg.src='https://lynz-tonomi.github.io/macrobrands/autonomi-logo-blue.svg';bImg.style.height='22px';bImg.style.width='auto'}
+    }
   }
   // Look for native Webflow bg video in sc-section or the section-dark-alt sibling below it
   var vidWrap=null;var scVid=null;
