@@ -333,7 +333,7 @@
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:4px 32px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
@@ -393,11 +393,9 @@
             /* Seed first image */
             a.src=urls[0];a.style.opacity='1';
             if(urls[1])b.src=urls[1];
-            /* Crossfade every 500 ms — re-shuffle when cycle completes */
-            function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
+            /* Crossfade every 500 ms */
             setInterval(function(){
-              idx++;
-              if(idx>=urls.length){idx=0;shuffleUrls();}
+              idx=(idx+1)%urls.length;
               if(aActive){
                 b.src=urls[idx];
                 b.style.opacity='1';a.style.opacity='0';
@@ -419,7 +417,7 @@
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">MicroThermic Processing</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">Our in-house MicroThermics AI Series UHT/HTST processor bridges the gap between lab development and commercial production. Fully automated with both direct injection and indirect heat transfer — send us a half-gallon sample and we validate your thermal process before you commit to a full run.</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:4px 32px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
@@ -507,7 +505,7 @@
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
           '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
-          tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
+          tab.bullets.map(function(b){return '<li style="padding:4px 0;color:#bbb;font-size:.95rem"><span style="color:#C9A84C;margin-right:8px">✓</span>'+b+'</li>'}).join('')+
           '</ul>'+
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
@@ -671,7 +669,7 @@
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
           '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
-          tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
+          tab.bullets.map(function(b){return '<li style="padding:4px 0;color:#bbb;font-size:.95rem"><span style="color:#C9A84C;margin-right:8px">\u2713</span>'+b+'</li>'}).join('')+
           '</ul>'+
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
@@ -978,10 +976,8 @@
           '</svg>'+
         '</div>'+
         /* Bullet capabilities in 2 columns */
-        '<div style="max-width:800px;margin:0 auto 36px">'+
-          '<ul style="list-style:none;padding:0;margin:0;columns:2;column-gap:32px">'+
-            tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
-          '</ul>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 40px;max-width:640px;margin:0 auto 36px">'+
+          tab.bullets.map(function(b){return '<div style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1a1a"><span style="color:#C9A84C">\u2713</span> '+b+'</div>'}).join('')+
         '</div>'+
         /* CTA — scroll to Agentic Supply Chain section */
         '<div style="text-align:center;padding-bottom:8px">'+
@@ -1002,16 +998,20 @@
         },100);
       })();
     } else {
-    panel.innerHTML=
-      '<div style="margin-bottom:32px">'+
+    panel.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">'+
+      '<div>'+
         '<div id="icon-slot-'+i+'"></div>'+
         '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
-        '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-        '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
-          tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
-        '</ul>'+
+        '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px">'+tab.desc+'</p>'+
         '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
-      '</div>';
+      '</div>'+
+      '<div style="background:#111;border-radius:16px;padding:32px;border:1px solid #222">'+
+        '<div style="font-weight:700;color:#ccc;margin-bottom:16px;font-size:.95rem">What\'s Included</div>'+
+        '<ul style="list-style:none;padding:0;margin:0">'+
+          tab.bullets.map(function(b){return '<li style="padding:10px 0;border-bottom:1px solid #1a1a1a;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
+        '</ul>'+
+      '</div>'+
+    '</div>';
     }
     tabContent.appendChild(panel);
     panels.push(panel);
@@ -1261,23 +1261,21 @@
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
-    if(hasGsap){
-      var revealH=[],revealP=[],revealC=[];
-      sects.forEach(function(sec2){
-        if(sec2.closest('.video-hero-wrap'))return;
-        sec2.querySelectorAll('h2').forEach(function(h){gsap.set(h,{y:80,opacity:0});revealH.push(h)});
-        sec2.querySelectorAll('p').forEach(function(p){gsap.set(p,{y:50,opacity:0});revealP.push(p)});
-        sec2.querySelectorAll('.card-light,.service-card').forEach(function(c){
-          gsap.set(c,{y:100,opacity:0,scale:.96});revealC.push(c);
-          c.style.transition='transform .3s,box-shadow .3s';
-          c.onmouseenter=function(){this.style.transform='translateY(-8px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.1)'};
-          c.onmouseleave=function(){this.style.transform='';this.style.boxShadow=''};
-        });
+    if(hasGsap)sects.forEach(function(sec2){
+      if(sec2.closest('.video-hero-wrap'))return;
+      sec2.querySelectorAll('h2').forEach(function(h){
+        gsap.fromTo(h,{y:80,opacity:0},{y:0,opacity:1,duration:1,ease:'power3.out',scrollTrigger:{trigger:h,start:'top 90%',end:'top 50%',scrub:.8}});
       });
-      ScrollTrigger.batch(revealH,{start:'top 90%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:1,ease:'power3.out',stagger:.15})}});
-      ScrollTrigger.batch(revealP,{start:'top 92%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:.8,ease:'power2.out',stagger:.1})}});
-      ScrollTrigger.batch(revealC,{start:'top 95%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,scale:1,duration:1,ease:'power3.out',stagger:.12})}});
-    }
+      sec2.querySelectorAll('p').forEach(function(p){
+        gsap.fromTo(p,{y:50,opacity:0},{y:0,opacity:1,duration:1,ease:'power2.out',scrollTrigger:{trigger:p,start:'top 92%',end:'top 60%',scrub:.6}});
+      });
+      sec2.querySelectorAll('.card-light,.service-card').forEach(function(c){
+        gsap.fromTo(c,{y:100,opacity:0,scale:.96},{y:0,opacity:1,scale:1,duration:1,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 95%',end:'top 55%',scrub:.5}});
+        c.style.transition='transform .3s,box-shadow .3s';
+        c.onmouseenter=function(){this.style.transform='translateY(-8px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.1)'};
+        c.onmouseleave=function(){this.style.transform='';this.style.boxShadow=''};
+      });
+    });
   },1000);
 })();
 
@@ -1329,7 +1327,7 @@
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
     scVid=document.createElement('video');
-    scVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web3.mp4';
+    scVid.src='https://lynz-tonomi.github.io/macrobrands/schero-web2.mp4';
     scVid.muted=true;scVid.loop=true;scVid.playsInline=true;
     scVid.style.cssText='width:100%;height:auto;display:block;opacity:1';
     vidWrap.appendChild(scVid);

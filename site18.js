@@ -57,14 +57,15 @@
   // --- 2. Parallax Hero (right after video scrub) ---
   var pxh=mk('section',{id:'parallax-hero',css:'position:relative;min-height:100vh;overflow:hidden;background:#000'});
   var bulb=mk('img',{id:'parallax-bulb'});
-  bulb.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-  bulb.alt='';
+  bulb.src='https://lynz-tonomi.github.io/macrobrands/Aura-bulb-bg-transparent.png';
+  bulb.alt='Light bulb';
   pxh.appendChild(bulb);
   var cutout=mk('img',{cls:'parallax-cutout'});
   cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-  cutout.alt='';
+  cutout.alt='Bottle';
   pxh.appendChild(cutout);
   var beaker=mk('img',{id:'parallax-beaker',css:'display:none'});
+  beaker.src='https://lynz-tonomi.github.io/macrobrands/Aura-beaker-bg-transparent.png';
   pxh.appendChild(beaker);
   frag.appendChild(pxh);
 
