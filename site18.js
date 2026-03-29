@@ -11,8 +11,9 @@
   // Disable Webflow Interactions (IX2) — conflicts with our scroll handlers
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
 
-  // Apply base body styling
-  document.body.style.cssText='margin:0;font-family:Inter,Helvetica Neue,Arial,sans-serif;background:#000;color:#fff;overflow-x:hidden';
+  // Apply base body styling — overflow must be visible for sticky to work
+  document.body.style.cssText='margin:0;font-family:Inter,Helvetica Neue,Arial,sans-serif;background:#000;color:#fff;overflow:visible';
+  document.body.className='';
 
   // Hide all old site content except footer
   var footer=document.querySelector('.section-footer.footer')||document.querySelector('.section-footer');
@@ -38,7 +39,7 @@
 
   // --- 1. Video Hero ---
   var heroLogo='https://cdn.prod.website-files.com/65d843430c6e27c634035fdb/65ecfddc155259a6d0efdfd8_MACRO-Brands-long-transparent.png';
-  var vhw=mk('div',{cls:'video-hero-wrap',css:'position:relative;width:100%'});
+  var vhw=mk('div',{cls:'video-hero-wrap',css:'position:relative;width:100%;overflow:visible'});
   var vhs=mk('div',{cls:'video-hero-sticky',css:'position:sticky;top:0;width:100%;height:100vh;overflow:hidden'});
   var hLogo=mk('img',{cls:'hero-logo',css:'display:block'});
   hLogo.src=heroLogo;hLogo.alt='MACRO Brands';
