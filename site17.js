@@ -1389,33 +1389,15 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 })();
 
 // ============ 8. CONTACT PAGE ENHANCEMENTS ============
+// Text, colors, backgrounds, logo inversion, and nav transparency are ALL native Webflow.
+// JS only handles: floating nav bar (UI component), 2-column form layout (DOM restructuring).
 (function(){
-  // Only run on /contact page
   if(!window.location.pathname.match(/\/contact/))return;
 
-  // Update heading text
   var h1=document.querySelector('h1');
-  if(h1)h1.textContent="Let's Build Your Beverage";
-
-  // Update subtitle
   var sub=document.querySelector('.subtitle');
-  if(sub)sub.textContent="Tell us about your product and we'll get back to you within 24 hours.";
 
-  // Style the page — black theme
-  var body=document.body;
-  body.style.cssText='background:#000;color:#fff;font-family:Inter,Helvetica Neue,Arial,sans-serif';
-  // Force all native sections to black background
-  document.querySelectorAll('section,.w-section,.content-wrapper,.w-container').forEach(function(s){s.style.background='transparent'});
-  document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
-
-  // White MACRO Brands logo centered at top
-  var wl=document.createElement('img');
-  wl.src='https://lynz-tonomi.github.io/macrobrands/MACRO-Brands-white.png';
-  wl.alt='MACRO Brands';
-  wl.style.cssText='height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;background:transparent';
-  document.body.appendChild(wl);
-
-  // Add floating nav bar (matching home page)
+  // Floating nav bar (matching home page — UI component, not styling)
   var nav=document.createElement('div');
   document.body.appendChild(nav);
   nav.setAttribute('style','position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3)');
@@ -1435,40 +1417,33 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   cb.onmouseleave=function(){fill.style.height='0';cb.querySelector('span').style.color='#1A1A1A'};
   nav.appendChild(cb);
 
-  // Find the form
+  // 2-column form layout (DOM restructuring — can't do natively)
   var form=document.querySelector('form');
   if(form){
-    var formParent=form.parentElement;
-
-    // Create a 2-column layout: info on left, form on right
     var wrapper=document.createElement('div');
     wrapper.style.cssText='max-width:1100px;margin:60px auto;padding:0 5%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start';
 
-    // Left column: contact info
     var info=document.createElement('div');
     info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#fff;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
       '<p style="font-size:1.1rem;line-height:1.7;color:#999;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
       '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#888;font-size:1rem">California, USA</div></div>'+
       '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#888;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
 
-    // Right column: styled form
     var formWrap=document.createElement('div');
     formWrap.style.cssText='background:#111;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.3);border:1px solid #222';
     formWrap.innerHTML='<h3 style="font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:24px">Request a Free Consultation</h3>';
     formWrap.appendChild(form);
 
-    // Style form inputs
     form.querySelectorAll('input,textarea').forEach(function(inp){
       inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#fff;color:#1a1a1a;transition:border-color .2s;outline:none';
       inp.onfocus=function(){this.style.borderColor='#C9A84C'};
       inp.onblur=function(){this.style.borderColor='#ddd'};
     });
 
-    // Style submit button with liquid fill
     var submit=form.querySelector('[type="submit"],.w-button');
     if(submit){
       submit.style.cssText='width:100%;padding:16px;background:#C9A84C;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:8px;position:relative;overflow:hidden';
-      submit.value='Send Message →';
+      submit.value='Send Message \u2192';
       var sf=document.createElement('div');
       sf.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px;pointer-events:none';
       submit.style.position='relative';
@@ -1480,26 +1455,16 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     wrapper.appendChild(info);
     wrapper.appendChild(formWrap);
 
-    // Insert wrapper after the h1
     if(h1&&h1.parentElement){
       h1.parentElement.insertBefore(wrapper,h1.nextSibling);
-      // Hide old subtitle since we have new layout
       if(sub)sub.style.display='none';
     }
   }
 
-  // Style h1
+  // H1 layout positioning only (color/font are native)
   if(h1){
-    h1.style.cssText='text-align:center;font-size:3.5rem;font-weight:800;color:#fff;padding:80px 5% 0;letter-spacing:-.03em;font-family:Inter,sans-serif';
+    h1.style.cssText='text-align:center;font-size:3.5rem;padding:80px 5% 0';
   }
-
-  // Hide old background image
-  var bgImg=document.querySelector('.heading-18');
-  if(bgImg){var imgParent=bgImg.closest('div');if(imgParent)imgParent.style.background='none'}
-  document.querySelectorAll('img[alt="__wf_reserved_inherit"]').forEach(function(img){
-    if(img.closest('form'))return;
-    img.style.display='none';
-  });
 })();
 
 })(); // end run
