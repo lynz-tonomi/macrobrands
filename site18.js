@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.6 (mobile services tabs + blue liquid-fill on Learn More buttons) */
+/* MACRO Brands — Master Site Script v18.7 (outline pill buttons + white Lottie fill + horizontal bullets) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -240,7 +240,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 
   // Inject global liquid-fill CTA style for all pages
   var ctaCSS=document.createElement('style');
-  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#C9A84C;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #C9A84C;color:#C9A84C}.cta-outline .fill-bg{background:#C9A84C}.cta-outline:hover span{color:#1A1A1A}';
+  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:10px 28px;border-radius:100px;font-weight:600;font-size:13px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;font-family:Inter,sans-serif;background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;transition:border-color .3s}.cta-liquid-fill span{position:relative;z-index:2}.cta-liquid-fill .fill-bg{display:none}.cta-liquid-fill:hover{border-color:rgba(255,255,255,0.6)}.cta-gold{background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff}.cta-outline{background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff}';
   document.head.appendChild(ctaCSS);
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
@@ -354,10 +354,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
         '</div>'+
         /* Bottom row: beaker left, parallax scientist right */
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
@@ -440,10 +440,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">MicroThermic Processing</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">Our in-house MicroThermics AI Series UHT/HTST processor bridges the gap between lab development and commercial production. Fully automated with both direct injection and indirect heat transfer — send us a half-gallon sample and we validate your thermal process before you commit to a full run.</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
         '</div>'+
         /* Bottom row: photo left (sized to match caps card), capabilities right */
         '<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;align-items:start">'+
@@ -475,7 +475,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">Process Development</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">We design, validate, and document your complete production process — from ingredient prep through packaging and palletizing. Every step is mapped so your product runs flawlessly at scale.</p>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
         '</div>'+
         /* 4-phase pipeline with connecting arrows */
         '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative">';
@@ -527,10 +527,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
           tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
         '</div>'+
         '<div id="pal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
           '<div style="background:transparent;border-radius:12px;padding:12px 16px 8px;border:1px solid #222;overflow:hidden">'+
@@ -691,10 +691,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
           tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started \u2192</span></a>'+
         '</div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
           /* Left: animated production line SVG */
@@ -1000,7 +1000,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         '</div>'+
         /* Bullet capabilities in 2 columns */
         '<div style="max-width:800px;margin:0 auto 36px">'+
-          '<ul style="list-style:none;padding:0;margin:0;columns:2;column-gap:32px">'+
+          '<ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
           '</ul>'+
         '</div>'+
@@ -1028,10 +1028,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         '<div id="icon-slot-'+i+'"></div>'+
         '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
         '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-        '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
+        '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
           tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
         '</ul>'+
-        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
+        '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started \u2192</span></a>'+
       '</div>';
     }
     tabContent.appendChild(panel);
@@ -1061,11 +1061,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         requestAnimationFrame(animIcon);
       }
       animIcon();
-      // Liquid fill on Get Started buttons
-      panel.querySelectorAll('.cta-outline').forEach(function(a){
-        var fb=a.querySelector('.fill-bg');
-        if(fb){a.onmouseenter=function(){fb.style.height='100%';a.querySelector('span').style.color='#1A1A1A'};a.onmouseleave=function(){fb.style.height='0';a.querySelector('span').style.color='#C9A84C'}}
-      });
+      // White Lottie liquid fill on Get Started buttons — wired in Section 9
     };
 
     btn.onmouseenter=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#ccc'};
@@ -1194,8 +1190,8 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
       '.svc-tab-btn{flex:0 0 auto!important;padding:10px 14px!important;font-size:.78rem!important}'+
       /* Stack 2-col grids to single column */
       '.svc-grid{grid-template-columns:1fr!important}'+
-      /* Stack 2-col bullet lists */
-      '.svc-bullets{columns:1!important}'+
+      /* Bullets wrap tighter on mobile */
+      '.svc-bullets{gap:6px 12px!important}'+
       /* Reduce panel heading size */
       '.svc-panel h3{font-size:1.3rem!important}'+
       /* Reduce image heights */
@@ -1220,7 +1216,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   tabWrap.querySelectorAll('[style*="grid-template-columns:1fr 1fr"],' +
     '[style*="grid-template-columns: 1fr 1fr"],' +
     '[style*="grid-template-columns:2fr 1fr"]').forEach(function(el){el.classList.add('svc-grid')});
-  tabWrap.querySelectorAll('[style*="columns:2"]').forEach(function(el){el.classList.add('svc-bullets')});
+  tabWrap.querySelectorAll('[style*="flex-wrap:wrap"]').forEach(function(el){el.classList.add('svc-bullets')});
   tabWrap.querySelectorAll('[style*="grid-template-columns:repeat(4"]').forEach(function(el){el.classList.add('svc-grid-4')});
   tabWrap.querySelectorAll('[style*="grid-template-columns:repeat(3"]').forEach(function(el){el.classList.add('svc-stat-grid')});
   tabWrap.querySelectorAll('[style*="height:380px"]').forEach(function(el){el.classList.add('svc-img-wrap')});
@@ -1747,55 +1743,66 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   });
 })();
 
-// ============ 9. BLUE LIQUID FILL HOVER — Autonomi + Homepage Learn More ============
+// ============ 9. LOTTIE LIQUID FILL HOVER — All pill buttons ============
 (function(){
   var BASE='https://lynz-tonomi.github.io/macrobrands/';
-  // Collect all blue pill buttons across pages
-  var btns=[];
-  var auBtn=document.querySelector('.au-cta-btn');
-  if(auBtn)btns.push(auBtn);
-  var scBtn=document.querySelector('.sc-learn-more-btn');
-  if(scBtn)btns.push(scBtn);
-  if(!btns.length)return;
 
-  function wireBtn(btn){
-    // Wrap existing text in a span for z-index layering
-    var textSpan=document.createElement('span');
-    textSpan.style.cssText='position:relative;z-index:2;transition:color .3s ease';
-    while(btn.firstChild)textSpan.appendChild(btn.firstChild);
-    btn.appendChild(textSpan);
+  // Wire a button with Lottie liquid fill hover
+  // type: 'blue' (blue fill, text white on hover, #00BFFF on leave)
+  //       'white' (white fill, text #1A1A1A on hover, #fff on leave)
+  function wireBtn(btn,type){
+    var lottiePath=BASE+(type==='blue'?'liquid-fill-blue.json':'liquid-fill.json');
+    var hoverColor=type==='blue'?'#FFFFFF':'#1A1A1A';
+    var restColor=type==='blue'?'#00BFFF':'#fff';
 
-    // Lottie container — fills button, sits behind text
+    // If text is already wrapped in a span, use it; otherwise wrap
+    var textSpan=btn.querySelector('span[style*="z-index:2"]')||btn.querySelector('span[style*="z-index: 2"]');
+    if(!textSpan){
+      textSpan=document.createElement('span');
+      textSpan.style.cssText='position:relative;z-index:2;transition:color .3s ease';
+      while(btn.firstChild)textSpan.appendChild(btn.firstChild);
+      btn.appendChild(textSpan);
+    }
+    textSpan.style.transition='color .3s ease';
+
+    // Lottie container
     var lottieDiv=document.createElement('div');
     lottieDiv.style.cssText='position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:100px;overflow:hidden';
     btn.insertBefore(lottieDiv,textSpan);
 
     var anim=lottie.loadAnimation({
       container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
-      path:BASE+'liquid-fill-blue.json'
+      path:lottiePath
     });
     anim.setSpeed(1.4);
 
     btn.addEventListener('mouseenter',function(){
       anim.setDirection(1);anim.play();
-      textSpan.style.color='#FFFFFF';
+      textSpan.style.color=hoverColor;
     });
     btn.addEventListener('mouseleave',function(){
       anim.setDirection(-1);anim.play();
-      textSpan.style.color='#00BFFF';
+      textSpan.style.color=restColor;
     });
   }
 
   function init(){
+    function go(){
+      // Blue pill buttons (Autonomi CTA + homepage Learn More)
+      document.querySelectorAll('.au-cta-btn,.sc-learn-more-btn').forEach(function(b){wireBtn(b,'blue')});
+      // White pill buttons (all service tab Get Started + any cta-outline)
+      document.querySelectorAll('.svc-cta-btn').forEach(function(b){wireBtn(b,'white')});
+    }
     if(typeof lottie==='undefined'){
       var s=document.createElement('script');
       s.src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
-      s.onload=function(){btns.forEach(wireBtn)};
+      s.onload=go;
       document.head.appendChild(s);
-    }else{btns.forEach(wireBtn)}
+    }else{go()}
   }
 
-  init();
+  // Delay slightly so service tab panels are built first
+  setTimeout(init,800);
 })();
 
 })(); // end run
