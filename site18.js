@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.5 (contact anims + autonomi blue liquid-fill hover) */
+/* MACRO Brands — Master Site Script v18.6 (mobile services tabs + blue liquid-fill on Learn More buttons) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -1184,10 +1184,48 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   }
 
 
-  // Add fadeIn animation
+  // Add fadeIn animation + mobile responsive styles
   var style=document.createElement('style');
-  style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
+  style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}'+
+    '@media(max-width:767px){'+
+      /* Tab row: horizontal scroll instead of overflow */
+      '.svc-tab-row{overflow-x:auto!important;-webkit-overflow-scrolling:touch;justify-content:flex-start!important;gap:0!important;scrollbar-width:none}'+
+      '.svc-tab-row::-webkit-scrollbar{display:none}'+
+      '.svc-tab-btn{flex:0 0 auto!important;padding:10px 14px!important;font-size:.78rem!important}'+
+      /* Stack 2-col grids to single column */
+      '.svc-grid{grid-template-columns:1fr!important}'+
+      /* Stack 2-col bullet lists */
+      '.svc-bullets{columns:1!important}'+
+      /* Reduce panel heading size */
+      '.svc-panel h3{font-size:1.3rem!important}'+
+      /* Reduce image heights */
+      '.svc-img-wrap{height:260px!important}'+
+      /* 4-col grid to 2-col */
+      '.svc-grid-4{grid-template-columns:repeat(2,1fr)!important}'+
+      /* Stat grids to 2-col */
+      '.svc-stat-grid{grid-template-columns:repeat(2,1fr)!important}'+
+    '}'+
+    '@media(max-width:479px){'+
+      '.svc-tab-btn{padding:8px 10px!important;font-size:.72rem!important}'+
+      '.svc-grid-4{grid-template-columns:1fr!important}'+
+      '.svc-stat-grid{grid-template-columns:1fr!important}'+
+      '.svc-img-wrap{height:200px!important}'+
+    '}';
   document.head.appendChild(style);
+
+  // Apply responsive classes to existing elements
+  tabRow.classList.add('svc-tab-row');
+  buttons.forEach(function(b){b.classList.add('svc-tab-btn')});
+  // Tag panels with responsive classes
+  tabWrap.querySelectorAll('[style*="grid-template-columns:1fr 1fr"],' +
+    '[style*="grid-template-columns: 1fr 1fr"],' +
+    '[style*="grid-template-columns:2fr 1fr"]').forEach(function(el){el.classList.add('svc-grid')});
+  tabWrap.querySelectorAll('[style*="columns:2"]').forEach(function(el){el.classList.add('svc-bullets')});
+  tabWrap.querySelectorAll('[style*="grid-template-columns:repeat(4"]').forEach(function(el){el.classList.add('svc-grid-4')});
+  tabWrap.querySelectorAll('[style*="grid-template-columns:repeat(3"]').forEach(function(el){el.classList.add('svc-stat-grid')});
+  tabWrap.querySelectorAll('[style*="height:380px"]').forEach(function(el){el.classList.add('svc-img-wrap')});
+  // Tag panels
+  panels.forEach(function(p){p.classList.add('svc-panel')});
 
   cw.appendChild(tabWrap);
   },500);
@@ -1709,34 +1747,29 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   });
 })();
 
-// ============ 9. AUTONOMI PAGE — BLUE LIQUID FILL HOVER ============
+// ============ 9. BLUE LIQUID FILL HOVER — Autonomi + Homepage Learn More ============
 (function(){
-  if(!window.location.pathname.match(/\/autonomi/))return;
   var BASE='https://lynz-tonomi.github.io/macrobrands/';
-  var btn=document.querySelector('.au-cta-btn');
-  if(!btn)return;
+  // Collect all blue pill buttons across pages
+  var btns=[];
+  var auBtn=document.querySelector('.au-cta-btn');
+  if(auBtn)btns.push(auBtn);
+  var scBtn=document.querySelector('.sc-learn-more-btn');
+  if(scBtn)btns.push(scBtn);
+  if(!btns.length)return;
 
-  // Wrap existing text in a span for z-index layering
-  var textSpan=document.createElement('span');
-  textSpan.style.cssText='position:relative;z-index:2;transition:color .3s ease';
-  while(btn.firstChild)textSpan.appendChild(btn.firstChild);
-  btn.appendChild(textSpan);
+  function wireBtn(btn){
+    // Wrap existing text in a span for z-index layering
+    var textSpan=document.createElement('span');
+    textSpan.style.cssText='position:relative;z-index:2;transition:color .3s ease';
+    while(btn.firstChild)textSpan.appendChild(btn.firstChild);
+    btn.appendChild(textSpan);
 
-  // Lottie container — fills button, sits behind text
-  var lottieDiv=document.createElement('div');
-  lottieDiv.style.cssText='position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:100px;overflow:hidden';
-  btn.insertBefore(lottieDiv,textSpan);
+    // Lottie container — fills button, sits behind text
+    var lottieDiv=document.createElement('div');
+    lottieDiv.style.cssText='position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:100px;overflow:hidden';
+    btn.insertBefore(lottieDiv,textSpan);
 
-  function initAnim(){
-    if(typeof lottie==='undefined'){
-      var s=document.createElement('script');
-      s.src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
-      s.onload=function(){boot()};
-      document.head.appendChild(s);
-    }else{boot()}
-  }
-
-  function boot(){
     var anim=lottie.loadAnimation({
       container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
       path:BASE+'liquid-fill-blue.json'
@@ -1753,7 +1786,16 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     });
   }
 
-  initAnim();
+  function init(){
+    if(typeof lottie==='undefined'){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
+      s.onload=function(){btns.forEach(wireBtn)};
+      document.head.appendChild(s);
+    }else{btns.forEach(wireBtn)}
+  }
+
+  init();
 })();
 
 })(); // end run
