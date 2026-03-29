@@ -1,179 +1,12 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18 (scaffold + enhancements) */
+/* MACRO Brands — Master Site Script v18.1 (no scaffold — native Webflow content) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
-// ============ 0. SCAFFOLD ============
-(function(){
-  // Skip scaffold on /contact and /autonomi pages (native Webflow content)
-  if(window.location.pathname.match(/\/(contact|autonomi)/))return;
-
-  // Disable Webflow Interactions (IX2) — conflicts with our scroll handlers
+// Disable Webflow Interactions (IX2) on homepage — conflicts with GSAP scroll handlers
+if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
-
-  // Apply base body styling — overflow must be visible for sticky to work
-  document.body.style.cssText='margin:0;font-family:Inter,Helvetica Neue,Arial,sans-serif;background:#000;color:#fff;overflow:visible';
-  document.body.className='';
-
-  // Hide all old site content except footer
-  var footer=document.querySelector('.section-footer.footer')||document.querySelector('.section-footer');
-  Array.prototype.slice.call(document.body.children).forEach(function(el){
-    if(el===footer)return;
-    if(el.tagName==='SCRIPT'||el.tagName==='STYLE'||el.tagName==='LINK'||el.tagName==='NOSCRIPT')return;
-    if(el.classList&&(el.classList.contains('section-footer')||el.classList.contains('footer')))return;
-    el.style.display='none';
-  });
-
-  // Helper: create element with optional class, id, styles, innerHTML
-  function mk(tag,opts){
-    var el=document.createElement(tag);
-    if(opts.cls)el.className=opts.cls;
-    if(opts.id)el.id=opts.id;
-    if(opts.css)el.style.cssText=opts.css;
-    if(opts.html)el.innerHTML=opts.html;
-    if(opts.text)el.textContent=opts.text;
-    return el;
-  }
-
-  var frag=document.createDocumentFragment();
-
-  // --- 1. Video Hero ---
-  var heroLogo='https://cdn.prod.website-files.com/65d843430c6e27c634035fdb/65ecfddc155259a6d0efdfd8_MACRO-Brands-long-transparent.png';
-  var vhw=mk('div',{cls:'video-hero-wrap',css:'position:relative;width:100%;overflow:visible'});
-  var vhs=mk('div',{cls:'video-hero-sticky',css:'position:sticky;top:0;width:100%;height:100vh;overflow:hidden'});
-  var hLogo=mk('img',{cls:'hero-logo',css:'display:block'});
-  hLogo.src=heroLogo;hLogo.alt='MACRO Brands';
-  var vhm=mk('div',{cls:'video-hero-media'});
-  vhs.appendChild(hLogo);
-  vhs.appendChild(vhm);
-  vhw.appendChild(vhs);
-  frag.appendChild(vhw);
-
-  // Nav logo (fixed, initially hidden)
-  var nl=mk('img',{cls:'nav-logo',css:'height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)'});
-  nl.src=heroLogo;nl.alt='MACRO Brands';
-  frag.appendChild(nl);
-
-  // --- 2. Parallax Hero (right after video scrub) ---
-  var pxh=mk('section',{id:'parallax-hero',css:'position:relative;min-height:100vh;overflow:hidden;background:#000'});
-  var bulb=mk('img',{id:'parallax-bulb'});
-  bulb.src='https://lynz-tonomi.github.io/macrobrands/Aura-bulb-bg-transparent.png';
-  bulb.alt='Light bulb';
-  pxh.appendChild(bulb);
-  var cutout=mk('img',{cls:'parallax-cutout'});
-  cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-  cutout.alt='Bottle';
-  pxh.appendChild(cutout);
-  var beaker=mk('img',{id:'parallax-beaker',css:'display:none'});
-  beaker.src='https://lynz-tonomi.github.io/macrobrands/Aura-beaker-bg-transparent.png';
-  pxh.appendChild(beaker);
-  frag.appendChild(pxh);
-
-  // --- 3. Fixed Nav (placeholder, will be hidden by enhancement code) ---
-  var fn=mk('div',{cls:'fixed-nav',css:'display:none'});
-  frag.appendChild(fn);
-
-  // Section styling helpers
-  var darkCSS='background:#0a0a0a;padding:100px 5%';
-  var lightCSS='background:#f5f3ef;padding:100px 5%;color:#1a1a1a';
-  var darkAltCSS='background:#0a0a0a;padding:100px 5%';
-  var cardCSS='background:#fff;border-radius:16px;padding:32px;box-shadow:0 2px 12px rgba(0,0,0,.06)';
-
-  // --- 3. Who We Serve ---
-  var wws=mk('section',{id:'who-we-serve',cls:'section-light',css:lightCSS});
-  wws.innerHTML='<h2 class="section-heading-light" style="text-align:center;margin-bottom:48px">Whether You\u2019re Launching or Scaling, We\u2019re Built for Both</h2>'+
-    '<div class="content-wrapper" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1100px;margin:0 auto">'+
-      '<div class="card-light" style="'+cardCSS+'"><div class="card-title" style="font-size:1.4rem;font-weight:700;margin-bottom:12px">Startup Founders</div><p>You have a recipe that works in the kitchen. We help you figure out if it works at production scale \u2014 and then we make it happen. Low MOQs for pilot runs. No minimum commitment until you\u2019re ready.</p></div>'+
-      '<div class="card-light" style="'+cardCSS+'"><div class="card-title" style="font-size:1.4rem;font-weight:700;margin-bottom:12px">Emerging Brands</div><p>You\u2019ve proven product-market fit. Now you need a manufacturing partner who can grow with you. We handle production so you can focus on selling.</p></div>'+
-    '</div>';
-  frag.appendChild(wws);
-
-  // --- 4. About ---
-  var about=mk('section',{id:'about',cls:'section-dark-alt',css:darkAltCSS});
-  about.innerHTML='<h2 class="section-heading" style="text-align:center;margin-bottom:32px">About MACRO Brands</h2>'+
-    '<p style="max-width:800px;margin:0 auto 24px;line-height:1.7;color:#999">MACRO Brands was founded on a simple observation: beverage brands were being forced to stitch together three or four different manufacturing partners just to get one product to market. One facility for formulation. Another for thermal processing. A third for filling. A fourth for co-packing. Every handoff introduced delays, quality risk, and cost.</p>'+
-    '<p style="max-width:800px;margin:0 auto;line-height:1.7;color:#999">We built MACRO Brands to be the single-source manufacturing partner that beverage companies actually need. Retort canning, aseptic bottling, cold brew extraction, carbonation, nitro infusion, and full process development \u2014 all under one roof in our FDA-registered, SQF-certified facility in Yorba Linda, California.</p>';
-  frag.appendChild(about);
-
-  // --- 5. Team ---
-  var team=mk('section',{id:'team',cls:'section-light',css:lightCSS});
-  team.innerHTML='<h2 class="section-heading-light" style="text-align:center;margin-bottom:16px">World Class Team of Beverage Experts</h2>'+
-    '<p class="section-subhead" style="text-align:center;color:#666;font-size:1.1rem">Over 125 years of combined experience in beverage manufacturing</p>';
-  frag.appendChild(team);
-
-  // --- 6. Services (section-dark) ---
-  var svc=mk('section',{cls:'section-dark',css:darkCSS});
-  svc.innerHTML='<div class="content-wrapper" style="max-width:1100px;margin:0 auto">'+
-    '<h2 class="section-heading" style="text-align:center;margin-bottom:32px">Our Services</h2>'+
-    '<div class="services-grid"></div>'+
-  '</div>';
-  frag.appendChild(svc);
-  // Store reference for services tab code
-  window._sdRef=svc;
-
-  // --- 7. Certifications ---
-  var certs=mk('section',{id:'certifications',cls:'section-light',css:lightCSS});
-  certs.innerHTML='<h2 class="section-heading-light" style="text-align:center;margin-bottom:48px">Certified. Audited. Trusted.</h2>'+
-    '<div class="content-wrapper" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;max-width:1100px;margin:0 auto">'+
-      '<div class="card-light" style="'+cardCSS+'"><div class="card-title" style="font-size:1.2rem;font-weight:700;margin-bottom:8px">USDA Organic</div><p>Certified organic production runs available for brands that need USDA Organic compliance across all manufacturing processes.</p></div>'+
-      '<div class="card-light" style="'+cardCSS+'"><div class="card-title" style="font-size:1.2rem;font-weight:700;margin-bottom:8px">SQF Level 2</div><p>Global food safety standard recognized by GFSI. Annual third-party audits ensure continuous compliance.</p></div>'+
-      '<div class="card-light" style="'+cardCSS+'"><div class="card-title" style="font-size:1.2rem;font-weight:700;margin-bottom:8px">HACCP Verified</div><p>Hazard Analysis and Critical Control Points verified across all production lines and processes.</p></div>'+
-    '</div>';
-  frag.appendChild(certs);
-
-  // --- 8. Autonomi AI ---
-  var aiSec=mk('section',{id:'autonomi-ai',cls:'section-dark-alt',css:'position:relative;overflow:hidden;background:#000'});
-  aiSec.innerHTML='<div class="sc-header" style="text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px">'+
-    '<div class="sc-badge" style="display:inline-flex;align-items:center;gap:8px;border:1px solid #00BFFF;border-radius:50px;padding:6px 16px;margin-bottom:16px;font-size:.85rem;color:#00BFFF"><img src="https://lynz-tonomi.github.io/macrobrands/AI-small-blue.png" alt="AI" style="height:22px;width:auto"> POWERED BY</div>'+
-    '<h2 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0">The Agentic Supply Chain</h2>'+
-    '<p style="font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto">Autonomi deploys 29 specialized AI agents across procurement, production, quality, and logistics \u2014 eliminating the manual coordination that costs F&B brands millions every year.</p>'+
-  '</div>';
-  frag.appendChild(aiSec);
-
-  // Autonomi video sibling (section-dark-alt with video + content-wrapper)
-  var aiVid=mk('section',{cls:'section-dark-alt',css:'position:relative;overflow:hidden;padding:0;background:#000'});
-  var vidEl=document.createElement('video');
-  vidEl.src='https://lynz-tonomi.github.io/macrobrands/schero-web3.mp4';
-  vidEl.muted=true;vidEl.loop=true;vidEl.playsInline=true;vidEl.setAttribute('muted','');
-  vidEl.style.cssText='width:100%;height:auto;display:block';
-  aiVid.appendChild(vidEl);
-  var aiCW=mk('div',{cls:'content-wrapper'});
-  aiVid.appendChild(aiCW);
-  frag.appendChild(aiVid);
-
-  // --- 10. FAQ ---
-  var faqSec=mk('section',{id:'faq',cls:'section-light',css:lightCSS});
-  var faqItems=[
-    {q:'What are your minimum order quantities?',a:'It depends on the process. For pilot trials, we can test 500-gallon batches. For full production runs, MOQs vary by line \u2014 contact us to discuss your specific product and we\u2019ll give you a straight answer.'},
-    {q:'How long from first contact to first production run?',a:'For brands with a finished, validated formula with all commercialization process in place, 4\u20138 weeks is typical for scheduling and producing your first run. If you need formulation support, process development, or pilot trials first, add 8\u201312 weeks depending on complexity. We\u2019ll give you a realistic timeline on our first call.'},
-    {q:'Do you help with formulation or just fill?',a:'Both. We have in-house food product development teams with 30+ years of experience at companies like Gerber, Pepsi, Tropicana, KDP, La Colomb, Kellogg, and Kraft Heinz. Whether you need a formula built from scratch, optimized for a specific process, or just validated through thermal processing trials \u2014 we handle it.'},
-    {q:'What types of beverages can you produce?',a:'We manufacture shelf-stable beverages across retort canning (8\u201312oz), aseptic PET bottling (2\u201364oz), and bag-in-box (2\u201325L). That covers everything from ready-to-drink protein shakes and plant-based milks to cold brew coffee, kombucha, juices, and functional drinks. If it\u2019s liquid and shelf-stable, we can likely produce it.'},
-    {q:'Do you provide co-packing, or only product development?',a:'Both, and everything in between. Some brands come to us with a finished formula and just need production capacity. Others start from a recipe idea and need full development \u2014 formulation, thermal processing, shelf-life testing, and packaging. We support the full lifecycle, and you only pay for what you need.'},
-    {q:'What certifications does your facility hold?',a:'Our Yorba Linda facility is FDA-registered, SQF Level 2 certified, HACCP verified, USDA Organic certified, GMP compliant, and Kosher certified. We maintain these certifications through annual third-party audits and continuous internal monitoring.'}
-  ];
-  var faqHTML='<div class="content-wrapper" style="max-width:800px;margin:0 auto"><h2 class="section-heading-light" style="text-align:center;margin-bottom:48px">Frequently Asked Questions</h2>';
-  faqItems.forEach(function(item){
-    faqHTML+='<div style="margin-bottom:24px;padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04)"><h3 class="card-title" style="font-size:1.1rem;font-weight:700;margin-bottom:8px;color:#1a1a1a">'+item.q+'</h3><p class="card-text" style="color:#666;line-height:1.6">'+item.a+'</p></div>';
-  });
-  faqHTML+='</div>';
-  faqSec.innerHTML=faqHTML;
-  frag.appendChild(faqSec);
-
-  // --- 11. Contact CTA ---
-  var ctaSec=mk('section',{id:'contact-cta',cls:'section-dark',css:darkCSS+';text-align:center'});
-  ctaSec.innerHTML='<h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:800;margin-bottom:20px">Ready to Bring Your Beverage to Market?</h2>'+
-    '<p style="font-size:1.1rem;color:#999;line-height:1.7;max-width:600px;margin:0 auto 32px">Whether you\u2019re starting with a napkin sketch or a finished formula, we\u2019ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
-    '<a class="cta-liquid-fill" href="/contact" style="display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif;background:#C9A84C;color:#1A1A1A;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Your Free Consultation \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>';
-  frag.appendChild(ctaSec);
-
-  // Insert all new elements BEFORE the footer
-  if(footer){
-    footer.style.display='';
-    document.body.insertBefore(frag,footer);
-  } else {
-    document.body.appendChild(frag);
-  }
-})();
+}
 
 // ============ 1. FRAME SCRUBBER ============
 (function(){
@@ -458,7 +291,7 @@
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
   setTimeout(function(){
-  var sd=window._sdRef||document.querySelector('.section-dark');
+  var sd=document.querySelector('.section-dark');
   if(!sd)return;
 
   // Find or create content wrapper inside section-dark
