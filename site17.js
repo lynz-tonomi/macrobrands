@@ -1401,17 +1401,17 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   var sub=document.querySelector('.subtitle');
   if(sub)sub.textContent="Tell us about your product and we'll get back to you within 24 hours.";
 
-  // Style the page — match home screen dark theme
+  // Style the page — black theme
   var body=document.body;
-  body.style.background='#000';
-  body.style.color='#fff';
-  body.style.fontFamily='Inter,Helvetica Neue,Arial,sans-serif';
-
-  // Match home page navbar: hide native fixed-nav, show logo white on transparent topbar
+  body.style.cssText='background:#000;color:#fff;font-family:Inter,Helvetica Neue,Arial,sans-serif';
+  // Force all native sections to black background
+  document.querySelectorAll('section,.w-section,.content-wrapper,.w-container').forEach(function(s){s.style.background='transparent'});
   document.querySelectorAll('.fixed-nav').forEach(function(el){el.style.display='none'});
+
+  // White MACRO Brands logo centered at top
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:brightness(100);background:transparent');
+    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:1;filter:invert(1) brightness(2);background:transparent');
   }
 
   // Add floating nav bar (matching home page)
