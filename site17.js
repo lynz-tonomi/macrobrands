@@ -393,9 +393,11 @@
             /* Seed first image */
             a.src=urls[0];a.style.opacity='1';
             if(urls[1])b.src=urls[1];
-            /* Crossfade every 500 ms */
+            /* Crossfade every 500 ms — re-shuffle when cycle completes */
+            function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
             setInterval(function(){
-              idx=(idx+1)%urls.length;
+              idx++;
+              if(idx>=urls.length){idx=0;shuffleUrls();}
               if(aActive){
                 b.src=urls[idx];
                 b.style.opacity='1';a.style.opacity='0';
