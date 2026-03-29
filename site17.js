@@ -1368,8 +1368,9 @@
 // ============ 7b. SECTION-DARK-ALT (native Webflow Background Video) ============
 // Video lives natively in Webflow's section-dark-alt — JS must NOT touch/remove it
 
-// ============ 7c. HIDE PHONE NUMBER FROM CTA ============
+// ============ 7c. HIDE PHONE NUMBER + "WE MAKE BEVERAGES" SECTION ============
 document.querySelectorAll('.section-subhead').forEach(function(p){if(p.textContent.indexOf('call us')!==-1)p.style.display='none'});
+document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent.indexOf('We Make Beverages')!==-1)s.style.display='none'});
 
 // ============ 7d. FAQ COPY UPDATES ============
 (function(){
