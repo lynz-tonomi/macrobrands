@@ -1529,8 +1529,7 @@
   var ctaWrap=document.createElement('div');
   ctaWrap.style.cssText='position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;align-items:center';
   var cta=document.createElement('a');
-  cta.href='https://autonomi.dev';
-  cta.target='_blank';
+  cta.href='/autonomi';
   cta.className='cta-liquid-fill cta-gold';
   cta.style.cssText='text-decoration:none;letter-spacing:.02em;font-size:17.6px';
   var ctaSpan=document.createElement('span');
@@ -1574,7 +1573,7 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 
 // ============ 8. CONTACT PAGE ENHANCEMENTS ============
 // Text, colors, backgrounds, logo inversion, and nav transparency are ALL native Webflow.
-// JS only handles: floating nav bar (UI component), 2-column form layout (DOM restructuring).
+/// JS only handles: floating nav bar (UI component), 2-column form layout (DOM restructuring).
 (function(){
   if(!window.location.pathname.match(/\/contact/))return;
 
