@@ -1978,6 +1978,18 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     cpGrid.appendChild(row2);
   }
 
+  /* ── MicroThermic right-align fix ── */
+  /* Push max-width constrained blocks to the right in the MT section */
+  var mtSection=document.querySelector('.svc-section.is-light');
+  if(mtSection){
+    var mtDesc=mtSection.querySelector('.svc-desc');
+    if(mtDesc) mtDesc.style.marginLeft='auto';
+    var mtBullets=mtSection.querySelector('.svc-bullet-row');
+    if(mtBullets) mtBullets.style.marginLeft='auto';
+    var mtCta=mtSection.querySelector('.svc-cta');
+    if(mtCta) mtCta.style.display='block';
+  }
+
   /* ── Section Title Canvas Icons ── */
   /* Inject animated canvas icons into the first 3 native section headings:
      Formulation (beaker), MicroThermic (thermometer), Co-Packing (bottle) */
