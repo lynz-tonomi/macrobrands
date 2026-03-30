@@ -1176,8 +1176,7 @@ if(false){(function(){
 // Carousel, parallax, animated icons, and co-packing cards
 // injected into native Webflow sections (no tab system).
 (function(){
-  document.addEventListener('DOMContentLoaded',function(){
-    setTimeout(function(){
+  setTimeout(function(){
 
       var ghBase='https://lynz-tonomi.github.io/macrobrands/';
 
@@ -1423,7 +1422,6 @@ if(false){(function(){
       }
 
     },600); // end setTimeout — wait for Webflow elements
-  }); // end DOMContentLoaded
 })();
 // ── END service section native animations ──
 
