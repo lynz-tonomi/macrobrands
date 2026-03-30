@@ -2386,47 +2386,178 @@ setTimeout(function(){
 
 /* ─────────────────────────────────────────────
    Section 14 — Supply Chain section enhancements
-   Text content is now native Webflow (editable in Designer).
-   JS only adds the animated network diagram SVG + canvas icon.
+   Text content is native Webflow. JS adds animated
+   white-line Lottie-style canvas agent pipeline.
    ───────────────────────────────────────────── */
 setTimeout(function(){
   var scSection=document.querySelector('.sc-section');
   if(!scSection)return;
-
-  /* Find the native content container */
   var scContent=scSection.querySelector('[data-role="sc-content"]');
   if(!scContent) return;
 
-  /* Inject animated network diagram SVG into a slot */
-  var diagramSlot=document.createElement('div');
-  diagramSlot.style.cssText='margin:40px auto;max-width:960px;padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid rgba(201,168,76,.15)';
-  diagramSlot.setAttribute('data-role','sc-diagram');
+  /* ── Agent pipeline: 5 animated white-line canvas icons ── */
+  var agents=[
+    {label:'Vendor\nSourcing',draw:function(ctx,t){
+      /* Clipboard */
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
+      ctx.beginPath();ctx.roundRect(-12,-18,24,34,3);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-6,-18);ctx.lineTo(-6,-22);ctx.lineTo(6,-22);ctx.lineTo(6,-18);ctx.stroke();
+      /* Animated checklines */
+      var n=3;for(var i=0;i<n;i++){
+        var ly=-8+i*10;var prog=Math.min(1,Math.max(0,(t*1.5-i*.3)%2));
+        ctx.globalAlpha=.3+prog*.5;
+        ctx.beginPath();ctx.moveTo(-7,ly);ctx.lineTo(-7+14*prog,ly);ctx.stroke();
+      }ctx.globalAlpha=1;
+    }},
+    {label:'Procurement\nAI Agents',draw:function(ctx,t){
+      /* Shield with checkmark */
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
+      var sc=1+Math.sin(t*2)*.03;ctx.scale(sc,sc);
+      ctx.beginPath();ctx.moveTo(0,-20);ctx.lineTo(16,-12);ctx.lineTo(16,4);
+      ctx.quadraticCurveTo(16,20,0,24);ctx.quadraticCurveTo(-16,20,-16,4);
+      ctx.lineTo(-16,-12);ctx.closePath();ctx.stroke();
+      ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-6,2);ctx.lineTo(-1,9);ctx.lineTo(8,-4);ctx.stroke();
+      /* Pulse glow */
+      ctx.globalAlpha=Math.sin(t*3)*.08+.04;ctx.lineWidth=6;
+      ctx.beginPath();ctx.moveTo(0,-20);ctx.lineTo(16,-12);ctx.lineTo(16,4);
+      ctx.quadraticCurveTo(16,20,0,24);ctx.quadraticCurveTo(-16,20,-16,4);
+      ctx.lineTo(-16,-12);ctx.closePath();ctx.stroke();ctx.globalAlpha=1;
+    }},
+    {label:'Production\nScheduling',draw:function(ctx,t){
+      /* Gear */
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
+      ctx.rotate(t*.6);
+      var teeth=8,oR=18,iR=12;
+      ctx.beginPath();
+      for(var i=0;i<teeth;i++){
+        var a1=i/teeth*Math.PI*2,a2=(i+.3)/teeth*Math.PI*2,a3=(i+.5)/teeth*Math.PI*2,a4=(i+.8)/teeth*Math.PI*2;
+        if(i===0)ctx.moveTo(Math.cos(a1)*iR,Math.sin(a1)*iR);
+        ctx.lineTo(Math.cos(a2)*oR,Math.sin(a2)*oR);
+        ctx.lineTo(Math.cos(a3)*oR,Math.sin(a3)*oR);
+        ctx.lineTo(Math.cos(a4)*iR,Math.sin(a4)*iR);
+      }ctx.closePath();ctx.stroke();
+      ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.stroke();
+    }},
+    {label:'Quality\nIntelligence',draw:function(ctx,t){
+      /* Magnifying glass with sparkle */
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
+      ctx.beginPath();ctx.arc(-3,-3,12,0,Math.PI*2);ctx.stroke();
+      ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(5.5,5.5);ctx.lineTo(16,16);ctx.stroke();
+      /* Animated sparkle inside lens */
+      ctx.lineWidth=1.5;ctx.globalAlpha=.4+Math.sin(t*4)*.4;
+      var sx=-5,sy=-5;
+      ctx.beginPath();ctx.moveTo(sx,sy-5);ctx.lineTo(sx,sy+5);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(sx-5,sy);ctx.lineTo(sx+5,sy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(sx-3.5,sy-3.5);ctx.lineTo(sx+3.5,sy+3.5);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(sx+3.5,sy-3.5);ctx.lineTo(sx-3.5,sy+3.5);ctx.stroke();
+      ctx.globalAlpha=1;
+    }},
+    {label:'Logistics\n& 3PL',draw:function(ctx,t){
+      /* Truck */
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+      /* Cargo box */
+      ctx.beginPath();ctx.rect(-18,-10,22,18);ctx.stroke();
+      /* Cab */
+      ctx.beginPath();ctx.moveTo(4,-10);ctx.lineTo(4,-4);ctx.lineTo(16,0);ctx.lineTo(16,8);ctx.lineTo(4,8);ctx.stroke();
+      /* Wheels */
+      var bounce=Math.sin(t*8)*.8;
+      ctx.beginPath();ctx.arc(-10,8+bounce,4,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.arc(10,8+bounce,4,0,Math.PI*2);ctx.stroke();
+      /* Road line */
+      ctx.globalAlpha=.3;ctx.lineWidth=1;
+      ctx.setLineDash([4,4]);ctx.lineDashOffset=-t*30;
+      ctx.beginPath();ctx.moveTo(-24,14);ctx.lineTo(22,14);ctx.stroke();
+      ctx.setLineDash([]);ctx.globalAlpha=1;
+    }}
+  ];
 
-  /* Build the 5-node agent pipeline SVG */
-  var agents=['Vendor\nSourcing','Procurement\nAI Agents','Production\nScheduling','Quality\nIntelligence','Logistics\n& 3PL'];
-  var icons=['📋','✅','⚙️','🔍','🚛'];
-  var svg='<svg viewBox="0 0 900 160" style="width:100%;height:auto">';
-  svg+='<line x1="50" y1="40" x2="850" y2="40" stroke="#C9A84C" stroke-width="2" stroke-dasharray="6,4" opacity=".4"/>';
+  var pipeWrap=document.createElement('div');
+  pipeWrap.style.cssText='margin:40px auto;max-width:960px;padding:32px 20px;background:rgba(255,255,255,.02);border-radius:16px;border:1px solid rgba(255,255,255,.06)';
+  pipeWrap.setAttribute('data-role','sc-pipeline');
+
+  /* Header line */
+  var hdr=document.createElement('div');
+  hdr.style.cssText='text-align:center;margin-bottom:24px;font-size:.7rem;letter-spacing:4px;color:#555;font-family:Inter,sans-serif';
+  hdr.textContent='AUTONOMI \u00B7 29 AI AGENTS \u00B7 REAL-TIME';
+  pipeWrap.appendChild(hdr);
+
+  /* Pipeline row */
+  var row=document.createElement('div');
+  row.style.cssText='display:flex;align-items:center;justify-content:center;gap:0;position:relative';
+  pipeWrap.appendChild(row);
+
   agents.forEach(function(agent,idx){
-    var x=90+idx*180;
-    svg+='<circle cx="'+x+'" cy="40" r="8" fill="#C9A84C" opacity=".6"/>';
-    svg+='<rect x="'+(x-60)+'" y="60" width="120" height="80" rx="12" fill="rgba(201,168,76,.08)" stroke="rgba(201,168,76,.25)" stroke-width="1"/>';
-    svg+='<text x="'+x+'" y="82" text-anchor="middle" fill="#C9A84C" font-size="20">'+icons[idx]+'</text>';
-    var lines=agent.split('\n');
-    svg+='<text x="'+x+'" y="105" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">'+lines[0]+'</text>';
-    if(lines[1]) svg+='<text x="'+x+'" y="120" text-anchor="middle" fill="#999" font-size="10">'+lines[1]+'</text>';
-    if(idx<4) svg+='<text x="'+(x+90)+'" y="100" text-anchor="middle" fill="#C9A84C" font-size="16">\u25B6</text>';
-  });
-  svg+='<text x="450" y="155" text-anchor="middle" fill="#666" font-size="10" letter-spacing="3">AUTONOMI \u00B7 29 AI AGENTS \u00B7 REAL-TIME</text>';
-  svg+='</svg>';
-  diagramSlot.innerHTML=svg;
+    /* Card */
+    var card=document.createElement('div');
+    card.style.cssText='display:flex;flex-direction:column;align-items:center;width:140px;position:relative;z-index:1';
 
-  /* Insert diagram after the bullet row */
+    /* Canvas icon — animated white lines */
+    var cv=document.createElement('canvas');
+    cv.width=80;cv.height=80;
+    cv.style.cssText='width:60px;height:60px;margin-bottom:8px';
+    cv._draw=agent.draw;cv._animT=0;cv._active=false;
+    card.appendChild(cv);
+
+    /* Label */
+    var lbl=document.createElement('div');
+    lbl.style.cssText='text-align:center;line-height:1.4';
+    var lines=agent.label.split('\n');
+    lbl.innerHTML='<span style="color:#fff;font-size:.8rem;font-weight:600;display:block">'+lines[0]+'</span>';
+    if(lines[1]) lbl.innerHTML+='<span style="color:#666;font-size:.7rem;display:block">'+lines[1]+'</span>';
+    card.appendChild(lbl);
+
+    row.appendChild(card);
+
+    /* Arrow between cards */
+    if(idx<agents.length-1){
+      var arrow=document.createElement('div');
+      arrow.style.cssText='width:28px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:1.2rem;margin-top:-24px';
+      arrow.textContent='\u25B8';
+      row.appendChild(arrow);
+    }
+  });
+
+  /* Connecting line behind cards */
+  var line=document.createElement('div');
+  line.style.cssText='position:absolute;top:30px;left:70px;right:70px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1) 10%,rgba(255,255,255,.1) 90%,transparent);z-index:0';
+  row.appendChild(line);
+
+  /* Insert pipeline after the bullet row */
   var bulletRow=scContent.querySelector('.svc-bullet-row');
   if(bulletRow&&bulletRow.nextSibling){
-    scContent.insertBefore(diagramSlot,bulletRow.nextSibling);
+    scContent.insertBefore(pipeWrap,bulletRow.nextSibling);
   }else{
-    scContent.appendChild(diagramSlot);
+    scContent.appendChild(pipeWrap);
+  }
+
+  /* ── Animate all pipeline canvases with IntersectionObserver ── */
+  var allCvs=pipeWrap.querySelectorAll('canvas');
+  function startAnim(cv){
+    if(cv._draw&&!cv._active){
+      cv._active=true;cv._animT=cv._animT||0;
+      (function loop(){
+        if(!cv._active)return;
+        cv._animT+=.016;
+        var ctx=cv.getContext('2d');
+        ctx.clearRect(0,0,cv.width,cv.height);
+        ctx.save();ctx.translate(cv.width/2,cv.height/2);
+        cv._draw(ctx,cv._animT);
+        ctx.restore();
+        requestAnimationFrame(loop);
+      })();
+    }
+  }
+  if(typeof IntersectionObserver!=='undefined'){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          allCvs.forEach(startAnim);
+        }else{
+          allCvs.forEach(function(cv){cv._active=false;});
+        }
+      });
+    },{threshold:0.1});
+    obs.observe(pipeWrap);
   }
 
 },2000);
