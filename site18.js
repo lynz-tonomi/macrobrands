@@ -411,23 +411,45 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
             var a=document.getElementById('carousel-img-a');
             var b=document.getElementById('carousel-img-b');
             if(!a||!b)return;
-            /* Seed first image */
-            a.src=urls[0];a.style.opacity='1';
-            if(urls[1])b.src=urls[1];
-            /* Crossfade every 500 ms — re-shuffle when cycle completes */
             function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
-            setInterval(function(){
-              idx++;
-              if(idx>=urls.length){idx=0;shuffleUrls();}
-              if(aActive){
-                b.src=urls[idx];
-                b.style.opacity='1';a.style.opacity='0';
-              }else{
-                a.src=urls[idx];
-                a.style.opacity='1';b.style.opacity='0';
-              }
-              aActive=!aActive;
-            },500);
+            /* Preload helper: resolves when image is decoded & ready */
+            function preload(url){
+              return new Promise(function(resolve){
+                var img=new Image();
+                img.onload=function(){resolve(url);};
+                img.onerror=function(){resolve(url);};
+                img.src=url;
+              });
+            }
+            /* Seed first image — wait for it to load before starting */
+            a.src=urls[0];
+            a.onload=function(){
+              a.style.opacity='1';
+              /* Preload second image into off-screen slot */
+              var next=urls.length>1?1:0;
+              preload(urls[next]).then(function(){
+                b.src=urls[next];
+                /* Now start the steady 500ms rhythm */
+                setInterval(function(){
+                  idx++;
+                  if(idx>=urls.length){idx=0;shuffleUrls();}
+                  /* Preload upcoming image into the hidden slot first */
+                  var target=aActive?b:a;
+                  preload(urls[idx]).then(function(src){
+                    target.src=src;
+                    /* Small RAF delay so browser paints the src before fade */
+                    requestAnimationFrame(function(){
+                      if(aActive){
+                        b.style.opacity='1';a.style.opacity='0';
+                      }else{
+                        a.style.opacity='1';b.style.opacity='0';
+                      }
+                      aActive=!aActive;
+                    });
+                  });
+                },500);
+              });
+            };
           })
           .catch(function(e){console.warn('Carousel fetch failed:',e);});
       })();
@@ -1856,15 +1878,28 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
         if(!urls.length)return;
         for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}
         var idx=0,aActive=true;
-        imgA.src=urls[0];imgA.style.opacity='1';
-        if(urls[1])imgB.src=urls[1];
         function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
-        setInterval(function(){
-          idx++;if(idx>=urls.length){idx=0;shuffleUrls();}
-          if(aActive){imgB.src=urls[idx];imgB.style.opacity='1';imgA.style.opacity='0';}
-          else{imgA.src=urls[idx];imgA.style.opacity='1';imgB.style.opacity='0';}
-          aActive=!aActive;
-        },500);
+        function preloadImg(url){return new Promise(function(resolve){var im=new Image();im.onload=function(){resolve(url);};im.onerror=function(){resolve(url);};im.src=url;});}
+        imgA.src=urls[0];
+        imgA.onload=function(){
+          imgA.style.opacity='1';
+          var next=urls.length>1?1:0;
+          preloadImg(urls[next]).then(function(){
+            imgB.src=urls[next];
+            setInterval(function(){
+              idx++;if(idx>=urls.length){idx=0;shuffleUrls();}
+              var target=aActive?imgB:imgA;
+              preloadImg(urls[idx]).then(function(src){
+                target.src=src;
+                requestAnimationFrame(function(){
+                  if(aActive){imgB.style.opacity='1';imgA.style.opacity='0';}
+                  else{imgA.style.opacity='1';imgB.style.opacity='0';}
+                  aActive=!aActive;
+                });
+              });
+            },500);
+          });
+        };
       }).catch(function(e){console.warn('Native carousel fetch failed:',e);});
   }
 
