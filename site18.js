@@ -2292,8 +2292,13 @@ setTimeout(function(){
 
   /* Map: native panel index → original JS panel index
      Original: 0=Formulation, 1=MicroThermic, 2=ProcessDev, 3=PAL, 4=ScaleUp, 5=CoPacking, 6=SupplyChain
-     Native:   0=ProcessDev,   1=PAL,          2=ScaleUp,    3=SupplyChain */
-  var srcMap=[2,3,4,6];
+     Native:   0=ProcessDev,   1=PAL,          2=ScaleUp  (Supply Chain moved to own section) */
+  var srcMap=[2,3,4];
+
+  /* Hide the 4th tab button (Supply Chain) — now its own section */
+  if(btns.length>=4) btns[3].style.display='none';
+  /* Also hide the 4th native panel */
+  if(nativePanels.length>=4) nativePanels[3].style.display='none';
 
   /* If original JS panels are available, inject their rich content */
   if(window._svcPanels&&window._svcPanels.length>=7){
@@ -2378,3 +2383,76 @@ setTimeout(function(){
 },2000);
 
 })(); // outer guard
+
+/* ─────────────────────────────────────────────
+   Section 14 — Supply Chain as standalone section
+   Injects rich JS content from panel index 6 into the
+   sc-section's svc-tab-panel (formerly hidden inside tabs).
+   ───────────────────────────────────────────── */
+setTimeout(function(){
+  var scSection=document.querySelector('.sc-section');
+  if(!scSection)return;
+  var scPanel=scSection.querySelector('.svc-tab-panel');
+  if(!scPanel)return;
+
+  /* Make panel visible (in case Webflow style hides it) */
+  scPanel.style.display='block';
+
+  /* Inject rich Supply Chain content from Section 5b */
+  if(window._svcPanels&&window._svcPanels.length>=7){
+    var srcPanel=window._svcPanels[6]; // Supply Chain = index 6
+    if(srcPanel){
+      scPanel.innerHTML='';
+      while(srcPanel.firstChild){
+        scPanel.appendChild(srcPanel.firstChild);
+      }
+    }
+  }
+
+  /* Start canvas animations in the Supply Chain section */
+  var cvs=scPanel.querySelectorAll('canvas');
+  cvs.forEach(function(cv){
+    if(cv._draw&&!cv._active){
+      cv._active=true;cv._animT=0;
+      (function animSc(){
+        if(!cv._active)return;
+        cv._animT+=.016;
+        var ctx=cv.getContext('2d');
+        ctx.clearRect(0,0,cv.width,cv.height);
+        ctx.save();ctx.translate(cv.width/2,cv.height/2);
+        cv._draw(ctx,cv._animT,cv._color);
+        ctx.restore();
+        requestAnimationFrame(animSc);
+      })();
+    }
+  });
+
+  /* Use IntersectionObserver to pause/resume animations when off-screen */
+  if(typeof IntersectionObserver!=='undefined'){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var panelCvs=scPanel.querySelectorAll('canvas');
+        if(e.isIntersecting){
+          panelCvs.forEach(function(cv){
+            if(cv._draw&&!cv._active){
+              cv._active=true;cv._animT=cv._animT||0;
+              (function animResume(){
+                if(!cv._active)return;
+                cv._animT+=.016;
+                var ctx=cv.getContext('2d');
+                ctx.clearRect(0,0,cv.width,cv.height);
+                ctx.save();ctx.translate(cv.width/2,cv.height/2);
+                cv._draw(ctx,cv._animT,cv._color);
+                ctx.restore();
+                requestAnimationFrame(animResume);
+              })();
+            }
+          });
+        }else{
+          panelCvs.forEach(function(cv){cv._active=false;});
+        }
+      });
+    },{threshold:0.1});
+    obs.observe(scPanel);
+  }
+},2500);
