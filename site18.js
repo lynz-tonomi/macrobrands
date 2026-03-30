@@ -2082,12 +2082,13 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       var mediaCol=grid.children[1]; // img-row or card-grid
       if(!textCol||!mediaCol) return;
 
-      textCol.style.minWidth='0';
-      mediaCol.style.minWidth='0';
+      if(i===0){
+        /* ── Formulation: original layout — text top, two image boxes below ── */
+        /* Keep default single-column stacked layout, text left-aligned */
+        textCol.style.textAlign='left';
 
-      if(i===1){
-        /* ── MicroThermic: text right, diagram full-width below ── */
-        /* Pull the SVG diagram box OUT of the media column, make it span full width */
+      } else if(i===1){
+        /* ── MicroThermic: caps left + text right, diagram full-width below ── */
         var diagramBox=mediaCol.querySelector('.svc-img-box, [data-role="equipment-photo"]');
         var capsBox=mediaCol.querySelector('.svc-caps-box');
 
@@ -2096,25 +2097,19 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
         grid.style.alignItems='start';
 
         if(diagramBox&&capsBox){
-          /* 2-col top: caps left, text right */
           grid.style.gridTemplateColumns='1fr 1.4fr';
-          mediaCol.style.display='block'; // stack caps only
+          mediaCol.style.display='block';
           mediaCol.style.overflow='visible';
-          /* Move diagram to span full width below the grid */
           diagramBox.style.gridColumn='1 / -1';
           diagramBox.style.width='100%';
           diagramBox.style.overflow='visible';
-          grid.appendChild(diagramBox); // moves diagram out of mediaCol into grid as 3rd child
+          grid.appendChild(diagramBox);
         }
         textCol.style.textAlign='right';
 
-      } else {
-        /* ── Formulation / Co-Packing: text left, media right ── */
-        grid.style.display='grid';
-        grid.style.gridTemplateColumns='1fr 1fr';
-        grid.style.gap='48px';
-        grid.style.alignItems='center';
-        mediaCol.style.overflow='hidden';
+      } else if(i===2){
+        /* ── Co-Packing: original layout — text top, 2×3 card grid + expansion below ── */
+        /* Keep default single-column stacked layout, text left-aligned */
         textCol.style.textAlign='left';
       }
     });
