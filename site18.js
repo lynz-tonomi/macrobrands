@@ -2126,60 +2126,7 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       }
     });
 
-    /* ── 3. Product carousel → parallax window ── */
-    var carouselSlot=document.querySelector('[data-role="carousel-slot"]');
-    if(carouselSlot){
-      /* Set up the parallax container */
-      carouselSlot.style.overflow='hidden';
-      carouselSlot.style.position='relative';
-      carouselSlot.style.height='380px';
-      carouselSlot.style.borderRadius='16px';
-
-      /* Make images taller than container for parallax travel room */
-      var cImgs=carouselSlot.querySelectorAll('img');
-      cImgs.forEach(function(img){
-        img.style.height='130%';
-        img.style.width='100%';
-        img.style.objectFit='contain';
-        img.style.objectPosition='center bottom';
-        img.style.position='absolute';
-        img.style.top='-15%'; // centered with 15% travel room each direction
-        img.style.left='0';
-        img.style.willChange='transform';
-      });
-
-      /* Scroll-driven parallax: images drift opposite to scroll */
-      if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
-        cImgs.forEach(function(img){
-          gsap.fromTo(img,
-            {yPercent:-8},
-            {yPercent:8,ease:'none',
-             scrollTrigger:{trigger:carouselSlot,start:'top bottom',end:'bottom top',scrub:true}
-            });
-        });
-      }
-    }
-
-    /* ── 4. Lab photo → parallax window ── */
-    var labSlot=document.querySelector('[data-role="lab-photo"]');
-    if(labSlot&&typeof gsap!=='undefined'){
-      labSlot.style.overflow='hidden';
-      labSlot.style.position='relative';
-      labSlot.style.height='380px';
-      labSlot.style.borderRadius='16px';
-      var labImg=labSlot.querySelector('img');
-      if(labImg){
-        labImg.style.height='130%';
-        labImg.style.position='absolute';
-        labImg.style.top='-15%';
-        labImg.style.willChange='transform';
-        gsap.fromTo(labImg,
-          {yPercent:-6},
-          {yPercent:6,ease:'none',
-           scrollTrigger:{trigger:labSlot,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-    }
+    /* ── 3. Product carousel + lab photo: no parallax, just clean styling ── */
 
   },1800);
 })();
@@ -2232,7 +2179,7 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       }
 
       /* — Images / diagram boxes: slowest layer (furthest away, depth) — */
-      var imgBoxes=sec.querySelectorAll('.svc-img-box, [data-role="equipment-photo"], [data-role="carousel-slot"], [data-role="lab-photo"]');
+      var imgBoxes=sec.querySelectorAll('.svc-img-box, [data-role="equipment-photo"]');
       imgBoxes.forEach(function(img){
         gsap.fromTo(img,
           {yPercent:-6},
@@ -2272,18 +2219,16 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       }
     });
 
-    /* — Cross-section depth: images inside img-row move opposite to scroll — */
-    var imgRows=document.querySelectorAll('.svc-img-row, .svc-img-row-mt');
+    /* — Cross-section depth: MicroThermic img-row only (Formulation excluded) — */
+    var imgRows=document.querySelectorAll('.svc-img-row-mt');
     imgRows.forEach(function(row){
       var children=row.children;
       if(children.length>=2){
-        /* Left image: drifts up slightly */
         gsap.fromTo(children[0],
           {y:30},
           {y:-30,ease:'none',
            scrollTrigger:{trigger:row,start:'top bottom',end:'bottom top',scrub:true}
           });
-        /* Right image: drifts down slightly (inverse) */
         gsap.fromTo(children[1],
           {y:-20},
           {y:20,ease:'none',
