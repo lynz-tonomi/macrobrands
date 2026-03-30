@@ -213,7 +213,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   document.body.appendChild(n);
   n.setAttribute('style','position:fixed;bottom:24px;top:auto;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3);opacity:0;transition:opacity .4s,transform .4s');
   var isHome=window.location.pathname==='/'||window.location.pathname==='/index.html';
-  var links=[['Home','#'],['About','#about'],['Services','.section-dark'],['Certs','#certifications'],['FAQ','#faq']];
+  var links=[['Home','#'],['About','#about'],['Services','#svc-formulation'],['Certs','#certifications'],['FAQ','#faq']];
   links.forEach(function(l){
     var a=document.createElement('a');a.textContent=l[0];
     // On non-home pages, link back to homepage with anchor
@@ -273,11 +273,20 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
   setTimeout(function(){
-  var sd=document.querySelector('.section-dark');
+  var sd=document.querySelector('#svc-formulation')||document.querySelector('.svc-section')||document.querySelector('.section-dark');
   if(!sd)return;
 
-  // Find or create content wrapper inside section-dark
-  var cw=sd;
+  // Hide all native svc-sections (replaced by tab view)
+  document.querySelectorAll('.svc-section').forEach(function(s){s.style.display='none'});
+  // Show only the container section and restyle it for tabs
+  sd.style.display='';
+  sd.style.background='#0a0a0a';
+  sd.style.padding='100px 5%';
+  sd.style.color='#fff';
+
+  // Find or create content wrapper
+  var cw=sd.querySelector('.content-wrapper')||sd;
+  cw.innerHTML='<h2 style="text-align:center;margin-bottom:32px;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#fff">Our Services</h2><p style="text-align:center;color:#999;font-size:1.1rem;margin-bottom:8px">Over 125 years of combined experience in food science, manufacturing operations, supply chain, and food safety. From Pepsi to Kraft Heinz to Kellogg — our team has worked with the brands you know.</p>';
 
   // Tab data — short names with canvas animated icons
   var tabs=[
@@ -1263,7 +1272,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
     if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
     // Apple parallax on content sections
-    var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
+    var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt,.svc-section,.sc-section');
     if(hasGsap){
       var revealH=[],revealP=[],revealC=[];
       sects.forEach(function(sec2){
