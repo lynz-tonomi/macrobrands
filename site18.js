@@ -2120,12 +2120,8 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       if(formDesc) formDesc.textContent='Your recipe is just the starting point. Our food scientists reverse-engineer your kitchen formula and rebuild it for commercial production \u2014 adjusting pH, water activity, viscosity, and emulsion stability so it survives thermal processing without sacrificing flavor or mouthfeel. Whether you\u2019re targeting retort, aseptic, tunnel pasteurization, or cold fill, we dial in every ingredient ratio, source clean-label alternatives when needed, and run accelerated shelf-life studies so you go into your first production run with a formula that\u2019s locked, validated, and ready to scale.';
     }
 
-    /* MicroThermic — longer paragraph */
+    /* MicroThermic — description is now native in Webflow Designer (no JS override needed) */
     var svcAll=document.querySelectorAll('.svc-section');
-    if(svcAll[1]){
-      var mtDesc=svcAll[1].querySelector('.svc-desc');
-      if(mtDesc) mtDesc.textContent='Most processors force you to commit tens of thousands of dollars to a production run before you know if your thermal process actually works. Our in-house MicroThermics AI Series UHT/HTST processor eliminates that gamble entirely. With both direct steam injection and indirect heat exchange in a single bench-top unit, we replicate the exact thermal curve your product will see at commercial scale \u2014 pasteurization, ultra-high-temperature sterilization, or anything in between. Send us a half-gallon sample, and within days we deliver validated time-temperature data, microbial kill-step confirmation, and sensory benchmarks so you can green-light production with zero ambiguity. Every run is logged with real-time AI monitoring that flags deviations before they become problems, giving you a thermal process file that satisfies FDA, your co-packer, and your retail buyer on day one.';
-    }
 
     /* Co-Packing — longer paragraph */
     if(svcAll[2]){
