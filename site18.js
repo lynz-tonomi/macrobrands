@@ -1373,6 +1373,189 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
       });
 
     } // end hasGsap
+
+    // ── 13. CONNECTING LINES — SVG draw-on-scroll (Duyvenvoorde style) ──
+    if(hasGsap){(function(){
+      // Wait a tick for layout to settle
+      requestAnimationFrame(function(){
+        // Collect section positions to build the path
+        var allSects=[];
+        document.querySelectorAll('.parallax-section,.section-light,.section-dark,.section-dark-alt,[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=faq],[id=contact-cta],[id=autonomi-ai]').forEach(function(s){
+          if(s.closest('.video-hero-wrap'))return;
+          var r=s.getBoundingClientRect();
+          var top=r.top+window.scrollY;
+          allSects.push({el:s,top:top,bottom:top+r.height,height:r.height,dark:s.classList.contains('section-dark')||s.classList.contains('section-dark-alt')||s.id==='autonomi-ai'});
+        });
+        if(allSects.length<2)return;
+        allSects.sort(function(a,b){return a.top-b.top});
+
+        var pageH=document.documentElement.scrollHeight;
+        var vw=window.innerWidth;
+
+        // Create SVG overlay
+        var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('width',vw);
+        svg.setAttribute('height',pageH);
+        svg.style.cssText='position:absolute;top:0;left:0;width:100%;height:'+pageH+'px;pointer-events:none;z-index:50;overflow:visible';
+        document.body.appendChild(svg);
+
+        // Build a flowing path through all sections
+        // Start from top-center, zigzag left/right through sections
+        var pts=[];
+        var startY=allSects[0].top;
+        var cx=vw/2;
+
+        // Entry point: top center
+        pts.push({x:cx,y:startY-50});
+
+        allSects.forEach(function(s,i){
+          var side=i%2===0?0.15:0.85; // alternate left/right
+          var midY=s.top+s.height*0.5;
+          pts.push({x:vw*side,y:midY});
+        });
+
+        // Exit: bottom center
+        var lastSec=allSects[allSects.length-1];
+        pts.push({x:cx,y:lastSec.bottom+50});
+
+        // Build SVG path with smooth cubic beziers
+        var d='M '+pts[0].x+' '+pts[0].y;
+        for(var pi=1;pi<pts.length;pi++){
+          var prev=pts[pi-1];
+          var curr=pts[pi];
+          // Control points: vertical handles for smooth curves
+          var handleLen=Math.abs(curr.y-prev.y)*0.4;
+          var cp1x=prev.x;
+          var cp1y=prev.y+handleLen;
+          var cp2x=curr.x;
+          var cp2y=curr.y-handleLen;
+          d+=' C '+cp1x+' '+cp1y+' '+cp2x+' '+cp2y+' '+curr.x+' '+curr.y;
+        }
+
+        // Gold line (main)
+        var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d',d);
+        path.setAttribute('fill','none');
+        path.setAttribute('stroke','#C9A84C');
+        path.setAttribute('stroke-width','2.5');
+        path.setAttribute('stroke-linecap','round');
+        svg.appendChild(path);
+
+        // Glow line (behind, wider, softer)
+        var glow=document.createElementNS('http://www.w3.org/2000/svg','path');
+        glow.setAttribute('d',d);
+        glow.setAttribute('fill','none');
+        glow.setAttribute('stroke','#C9A84C');
+        glow.setAttribute('stroke-width','8');
+        glow.setAttribute('stroke-linecap','round');
+        glow.style.opacity='0.15';
+        glow.style.filter='blur(6px)';
+        svg.insertBefore(glow,path);
+
+        // Set up stroke-dasharray for draw-on-scroll
+        var pathLen=path.getTotalLength();
+        path.style.strokeDasharray=pathLen;
+        path.style.strokeDashoffset=pathLen;
+        glow.style.strokeDasharray=pathLen;
+        glow.style.strokeDashoffset=pathLen;
+
+        // Animate with GSAP scroll scrub
+        gsap.to([path,glow],{
+          strokeDashoffset:0,
+          ease:'none',
+          scrollTrigger:{
+            trigger:document.body,
+            start:'top top',
+            end:'bottom bottom',
+            scrub:1.5
+          }
+        });
+
+        // Traveling dot — a glowing circle that follows the line
+        var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+        dot.setAttribute('r','5');
+        dot.setAttribute('fill','#C9A84C');
+        dot.style.filter='drop-shadow(0 0 8px #C9A84C) drop-shadow(0 0 20px rgba(201,168,76,0.4))';
+        svg.appendChild(dot);
+
+        // Outer pulse ring
+        var ring=document.createElementNS('http://www.w3.org/2000/svg','circle');
+        ring.setAttribute('r','12');
+        ring.setAttribute('fill','none');
+        ring.setAttribute('stroke','#C9A84C');
+        ring.setAttribute('stroke-width','1');
+        ring.style.opacity='0.4';
+        svg.appendChild(ring);
+
+        // Animate dot along path
+        var dotObj={progress:0};
+        gsap.to(dotObj,{
+          progress:1,
+          ease:'none',
+          scrollTrigger:{
+            trigger:document.body,
+            start:'top top',
+            end:'bottom bottom',
+            scrub:1.5,
+            onUpdate:function(){
+              var p=dotObj.progress;
+              var drawLen=pathLen*(1-parseFloat(path.style.strokeDashoffset||pathLen)/pathLen);
+              var pt=path.getPointAtLength(Math.min(p*pathLen,pathLen));
+              dot.setAttribute('cx',pt.x);
+              dot.setAttribute('cy',pt.y);
+              ring.setAttribute('cx',pt.x);
+              ring.setAttribute('cy',pt.y);
+            }
+          }
+        });
+
+        // Pulse animation on the ring
+        gsap.to(ring,{attr:{r:20},opacity:0,duration:1.5,ease:'power1.out',repeat:-1});
+
+        // Node dots at each section midpoint
+        allSects.forEach(function(s,i){
+          var side=i%2===0?0.15:0.85;
+          var midY=s.top+s.height*0.5;
+          var nx=vw*side;
+
+          // Static node
+          var node=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          node.setAttribute('cx',nx);
+          node.setAttribute('cy',midY);
+          node.setAttribute('r','6');
+          node.setAttribute('fill','none');
+          node.setAttribute('stroke','#C9A84C');
+          node.setAttribute('stroke-width','2');
+          node.style.opacity='0';
+          svg.appendChild(node);
+
+          // Node fill
+          var nodeFill=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          nodeFill.setAttribute('cx',nx);
+          nodeFill.setAttribute('cy',midY);
+          nodeFill.setAttribute('r','3');
+          nodeFill.setAttribute('fill','#C9A84C');
+          nodeFill.style.opacity='0';
+          svg.appendChild(nodeFill);
+
+          // Reveal when scroll reaches this point
+          gsap.to([node,nodeFill],{opacity:1,duration:.4,ease:'power2.out',scrollTrigger:{trigger:s.el,start:'top 70%',toggleActions:'play none none none'}});
+          gsap.fromTo(node,{attr:{r:0}},{attr:{r:8},duration:.6,ease:'back.out(2)',scrollTrigger:{trigger:s.el,start:'top 70%',toggleActions:'play none none none'}});
+        });
+
+        // Handle resize: rebuild SVG
+        var resizeTimer;
+        window.addEventListener('resize',function(){
+          clearTimeout(resizeTimer);
+          resizeTimer=setTimeout(function(){
+            svg.remove();
+            // Lines will be stale — acceptable trade-off vs full rebuild complexity
+          },500);
+        });
+      });
+    })()}
+
+    } // end hasGsap
   },1000);
 })();
 
