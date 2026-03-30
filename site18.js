@@ -2059,6 +2059,11 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 (function(){
   setTimeout(function(){
 
+    /* ── 0. Force svc-tab-panel visible when placed outside tab system ── */
+    document.querySelectorAll('.sc-section .svc-tab-panel').forEach(function(p){
+      p.style.display='block';
+    });
+
     /* ── 1. Hide section number labels ("01 — Formulation", etc.) ── */
     document.querySelectorAll('.svc-label').forEach(function(lbl){
       lbl.style.display='none';
