@@ -393,14 +393,14 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
          To add images: drop any .png/.jpg into the repo's carousel/ folder.
          They will appear automatically on next page load (no code changes needed). */
       (function(){
-        var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel';
-        fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
+        var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel?_='+Date.now();
+        fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json','Cache-Control':'no-cache'}})
           .then(function(r){return r.json();})
           .then(function(files){
             /* Filter to image files only, grab the raw download URL */
             var urls=files
               .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
-              .map(function(f){return f.download_url;});
+              .map(function(f){return f.download_url+'?v='+Date.now();});
             if(!urls.length)return;
             /* Fisher-Yates shuffle for random order every load */
             for(var i=urls.length-1;i>0;i--){
