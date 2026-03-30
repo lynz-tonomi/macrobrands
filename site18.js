@@ -1978,8 +1978,9 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 
 /* ─────────────────────────────────────────────
    Section 13 — Native Tab Switching (Supporting Services)
+   Wrapped in setTimeout for Webflow component DOM readiness
    ───────────────────────────────────────────── */
-(function(){
+setTimeout(function(){
   var nav=document.querySelector('[data-tabs-nav="supporting"]');
   if(!nav)return;
   var btns=nav.querySelectorAll('[data-tab]');
@@ -2012,6 +2013,6 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 
   /* Activate first tab on load */
   activate(0);
-})();
+},2000);
 
 })(); // outer guard
