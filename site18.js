@@ -1883,22 +1883,31 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
         imgA.src=urls[0];
         imgA.onload=function(){
           imgA.style.opacity='1';
-          var next=urls.length>1?1:0;
-          preloadImg(urls[next]).then(function(){
-            imgB.src=urls[next];
-            setInterval(function(){
-              idx++;if(idx>=urls.length){idx=0;shuffleUrls();}
-              var target=aActive?imgB:imgA;
-              preloadImg(urls[idx]).then(function(src){
-                target.src=src;
-                requestAnimationFrame(function(){
-                  if(aActive){imgB.style.opacity='1';imgA.style.opacity='0';}
-                  else{imgA.style.opacity='1';imgB.style.opacity='0';}
-                  aActive=!aActive;
+          /* Preload ALL images before starting the rhythm */
+          var loaded=0,total=Math.min(urls.length,6);
+          function preloadBatch(){
+            if(loaded>=total){startCarousel();return;}
+            preloadImg(urls[loaded]).then(function(){loaded++;preloadBatch();});
+          }
+          function startCarousel(){
+            if(urls.length>1){imgB.src=urls[1];}
+            /* Initial 1.5s pause so first image is visible before any transition */
+            setTimeout(function(){
+              setInterval(function(){
+                idx++;if(idx>=urls.length){idx=0;shuffleUrls();}
+                var target=aActive?imgB:imgA;
+                preloadImg(urls[idx]).then(function(src){
+                  target.src=src;
+                  requestAnimationFrame(function(){
+                    if(aActive){imgB.style.opacity='1';imgA.style.opacity='0';}
+                    else{imgA.style.opacity='1';imgB.style.opacity='0';}
+                    aActive=!aActive;
+                  });
                 });
-              });
-            },500);
-          });
+              },500);
+            },1500);
+          }
+          preloadBatch();
         };
       }).catch(function(e){console.warn('Native carousel fetch failed:',e);});
   }
@@ -2124,17 +2133,28 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       if(cpDesc) cpDesc.textContent='Scaling from pilot to full production is where most emerging brands stall \u2014 quality drifts, timelines slip, and per-unit costs balloon. Our co-packing operation is built to prevent all three. We run tunnel pasteurization, retort, aseptic hot-fill, ESL bottling, and HPP cold-press across multiple lines, each with dedicated CIP systems and allergen-segregated bays so your product never touches someone else\u2019s run. From 5,000-unit test batches to million-case annual contracts, every job gets a dedicated production coordinator, real-time batch dashboards, and a quality hold protocol that won\u2019t release a single pallet until COA, micro, and sensory all clear. We handle procurement, warehousing, and 3PL coordination so you get one invoice and one point of contact from raw ingredient to delivered case.';
     }
 
-    /* Supply Chain — longer paragraph + center alignment */
+    /* Supply Chain — longer paragraph + center everything */
     var scSec=document.querySelector('.sc-section');
     if(scSec){
+      /* Center the whole section content */
+      scSec.style.textAlign='center';
+      var scCont=scSec.querySelector('[data-role="sc-content"]');
+      if(scCont){
+        scCont.style.cssText='max-width:1000px;margin:0 auto;text-align:center;padding:0 20px';
+      }
+      var scH2=scSec.querySelector('.svc-h2');
+      if(scH2) scH2.style.textAlign='center';
       var scDesc=scSec.querySelector('.svc-desc');
       if(scDesc){
         scDesc.textContent='The food and beverage industry loses billions every year to manual coordination \u2014 reordering ingredients too late, missing quality flags mid-run, filing compliance paperwork after the fact, and paying premium freight because nobody saw the stockout coming. Autonomi\u2019s agentic supply chain replaces that patchwork with 29 purpose-built AI agents that monitor, decide, and act across your entire operation in real time. From vendor sourcing and procurement automation to production scheduling, quality intelligence, and last-mile logistics, every handoff is orchestrated by agents that share a unified data layer \u2014 so a raw-material delay in stage one automatically adjusts your production calendar, notifies your 3PL, and updates your retail buyer before anyone picks up a phone. The result: fewer stockouts, tighter margins, full traceability from farm to shelf, and a supply chain that gets smarter with every order.';
-        scDesc.style.textAlign='center';
-        scDesc.style.maxWidth='800px';
-        scDesc.style.marginLeft='auto';
-        scDesc.style.marginRight='auto';
+        scDesc.style.cssText='text-align:center;max-width:800px;margin-left:auto;margin-right:auto;line-height:1.8;color:#999;font-size:1.05rem';
       }
+      /* Center bullets */
+      var scBullets=scSec.querySelector('.svc-bullet-row');
+      if(scBullets) scBullets.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;gap:8px 24px;max-width:800px;margin:0 auto';
+      /* Center CTA */
+      var scCta=scSec.querySelector('.svc-cta');
+      if(scCta) scCta.style.cssText+='display:inline-block;margin:0 auto';
     }
 
     /* ── 1b. Hide old "Our Services" 7-tab JS section (replaced by native sections) ── */
