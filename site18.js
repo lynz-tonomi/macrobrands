@@ -2053,6 +2053,141 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   },1500); // delay for Webflow DOM
 })();
 
+/* ═══════════════════════════════════════════════════════════════
+   Section 12b — Layered Depth Parallax (Service Sections)
+   Content & background elements move at different scroll speeds:
+   - Headings:  1.3x  (faster — feels closest to viewer)
+   - Images:    0.7x  (slower — feels furthest away)
+   - Diagrams:  0.85x (medium depth)
+   - Bullets:   1.1x  (slightly fast)
+   Uses GSAP ScrollTrigger scrub for butter-smooth interpolation.
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  setTimeout(function(){
+    if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
+
+    var svcSections=document.querySelectorAll('.svc-section');
+    if(!svcSections.length)return;
+
+    svcSections.forEach(function(sec){
+      /* — Heading: fastest layer (closest to viewer) — */
+      var h2=sec.querySelector('.svc-h2');
+      if(h2){
+        gsap.fromTo(h2,
+          {yPercent:8},
+          {yPercent:-8,ease:'none',
+           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* — Description: slightly fast — */
+      var desc=sec.querySelector('.svc-desc');
+      if(desc){
+        gsap.fromTo(desc,
+          {yPercent:5},
+          {yPercent:-5,ease:'none',
+           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* — Bullet row: medium-fast — */
+      var bullets=sec.querySelector('.svc-bullet-row');
+      if(bullets){
+        gsap.fromTo(bullets,
+          {yPercent:4},
+          {yPercent:-4,ease:'none',
+           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* — Images / diagram boxes: slowest layer (furthest away, depth) — */
+      var imgBoxes=sec.querySelectorAll('.svc-img-box, [data-role="equipment-photo"], [data-role="carousel-slot"], [data-role="lab-photo"]');
+      imgBoxes.forEach(function(img){
+        gsap.fromTo(img,
+          {yPercent:-6},
+          {yPercent:6,ease:'none',
+           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      });
+
+      /* — Caps box / card grid: medium depth — */
+      var capsBox=sec.querySelector('.svc-caps-box, .svc-card-grid, [data-role="cp-cards"]');
+      if(capsBox){
+        gsap.fromTo(capsBox,
+          {yPercent:-4},
+          {yPercent:4,ease:'none',
+           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* — CTA button: matches heading speed — */
+      var cta=sec.querySelector('.svc-cta');
+      if(cta){
+        gsap.fromTo(cta,
+          {yPercent:6},
+          {yPercent:-6,ease:'none',
+           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* — Entrance fade-up for the whole section — */
+      var container=sec.querySelector('.svc-container');
+      if(container){
+        gsap.fromTo(container,
+          {opacity:0,y:60},
+          {opacity:1,y:0,duration:1,ease:'power2.out',
+           scrollTrigger:{trigger:sec,start:'top 85%',once:true}
+          });
+      }
+    });
+
+    /* — Cross-section depth: images inside img-row move opposite to scroll — */
+    var imgRows=document.querySelectorAll('.svc-img-row, .svc-img-row-mt');
+    imgRows.forEach(function(row){
+      var children=row.children;
+      if(children.length>=2){
+        /* Left image: drifts up slightly */
+        gsap.fromTo(children[0],
+          {y:30},
+          {y:-30,ease:'none',
+           scrollTrigger:{trigger:row,start:'top bottom',end:'bottom top',scrub:true}
+          });
+        /* Right image: drifts down slightly (inverse) */
+        gsap.fromTo(children[1],
+          {y:-20},
+          {y:20,ease:'none',
+           scrollTrigger:{trigger:row,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+    });
+
+    /* — Supporting services tab section gets depth too — */
+    var tabSection=document.querySelector('.svc-section .svc-tabs-nav, [data-tabs-nav="supporting"]');
+    if(tabSection){
+      var tabParent=tabSection.closest('.svc-section');
+      if(tabParent){
+        var tabBtns=tabParent.querySelector('[data-tabs-nav]');
+        var tabPanels=tabParent.querySelectorAll('[data-panel]');
+        if(tabBtns){
+          gsap.fromTo(tabBtns,
+            {yPercent:5},
+            {yPercent:-5,ease:'none',
+             scrollTrigger:{trigger:tabParent,start:'top bottom',end:'bottom top',scrub:true}
+            });
+        }
+        tabPanels.forEach(function(panel){
+          gsap.fromTo(panel,
+            {yPercent:-3},
+            {yPercent:3,ease:'none',
+             scrollTrigger:{trigger:tabParent,start:'top bottom',end:'bottom top',scrub:true}
+            });
+        });
+      }
+    }
+
+  },2500); // after all sections populated
+})();
+
 /* ─────────────────────────────────────────────
    Section 13 — Native Tab Switching (Supporting Services)
    Injects rich content from original JS panels into native Webflow tabs.
