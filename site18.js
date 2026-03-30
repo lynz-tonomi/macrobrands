@@ -1376,8 +1376,9 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 
     // ── 13. CONNECTING LINES — SVG draw-on-scroll (Duyvenvoorde style) ──
     if(hasGsap){(function(){
-      // Wait a tick for layout to settle
-      requestAnimationFrame(function(){
+      // Wait for full layout settle (needs body position + section heights computed)
+      setTimeout(function(){
+      document.body.style.position='relative';
         // Collect section positions to build the path
         var allSects=[];
         document.querySelectorAll('.parallax-section,.section-light,.section-dark,.section-dark-alt,[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=faq],[id=contact-cta],[id=autonomi-ai]').forEach(function(s){
@@ -1552,7 +1553,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
             // Lines will be stale — acceptable trade-off vs full rebuild complexity
           },500);
         });
-      });
+      },1500); // 1.5s delay ensures all sections are laid out before measuring positions
     })()}
 
     } // end hasGsap
