@@ -2054,6 +2054,105 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 })();
 
 /* ═══════════════════════════════════════════════════════════════
+   Section 12a — Layout Polish (labels, stagger, carousel parallax)
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  setTimeout(function(){
+
+    /* ── 1. Hide section number labels ("01 — Formulation", etc.) ── */
+    document.querySelectorAll('.svc-label').forEach(function(lbl){
+      lbl.style.display='none';
+    });
+
+    /* ── 2. Stagger: Formulation=left, MicroThermic=right, Co-Packing=left ── */
+    var svcSections=document.querySelectorAll('.svc-section');
+    svcSections.forEach(function(sec,i){
+      if(i>2) return; // skip Supporting Services (section 4)
+      var grid=sec.querySelector('.svc-hero-grid');
+      if(!grid) return;
+
+      /* Make hero-grid a 2-column layout: text + media side by side */
+      var textCol=grid.children[0]; // label + h2 + desc + bullets + cta
+      var mediaCol=grid.children[1]; // img-row or card-grid
+
+      if(!textCol||!mediaCol) return;
+
+      grid.style.display='grid';
+      grid.style.gap='48px';
+      grid.style.alignItems='start';
+
+      var isRight=(i===1); // MicroThermic = text on right
+      if(isRight){
+        grid.style.gridTemplateColumns='1.2fr 1fr';
+        grid.style.direction='rtl'; // flip column order
+        textCol.style.direction='ltr';
+        mediaCol.style.direction='ltr';
+        textCol.style.textAlign='right';
+      } else {
+        grid.style.gridTemplateColumns='1fr 1.2fr';
+        textCol.style.textAlign='left';
+      }
+    });
+
+    /* ── 3. Product carousel → parallax window ── */
+    var carouselSlot=document.querySelector('[data-role="carousel-slot"]');
+    if(carouselSlot){
+      /* Set up the parallax container */
+      carouselSlot.style.overflow='hidden';
+      carouselSlot.style.position='relative';
+      carouselSlot.style.height='380px';
+      carouselSlot.style.borderRadius='16px';
+
+      /* Make images taller than container for parallax travel room */
+      var cImgs=carouselSlot.querySelectorAll('img');
+      cImgs.forEach(function(img){
+        img.style.height='130%';
+        img.style.width='100%';
+        img.style.objectFit='contain';
+        img.style.objectPosition='center bottom';
+        img.style.position='absolute';
+        img.style.top='-15%'; // centered with 15% travel room each direction
+        img.style.left='0';
+        img.style.willChange='transform';
+      });
+
+      /* Scroll-driven parallax: images drift opposite to scroll */
+      if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
+        cImgs.forEach(function(img){
+          gsap.fromTo(img,
+            {yPercent:-8},
+            {yPercent:8,ease:'none',
+             scrollTrigger:{trigger:carouselSlot,start:'top bottom',end:'bottom top',scrub:true}
+            });
+        });
+      }
+    }
+
+    /* ── 4. Lab photo → parallax window ── */
+    var labSlot=document.querySelector('[data-role="lab-photo"]');
+    if(labSlot&&typeof gsap!=='undefined'){
+      labSlot.style.overflow='hidden';
+      labSlot.style.position='relative';
+      labSlot.style.height='380px';
+      labSlot.style.borderRadius='16px';
+      var labImg=labSlot.querySelector('img');
+      if(labImg){
+        labImg.style.height='130%';
+        labImg.style.position='absolute';
+        labImg.style.top='-15%';
+        labImg.style.willChange='transform';
+        gsap.fromTo(labImg,
+          {yPercent:-6},
+          {yPercent:6,ease:'none',
+           scrollTrigger:{trigger:labSlot,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+    }
+
+  },1800);
+})();
+
+/* ═══════════════════════════════════════════════════════════════
    Section 12b — Layered Depth Parallax (Service Sections)
    Content & background elements move at different scroll speeds:
    - Headings:  1.3x  (faster — feels closest to viewer)
