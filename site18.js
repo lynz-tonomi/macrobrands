@@ -240,10 +240,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 
   // Inject global liquid-fill CTA style for all pages
   var ctaCSS=document.createElement('style');
-  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#C9A84C;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #C9A84C;color:#C9A84C}.cta-outline .fill-bg{background:#C9A84C}.cta-outline:hover span{color:#1A1A1A}'+
-  /* GPU-accelerated parallax performance */
-  '.section-light,.section-dark,.section-dark-alt,[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=faq],[id=contact-cta]{will-change:clip-path;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;perspective:1200px}'+
-  '.section-light h2,.section-dark h2,.section-dark-alt h2,.section-light p,.section-dark p,.section-dark-alt p,.card-light,.service-card{will-change:transform,opacity;backface-visibility:hidden;-webkit-backface-visibility:hidden}';
+  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#C9A84C;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #C9A84C;color:#C9A84C}.cta-outline .fill-bg{background:#C9A84C}.cta-outline:hover span{color:#1A1A1A}';
   document.head.appendChild(ctaCSS);
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
@@ -1265,300 +1262,26 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
     // Bulb slides full canvas in from left on scroll
     if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
-    // ── FULL PARALLAX ENGINE — layered scroll speeds, depth, reveals ──
+    // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
     if(hasGsap){
-
+      var revealH=[],revealP=[],revealC=[];
       sects.forEach(function(sec2){
         if(sec2.closest('.video-hero-wrap'))return;
-        // Skip parallax-section itself (handled above)
-        if(sec2.id==='parallax-hero')return;
-        // Ensure overflow hidden for parallax clipping
-        sec2.style.overflow='hidden';
-
-        // ── 1. SECTION BACKGROUND PARALLAX — subtle vertical shift ──
-        // Wrap existing content in a parallax inner container
-        var inner=sec2.querySelector('.content-wrapper');
-        // Whole-section slow drift (background moves slower than scroll)
-        gsap.fromTo(sec2,{backgroundPositionY:'0%'},{backgroundPositionY:'30%',ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
-
-        // ── 2. HEADINGS — float up with depth + slight scale ──
-        sec2.querySelectorAll('h2,.section-heading,.section-heading-light,.sc-header h2,.svc-h2').forEach(function(h){
-          gsap.set(h,{y:100,opacity:0,scale:0.92});
-          gsap.to(h,{y:0,opacity:1,scale:1,duration:1.4,ease:'power3.out',scrollTrigger:{trigger:h,start:'top 88%',toggleActions:'play none none none'}});
-          // Continuous subtle parallax drift while in view
-          gsap.to(h,{yPercent:-15,ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
-        });
-
-        // ── 3. PARAGRAPHS — stagger in with slight horizontal slide ──
-        sec2.querySelectorAll('p,.svc-desc,.card-text').forEach(function(p,i){
-          var dir=i%2===0?-30:30; // alternate left/right
-          gsap.set(p,{y:60,opacity:0,x:dir});
-          gsap.to(p,{y:0,opacity:1,x:0,duration:1,ease:'power2.out',delay:i*.08,scrollTrigger:{trigger:p,start:'top 92%',toggleActions:'play none none none'}});
-          // Slower parallax layer — paragraphs lag behind headings
-          gsap.to(p,{yPercent:-8,ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
-        });
-
-        // ── 4. CARDS — rise up with stagger + scale + rotation ──
-        sec2.querySelectorAll('.card-light,.service-card,.faq-card').forEach(function(c,ci){
-          gsap.set(c,{y:120,opacity:0,scale:0.9,rotationX:8});
-          gsap.to(c,{y:0,opacity:1,scale:1,rotationX:0,duration:1.2,ease:'power3.out',delay:ci*.1,scrollTrigger:{trigger:c,start:'top 95%',toggleActions:'play none none none'}});
-          // Cards drift slightly slower (deeper layer)
-          gsap.to(c,{yPercent:-5,ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
-          // Hover lift
-          c.style.transition='transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s';
-          c.onmouseenter=function(){this.style.transform='translateY(-12px) scale(1.02)';this.style.boxShadow='0 24px 60px rgba(0,0,0,.15)'};
+        sec2.querySelectorAll('h2').forEach(function(h){gsap.set(h,{y:80,opacity:0});revealH.push(h)});
+        sec2.querySelectorAll('p').forEach(function(p){gsap.set(p,{y:50,opacity:0});revealP.push(p)});
+        sec2.querySelectorAll('.card-light,.service-card').forEach(function(c){
+          gsap.set(c,{y:100,opacity:0,scale:.96});revealC.push(c);
+          c.style.transition='transform .3s,box-shadow .3s';
+          c.onmouseenter=function(){this.style.transform='translateY(-8px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.1)'};
           c.onmouseleave=function(){this.style.transform='';this.style.boxShadow=''};
         });
-
-        // ── 5. BULLET ITEMS / LIST ITEMS — cascade reveal ──
-        sec2.querySelectorAll('.svc-bullet-row li,ul li,.bullet-item').forEach(function(li,bi){
-          gsap.set(li,{y:40,opacity:0,x:-20});
-          gsap.to(li,{y:0,opacity:1,x:0,duration:.7,ease:'power2.out',delay:bi*.06,scrollTrigger:{trigger:li,start:'top 95%',toggleActions:'play none none none'}});
-        });
-
-        // ── 6. IMAGES inside sections — scale reveal ──
-        sec2.querySelectorAll('img:not(.nav-logo):not(.hero-logo):not(.parallax-cutout)').forEach(function(img){
-          gsap.set(img,{scale:1.15,opacity:0});
-          gsap.to(img,{scale:1,opacity:1,duration:1.4,ease:'power2.out',scrollTrigger:{trigger:img,start:'top 90%',toggleActions:'play none none none'}});
-        });
-
-        // ── 7. BADGES / SMALL ELEMENTS — pop in ──
-        sec2.querySelectorAll('.sc-badge,.cert-badge,.tag').forEach(function(badge){
-          gsap.set(badge,{scale:0,opacity:0});
-          gsap.to(badge,{scale:1,opacity:1,duration:.6,ease:'back.out(1.7)',scrollTrigger:{trigger:badge,start:'top 92%',toggleActions:'play none none none'}});
-        });
-
-        // ── 8. DIVIDERS / HORIZONTAL RULES — width reveal ──
-        sec2.querySelectorAll('hr,.divider').forEach(function(hr){
-          gsap.set(hr,{scaleX:0,transformOrigin:'left center'});
-          gsap.to(hr,{scaleX:1,duration:1,ease:'power2.inOut',scrollTrigger:{trigger:hr,start:'top 92%',toggleActions:'play none none none'}});
-        });
       });
-
-      // ── 9. SERVICES TAB PANEL — special treatment ──
-      var tabBtns=document.querySelectorAll('.mb-tab-btn');
-      tabBtns.forEach(function(btn,i){
-        gsap.set(btn,{y:40,opacity:0});
-        gsap.to(btn,{y:0,opacity:1,duration:.6,ease:'power2.out',delay:.6+i*.08,scrollTrigger:{trigger:btn.parentElement,start:'top 85%',toggleActions:'play none none none'}});
-      });
-
-      // ── 10. SECTION TRANSITION OVERLAYS — smooth dark→light crossfade ──
-      sects.forEach(function(sec2){
-        if(sec2.closest('.video-hero-wrap'))return;
-        if(sec2.id==='parallax-hero')return;
-        // Subtle clip-path reveal from bottom
-        gsap.fromTo(sec2,{clipPath:'inset(8% 0% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',ease:'none',scrollTrigger:{trigger:sec2,start:'top 95%',end:'top 60%',scrub:true}});
-      });
-
-      // ── 11. AUTONOMI AI SECTION — special cinematic parallax ──
-      var aiSec=document.getElementById('autonomi-ai');
-      if(aiSec){
-        var aiHeader=aiSec.querySelector('.sc-header');
-        var aiBadge=aiSec.querySelector('.sc-badge');
-        var aiH2=aiSec.querySelector('h2');
-        var aiP=aiSec.querySelector('p');
-        if(aiBadge){gsap.set(aiBadge,{y:60,opacity:0,scale:0.5});gsap.to(aiBadge,{y:0,opacity:1,scale:1,duration:1,ease:'back.out(1.5)',scrollTrigger:{trigger:aiSec,start:'top 75%',toggleActions:'play none none none'}})}
-        if(aiH2){gsap.set(aiH2,{y:100,opacity:0,letterSpacing:'0.1em'});gsap.to(aiH2,{y:0,opacity:1,letterSpacing:'-0.02em',duration:1.4,ease:'power3.out',delay:.2,scrollTrigger:{trigger:aiSec,start:'top 75%',toggleActions:'play none none none'}})}
-        if(aiP){gsap.set(aiP,{y:60,opacity:0});gsap.to(aiP,{y:0,opacity:1,duration:1,ease:'power2.out',delay:.5,scrollTrigger:{trigger:aiSec,start:'top 75%',toggleActions:'play none none none'}})}
-        // Parallax depth on entire AI header
-        if(aiHeader){gsap.to(aiHeader,{yPercent:-20,ease:'none',scrollTrigger:{trigger:aiSec,start:'top bottom',end:'bottom top',scrub:true}})}
-      }
-
-      // ── 12. CTA BUTTONS — slide up + glow pulse ──
-      document.querySelectorAll('.cta-liquid-fill,a[href="/contact"]:not(.mb-floating-nav a)').forEach(function(cta){
-        if(cta.closest('.video-hero-wrap')||cta.closest('.mb-floating-nav'))return;
-        gsap.set(cta,{y:50,opacity:0});
-        gsap.to(cta,{y:0,opacity:1,duration:.8,ease:'power2.out',scrollTrigger:{trigger:cta,start:'top 95%',toggleActions:'play none none none'}});
-      });
-
-    } // end hasGsap
+      ScrollTrigger.batch(revealH,{start:'top 90%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:1,ease:'power3.out',stagger:.15})}});
+      ScrollTrigger.batch(revealP,{start:'top 92%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:.8,ease:'power2.out',stagger:.1})}});
+      ScrollTrigger.batch(revealC,{start:'top 95%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,scale:1,duration:1,ease:'power3.out',stagger:.12})}});
+    }
   },1000);
-})();
-
-// ============ 6b. CONNECTING LINES — SVG draw-on-scroll (Duyvenvoorde style) ============
-(function(){
-  // Independent IIFE with own timing — waits 3s for GSAP + all sections to settle
-  setTimeout(function(){
-    if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
-    if(window.location.pathname.match(/\/(contact|autonomi)/))return;
-    document.body.style.position='relative';
-        // Collect section positions to build the path
-        var allSects=[];
-        document.querySelectorAll('.parallax-section,.section-light,.section-dark,.section-dark-alt,[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=faq],[id=contact-cta],[id=autonomi-ai]').forEach(function(s){
-          if(s.closest('.video-hero-wrap'))return;
-          var r=s.getBoundingClientRect();
-          var top=r.top+window.scrollY;
-          allSects.push({el:s,top:top,bottom:top+r.height,height:r.height,dark:s.classList.contains('section-dark')||s.classList.contains('section-dark-alt')||s.id==='autonomi-ai'});
-        });
-        if(allSects.length<2)return;
-        allSects.sort(function(a,b){return a.top-b.top});
-
-        var pageH=document.documentElement.scrollHeight;
-        var vw=window.innerWidth;
-
-        // Create SVG overlay
-        var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-        svg.setAttribute('width',vw);
-        svg.setAttribute('height',pageH);
-        svg.style.cssText='position:absolute;top:0;left:0;width:100%;height:'+pageH+'px;pointer-events:none;z-index:50;overflow:visible';
-        document.body.appendChild(svg);
-
-        // Build a flowing path through all sections
-        // Start from top-center, zigzag left/right through sections
-        var pts=[];
-        var startY=allSects[0].top;
-        var cx=vw/2;
-
-        // Entry point: top center
-        pts.push({x:cx,y:startY-50});
-
-        allSects.forEach(function(s,i){
-          var side=i%2===0?0.15:0.85; // alternate left/right
-          var midY=s.top+s.height*0.5;
-          pts.push({x:vw*side,y:midY});
-        });
-
-        // Exit: bottom center
-        var lastSec=allSects[allSects.length-1];
-        pts.push({x:cx,y:lastSec.bottom+50});
-
-        // Build SVG path with smooth cubic beziers
-        var d='M '+pts[0].x+' '+pts[0].y;
-        for(var pi=1;pi<pts.length;pi++){
-          var prev=pts[pi-1];
-          var curr=pts[pi];
-          // Control points: vertical handles for smooth curves
-          var handleLen=Math.abs(curr.y-prev.y)*0.4;
-          var cp1x=prev.x;
-          var cp1y=prev.y+handleLen;
-          var cp2x=curr.x;
-          var cp2y=curr.y-handleLen;
-          d+=' C '+cp1x+' '+cp1y+' '+cp2x+' '+cp2y+' '+curr.x+' '+curr.y;
-        }
-
-        // Gold line (main)
-        var path=document.createElementNS('http://www.w3.org/2000/svg','path');
-        path.setAttribute('d',d);
-        path.setAttribute('fill','none');
-        path.setAttribute('stroke','#C9A84C');
-        path.setAttribute('stroke-width','2.5');
-        path.setAttribute('stroke-linecap','round');
-        svg.appendChild(path);
-
-        // Glow line (behind, wider, softer)
-        var glow=document.createElementNS('http://www.w3.org/2000/svg','path');
-        glow.setAttribute('d',d);
-        glow.setAttribute('fill','none');
-        glow.setAttribute('stroke','#C9A84C');
-        glow.setAttribute('stroke-width','8');
-        glow.setAttribute('stroke-linecap','round');
-        glow.style.opacity='0.15';
-        glow.style.filter='blur(6px)';
-        svg.insertBefore(glow,path);
-
-        // Set up stroke-dasharray for draw-on-scroll
-        var pathLen=path.getTotalLength();
-        path.style.strokeDasharray=pathLen;
-        path.style.strokeDashoffset=pathLen;
-        glow.style.strokeDasharray=pathLen;
-        glow.style.strokeDashoffset=pathLen;
-
-        // Animate with GSAP scroll scrub
-        gsap.to([path,glow],{
-          strokeDashoffset:0,
-          ease:'none',
-          scrollTrigger:{
-            trigger:document.body,
-            start:'top top',
-            end:'bottom bottom',
-            scrub:1.5
-          }
-        });
-
-        // Traveling dot — a glowing circle that follows the line
-        var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-        dot.setAttribute('r','5');
-        dot.setAttribute('fill','#C9A84C');
-        dot.style.filter='drop-shadow(0 0 8px #C9A84C) drop-shadow(0 0 20px rgba(201,168,76,0.4))';
-        svg.appendChild(dot);
-
-        // Outer pulse ring
-        var ring=document.createElementNS('http://www.w3.org/2000/svg','circle');
-        ring.setAttribute('r','12');
-        ring.setAttribute('fill','none');
-        ring.setAttribute('stroke','#C9A84C');
-        ring.setAttribute('stroke-width','1');
-        ring.style.opacity='0.4';
-        svg.appendChild(ring);
-
-        // Animate dot along path
-        var dotObj={progress:0};
-        gsap.to(dotObj,{
-          progress:1,
-          ease:'none',
-          scrollTrigger:{
-            trigger:document.body,
-            start:'top top',
-            end:'bottom bottom',
-            scrub:1.5,
-            onUpdate:function(){
-              var p=dotObj.progress;
-              var drawLen=pathLen*(1-parseFloat(path.style.strokeDashoffset||pathLen)/pathLen);
-              var pt=path.getPointAtLength(Math.min(p*pathLen,pathLen));
-              dot.setAttribute('cx',pt.x);
-              dot.setAttribute('cy',pt.y);
-              ring.setAttribute('cx',pt.x);
-              ring.setAttribute('cy',pt.y);
-            }
-          }
-        });
-
-        // Pulse animation on the ring
-        gsap.to(ring,{attr:{r:20},opacity:0,duration:1.5,ease:'power1.out',repeat:-1});
-
-        // Node dots at each section midpoint
-        allSects.forEach(function(s,i){
-          var side=i%2===0?0.15:0.85;
-          var midY=s.top+s.height*0.5;
-          var nx=vw*side;
-
-          // Static node
-          var node=document.createElementNS('http://www.w3.org/2000/svg','circle');
-          node.setAttribute('cx',nx);
-          node.setAttribute('cy',midY);
-          node.setAttribute('r','6');
-          node.setAttribute('fill','none');
-          node.setAttribute('stroke','#C9A84C');
-          node.setAttribute('stroke-width','2');
-          node.style.opacity='0';
-          svg.appendChild(node);
-
-          // Node fill
-          var nodeFill=document.createElementNS('http://www.w3.org/2000/svg','circle');
-          nodeFill.setAttribute('cx',nx);
-          nodeFill.setAttribute('cy',midY);
-          nodeFill.setAttribute('r','3');
-          nodeFill.setAttribute('fill','#C9A84C');
-          nodeFill.style.opacity='0';
-          svg.appendChild(nodeFill);
-
-          // Reveal when scroll reaches this point
-          gsap.to([node,nodeFill],{opacity:1,duration:.4,ease:'power2.out',scrollTrigger:{trigger:s.el,start:'top 70%',toggleActions:'play none none none'}});
-          gsap.fromTo(node,{attr:{r:0}},{attr:{r:8},duration:.6,ease:'back.out(2)',scrollTrigger:{trigger:s.el,start:'top 70%',toggleActions:'play none none none'}});
-        });
-
-        // Handle resize: rebuild SVG
-        var resizeTimer;
-    // Handle resize: rebuild SVG
-    var resizeTimer;
-    window.addEventListener('resize',function(){
-      clearTimeout(resizeTimer);
-      resizeTimer=setTimeout(function(){
-        svg.remove();
-      },500);
-    });
-  },3000); // 3s delay: GSAP loads ~1s, sections render ~2s, then measure positions
 })();
 
 // ============ 7. SUPPLY CHAIN AI SECTION FIX ============
