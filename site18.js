@@ -2064,6 +2064,14 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       lbl.style.display='none';
     });
 
+    /* ── 1b. Hide old "Our Services" 7-tab JS section (replaced by native sections) ── */
+    document.querySelectorAll('h2').forEach(function(h){
+      if(h.textContent.trim()==='Our Services'){
+        var sec=h.closest('section')||h.parentElement;
+        if(sec) sec.style.display='none';
+      }
+    });
+
     /* ── 2. Stagger: Formulation=left, MicroThermic=right, Co-Packing=left ── */
     /* First, constrain containers so grids don't stretch to full viewport */
     document.querySelectorAll('.svc-container').forEach(function(c){
