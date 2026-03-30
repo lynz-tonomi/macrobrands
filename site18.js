@@ -2385,79 +2385,48 @@ setTimeout(function(){
 })(); // outer guard
 
 /* ─────────────────────────────────────────────
-   Section 14 — Supply Chain as standalone section
-   Creates a container inside sc-section and injects
-   rich JS content from panel index 6 (network diagram,
-   AI agent animations).
+   Section 14 — Supply Chain section enhancements
+   Text content is now native Webflow (editable in Designer).
+   JS only adds the animated network diagram SVG + canvas icon.
    ───────────────────────────────────────────── */
 setTimeout(function(){
   var scSection=document.querySelector('.sc-section');
   if(!scSection)return;
-  if(!window._svcPanels||window._svcPanels.length<7)return;
 
-  /* Use existing svc-tab-panel if published, or create one */
-  var scPanel=scSection.querySelector('.svc-tab-panel');
-  if(!scPanel){
-    scPanel=document.createElement('div');
-    scPanel.className='svc-tab-panel';
-    scPanel.style.cssText='max-width:1200px;margin:0 auto;padding:40px 20px';
-    scSection.appendChild(scPanel);
-  }
-  scPanel.style.display='block';
+  /* Find the native content container */
+  var scContent=scSection.querySelector('[data-role="sc-content"]');
+  if(!scContent) return;
 
-  /* Inject rich Supply Chain content from Section 5b panel 6 */
-  var srcPanel=window._svcPanels[6];
-  if(srcPanel&&srcPanel.children.length>0){
-    scPanel.innerHTML='';
-    while(srcPanel.firstChild){
-      scPanel.appendChild(srcPanel.firstChild);
-    }
-  }
+  /* Inject animated network diagram SVG into a slot */
+  var diagramSlot=document.createElement('div');
+  diagramSlot.style.cssText='margin:40px auto;max-width:960px;padding:20px;background:rgba(0,0,0,.3);border-radius:16px;border:1px solid rgba(201,168,76,.15)';
+  diagramSlot.setAttribute('data-role','sc-diagram');
 
-  /* Start canvas animations in the Supply Chain section */
-  var cvs=scPanel.querySelectorAll('canvas');
-  cvs.forEach(function(cv){
-    if(cv._draw&&!cv._active){
-      cv._active=true;cv._animT=0;
-      (function animSc(){
-        if(!cv._active)return;
-        cv._animT+=.016;
-        var ctx=cv.getContext('2d');
-        ctx.clearRect(0,0,cv.width,cv.height);
-        ctx.save();ctx.translate(cv.width/2,cv.height/2);
-        cv._draw(ctx,cv._animT,cv._color);
-        ctx.restore();
-        requestAnimationFrame(animSc);
-      })();
-    }
+  /* Build the 5-node agent pipeline SVG */
+  var agents=['Vendor\nSourcing','Procurement\nAI Agents','Production\nScheduling','Quality\nIntelligence','Logistics\n& 3PL'];
+  var icons=['📋','✅','⚙️','🔍','🚛'];
+  var svg='<svg viewBox="0 0 900 160" style="width:100%;height:auto">';
+  svg+='<line x1="50" y1="40" x2="850" y2="40" stroke="#C9A84C" stroke-width="2" stroke-dasharray="6,4" opacity=".4"/>';
+  agents.forEach(function(agent,idx){
+    var x=90+idx*180;
+    svg+='<circle cx="'+x+'" cy="40" r="8" fill="#C9A84C" opacity=".6"/>';
+    svg+='<rect x="'+(x-60)+'" y="60" width="120" height="80" rx="12" fill="rgba(201,168,76,.08)" stroke="rgba(201,168,76,.25)" stroke-width="1"/>';
+    svg+='<text x="'+x+'" y="82" text-anchor="middle" fill="#C9A84C" font-size="20">'+icons[idx]+'</text>';
+    var lines=agent.split('\n');
+    svg+='<text x="'+x+'" y="105" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">'+lines[0]+'</text>';
+    if(lines[1]) svg+='<text x="'+x+'" y="120" text-anchor="middle" fill="#999" font-size="10">'+lines[1]+'</text>';
+    if(idx<4) svg+='<text x="'+(x+90)+'" y="100" text-anchor="middle" fill="#C9A84C" font-size="16">\u25B6</text>';
   });
+  svg+='<text x="450" y="155" text-anchor="middle" fill="#666" font-size="10" letter-spacing="3">AUTONOMI \u00B7 29 AI AGENTS \u00B7 REAL-TIME</text>';
+  svg+='</svg>';
+  diagramSlot.innerHTML=svg;
 
-  /* Use IntersectionObserver to pause/resume animations when off-screen */
-  if(typeof IntersectionObserver!=='undefined'){
-    var obs=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        var panelCvs=scPanel.querySelectorAll('canvas');
-        if(e.isIntersecting){
-          panelCvs.forEach(function(cv){
-            if(cv._draw&&!cv._active){
-              cv._active=true;cv._animT=cv._animT||0;
-              (function animResume(){
-                if(!cv._active)return;
-                cv._animT+=.016;
-                var ctx=cv.getContext('2d');
-                ctx.clearRect(0,0,cv.width,cv.height);
-                ctx.save();ctx.translate(cv.width/2,cv.height/2);
-                cv._draw(ctx,cv._animT,cv._color);
-                ctx.restore();
-                requestAnimationFrame(animResume);
-              })();
-            }
-          });
-        }else{
-          panelCvs.forEach(function(cv){cv._active=false;});
-        }
-      });
-    },{threshold:0.1});
-    obs.observe(scPanel);
+  /* Insert diagram after the bullet row */
+  var bulletRow=scContent.querySelector('.svc-bullet-row');
+  if(bulletRow&&bulletRow.nextSibling){
+    scContent.insertBefore(diagramSlot,bulletRow.nextSibling);
+  }else{
+    scContent.appendChild(diagramSlot);
   }
-},1900); // Run BEFORE Section 13 (2000ms) to grab panel 6 first
+
+},2000);
