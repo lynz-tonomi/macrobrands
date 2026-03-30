@@ -2522,12 +2522,25 @@ setTimeout(function(){
     '</svg>';
   pipeWrap.appendChild(svgWrap);
 
-  /* Insert pipeline after the bullet row */
+  /* Reorder: Heading → SVG Pipeline → Paragraph → Bullets → CTA */
+  var svcH2=scContent.querySelector('.svc-h2');
+  var svcDesc=scContent.querySelector('.svc-desc');
   var bulletRow=scContent.querySelector('.svc-bullet-row');
-  if(bulletRow&&bulletRow.nextSibling){
-    scContent.insertBefore(pipeWrap,bulletRow.nextSibling);
+
+  /* Insert pipeline right after the heading */
+  if(svcH2&&svcH2.nextSibling){
+    scContent.insertBefore(pipeWrap,svcH2.nextSibling);
   }else{
     scContent.appendChild(pipeWrap);
+  }
+
+  /* Move paragraph after the pipeline (middle position) */
+  if(svcDesc){
+    if(pipeWrap.nextSibling){
+      scContent.insertBefore(svcDesc,pipeWrap.nextSibling);
+    }else{
+      scContent.appendChild(svcDesc);
+    }
   }
 
   /* ── Replay animations when scrolled into view ── */
