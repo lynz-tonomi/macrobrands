@@ -269,24 +269,13 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 })();
 
 
-// ============ 5b. SERVICES TAB VIEW ============
-(function(){
-  if(window.location.pathname.match(/\/contact/))return;
-  setTimeout(function(){
-  var sd=document.querySelector('#svc-formulation')||document.querySelector('.svc-section')||document.querySelector('.section-dark');
-  if(!sd)return;
-
-  // Hide all native svc-sections (replaced by tab view)
-  document.querySelectorAll('.svc-section').forEach(function(s){s.style.display='none'});
-  // Show only the container section and restyle it for tabs
-  sd.style.display='';
-  sd.style.background='#0a0a0a';
-  sd.style.padding='100px 5%';
-  sd.style.color='#fff';
-
-  // Find or create content wrapper
-  var cw=sd.querySelector('.content-wrapper')||sd;
-  cw.innerHTML='<h2 style="text-align:center;margin-bottom:32px;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#fff">Our Services</h2><p style="text-align:center;color:#999;font-size:1.1rem;margin-bottom:8px">Over 125 years of combined experience in food science, manufacturing operations, supply chain, and food safety. From Pepsi to Kraft Heinz to Kellogg — our team has worked with the brands you know.</p>';
+// ── 5b. SERVICES TAB VIEW — DISABLED ──
+// Native Webflow sections now handle service display:
+// #svc-formulation, #svc-microthermic, #svc-copacking,
+// #svc-supporting (with Process Dev / PAL / Scale-Up sub-tabs),
+// #autonomi-ai (Supply Chain)
+// All with Lottie icons and SVG line drawings built natively.
+if(false){(function(){
 
   // Tab data — short names with canvas animated icons
   var tabs=[
@@ -1180,9 +1169,8 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
   document.head.appendChild(style);
 
-  cw.appendChild(tabWrap);
-  },500);
-})();
+})();}
+// ── END disabled tab view ──
 
 // ============ 6. DUAL TEXT OUTLINE PARALLAX ============
 (function(){
