@@ -1822,8 +1822,10 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
    Section 12 — Populate native Webflow service sections
    Injects carousel, images, SVG diagrams, and process cards
    into the Webflow-native hero sections (data-role attributes).
+   Wrapped in setTimeout to ensure Webflow DOM is fully rendered.
    ═══════════════════════════════════════════════════════════════ */
 (function(){
+  setTimeout(function(){
   var ghBase='https://lynz-tonomi.github.io/macrobrands/';
 
   /* ── Formulation: Carousel slot ── */
@@ -1964,6 +1966,7 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     cpGrid.appendChild(expSlot);
     cpGrid.appendChild(row2);
   }
+  },1500); // delay for Webflow DOM
 })();
 
 })(); // outer guard
