@@ -2069,11 +2069,31 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       lbl.style.display='none';
     });
 
-    /* ── 1a. Update Formulation description with longer copy ── */
+    /* ── 1a. Update all service section descriptions with longer copy ── */
     var formSec=document.getElementById('svc-formulation');
     if(formSec){
       var formDesc=formSec.querySelector('.svc-desc');
       if(formDesc) formDesc.textContent='Your recipe is just the starting point. Our food scientists reverse-engineer your kitchen formula and rebuild it for commercial production \u2014 adjusting pH, water activity, viscosity, and emulsion stability so it survives thermal processing without sacrificing flavor or mouthfeel. Whether you\u2019re targeting retort, aseptic, tunnel pasteurization, or cold fill, we dial in every ingredient ratio, source clean-label alternatives when needed, and run accelerated shelf-life studies so you go into your first production run with a formula that\u2019s locked, validated, and ready to scale.';
+    }
+
+    /* MicroThermic — longer paragraph */
+    var svcAll=document.querySelectorAll('.svc-section');
+    if(svcAll[1]){
+      var mtDesc=svcAll[1].querySelector('.svc-desc');
+      if(mtDesc) mtDesc.textContent='Most processors force you to commit tens of thousands of dollars to a production run before you know if your thermal process actually works. Our in-house MicroThermics AI Series UHT/HTST processor eliminates that gamble entirely. With both direct steam injection and indirect heat exchange in a single bench-top unit, we replicate the exact thermal curve your product will see at commercial scale \u2014 pasteurization, ultra-high-temperature sterilization, or anything in between. Send us a half-gallon sample, and within days we deliver validated time-temperature data, microbial kill-step confirmation, and sensory benchmarks so you can green-light production with zero ambiguity. Every run is logged with real-time AI monitoring that flags deviations before they become problems, giving you a thermal process file that satisfies FDA, your co-packer, and your retail buyer on day one.';
+    }
+
+    /* Co-Packing — longer paragraph */
+    if(svcAll[2]){
+      var cpDesc=svcAll[2].querySelector('.svc-desc');
+      if(cpDesc) cpDesc.textContent='Scaling from pilot to full production is where most emerging brands stall \u2014 quality drifts, timelines slip, and per-unit costs balloon. Our co-packing operation is built to prevent all three. We run tunnel pasteurization, retort, aseptic hot-fill, ESL bottling, and HPP cold-press across multiple lines, each with dedicated CIP systems and allergen-segregated bays so your product never touches someone else\u2019s run. From 5,000-unit test batches to million-case annual contracts, every job gets a dedicated production coordinator, real-time batch dashboards, and a quality hold protocol that won\u2019t release a single pallet until COA, micro, and sensory all clear. We handle procurement, warehousing, and 3PL coordination so you get one invoice and one point of contact from raw ingredient to delivered case.';
+    }
+
+    /* Supply Chain — longer paragraph */
+    var scSec=document.querySelector('.sc-section');
+    if(scSec){
+      var scDesc=scSec.querySelector('.svc-desc');
+      if(scDesc) scDesc.textContent='The food and beverage industry loses billions every year to manual coordination \u2014 reordering ingredients too late, missing quality flags mid-run, filing compliance paperwork after the fact, and paying premium freight because nobody saw the stockout coming. Autonomi\u2019s agentic supply chain replaces that patchwork with 29 purpose-built AI agents that monitor, decide, and act across your entire operation in real time. From vendor sourcing and procurement automation to production scheduling, quality intelligence, and last-mile logistics, every handoff is orchestrated by agents that share a unified data layer \u2014 so a raw-material delay in stage one automatically adjusts your production calendar, notifies your 3PL, and updates your retail buyer before anyone picks up a phone. The result: fewer stockouts, tighter margins, full traceability from farm to shelf, and a supply chain that gets smarter with every order.';
     }
 
     /* ── 1b. Hide old "Our Services" 7-tab JS section (replaced by native sections) ── */
