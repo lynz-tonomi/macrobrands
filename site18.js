@@ -2083,8 +2083,10 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       if(!textCol||!mediaCol) return;
 
       if(i===0){
-        /* ── Formulation: original layout — text top, two image boxes below ── */
-        /* Keep default single-column stacked layout, text left-aligned */
+        /* ── Formulation: text full-width top, two image boxes row below ── */
+        grid.style.display='grid';
+        grid.style.gridTemplateColumns='1fr';
+        grid.style.gap='32px';
         textCol.style.textAlign='left';
 
       } else if(i===1){
@@ -2108,8 +2110,10 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
         textCol.style.textAlign='right';
 
       } else if(i===2){
-        /* ── Co-Packing: original layout — text top, 2×3 card grid + expansion below ── */
-        /* Keep default single-column stacked layout, text left-aligned */
+        /* ── Co-Packing: text full-width top, 2×3 card grid + expansion below ── */
+        grid.style.display='grid';
+        grid.style.gridTemplateColumns='1fr';
+        grid.style.gap='32px';
         textCol.style.textAlign='left';
       }
     });
