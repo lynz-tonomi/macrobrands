@@ -1987,7 +1987,7 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     var mtBullets=mtSection.querySelector('.svc-bullet-row');
     if(mtBullets) mtBullets.style.marginLeft='auto';
     var mtCta=mtSection.querySelector('.svc-cta');
-    if(mtCta) mtCta.style.display='block';
+    if(mtCta){mtCta.style.display='inline-block';mtCta.style.float='right';mtCta.style.clear='both';}
   }
 
   /* ── Section Title Canvas Icons ── */
