@@ -394,7 +394,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
          They will appear automatically on next page load (no code changes needed). */
       (function(){
         var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel?_='+Date.now();
-        fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json','Cache-Control':'no-cache'}})
+        fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
           .then(function(r){return r.json();})
           .then(function(files){
             /* Filter to image files only, grab the raw download URL */
