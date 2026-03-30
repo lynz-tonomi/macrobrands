@@ -397,59 +397,40 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
           .then(function(r){return r.json();})
           .then(function(files){
-            /* Filter to image files only, grab the raw download URL */
+            /* Filter to image files, sort alphabetically so first image is always consistent */
             var urls=files
               .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
+              .sort(function(a,b){return a.name.localeCompare(b.name);})
               .map(function(f){return f.download_url+'?v='+Date.now();});
             if(!urls.length)return;
-            /* Fisher-Yates shuffle for random order every load */
-            for(var i=urls.length-1;i>0;i--){
-              var j=Math.floor(Math.random()*(i+1));
-              var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;
-            }
-            var idx=0,aActive=true;
             var a=document.getElementById('carousel-img-a');
             var b=document.getElementById('carousel-img-b');
             if(!a||!b)return;
-            function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
-            /* Preload helper: resolves when image is decoded & ready */
-            function preload(url){
-              return new Promise(function(resolve){
-                var img=new Image();
-                img.onload=function(){resolve(url);};
-                img.onerror=function(){resolve(url);};
-                img.src=url;
-              });
+            function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+            /* Preload ALL images upfront so transitions are instant */
+            var cached={},loaded=0;
+            urls.forEach(function(url){
+              var im=new Image();im.onload=im.onerror=function(){cached[url]=true;loaded++;if(loaded===urls.length)startCarousel();};im.src=url;
+            });
+            function startCarousel(){
+              /* Always start on first image (index 0) */
+              var idx=0,aActive=true;
+              a.src=urls[0];a.style.opacity='1';
+              /* Build shuffled queue (excluding first image which is already showing) */
+              var queue=urls.slice(1);shuffle(queue);
+              var qi=0;
+              /* Rock-solid 500ms interval — no async, all images pre-cached */
+              setInterval(function(){
+                var nextUrl;
+                if(qi>=queue.length){queue=urls.slice(0);shuffle(queue);qi=0;}
+                nextUrl=queue[qi++];
+                var target=aActive?b:a;
+                target.src=nextUrl;
+                if(aActive){b.style.opacity='1';a.style.opacity='0';}
+                else{a.style.opacity='1';b.style.opacity='0';}
+                aActive=!aActive;
+              },500);
             }
-            /* Seed first image — wait for it to load before starting */
-            a.src=urls[0];
-            a.onload=function(){
-              a.style.opacity='1';
-              /* Preload second image into off-screen slot */
-              var next=urls.length>1?1:0;
-              preload(urls[next]).then(function(){
-                b.src=urls[next];
-                /* Now start the steady 500ms rhythm */
-                setInterval(function(){
-                  idx++;
-                  if(idx>=urls.length){idx=0;shuffleUrls();}
-                  /* Preload upcoming image into the hidden slot first */
-                  var target=aActive?b:a;
-                  preload(urls[idx]).then(function(src){
-                    target.src=src;
-                    /* Small RAF delay so browser paints the src before fade */
-                    requestAnimationFrame(function(){
-                      if(aActive){
-                        b.style.opacity='1';a.style.opacity='0';
-                      }else{
-                        a.style.opacity='1';b.style.opacity='0';
-                      }
-                      aActive=!aActive;
-                    });
-                  });
-                },500);
-              });
-            };
           })
           .catch(function(e){console.warn('Carousel fetch failed:',e);});
       })();
@@ -1872,43 +1853,35 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
       .then(function(r){return r.json();})
       .then(function(files){
+        /* Sort alphabetically so first image is always consistent */
         var urls=files
           .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
+          .sort(function(a,b){return a.name.localeCompare(b.name);})
           .map(function(f){return f.download_url+'?v='+Date.now();});
         if(!urls.length)return;
-        for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}
-        var idx=0,aActive=true;
-        function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
-        function preloadImg(url){return new Promise(function(resolve){var im=new Image();im.onload=function(){resolve(url);};im.onerror=function(){resolve(url);};im.src=url;});}
-        imgA.src=urls[0];
-        imgA.onload=function(){
-          imgA.style.opacity='1';
-          /* Preload ALL images before starting the rhythm */
-          var loaded=0,total=Math.min(urls.length,6);
-          function preloadBatch(){
-            if(loaded>=total){startCarousel();return;}
-            preloadImg(urls[loaded]).then(function(){loaded++;preloadBatch();});
-          }
-          function startCarousel(){
-            if(urls.length>1){imgB.src=urls[1];}
-            /* Initial 1.5s pause so first image is visible before any transition */
-            setTimeout(function(){
-              setInterval(function(){
-                idx++;if(idx>=urls.length){idx=0;shuffleUrls();}
-                var target=aActive?imgB:imgA;
-                preloadImg(urls[idx]).then(function(src){
-                  target.src=src;
-                  requestAnimationFrame(function(){
-                    if(aActive){imgB.style.opacity='1';imgA.style.opacity='0';}
-                    else{imgA.style.opacity='1';imgB.style.opacity='0';}
-                    aActive=!aActive;
-                  });
-                });
-              },500);
-            },1500);
-          }
-          preloadBatch();
-        };
+        function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+        /* Preload ALL images upfront so transitions are instant */
+        var cached={},loaded=0;
+        urls.forEach(function(url){
+          var im=new Image();im.onload=im.onerror=function(){cached[url]=true;loaded++;if(loaded===urls.length)startCarousel();};im.src=url;
+        });
+        function startCarousel(){
+          /* Always start on first image */
+          var aActive=true;
+          imgA.src=urls[0];imgA.style.opacity='1';
+          var queue=urls.slice(1);shuffle(queue);
+          var qi=0;
+          /* Rock-solid 500ms — no async, all images pre-cached */
+          setInterval(function(){
+            if(qi>=queue.length){queue=urls.slice(0);shuffle(queue);qi=0;}
+            var nextUrl=queue[qi++];
+            var target=aActive?imgB:imgA;
+            target.src=nextUrl;
+            if(aActive){imgB.style.opacity='1';imgA.style.opacity='0';}
+            else{imgA.style.opacity='1';imgB.style.opacity='0';}
+            aActive=!aActive;
+          },500);
+        }
       }).catch(function(e){console.warn('Native carousel fetch failed:',e);});
   }
 
