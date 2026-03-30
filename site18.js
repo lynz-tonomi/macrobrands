@@ -1976,4 +1976,42 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
   },1500); // delay for Webflow DOM
 })();
 
+/* ─────────────────────────────────────────────
+   Section 13 — Native Tab Switching (Supporting Services)
+   ───────────────────────────────────────────── */
+(function(){
+  var nav=document.querySelector('[data-tabs-nav="supporting"]');
+  if(!nav)return;
+  var btns=nav.querySelectorAll('[data-tab]');
+  var parent=nav.parentElement;
+  if(!parent)return;
+  var panels=parent.querySelectorAll('[data-panel]');
+  if(!btns.length||!panels.length)return;
+
+  function activate(idx){
+    btns.forEach(function(b){
+      b.classList.remove('is-active');
+      b.style.color='#bbb';
+      b.style.borderBottomColor='transparent';
+    });
+    panels.forEach(function(p){
+      p.style.display='none';
+      p.classList.remove('is-active');
+    });
+    btns[idx].classList.add('is-active');
+    btns[idx].style.color='#fff';
+    btns[idx].style.borderBottomColor='#C9A84C';
+    panels[idx].style.display='block';
+    panels[idx].classList.add('is-active');
+  }
+
+  btns.forEach(function(btn,i){
+    btn.style.cursor='pointer';
+    btn.addEventListener('click',function(){activate(i);});
+  });
+
+  /* Activate first tab on load */
+  activate(0);
+})();
+
 })(); // outer guard
