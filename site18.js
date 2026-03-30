@@ -1818,4 +1818,152 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 
 })(); // end run
 
+/* ═══════════════════════════════════════════════════════════════
+   Section 12 — Populate native Webflow service sections
+   Injects carousel, images, SVG diagrams, and process cards
+   into the Webflow-native hero sections (data-role attributes).
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  var ghBase='https://lynz-tonomi.github.io/macrobrands/';
+
+  /* ── Formulation: Carousel slot ── */
+  var carouselSlot=document.querySelector('[data-role="carousel-slot"]');
+  if(carouselSlot){
+    carouselSlot.style.position='relative';
+    carouselSlot.style.overflow='hidden';
+    var imgA=document.createElement('img');
+    var imgB=document.createElement('img');
+    [imgA,imgB].forEach(function(img){
+      img.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0';
+      img.alt='Product';
+      carouselSlot.appendChild(img);
+    });
+    var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel?_='+Date.now();
+    fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
+      .then(function(r){return r.json();})
+      .then(function(files){
+        var urls=files
+          .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
+          .map(function(f){return f.download_url+'?v='+Date.now();});
+        if(!urls.length)return;
+        for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}
+        var idx=0,aActive=true;
+        imgA.src=urls[0];imgA.style.opacity='1';
+        if(urls[1])imgB.src=urls[1];
+        function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
+        setInterval(function(){
+          idx++;if(idx>=urls.length){idx=0;shuffleUrls();}
+          if(aActive){imgB.src=urls[idx];imgB.style.opacity='1';imgA.style.opacity='0';}
+          else{imgA.src=urls[idx];imgA.style.opacity='1';imgB.style.opacity='0';}
+          aActive=!aActive;
+        },500);
+      }).catch(function(e){console.warn('Native carousel fetch failed:',e);});
+  }
+
+  /* ── Formulation: Lab scientist photo ── */
+  var labSlot=document.querySelector('[data-role="lab-photo"]');
+  if(labSlot){
+    labSlot.style.position='relative';labSlot.style.overflow='hidden';
+    var labImg=document.createElement('img');
+    labImg.src=ghBase+'Lab_formulation.png';
+    labImg.alt='Lab scientist formulating';
+    labImg.style.cssText='width:100%;height:140%;object-fit:cover;object-position:center top;position:absolute;top:-20%;will-change:transform';
+    labSlot.appendChild(labImg);
+    var ticking=false;
+    function updateParallax(){
+      var rect=labSlot.getBoundingClientRect();
+      var vh=window.innerHeight||document.documentElement.clientHeight;
+      var p=(vh-rect.top)/(vh+rect.height);
+      p=Math.max(0,Math.min(1,p));
+      labImg.style.transform='translateY('+((p-0.5)*80)+'px)';
+      ticking=false;
+    }
+    window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(updateParallax);ticking=true;}},{passive:true});
+    updateParallax();
+  }
+
+  /* ── MicroThermic: Equipment SVG diagram ── */
+  var eqSlot=document.querySelector('[data-role="equipment-photo"]');
+  if(eqSlot){
+    eqSlot.style.overflow='hidden';eqSlot.style.padding='6px';eqSlot.style.background='#000';
+    /* Inject the same CSS keyframes needed by the SVG */
+    var mtStyle=document.createElement('style');
+    mtStyle.textContent='@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes scan{from{transform:translateY(-6px)}to{transform:translateY(520px)}}@keyframes fR{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}@keyframes fL{from{stroke-dashoffset:0}to{stroke-dashoffset:20}}@keyframes fD{from{stroke-dashoffset:16}to{stroke-dashoffset:0}}@keyframes fU{from{stroke-dashoffset:0}to{stroke-dashoffset:16}}@keyframes rotor{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes piston{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.5)}}@keyframes aiGlow{0%,100%{filter:drop-shadow(0 0 5px #fbbf24)}50%{filter:drop-shadow(0 0 22px #fbbf24) drop-shadow(0 0 44px #fbbf2422)}}@keyframes flicker{0%,88%,100%{opacity:1}90%{opacity:.2}95%{opacity:.7}}.n-fR{stroke-dasharray:7 5;animation:fR .75s linear infinite}.n-fL{stroke-dasharray:7 5;animation:fL .75s linear infinite}.n-fD{stroke-dasharray:7 5;animation:fD .75s linear infinite}.n-fU{stroke-dasharray:7 5;animation:fU .75s linear infinite}.n-fRs{stroke-dasharray:5 4;animation:fR 1.1s linear infinite}.n-fDs{stroke-dasharray:5 4;animation:fD 1.1s linear infinite}.n-fUs{stroke-dasharray:5 4;animation:fU 1.1s linear infinite}.n-fCd{stroke-dasharray:5 4;animation:fD 1.2s linear infinite}.n-fCu{stroke-dasharray:5 4;animation:fU 1.2s linear infinite}.n-fSt{stroke-dasharray:6 4;animation:fD .65s linear infinite}.n-tc{animation:flicker 6s ease-in-out infinite}.n-psi{animation:flicker 7s ease-in-out 1.8s infinite}.n-aiG{animation:aiGlow 2.4s ease-in-out infinite}';
+    document.head.appendChild(mtStyle);
+    /* Use the same inline SVG from the MicroThermic tab */
+    eqSlot.innerHTML='<svg viewBox="0 0 1400 470" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:10px"> <defs> <linearGradient id="ngPre" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#14532d"/><stop offset="100%" stop-color="#052e16"/> </linearGradient> <linearGradient id="ngFin" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#3b0000"/> </linearGradient> <linearGradient id="ngCool" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="rgba(255,255,255,0.14)"/><stop offset="100%" stop-color="rgba(255,255,255,0.06)"/> </linearGradient> <linearGradient id="ngCond" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="rgba(255,255,255,0.22)"/><stop offset="100%" stop-color="rgba(255,255,255,0.10)"/> </linearGradient> <filter id="ngO"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter> <filter id="ngY"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter> <filter id="ngC"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter> </defs> <text x="18" y="22" fill="#ffffff" font-family="JetBrains Mono" font-size="8" letter-spacing="3">DUAL PRODUCT INLET</text> <text x="18" y="98" fill="#ffffff" font-family="JetBrains Mono" font-size="8" letter-spacing="3">PRODUCT PUMP</text> <rect x="18" y="30" width="74" height="28" rx="2" fill="#000000" stroke="#f59e0b" stroke-width="1"/> <text x="55" y="43" fill="#f59e0b" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">CITY WATER</text> <text x="55" y="53" fill="#f59e0b" font-family="JetBrains Mono" font-size="7" text-anchor="middle">SOURCE</text> <line x1="92" y1="44" x2="118" y2="44" stroke="#ffffff" stroke-width="4"/> <line x1="92" y1="44" x2="118" y2="44" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.05s"/> <rect x="112" y="36" width="22" height="17" rx="2" fill="#000000" stroke="#ffffff" stroke-width="1"/> <line x1="116" y1="40" x2="130" y2="49" stroke="#f59e0b" stroke-width="1.5"/> <line x1="130" y1="40" x2="116" y2="49" stroke="#f59e0b" stroke-width="1.5"/> <text x="123" y="63" fill="#ffffff" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">RUN DRY VALVE</text> <line x1="123" y1="53" x2="123" y2="190" stroke="#0a1525" stroke-width="6"/> <line x1="123" y1="53" x2="123" y2="190" stroke="#ffffff" stroke-width="3"/> <path d="M123,53 L123,190" stroke="#f97316" fill="none" class="n-fD"/> <line x1="85" y1="225" x2="990" y2="225" stroke="#080f1e" stroke-width="9"/> <line x1="85" y1="225" x2="990" y2="225" stroke="#ffffff" stroke-width="5"/> <line x1="85" y1="225" x2="155" y2="225" stroke="#f97316" fill="none" class="n-fR"/> <line x1="215" y1="225" x2="275" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.12s"/> <line x1="347" y1="225" x2="383" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.22s"/> <line x1="457" y1="225" x2="530" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.32s"/> <line x1="590" y1="225" x2="665" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.42s"/> <line x1="720" y1="225" x2="798" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.52s"/> <line x1="836" y1="225" x2="990" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.62s"/> <circle cx="120" cy="225" r="19" fill="#0c1828" stroke="#f97316" stroke-width="2" filter="url(#ngO)"/> <g style="transform-origin:120px 225px;animation:rotor 1.3s linear infinite;"> <line x1="120" y1="213" x2="120" y2="237" stroke="#f97316" stroke-width="2.5"/> <line x1="108" y1="225" x2="132" y2="225" stroke="#f97316" stroke-width="2.5"/> <line x1="111" y1="216" x2="129" y2="234" stroke="#f97316" stroke-width="1.5" opacity=".5"/> <line x1="129" y1="216" x2="111" y2="234" stroke="#f97316" stroke-width="1.5" opacity=".5"/> </g> <text x="120" y="252" fill="#f97316" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">PUMP</text> <rect x="155" y="188" width="60" height="74" rx="2" fill="url(#ngPre)" stroke="#22c55e" stroke-width="1.5"/> <line x1="155" y1="262" x2="215" y2="188" stroke="#4ade80" stroke-width="2.5" opacity=".75"/> <text x="185" y="177" fill="#4ade80" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">PREHEATER</text> <g class="n-tc" filter="url(#ngY)"> <circle cx="150" cy="178" r="10" fill="#000000" stroke="#fbbf24" stroke-width="1.5"/> <text x="150" y="182" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <rect x="275" y="185" width="72" height="80" rx="2" fill="url(#ngFin)" stroke="#f87171" stroke-width="1.5"/> <line x1="275" y1="265" x2="347" y2="185" stroke="#fca5a5" stroke-width="3" opacity=".8"/> <text x="311" y="174" fill="#f87171" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">FINAL HEATER</text> <path d="M383,225 L383,128 L457,128 L457,225" fill="none" stroke="#ffffff" stroke-width="5"/> <rect x="360" y="108" width="120" height="38" rx="3" fill="#000000" stroke="#ef4444" stroke-width="2"/> <text x="420" y="124" fill="#ef4444" font-family="JetBrains Mono" font-size="9.5" text-anchor="middle" font-weight="700">HOLD TUBE BANK</text> <text x="420" y="138" fill="#ef4444" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle" opacity=".6">STERILIZATION HOLD</text> <rect x="530" y="187" width="60" height="76" rx="2" fill="url(#ngCool)" stroke="#818cf8" stroke-width="1.5"/> <line x1="530" y1="187" x2="590" y2="263" stroke="#a5b4fc" stroke-width="2.5" opacity=".8"/> <text x="560" y="176" fill="#818cf8" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">COOLER</text> <rect x="617" y="204" width="90" height="42" rx="19" fill="#080f1e" stroke="#f97316" stroke-width="1.5" filter="url(#ngO)"/> <g style="transform-origin:637px 225px;animation:piston .5s ease-in-out infinite"> <rect x="631" y="211" width="8" height="28" rx="2" fill="#f97316" opacity=".85"/> </g> <g style="transform-origin:657px 225px;animation:piston .5s ease-in-out .17s infinite"> <rect x="651" y="211" width="8" height="28" rx="2" fill="#f97316" opacity=".85"/> </g> <g style="transform-origin:677px 225px;animation:piston .5s ease-in-out .34s infinite"> <rect x="671" y="211" width="8" height="28" rx="2" fill="#f97316" opacity=".85"/> </g> <text x="662" y="260" fill="#f97316" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">IN-LINE HOMOGENIZER</text> <rect x="720" y="187" width="60" height="76" rx="2" fill="url(#ngCool)" stroke="#818cf8" stroke-width="1.5"/> <line x1="720" y1="187" x2="780" y2="263" stroke="#a5b4fc" stroke-width="2.5" opacity=".8"/> <text x="750" y="176" fill="#818cf8" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">COOLER</text> <rect x="994" y="150" width="390" height="238" rx="4" fill="#000000" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="9 4"/> <text x="1189" y="410" fill="#3b82f6" font-family="JetBrains Mono" font-size="9" text-anchor="middle" letter-spacing="3" font-weight="700">CLEAN-FILL HOOD &amp; ACCUFILL</text> <line x1="1097" y1="238" x2="1225" y2="238" stroke="#ffffff" stroke-width="3"/> <line x1="1097" y1="238" x2="1225" y2="238" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.82s"/> <rect x="1122" y="155" width="104" height="112" rx="3" fill="url(#ngCond)" stroke="#60a5fa" stroke-width="2"/> <text x="1174" y="283" fill="#93c5fd" font-family="JetBrains Mono" font-size="9.5" text-anchor="middle" font-weight="700">CONDENSER</text> <line x1="1051" y1="264" x2="1051" y2="445" stroke="#0e4a5a" stroke-width="3"/> <path d="M1051,264 L1051,445" stroke="#22d3ee" fill="none" class="n-fSt" filter="url(#ngC)"/> <polygon points="1051,453 1041,441 1061,441" fill="#22d3ee" filter="url(#ngC)"/> <text x="1051" y="466" fill="#22d3ee" font-family="Bebas Neue,JetBrains Mono" font-size="15" text-anchor="middle" letter-spacing="6" filter="url(#ngC)">STERILE PRODUCT OUTLET</text> <text x="22" y="392" fill="#22c55e" font-family="JetBrains Mono" font-size="8" opacity=".7">TEMP_IN &#9654; 142.4°C</text> <text x="22" y="405" fill="#3b82f6" font-family="JetBrains Mono" font-size="8" opacity=".7">CHILL_T &#9654; 4.2°C</text> <text x="22" y="418" fill="#f97316" font-family="JetBrains Mono" font-size="8" opacity=".7">FLOW_RT &#9654; 18.6 L/s</text> <text x="22" y="431" fill="#fbbf24" font-family="JetBrains Mono" font-size="8" opacity=".7">HOLD_TM &#9654; 4.0 sec</text> <text x="22" y="444" fill="#818cf8" font-family="JetBrains Mono" font-size="8" opacity=".7">HOMO_PR &#9654; 280 bar</text> <path d="M8,8 L8,26 M8,8 L26,8" fill="none" stroke="#ffffff" stroke-width="1.5"/> <path d="M1392,8 L1392,26 M1392,8 L1374,8" fill="none" stroke="#ffffff" stroke-width="1.5"/> <path d="M8,462 L8,444 M8,462 L26,462" fill="none" stroke="#ffffff" stroke-width="1.5"/> <path d="M1392,462 L1392,444 M1392,462 L1374,462" fill="none" stroke="#ffffff" stroke-width="1.5"/> </svg>';
+  }
+
+  /* ── Co-Packing: 6 Process Cards ── */
+  var cpGrid=document.querySelector('[data-role="cp-cards"]');
+  if(cpGrid){
+    /* Inject CSS for card animations */
+    var cpS=document.createElement('style');
+    cpS.textContent='@keyframes ncpDraw{to{stroke-dashoffset:0}}@keyframes ncpFade{from{opacity:0}to{opacity:1}}@keyframes ncpFlow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}@keyframes ncpPop{0%,100%{opacity:0}30%,70%{opacity:1}}@keyframes ncpSwell{0%{transform:translateY(0)scaleY(1);opacity:.8}45%{transform:translateY(-4px)scaleY(1.03);opacity:1}100%{transform:translateY(0)scaleY(1);opacity:.8}}@keyframes ncpWisp{0%{transform:translateY(0);opacity:.7}100%{transform:translateY(-14px);opacity:0}}@keyframes ncpDrip{0%,100%{opacity:0;transform:scaleY(0)}30%,70%{opacity:1;transform:scaleY(1)}}@keyframes ncpSpin{to{transform:rotate(360deg)}}@keyframes ncpBelt{from{stroke-dashoffset:36}to{stroke-dashoffset:0}}@keyframes ncpSweep{0%{transform:rotate(-35deg)}55%{transform:rotate(40deg)}100%{transform:rotate(-35deg)}}.ncp-d{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:ncpDraw 1.1s cubic-bezier(.4,0,.15,1) forwards}.ncp-glow{fill:none;stroke:#C9A84C;stroke-width:1;opacity:0;animation:ncpFade .6s ease 1s forwards}.ncp-fi{opacity:0;animation:ncpFade .4s ease forwards}.ncp-pO{stroke:#f97316;stroke-width:2.5;stroke-dasharray:10 6;fill:none;animation:ncpFlow .5s linear infinite;animation-delay:2s}.ncp-liq{transform-box:fill-box;transform-origin:bottom center;animation:ncpSwell 3.5s ease-in-out infinite;animation-delay:2s}.ncp-ws{animation:ncpWisp 2.2s ease-out infinite;animation-delay:2s}.ncp-ws1{animation:ncpWisp 2.2s ease-out .7s infinite;animation-delay:2.7s}.ncp-drip{transform-box:fill-box;transform-origin:top center;animation:ncpDrip 1.4s ease-in-out infinite;animation-delay:2s;opacity:0}.ncp-imp{transform-box:fill-box;transform-origin:center;animation:ncpSpin 1s linear infinite;animation-delay:2s}.ncp-belt{animation:ncpBelt .7s linear infinite;animation-delay:2s}.ncp-ndl{transform-box:fill-box;transform-origin:50% 100%;animation:ncpSweep 3.2s ease-in-out infinite;animation-delay:2s}.ncp-lbl{fill:rgba(255,255,255,.5);font-family:monospace;font-size:9px;text-anchor:middle}.ncp-lbl2{fill:#f97316;font-family:monospace;font-size:8px;text-anchor:middle;fill-opacity:.6}.ncp-card{background:rgba(255,255,255,.03);border:1px solid #222;border-radius:14px;padding:24px;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s}.ncp-card:hover{border-color:#C9A84C;transform:translateY(-4px)}.ncp-card.ncp-active{border-color:#C9A84C;box-shadow:0 0 20px rgba(201,168,76,.15)}.ncp-expand{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s ease;opacity:0}.ncp-expand.ncp-open{max-height:400px;opacity:1}';
+    document.head.appendChild(cpS);
+
+    var ncpProcs=[
+      {title:'Tunnel Pasteurization',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><rect x="6" y="14" width="52" height="22" rx="3" class="ncp-d" style="--l:160;animation-delay:.2s"/><line x1="6" y1="25" x2="58" y2="25" class="ncp-d" style="--l:52;animation-delay:.5s"/><rect x="14" y="18" width="8" height="14" rx="2" class="ncp-d" style="--l:48;animation-delay:.7s"/><rect x="28" y="18" width="8" height="14" rx="2" class="ncp-d" style="--l:48;animation-delay:.85s"/><rect x="42" y="18" width="8" height="14" rx="2" class="ncp-d" style="--l:48;animation-delay:1s"/><path d="M18,10 Q18,6 22,6 M32,10 Q32,6 36,6 M46,10 Q46,6 50,6" class="ncp-glow" stroke-width="1.2"/></svg>',
+       desc:'Continuous hot-water tunnel for high-acid beverages \u2014 juice, tea, kombucha.',
+       specs:['High-acid (pH < 4.6)','Glass & PET','12\u201364 oz','Continuous']},
+      {title:'Retort Processing',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><ellipse cx="12" cy="24" rx="6" ry="16" class="ncp-d" style="--l:100;animation-delay:.2s"/><rect x="12" y="8" width="40" height="32" rx="2" class="ncp-d" style="--l:150;animation-delay:.4s"/><ellipse cx="52" cy="24" rx="6" ry="16" class="ncp-d" style="--l:100;animation-delay:.6s"/><circle cx="32" cy="24" r="3" class="ncp-d" style="--l:20;animation-delay:.9s"/><path d="M24,16 Q26,12 28,16 M34,16 Q36,12 38,16" class="ncp-glow" stroke-width="1.5"/></svg>',
+       desc:'Batch pressure-cooking for low-acid shelf-stable products \u2014 soups, broths, plant milks.',
+       specs:['Low-acid (pH \u2265 4.6)','Cans: 8\u201312oz','250\u00b0F+','FDA filed']},
+      {title:'ESL Bottling',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="ncp-d" style="--l:120;animation-delay:.2s"/><line x1="22" y1="28" x2="42" y2="28" class="ncp-d" style="--l:20;animation-delay:.6s"/><rect x="26" y="1" width="12" height="4" rx="1" class="ncp-d" style="--l:36;animation-delay:.4s"/><path d="M16,12 Q10,24 16,36" class="ncp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/><path d="M48,12 Q54,24 48,36" class="ncp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/><circle cx="10" cy="18" r="2" class="ncp-glow" fill="#C9A84C" stroke="none"/><circle cx="54" cy="30" r="2" class="ncp-glow" fill="#C9A84C" stroke="none"/></svg>',
+       desc:'Extended Shelf Life \u2014 light pasteurization + clean-fill for 180\u2013365 day refrigerated shelf life.',
+       specs:['Refrigerated','180\u2013365 day','PET & HDPE','Accelerated Shelf Life Study']},
+      {title:'Aseptic Bottling',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="ncp-d" style="--l:120;animation-delay:.2s"/><rect x="26" y="1" width="12" height="4" rx="1" class="ncp-d" style="--l:36;animation-delay:.4s"/><line x1="32" y1="10" x2="32" y2="38" class="ncp-d" style="--l:28;animation-delay:.7s" stroke-opacity=".3"/><path d="M14,6 L20,14 M50,6 L44,14 M14,42 L20,34 M50,42 L44,34" class="ncp-glow" stroke-width="1.5"/></svg>',
+       desc:'UHT sterilization + aseptic PET filling. No preservatives \u2014 12+ month ambient shelf life.',
+       specs:['Ambient','PET 2\u201364oz','No preservatives','12+ months']},
+      {title:'Aseptic Bag-in-Box',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><rect x="8" y="6" width="48" height="36" rx="2" class="ncp-d" style="--l:175;animation-delay:.2s"/><path d="M16,12 Q32,18 48,12 L46,36 Q32,30 18,36 Z" class="ncp-d" style="--l:120;animation-delay:.5s" stroke-opacity=".5"/><circle cx="44" cy="10" r="3" class="ncp-d" style="--l:20;animation-delay:.8s"/><line x1="44" y1="10" x2="56" y2="4" class="ncp-d" style="--l:16;animation-delay:.9s"/></svg>',
+       desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail \u2014 2L\u201325L.',
+       specs:['2L\u201325L','Foodservice','Concentrate & RTD','Aseptic valve']},
+      {title:'Tetra Pak',
+       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M18,44 L18,8 L32,2 L46,8 L46,44 Z" class="ncp-d" style="--l:140;animation-delay:.2s"/><line x1="18" y1="8" x2="46" y2="8" class="ncp-d" style="--l:28;animation-delay:.5s"/><path d="M18,8 L32,2 L46,8" class="ncp-d" style="--l:36;animation-delay:.6s"/><rect x="26" y="14" width="12" height="8" rx="1" class="ncp-d" style="--l:44;animation-delay:.8s" stroke-opacity=".4"/><circle cx="32" cy="18" r="2" class="ncp-glow" fill="#C9A84C" stroke="none"/></svg>',
+       desc:'Multi-layer carton packaging for dairy alternatives, juice, broth \u2014 200mL\u20131L.',
+       specs:['Carton','200mL\u20131L','Ambient','Sustainable']}
+    ];
+
+    /* Build: row1 (3 cards) → expansion slot → row2 (3 cards) */
+    var row1=document.createElement('div');row1.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px';
+    var expSlot=document.createElement('div');expSlot.className='ncp-expand';expSlot.style.cssText='margin:16px 0;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid transparent;padding:0 24px;grid-column:1/-1';
+    var row2=document.createElement('div');row2.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px';
+    var activeIdx=-1,allCards=[];
+
+    function openSlot(idx){
+      if(activeIdx===idx){expSlot.className='ncp-expand';expSlot.style.borderColor='transparent';allCards[idx].classList.remove('ncp-active');activeIdx=-1;return;}
+      if(activeIdx>=0)allCards[activeIdx].classList.remove('ncp-active');
+      activeIdx=idx;allCards[idx].classList.add('ncp-active');
+      expSlot.innerHTML='<div style="padding:20px 0"><div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;letter-spacing:.05em">'+ncpProcs[idx].title.toUpperCase()+' \u2014 PROCESS FLOW</div><div style="color:#666;font-size:.8rem;padding:20px 0;text-align:center">Expand diagram coming soon</div></div>';
+      expSlot.style.borderColor='#222';expSlot.className='ncp-expand ncp-open';
+    }
+
+    ncpProcs.forEach(function(p,pi){
+      var card=document.createElement('div');
+      card.className='ncp-card';
+      card.style.cssText+='opacity:0;animation:ncpFade .5s ease '+(.15+pi*.1)+'s forwards';
+      card.innerHTML=
+        '<div style="margin-bottom:12px">'+p.svg+'</div>'+
+        '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px">'+p.title+'</div>'+
+        '<p style="font-size:.82rem;line-height:1.5;color:#888;margin-bottom:10px">'+p.desc+'</p>'+
+        '<ul style="list-style:none;padding:0;margin:0">'+p.specs.map(function(s){return '<li style="padding:2px 0;color:#666;font-size:.78rem"><span style="color:#C9A84C;margin-right:6px">\u25b8</span>'+s+'</li>'}).join('')+'</ul>';
+      card.onclick=function(){openSlot(pi)};
+      allCards.push(card);
+      if(pi<3)row1.appendChild(card);else row2.appendChild(card);
+    });
+
+    /* Clear existing Webflow placeholder children */
+    cpGrid.innerHTML='';
+    cpGrid.style.display='block';
+    cpGrid.appendChild(row1);
+    cpGrid.appendChild(expSlot);
+    cpGrid.appendChild(row2);
+  }
+})();
+
 })(); // outer guard
