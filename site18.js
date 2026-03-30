@@ -1,5 +1,5 @@
 (function(){if(window._macroVersion>=18)return;window._macroVersion=18;
-/* MACRO Brands — Master Site Script v18.11 (fix: Lottie hover fill + preserve blue pills + text color) */
+/* MACRO Brands — Master Site Script v18.1 (no scaffold — native Webflow content) */
 (function run(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);return;}
 
@@ -240,12 +240,15 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 
   // Inject global liquid-fill CTA style for all pages
   var ctaCSS=document.createElement('style');
-  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:10px 28px;border-radius:100px;font-weight:600;font-size:13px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;font-family:Inter,sans-serif;background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;transition:border-color .3s}.cta-liquid-fill span{position:relative;z-index:2}.cta-liquid-fill .fill-bg{display:none}.cta-liquid-fill:hover{border-color:rgba(255,255,255,0.6)}.cta-gold{background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff}.cta-outline{background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff}';
+  ctaCSS.textContent='.cta-liquid-fill{position:relative;overflow:hidden;display:inline-block;padding:16px 40px;border-radius:50px;font-weight:700;font-size:1.1rem;text-decoration:none;cursor:pointer;border:none;font-family:Inter,sans-serif}.cta-liquid-fill span{position:relative;z-index:1}.cta-liquid-fill .fill-bg{position:absolute;bottom:0;left:0;width:100%;height:0;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px}.cta-liquid-fill:hover .fill-bg{height:100%}.cta-gold{background:#C9A84C;color:#1A1A1A}.cta-gold .fill-bg{background:#fff}.cta-gold:hover span{color:#1A1A1A}.cta-outline{background:transparent;border:2px solid #C9A84C;color:#C9A84C}.cta-outline .fill-bg{background:#C9A84C}.cta-outline:hover span{color:#1A1A1A}'+
+  /* GPU-accelerated parallax performance */
+  '.section-light,.section-dark,.section-dark-alt,[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=faq],[id=contact-cta]{will-change:clip-path;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;perspective:1200px}'+
+  '.section-light h2,.section-dark h2,.section-dark-alt h2,.section-light p,.section-dark p,.section-dark-alt p,.card-light,.service-card{will-change:transform,opacity;backface-visibility:hidden;-webkit-backface-visibility:hidden}';
   document.head.appendChild(ctaCSS);
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:auto;width:256px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
+    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
     // Make any parent container transparent
     var nlParent=nl.parentElement;
     if(nlParent&&nlParent!==document.body){
@@ -258,24 +261,6 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 (function(){
   // Hide video-hero-media (replaced by canvas frame scrubber)
   var vm=document.querySelector('.video-hero-media');if(vm)vm.style.display='none';
-
-  // Rename services heading
-  var sd=document.querySelector('.section-dark');
-  if(sd){
-    var sdH2=sd.querySelector('h2');
-    if(sdH2&&sdH2.textContent.match(/World Class/i))sdH2.textContent='Our Services';
-  }
-
-  // Fix "Our Services" heading legibility — make it white
-  if(sd){
-    var sdH2s=sd.querySelectorAll('h2');
-    sdH2s.forEach(function(h){h.style.color='#fff'});
-  }
-
-  // Fix light section card titles — dark text on light backgrounds
-  document.querySelectorAll('.section-light .card-title').forEach(function(el){
-    el.style.color='#1a1a1a';
-  });
 
   // Hide old services-grid (replaced by tabs)
   var oldGrid=document.querySelector('.services-grid');
@@ -291,15 +276,15 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
   setTimeout(function(){
-  /* Build panels off-DOM — no longer depends on .section-dark existing.
-     Panels are exported via window._svcPanels for Section 13 to inject
-     into native Webflow tab panels. If .section-dark exists, also render there. */
   var sd=document.querySelector('.section-dark');
-  var cw=sd||document.createElement('div'); // off-DOM fallback
+  if(!sd)return;
+
+  // Find or create content wrapper inside section-dark
+  var cw=sd;
 
   // Tab data — short names with canvas animated icons
   var tabs=[
-    {title:'Formulation',desc:'Your recipe is just the starting point. Our food scientists reverse-engineer your kitchen formula and rebuild it for commercial production — adjusting pH, water activity, viscosity, and emulsion stability so it survives thermal processing without sacrificing flavor or mouthfeel. Whether you\u2019re targeting retort, aseptic, tunnel pasteurization, or cold fill, we dial in every ingredient ratio, source clean-label alternatives when needed, and run accelerated shelf-life studies so you go into your first production run with a formula that\u2019s locked, validated, and ready to scale.',bullets:['Formulation optimization','Ingredient sourcing guidance','Flavor & stability profiling','Clean label solutions','Sensory evaluation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#fff';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}}},
+    {title:'Formulation',desc:'From kitchen recipe to production-ready formula. Our food scientists optimize your formulation for the target manufacturing process — retort, aseptic, tunnel pasteurization, or cold fill.',bullets:['Formulation optimization','Ingredient sourcing guidance','Flavor & stability profiling','Clean label solutions','Sensory evaluation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#fff';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}}},
     {title:'MicroThermic',desc:'Send us a half-gallon sample. We fill it in cans, process it through our MicroThermic or JBT Retort system, and confirm sensory and emulsion stability before you commit to production.',bullets:['MicroThermic validation','JBT Static Retort testing','Sensory & emulsion stability','High acid & low acid','Can format validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';/* Thermometer */ctx.beginPath();ctx.moveTo(-4,-26);ctx.lineTo(-4,8);ctx.arc(0,14,10,Math.PI*.8,Math.PI*.2);ctx.lineTo(4,8);ctx.lineTo(4,-26);ctx.arc(0,-26,4,0,Math.PI,true);ctx.stroke();/* Mercury rising */var mH=20+Math.sin(t*2)*8;ctx.fillStyle='#fff';ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(0,14,6,0,Math.PI*2);ctx.fill();ctx.fillRect(-2,14-mH,4,mH);/* Heat waves */ctx.globalAlpha=.4;ctx.lineWidth=1.5;for(var i=0;i<3;i++){var wx=14+i*6;var wave=Math.sin(t*4+i*1.5)*3;ctx.beginPath();ctx.moveTo(wx,0);ctx.quadraticCurveTo(wx+wave,-8,wx,-16);ctx.stroke()}}},
     {title:'Process Dev',desc:'We determine the right thermal process for your product. Scale-up from bench to pilot to production with validated parameters at every step.',bullets:['Thermal process design','Scale-up protocols','Emulsion & stability testing','Shelf life studies','Process validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.rotate(t*.8);var teeth=8,oR=20,iR=14;ctx.beginPath();for(var i=0;i<teeth;i++){var a1=i/teeth*Math.PI*2,a2=(i+.3)/teeth*Math.PI*2,a3=(i+.5)/teeth*Math.PI*2,a4=(i+.8)/teeth*Math.PI*2;if(i===0)ctx.moveTo(Math.cos(a1)*iR,Math.sin(a1)*iR);ctx.lineTo(Math.cos(a2)*oR,Math.sin(a2)*oR);ctx.lineTo(Math.cos(a3)*oR,Math.sin(a3)*oR);ctx.lineTo(Math.cos(a4)*iR,Math.sin(a4)*iR)}ctx.closePath();ctx.stroke();ctx.beginPath();ctx.arc(0,0,6,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff';ctx.globalAlpha=.3;ctx.beginPath();ctx.arc(0,0,3,0,Math.PI*2);ctx.fill()}},
     {title:'PAL / Heat Pen',desc:'Our Process Authority (30 years experience) conducts heat penetration studies and validates your thermal process for FDA compliance. Required for all shelf-stable low-acid beverages.',bullets:['Heat penetration testing','21 CFR 113/114 compliance','Scheduled process filing','Inoculated pack studies','LACF validation'],drawIcon:function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';var sc=1+Math.sin(t*2)*.04;ctx.scale(sc,sc);ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(20,-16);ctx.lineTo(20,6);ctx.quadraticCurveTo(20,26,0,30);ctx.quadraticCurveTo(-20,26,-20,6);ctx.lineTo(-20,-16);ctx.closePath();ctx.stroke();ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-9,2);ctx.lineTo(-3,12);ctx.lineTo(12,-8);ctx.stroke();ctx.globalAlpha=Math.sin(t*4)*.1+.06;ctx.strokeStyle='#fff';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(20,-16);ctx.lineTo(20,6);ctx.quadraticCurveTo(20,26,0,30);ctx.quadraticCurveTo(-20,26,-20,6);ctx.lineTo(-20,-16);ctx.closePath();ctx.stroke()}},
@@ -354,10 +339,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         /* Bottom row: beaker left, parallax scientist right */
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
@@ -393,44 +378,41 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
          To add images: drop any .png/.jpg into the repo's carousel/ folder.
          They will appear automatically on next page load (no code changes needed). */
       (function(){
-        var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel?_='+Date.now();
+        var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel';
         fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
           .then(function(r){return r.json();})
           .then(function(files){
-            /* Filter to image files, sort alphabetically so first image is always consistent */
+            /* Filter to image files only, grab the raw download URL */
             var urls=files
               .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
-              .sort(function(a,b){return a.name.localeCompare(b.name);})
-              .map(function(f){return f.download_url+'?v='+Date.now();});
+              .map(function(f){return f.download_url;});
             if(!urls.length)return;
+            /* Fisher-Yates shuffle for random order every load */
+            for(var i=urls.length-1;i>0;i--){
+              var j=Math.floor(Math.random()*(i+1));
+              var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;
+            }
+            var idx=0,aActive=true;
             var a=document.getElementById('carousel-img-a');
             var b=document.getElementById('carousel-img-b');
             if(!a||!b)return;
-            function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
-            /* Preload ALL images upfront so transitions are instant */
-            var cached={},loaded=0;
-            urls.forEach(function(url){
-              var im=new Image();im.onload=im.onerror=function(){cached[url]=true;loaded++;if(loaded===urls.length)startCarousel();};im.src=url;
-            });
-            function startCarousel(){
-              /* Always start on first image (index 0) */
-              var idx=0,aActive=true;
-              a.src=urls[0];a.style.opacity='1';
-              /* Build shuffled queue (excluding first image which is already showing) */
-              var queue=urls.slice(1);shuffle(queue);
-              var qi=0;
-              /* Rock-solid 500ms interval — no async, all images pre-cached */
-              setInterval(function(){
-                var nextUrl;
-                if(qi>=queue.length){queue=urls.slice(0);shuffle(queue);qi=0;}
-                nextUrl=queue[qi++];
-                var target=aActive?b:a;
-                target.src=nextUrl;
-                if(aActive){b.style.opacity='1';a.style.opacity='0';}
-                else{a.style.opacity='1';b.style.opacity='0';}
-                aActive=!aActive;
-              },500);
-            }
+            /* Seed first image */
+            a.src=urls[0];a.style.opacity='1';
+            if(urls[1])b.src=urls[1];
+            /* Crossfade every 500 ms — re-shuffle when cycle completes */
+            function shuffleUrls(){for(var i=urls.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;}}
+            setInterval(function(){
+              idx++;
+              if(idx>=urls.length){idx=0;shuffleUrls();}
+              if(aActive){
+                b.src=urls[idx];
+                b.style.opacity='1';a.style.opacity='0';
+              }else{
+                a.src=urls[idx];
+                a.style.opacity='1';b.style.opacity='0';
+              }
+              aActive=!aActive;
+            },500);
           })
           .catch(function(e){console.warn('Carousel fetch failed:',e);});
       })();
@@ -443,10 +425,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">MicroThermic Processing</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">Our in-house MicroThermics AI Series UHT/HTST processor bridges the gap between lab development and commercial production. Fully automated with both direct injection and indirect heat transfer — send us a half-gallon sample and we validate your thermal process before you commit to a full run.</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         /* Bottom row: photo left (sized to match caps card), capabilities right */
         '<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;align-items:start">'+
@@ -478,7 +460,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">Process Development</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">We design, validate, and document your complete production process — from ingredient prep through packaging and palletizing. Every step is mapped so your product runs flawlessly at scale.</p>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         /* 4-phase pipeline with connecting arrows */
         '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative">';
@@ -530,10 +512,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
           tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started →</span></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         '<div id="pal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
           '<div style="background:transparent;border-radius:12px;padding:12px 16px 8px;border:1px solid #222;overflow:hidden">'+
@@ -694,10 +676,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
           '<div id="icon-slot-'+i+'"></div>'+
           '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
           '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
+          '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
           tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">✓</span> '+b+'</li>'}).join('')+
           '</ul>'+
-          '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started \u2192</span></a>'+
+          '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
           /* Left: animated production line SVG */
@@ -1003,7 +985,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         '</div>'+
         /* Bullet capabilities in 2 columns */
         '<div style="max-width:800px;margin:0 auto 36px">'+
-          '<ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
+          '<ul style="list-style:none;padding:0;margin:0;columns:2;column-gap:32px">'+
             tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
           '</ul>'+
         '</div>'+
@@ -1031,10 +1013,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         '<div id="icon-slot-'+i+'"></div>'+
         '<h3 style="font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em">'+tab.title+'</h3>'+
         '<p style="font-size:1.05rem;line-height:1.7;color:#999;margin-bottom:24px;max-width:800px">'+tab.desc+'</p>'+
-        '<ul style="list-style:none;padding:0;margin:0 0 24px 0;display:flex;flex-wrap:wrap;gap:8px 20px">'+
+        '<ul style="list-style:none;padding:0;margin:0 0 24px 0;columns:2;column-gap:32px">'+
           tab.bullets.map(function(b){return '<li style="padding:8px 0;color:#999;font-size:.95rem;display:flex;align-items:center;gap:10px"><span style="color:#C9A84C">\u2713</span> '+b+'</li>'}).join('')+
         '</ul>'+
-        '<a href="/contact" class="cta-liquid-fill cta-outline svc-cta-btn" style="text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:2">Get Started \u2192</span></a>'+
+        '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started \u2192</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
       '</div>';
     }
     tabContent.appendChild(panel);
@@ -1064,7 +1046,11 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
         requestAnimationFrame(animIcon);
       }
       animIcon();
-      // White Lottie liquid fill on Get Started buttons — wired in Section 9
+      // Liquid fill on Get Started buttons
+      panel.querySelectorAll('.cta-outline').forEach(function(a){
+        var fb=a.querySelector('.fill-bg');
+        if(fb){a.onmouseenter=function(){fb.style.height='100%';a.querySelector('span').style.color='#1A1A1A'};a.onmouseleave=function(){fb.style.height='0';a.querySelector('span').style.color='#C9A84C'}}
+      });
     };
 
     btn.onmouseenter=function(){if(btn.style.color!=='rgb(255, 255, 255)')btn.style.color='#ccc'};
@@ -1073,10 +1059,6 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 
   // Activate first tab
   buttons[0].onclick();
-
-  // Export panels for native Webflow tab integration (Section 13)
-  window._svcPanels=panels;
-  window._svcButtons=buttons;
 
   // Co-Packing process cards with expandable SVG diagrams (index 5)
   if(panels.length>5){
@@ -1147,8 +1129,6 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
        specs:['Carton','200mL\u20131L','Ambient','Sustainable'],
        diagram:'<svg viewBox="0 0 900 240" width="100%"><defs><filter id="g6o" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="g6b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><marker id="m6" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0,6 3,0 6" fill="#f97316"/></marker></defs><line x1="10" y1="218" x2="880" y2="218" stroke="white" stroke-width=".7" stroke-opacity=".05" class="cp-d" style="--l:870;animation-delay:0s"/><rect x="22" y="50" width="56" height="124" rx="8" class="cp-d" style="--l:360;animation-delay:0.1s"/><path d="M22,50 Q50,34 78,50" class="cp-d" style="--l:74;animation-delay:0.15000000000000002s"/><rect x="27" y="112" width="46" height="56" rx="3" stroke="#38bdf8" stroke-width="1" stroke-opacity=".35" fill="none" class="cp-fi" style="animation-delay:1.1s"/><rect x="28" y="140" width="44" height="31" rx="2" fill="#38bdf8" fill-opacity=".18" class="cp-liq"/><text x="50" y="205" class="cp-lbl">PRODUCT</text><text x="50" y="216" class="cp-lbl" fill-opacity=".4">TANK</text><line x1="78" y1="120" x2="128" y2="120" stroke="white" stroke-width="1.5" stroke-opacity=".2" class="cp-d" style="--l:50;animation-delay:0.3s"/><line x1="78" y1="120" x2="128" y2="120" class="cp-pO" filter="url(#g6o)"/><polygon points="103,120 95,116 95,124" fill="#f97316" class="cp-ap" filter="url(#g6o)"/><rect x="128" y="48" width="90" height="124" rx="8" class="cp-d" style="--l:428;animation-delay:.4s"/><path d="M140,68 Q165,62 165,80 Q165,98 140,90 Q165,82 165,100 Q165,118 140,110 Q165,102 165,120 Q165,138 140,130" stroke="#f97316" stroke-width="1.2" fill="none" stroke-opacity=".5" class="cp-d" style="--l:360;animation-delay:.6s"/><line x1="186" y1="62" x2="186" y2="158" stroke="white" stroke-width="1.5" class="cp-d" style="--l:96;animation-delay:.55s"/><line x1="204" y1="62" x2="204" y2="158" stroke="white" stroke-width="1.5" class="cp-d" style="--l:96;animation-delay:.58s"/><line x1="186" y1="62" x2="204" y2="62" stroke="white" stroke-width="1" class="cp-d" style="--l:18;animation-delay:.62s"/><line x1="186" y1="158" x2="204" y2="158" stroke="white" stroke-width="1" class="cp-d" style="--l:18;animation-delay:.65s"/><circle cx="195" cy="42" r="10" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:64;animation-delay:0.8s"/><line x1="195" y1="42" x2="195" y2="34" stroke="#f97316" stroke-width="1.5" class="cp-ndl" filter="url(#g6o)"/><path d="M142,42 Q147,35 152,42 Q157,49 162,42" stroke="#f97316" stroke-width="1" fill="none" stroke-opacity=".4" class="cp-ws" filter="url(#g6o)"/><path d="M168,42 Q173,35 178,42 Q183,49 188,42" stroke="#f97316" stroke-width="1" fill="none" stroke-opacity=".4" class="cp-ws1" filter="url(#g6o)"/><text x="172" y="108" class="cp-lbl2">280&#176;F</text><text x="172" y="205" class="cp-lbl">UHT</text><line x1="218" y1="120" x2="265" y2="120" stroke="white" stroke-width="1.5" stroke-opacity=".2" class="cp-d" style="--l:47;animation-delay:1.0s"/><line x1="218" y1="120" x2="265" y2="120" class="cp-pO" filter="url(#g6o)"/><polygon points="241,120 233,116 233,124" fill="#f97316" class="cp-ap" filter="url(#g6o)"/><rect x="265" y="40" width="200" height="140" rx="8" class="cp-d" style="--l:680;animation-delay:1.1s"/><circle cx="295" cy="75" r="18" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:114;animation-delay:1.25s"/><circle cx="295" cy="75" r="6" stroke="white" stroke-width="1" fill="none" class="cp-imp"/><path d="M295,93 L295,145 Q295,155 305,155 L430,155" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-d" style="--l:200;animation-delay:1.4s"/><line x1="330" y1="55" x2="330" y2="165" stroke="white" stroke-width="1.2" class="cp-d" style="--l:110;animation-delay:1.3s"/><line x1="350" y1="55" x2="350" y2="85" stroke="white" stroke-width="1.2" class="cp-d" style="--l:30;animation-delay:1.45s"/><line x1="350" y1="85" x2="350" y2="115" stroke="#f97316" stroke-width="1.5" class="cp-drip" filter="url(#g6o)"/><path d="M360,95 L360,135 L390,135 L390,95" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".2" class="cp-fi" style="animation-delay:1.7s"/><path d="M400,90 L400,135 L430,135 L430,90 L415,82 L400,90" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-fi" style="animation-delay:1.8s"/><path d="M440,88 L440,135 L455,135 L455,88 L447,82 L440,88" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-fi" style="animation-delay:1.9s"/><line x1="340" y1="140" x2="370" y2="140" stroke="#f97316" stroke-width="1.5" stroke-opacity=".4" class="cp-fi" style="animation-delay:2s"/><line x1="340" y1="95" x2="370" y2="95" stroke="#f97316" stroke-width="1" stroke-opacity=".3" class="cp-fi" style="animation-delay:2.05s"/><text x="380" y="60" class="cp-lbl">FORM</text><text x="380" y="72" class="cp-lbl" fill-opacity=".4">FILL SEAL</text><text x="365" y="205" class="cp-lbl">FORM-FILL</text><text x="365" y="216" class="cp-lbl" fill-opacity=".4">SEAL</text><line x1="465" y1="120" x2="510" y2="120" stroke="white" stroke-width="1.5" stroke-opacity=".2" class="cp-d" style="--l:45;animation-delay:2.0s"/><line x1="465" y1="120" x2="510" y2="120" class="cp-pO" filter="url(#g6o)"/><polygon points="487,120 479,116 479,124" fill="#f97316" class="cp-ap" filter="url(#g6o)"/><rect x="510" y="60" width="70" height="110" rx="6" class="cp-d" style="--l:360;animation-delay:2.1s"/><path d="M528,88 L528,148 L562,148 L562,88 L545,80 L528,88" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/><line x1="520" y1="75" x2="548" y2="75" stroke="white" stroke-width="1.2" class="cp-d" style="--l:28;animation-delay:2.35s"/><rect x="538" y="72" width="10" height="7" rx="1" stroke="#C9A84C" stroke-width="1" fill="none" class="cp-d" style="--l:34;animation-delay:2.4s"/><line x1="545" y1="100" x2="545" y2="115" stroke="#C9A84C" stroke-width="1" stroke-opacity=".5" class="cp-fi" style="animation-delay:2.5s"/><text x="545" y="205" class="cp-lbl">CAP &amp;</text><text x="545" y="216" class="cp-lbl" fill-opacity=".4">STRAW</text><line x1="580" y1="120" x2="625" y2="120" stroke="white" stroke-width="1.5" stroke-opacity=".2" class="cp-d" style="--l:45;animation-delay:2.5s"/><line x1="580" y1="120" x2="625" y2="120" class="cp-pO" filter="url(#g6o)"/><polygon points="602,120 594,116 594,124" fill="#f97316" class="cp-ap" filter="url(#g6o)"/><rect x="625" y="70" width="75" height="88" rx="6" class="cp-d" style="--l:326;animation-delay:2.6s"/><line x1="625" y1="158" x2="770" y2="158" stroke="white" stroke-width="2" stroke-dasharray="8 4" class="cp-belt"/><circle cx="635" cy="158" r="5" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:32;animation-delay:2.65s"/><circle cx="760" cy="158" r="5" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:32;animation-delay:2.7s"/><rect x="710" y="128" width="30" height="28" rx="2" class="cp-d" style="--l:116;animation-delay:2.75s" stroke-opacity=".4"/><rect x="745" y="128" width="30" height="28" rx="2" class="cp-d" style="--l:116;animation-delay:2.85s" stroke-opacity=".3"/><rect x="718" y="106" width="30" height="24" rx="2" class="cp-d" style="--l:108;animation-delay:2.95s" stroke-opacity=".25"/><text x="680" y="205" class="cp-lbl">CASE</text><text x="680" y="216" class="cp-lbl" fill-opacity=".4">PACK</text></svg>'}
     ];
-    /* Export diagrams for native Section 12 to use */
-    window._ncpDiagrams=cpProcs.map(function(p){return p.diagram||'';});
     /* Build layout: Row1 → Expansion → Row2 */
     var cpWrap=document.createElement('div');
     cpWrap.style.cssText='margin-top:36px;padding-top:36px;border-top:1px solid #222';
@@ -1186,53 +1166,13 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
     /* Hide native service cards */
     var nativeGrid=document.querySelector('.services-grid');
     if(nativeGrid)nativeGrid.style.display='none';
-    /* Auto-open Tunnel Pasteurization on load */
-    setTimeout(function(){ openSlot(0); },300);
   }
 
 
-  // Add fadeIn animation + mobile responsive styles
+  // Add fadeIn animation
   var style=document.createElement('style');
-  style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}'+
-    '@media(max-width:767px){'+
-      /* Tab row: horizontal scroll instead of overflow */
-      '.svc-tab-row{overflow-x:auto!important;-webkit-overflow-scrolling:touch;justify-content:flex-start!important;gap:0!important;scrollbar-width:none}'+
-      '.svc-tab-row::-webkit-scrollbar{display:none}'+
-      '.svc-tab-btn{flex:0 0 auto!important;padding:10px 14px!important;font-size:.78rem!important}'+
-      /* Stack 2-col grids to single column */
-      '.svc-grid{grid-template-columns:1fr!important}'+
-      /* Bullets wrap tighter on mobile */
-      '.svc-bullets{gap:6px 12px!important}'+
-      /* Reduce panel heading size */
-      '.svc-panel h3{font-size:1.3rem!important}'+
-      /* Reduce image heights */
-      '.svc-img-wrap{height:260px!important}'+
-      /* 4-col grid to 2-col */
-      '.svc-grid-4{grid-template-columns:repeat(2,1fr)!important}'+
-      /* Stat grids to 2-col */
-      '.svc-stat-grid{grid-template-columns:repeat(2,1fr)!important}'+
-    '}'+
-    '@media(max-width:479px){'+
-      '.svc-tab-btn{padding:8px 10px!important;font-size:.72rem!important}'+
-      '.svc-grid-4{grid-template-columns:1fr!important}'+
-      '.svc-stat-grid{grid-template-columns:1fr!important}'+
-      '.svc-img-wrap{height:200px!important}'+
-    '}';
+  style.textContent='@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
   document.head.appendChild(style);
-
-  // Apply responsive classes to existing elements
-  tabRow.classList.add('svc-tab-row');
-  buttons.forEach(function(b){b.classList.add('svc-tab-btn')});
-  // Tag panels with responsive classes
-  tabWrap.querySelectorAll('[style*="grid-template-columns:1fr 1fr"],' +
-    '[style*="grid-template-columns: 1fr 1fr"],' +
-    '[style*="grid-template-columns:2fr 1fr"]').forEach(function(el){el.classList.add('svc-grid')});
-  tabWrap.querySelectorAll('[style*="flex-wrap:wrap"]').forEach(function(el){el.classList.add('svc-bullets')});
-  tabWrap.querySelectorAll('[style*="grid-template-columns:repeat(4"]').forEach(function(el){el.classList.add('svc-grid-4')});
-  tabWrap.querySelectorAll('[style*="grid-template-columns:repeat(3"]').forEach(function(el){el.classList.add('svc-stat-grid')});
-  tabWrap.querySelectorAll('[style*="height:380px"]').forEach(function(el){el.classList.add('svc-img-wrap')});
-  // Tag panels
-  panels.forEach(function(p){p.classList.add('svc-panel')});
 
   cw.appendChild(tabWrap);
   },500);
@@ -1298,7 +1238,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
     }
 
     // Row 1: "FROM CONCEPT" — 25% smaller, starts centered, scrolls RIGHT
-    var r1=makeRow('FROM CONCEPT','26%','top',0.69);
+    var r1=makeRow('FROM CONCEPT','21%','top',0.69);
     r1.wrap.setAttribute('data-row','1');
     r1.wrap.style.zIndex='1';
     // Row 2: "THROUGH PRODUCTION" — full width, starts centered, scrolls LEFT, IN FRONT of bottle
@@ -1325,25 +1265,114 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
     // Bulb slides full canvas in from left on scroll
     if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
 
-    // Apple parallax on content sections
+    // ── FULL PARALLAX ENGINE — layered scroll speeds, depth, reveals ──
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt');
     if(hasGsap){
-      var revealH=[],revealP=[],revealC=[];
+
       sects.forEach(function(sec2){
         if(sec2.closest('.video-hero-wrap'))return;
-        sec2.querySelectorAll('h2').forEach(function(h){gsap.set(h,{y:80,opacity:0});revealH.push(h)});
-        sec2.querySelectorAll('p').forEach(function(p){gsap.set(p,{y:50,opacity:0});revealP.push(p)});
-        sec2.querySelectorAll('.card-light,.service-card').forEach(function(c){
-          gsap.set(c,{y:100,opacity:0,scale:.96});revealC.push(c);
-          c.style.transition='transform .3s,box-shadow .3s';
-          c.onmouseenter=function(){this.style.transform='translateY(-8px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.1)'};
+        // Skip parallax-section itself (handled above)
+        if(sec2.id==='parallax-hero')return;
+        // Ensure overflow hidden for parallax clipping
+        sec2.style.overflow='hidden';
+
+        // ── 1. SECTION BACKGROUND PARALLAX — subtle vertical shift ──
+        // Wrap existing content in a parallax inner container
+        var inner=sec2.querySelector('.content-wrapper');
+        // Whole-section slow drift (background moves slower than scroll)
+        gsap.fromTo(sec2,{backgroundPositionY:'0%'},{backgroundPositionY:'30%',ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
+
+        // ── 2. HEADINGS — float up with depth + slight scale ──
+        sec2.querySelectorAll('h2,.section-heading,.section-heading-light,.sc-header h2,.svc-h2').forEach(function(h){
+          gsap.set(h,{y:100,opacity:0,scale:0.92});
+          gsap.to(h,{y:0,opacity:1,scale:1,duration:1.4,ease:'power3.out',scrollTrigger:{trigger:h,start:'top 88%',toggleActions:'play none none none'}});
+          // Continuous subtle parallax drift while in view
+          gsap.to(h,{yPercent:-15,ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
+        });
+
+        // ── 3. PARAGRAPHS — stagger in with slight horizontal slide ──
+        sec2.querySelectorAll('p,.svc-desc,.card-text').forEach(function(p,i){
+          var dir=i%2===0?-30:30; // alternate left/right
+          gsap.set(p,{y:60,opacity:0,x:dir});
+          gsap.to(p,{y:0,opacity:1,x:0,duration:1,ease:'power2.out',delay:i*.08,scrollTrigger:{trigger:p,start:'top 92%',toggleActions:'play none none none'}});
+          // Slower parallax layer — paragraphs lag behind headings
+          gsap.to(p,{yPercent:-8,ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
+        });
+
+        // ── 4. CARDS — rise up with stagger + scale + rotation ──
+        sec2.querySelectorAll('.card-light,.service-card,.faq-card').forEach(function(c,ci){
+          gsap.set(c,{y:120,opacity:0,scale:0.9,rotationX:8});
+          gsap.to(c,{y:0,opacity:1,scale:1,rotationX:0,duration:1.2,ease:'power3.out',delay:ci*.1,scrollTrigger:{trigger:c,start:'top 95%',toggleActions:'play none none none'}});
+          // Cards drift slightly slower (deeper layer)
+          gsap.to(c,{yPercent:-5,ease:'none',scrollTrigger:{trigger:sec2,start:'top bottom',end:'bottom top',scrub:true}});
+          // Hover lift
+          c.style.transition='transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s';
+          c.onmouseenter=function(){this.style.transform='translateY(-12px) scale(1.02)';this.style.boxShadow='0 24px 60px rgba(0,0,0,.15)'};
           c.onmouseleave=function(){this.style.transform='';this.style.boxShadow=''};
         });
+
+        // ── 5. BULLET ITEMS / LIST ITEMS — cascade reveal ──
+        sec2.querySelectorAll('.svc-bullet-row li,ul li,.bullet-item').forEach(function(li,bi){
+          gsap.set(li,{y:40,opacity:0,x:-20});
+          gsap.to(li,{y:0,opacity:1,x:0,duration:.7,ease:'power2.out',delay:bi*.06,scrollTrigger:{trigger:li,start:'top 95%',toggleActions:'play none none none'}});
+        });
+
+        // ── 6. IMAGES inside sections — scale reveal ──
+        sec2.querySelectorAll('img:not(.nav-logo):not(.hero-logo):not(.parallax-cutout)').forEach(function(img){
+          gsap.set(img,{scale:1.15,opacity:0});
+          gsap.to(img,{scale:1,opacity:1,duration:1.4,ease:'power2.out',scrollTrigger:{trigger:img,start:'top 90%',toggleActions:'play none none none'}});
+        });
+
+        // ── 7. BADGES / SMALL ELEMENTS — pop in ──
+        sec2.querySelectorAll('.sc-badge,.cert-badge,.tag').forEach(function(badge){
+          gsap.set(badge,{scale:0,opacity:0});
+          gsap.to(badge,{scale:1,opacity:1,duration:.6,ease:'back.out(1.7)',scrollTrigger:{trigger:badge,start:'top 92%',toggleActions:'play none none none'}});
+        });
+
+        // ── 8. DIVIDERS / HORIZONTAL RULES — width reveal ──
+        sec2.querySelectorAll('hr,.divider').forEach(function(hr){
+          gsap.set(hr,{scaleX:0,transformOrigin:'left center'});
+          gsap.to(hr,{scaleX:1,duration:1,ease:'power2.inOut',scrollTrigger:{trigger:hr,start:'top 92%',toggleActions:'play none none none'}});
+        });
       });
-      ScrollTrigger.batch(revealH,{start:'top 90%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:1,ease:'power3.out',stagger:.15})}});
-      ScrollTrigger.batch(revealP,{start:'top 92%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:.8,ease:'power2.out',stagger:.1})}});
-      ScrollTrigger.batch(revealC,{start:'top 95%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,scale:1,duration:1,ease:'power3.out',stagger:.12})}});
-    }
+
+      // ── 9. SERVICES TAB PANEL — special treatment ──
+      var tabBtns=document.querySelectorAll('.mb-tab-btn');
+      tabBtns.forEach(function(btn,i){
+        gsap.set(btn,{y:40,opacity:0});
+        gsap.to(btn,{y:0,opacity:1,duration:.6,ease:'power2.out',delay:.6+i*.08,scrollTrigger:{trigger:btn.parentElement,start:'top 85%',toggleActions:'play none none none'}});
+      });
+
+      // ── 10. SECTION TRANSITION OVERLAYS — smooth dark→light crossfade ──
+      sects.forEach(function(sec2){
+        if(sec2.closest('.video-hero-wrap'))return;
+        if(sec2.id==='parallax-hero')return;
+        // Subtle clip-path reveal from bottom
+        gsap.fromTo(sec2,{clipPath:'inset(8% 0% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',ease:'none',scrollTrigger:{trigger:sec2,start:'top 95%',end:'top 60%',scrub:true}});
+      });
+
+      // ── 11. AUTONOMI AI SECTION — special cinematic parallax ──
+      var aiSec=document.getElementById('autonomi-ai');
+      if(aiSec){
+        var aiHeader=aiSec.querySelector('.sc-header');
+        var aiBadge=aiSec.querySelector('.sc-badge');
+        var aiH2=aiSec.querySelector('h2');
+        var aiP=aiSec.querySelector('p');
+        if(aiBadge){gsap.set(aiBadge,{y:60,opacity:0,scale:0.5});gsap.to(aiBadge,{y:0,opacity:1,scale:1,duration:1,ease:'back.out(1.5)',scrollTrigger:{trigger:aiSec,start:'top 75%',toggleActions:'play none none none'}})}
+        if(aiH2){gsap.set(aiH2,{y:100,opacity:0,letterSpacing:'0.1em'});gsap.to(aiH2,{y:0,opacity:1,letterSpacing:'-0.02em',duration:1.4,ease:'power3.out',delay:.2,scrollTrigger:{trigger:aiSec,start:'top 75%',toggleActions:'play none none none'}})}
+        if(aiP){gsap.set(aiP,{y:60,opacity:0});gsap.to(aiP,{y:0,opacity:1,duration:1,ease:'power2.out',delay:.5,scrollTrigger:{trigger:aiSec,start:'top 75%',toggleActions:'play none none none'}})}
+        // Parallax depth on entire AI header
+        if(aiHeader){gsap.to(aiHeader,{yPercent:-20,ease:'none',scrollTrigger:{trigger:aiSec,start:'top bottom',end:'bottom top',scrub:true}})}
+      }
+
+      // ── 12. CTA BUTTONS — slide up + glow pulse ──
+      document.querySelectorAll('.cta-liquid-fill,a[href="/contact"]:not(.mb-floating-nav a)').forEach(function(cta){
+        if(cta.closest('.video-hero-wrap')||cta.closest('.mb-floating-nav'))return;
+        gsap.set(cta,{y:50,opacity:0});
+        gsap.to(cta,{y:0,opacity:1,duration:.8,ease:'power2.out',scrollTrigger:{trigger:cta,start:'top 95%',toggleActions:'play none none none'}});
+      });
+
+    } // end hasGsap
   },1000);
 })();
 
@@ -1358,9 +1387,9 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   var hdr=sec.querySelector('.sc-header');
   if(hdr){
     hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px';
-    hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';if(h.textContent.trim()==='Supply Chain AI'||h.textContent.trim()==='The Agentic Integration')h.textContent='The Agentic Supply Chain'});
+    hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0'});
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto';
-      if(p.textContent.indexOf('Autonomi')!==-1){p.innerHTML=p.innerHTML.replace('Autonomi','<img src=\"https://lynz-tonomi.github.io/macrobrands/Autonomi-logo-blue.png\" alt=\"Autonomi\" style=\"height:47px;vertical-align:-10px;margin:0 1px\">')}
+      if(p.textContent.indexOf('Autonomi')!==-1){p.innerHTML=p.innerHTML.replace('Autonomi','<img src=\"https://lynz-tonomi.github.io/macrobrands/Autonomi-logo-blue.png\" alt=\"Autonomi\" style=\"height:52px;vertical-align:-12px;margin:0 4px\">')}
     });
     /* Electric-blue badge */
     var badge=hdr.querySelector('.sc-badge');
@@ -1417,1301 +1446,90 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 // Video lives natively in Webflow's section-dark-alt — JS must NOT touch/remove it
 
 // ============ 7c. HIDE PHONE NUMBER + "WE MAKE BEVERAGES" SECTION ============
-document.querySelectorAll('.section-subhead').forEach(function(p){if(p.textContent.indexOf('call us')!==-1)p.style.display='none'});
-document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent.indexOf('We Make Beverages')!==-1)s.style.display='none'});
+// Now hidden natively via Webflow "is-hidden" combo class
 
 // ============ 7d. FAQ COPY UPDATES ============
-(function(){
-  var faqMap={
-    'What are your minimum order quantities?':'It depends on the process. For pilot trials, we can test 500-gallon batches. For full production runs, MOQs vary by line \u2014 contact us to discuss your specific product and we\u2019ll give you a straight answer.',
-    'How long from first contact to first production run?':'For brands with a finished, validated formula with all commercialization process in place, 4\u20138 weeks is typical for scheduling and producing your first run. If you need formulation support, process development, or pilot trials first, add 8\u201312 weeks depending on complexity. We\u2019ll give you a realistic timeline on our first call.',
-    'Do you help with formulation or just fill?':'Both. We have in-house food product development teams with 30+ years of experience at companies like Gerber, Pepsi, Tropicana, KDP, La Colomb, Kellogg, and Kraft Heinz. Whether you need a formula built from scratch, optimized for a specific process, or just validated through thermal processing \u2014 we can help.',
-    'What\u2019s the difference between retort and aseptic?':'Retort processing sterilizes the product after it\u2019s sealed in the container (can or glass bottle). Aseptic processing sterilizes the product and the container separately, then fills in a sterile environment. Both produce shelf-stable products. Retort is ideal for cans and denser products. Aseptic is ideal for PET bottles and products where fresh flavor retention is critical. We offer both \u2014 we can help you determine which is right for your product.',
-    'Can you do organic production runs?':'Yes. Our facilities are USDA Organic certified. We can produce organic beverages across all of our manufacturing processes \u2014 retort, aseptic, and cold brew. We follow strict organic handling protocols including dedicated cleaning procedures and full batch documentation for organic traceability.',
-    'What certifications do you hold?':'USDA Organic, SQF Level 2, HACCP, FDA Registered, GMP Certified, Kosher, and NSF Certified. Our Process Authority has 30 years of experience in thermal process validation and LACF compliance. These certifications mean your product meets the standards required by major retailers, natural food stores, and foodservice distributors.'
-  };
-  document.querySelectorAll('.card-title').forEach(function(h){
-    var q=h.textContent.trim();
-    if(faqMap[q]){var p=h.nextElementSibling;if(p&&p.classList.contains('card-text'))p.textContent=faqMap[q]}
-  });
-})();
+// All FAQ answers are now native Webflow — no JS overrides needed
 
-// ============ 8. CONTACT PAGE ANIMATIONS ============
-// SVG line-draw hero, GSAP entrances, Lottie cert badges, particle mesh, liquid fill button
+// ============ 8. CONTACT PAGE ENHANCEMENTS ============
+// Text, colors, backgrounds, logo inversion, and nav transparency are ALL native Webflow.
+/// JS only handles: floating nav bar (UI component), 2-column form layout (DOM restructuring).
 (function(){
   if(!window.location.pathname.match(/\/contact/))return;
-  var BASE='https://lynz-tonomi.github.io/macrobrands/';
 
-  // --- 8a. Load lottie-web ---
-  function loadLottie(cb){
-    if(window.lottie)return cb();
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
-    s.onload=cb;
-    document.head.appendChild(s);
-  }
+  var h1=document.querySelector('h1');
+  var sub=document.querySelector('.subtitle');
 
-  // --- 8b. SVG HERO LINE-DRAW ILLUSTRATION ---
-  function initHeroSVG(){
-    var heading=document.querySelector('.contact-info-h2')||document.querySelector('h2');
-    if(!heading)return;
-    var svgWrap=document.createElement('div');
-    svgWrap.style.cssText='width:100%;max-width:360px;margin:0 auto 30px;opacity:0';
-    svgWrap.id='contact-hero-svg';
-
-    var obj=document.createElement('object');
-    obj.type='image/svg+xml';
-    obj.data=BASE+'contact-hero-illustration.svg';
-    obj.style.cssText='width:100%;height:auto;pointer-events:none';
-    obj.onload=function(){
-      try{
-        var svgDoc=obj.contentDocument;
-        var paths=svgDoc.querySelectorAll('path,circle,ellipse,line,polyline,polygon,rect');
-        paths.forEach(function(p){
-          var len=p.getTotalLength?p.getTotalLength():300;
-          p.style.strokeDasharray=len;
-          p.style.strokeDashoffset=len;
-          p.style.transition='none';
-        });
-        // Animate draw-on with GSAP if available
-        if(window.gsap){
-          gsap.to(svgWrap,{opacity:1,duration:0.3});
-          paths.forEach(function(p,i){
-            var len=p.getTotalLength?p.getTotalLength():300;
-            gsap.to(p,{strokeDashoffset:0,duration:1.5,delay:0.2*i,ease:'power2.inOut'});
-          });
-        }else{
-          svgWrap.style.opacity='1';
-          paths.forEach(function(p,i){
-            var len=p.getTotalLength?p.getTotalLength():300;
-            setTimeout(function(){
-              p.style.transition='stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)';
-              p.style.strokeDashoffset='0';
-            },200*i);
-          });
-        }
-      }catch(e){}
-    };
-    svgWrap.appendChild(obj);
-    // Insert above the contact-info column
-    var infoCol=document.querySelector('.contact-info');
-    if(infoCol)infoCol.insertBefore(svgWrap,infoCol.firstChild);
-  }
-
-  // --- 8c. GSAP STAGGERED ENTRANCES ---
-  function initEntrances(){
-    if(!window.gsap||!window.ScrollTrigger)return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    // H1 + subtitle entrance
-    var h1=document.querySelector('h1');
-    var sub=document.querySelector('.subtitle')||document.querySelector('[class*="subtitle"]')||document.querySelector('[class*="Subtitle"]');
-    if(h1){
-      gsap.from(h1,{y:40,opacity:0,duration:0.8,ease:'power3.out'});
-    }
-    if(sub){
-      gsap.from(sub,{y:30,opacity:0,duration:0.8,delay:0.15,ease:'power3.out'});
-    }
-
-    // Contact grid columns entrance
-    var infoCol=document.querySelector('.contact-info');
-    var formCard=document.querySelector('.contact-form-card');
-    if(infoCol){
-      gsap.from(infoCol,{x:-50,opacity:0,duration:0.9,delay:0.3,ease:'power3.out',
-        scrollTrigger:{trigger:infoCol,start:'top 85%',once:true}});
-    }
-    if(formCard){
-      gsap.from(formCard,{x:50,opacity:0,duration:0.9,delay:0.4,ease:'power3.out',
-        scrollTrigger:{trigger:formCard,start:'top 85%',once:true}});
-    }
-
-    // Form fields cascade
-    var fields=document.querySelectorAll('.contact-form-card input,.contact-form-card textarea');
-    fields.forEach(function(f,i){
-      gsap.from(f,{y:20,opacity:0,duration:0.5,delay:0.5+i*0.08,ease:'power2.out',
-        scrollTrigger:{trigger:f,start:'top 90%',once:true}});
-    });
-
-    // Detail labels/values
-    var details=document.querySelectorAll('.contact-detail-label,.contact-detail-value');
-    details.forEach(function(d,i){
-      gsap.from(d,{y:15,opacity:0,duration:0.5,delay:0.4+i*0.1,ease:'power2.out',
-        scrollTrigger:{trigger:d,start:'top 90%',once:true}});
-    });
-  }
-
-  // --- 8d. CERTIFICATION BADGE LOTTIES ---
-  function initBadges(){
-    if(!window.lottie)return;
-    var valEl=document.querySelectorAll('.contact-detail-value');
-    var certEl=null;
-    valEl.forEach(function(v){if(v.textContent&&v.textContent.indexOf('USDA')!==-1)certEl=v;});
-    if(!certEl)return;
-
-    // Hide text, replace with badge row
-    certEl.style.display='none';
-    var badgeRow=document.createElement('div');
-    badgeRow.style.cssText='display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:28px';
-    certEl.parentElement.insertBefore(badgeRow,certEl.nextSibling);
-
-    var badges=[
-      {file:'lottie-usda-organic.json',label:'USDA Organic'},
-      {file:'lottie-sqf.json',label:'SQF Level 2'},
-      {file:'lottie-fda.json',label:'FDA'}
-    ];
-
-    var certs=['HACCP','GMP','Kosher','NSF'];
-
-    badges.forEach(function(b,i){
-      var wrap=document.createElement('div');
-      wrap.style.cssText='display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0';
-      var lotDiv=document.createElement('div');
-      lotDiv.style.cssText='width:52px;height:52px';
-      var lbl=document.createElement('span');
-      lbl.style.cssText='font-size:0.7rem;color:#999;font-family:Inter,sans-serif;font-weight:600;text-align:center';
-      lbl.textContent=b.label;
-      wrap.appendChild(lotDiv);
-      wrap.appendChild(lbl);
-      badgeRow.appendChild(wrap);
-
-      var anim=lottie.loadAnimation({
-        container:lotDiv,renderer:'svg',loop:false,autoplay:false,
-        path:BASE+b.file
-      });
-
-      // Trigger on scroll into view
-      var observer=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting){
-            setTimeout(function(){
-              wrap.style.transition='opacity 0.4s ease';
-              wrap.style.opacity='1';
-              anim.play();
-            },i*200);
-            observer.disconnect();
-          }
-        });
-      },{threshold:0.3});
-      observer.observe(wrap);
-    });
-
-    // Text badges for the rest
-    certs.forEach(function(c,i){
-      var tag=document.createElement('div');
-      tag.style.cssText='display:inline-flex;align-items:center;justify-content:center;padding:6px 14px;border:1px solid #ddd;border-radius:20px;font-size:0.75rem;color:#666;font-family:Inter,sans-serif;font-weight:600;opacity:0;transition:opacity 0.4s ease';
-      tag.textContent=c;
-      badgeRow.appendChild(tag);
-      setTimeout(function(){tag.style.opacity='1';},800+i*150);
-    });
-  }
-
-  // --- 8e. PARTICLE MESH BACKGROUND ---
-  function initParticles(){
-    var canvas=document.createElement('canvas');
-    canvas.id='contact-particles';
-    canvas.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4';
-    document.body.insertBefore(canvas,document.body.firstChild);
-    // Ensure page content is above
-    var sections=document.querySelectorAll('section,.w-section,nav,.w-nav,[class*="Section"],[class*="NAVBar"],.contact-grid,[class*="container"],[class*="Container"],footer,.w-footer');
-    sections.forEach(function(s){if(s.style)s.style.position=s.style.position||'relative';if(s.style)s.style.zIndex=s.style.zIndex||'1';});
-
-    var ctx=canvas.getContext('2d');
-    var particles=[];
-    var PARTICLE_COUNT=35;
-    var CONNECT_DIST=140;
-
-    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-    resize();
-    window.addEventListener('resize',resize);
-
-    for(var i=0;i<PARTICLE_COUNT;i++){
-      particles.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        vx:(Math.random()-0.5)*0.3,
-        vy:(Math.random()-0.5)*0.3,
-        r:1.5+Math.random()*1
-      });
-    }
-
-    function draw(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      // Lines
-      for(var i=0;i<particles.length;i++){
-        for(var j=i+1;j<particles.length;j++){
-          var dx=particles[i].x-particles[j].x;
-          var dy=particles[i].y-particles[j].y;
-          var dist=Math.sqrt(dx*dx+dy*dy);
-          if(dist<CONNECT_DIST){
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x,particles[i].y);
-            ctx.lineTo(particles[j].x,particles[j].y);
-            ctx.strokeStyle='rgba(201,168,76,'+(0.12*(1-dist/CONNECT_DIST))+')';
-            ctx.lineWidth=0.5;
-            ctx.stroke();
-          }
-        }
-      }
-      // Dots
-      for(var i=0;i<particles.length;i++){
-        var p=particles[i];
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fillStyle='rgba(201,168,76,0.2)';
-        ctx.fill();
-        p.x+=p.vx;p.y+=p.vy;
-        if(p.x<0||p.x>canvas.width)p.vx*=-1;
-        if(p.y<0||p.y>canvas.height)p.vy*=-1;
-      }
-      requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  // --- 8f. GOLD ACCENT DIVIDER ---
-  function initDivider(){
-    var grid=document.querySelector('.contact-grid');
-    if(!grid)return;
-    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox','0 0 1100 4');
-    svg.style.cssText='width:100%;max-width:1100px;height:4px;display:block;margin:0 auto 0;overflow:visible';
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1','0');line.setAttribute('y1','2');
-    line.setAttribute('x2','1100');line.setAttribute('y2','2');
-    line.setAttribute('stroke','#C9A84C');line.setAttribute('stroke-width','1.5');
-    line.setAttribute('stroke-linecap','round');
-    line.setAttribute('stroke-dasharray','1100');
-    line.setAttribute('stroke-dashoffset','1100');
-    svg.appendChild(line);
-    grid.parentElement.insertBefore(svg,grid);
-
-    // Animate
-    if(window.gsap){
-      gsap.to(line,{attr:{'stroke-dashoffset':0},duration:1.8,delay:0.5,ease:'power2.inOut',
-        scrollTrigger:{trigger:svg,start:'top 85%',once:true}});
-    }else{
-      setTimeout(function(){
-        line.style.transition='stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1)';
-        line.setAttribute('stroke-dashoffset','0');
-      },500);
-    }
-  }
-
-  // --- 8g. LIQUID FILL BUTTON ---
-  // Native Webflow handles text, color, centering. JS only adds Lottie animation layer.
-  function initButton(){
-    if(!window.lottie)return;
-    var btn=document.querySelector('.w-button,[type="submit"]');
-    if(!btn)return;
-
-    btn.style.position='relative';
-    btn.style.overflow='hidden';
-
-    // For INPUT elements we can't put children inside — wrap in a positioned container
-    var wrapper, lottieDiv=document.createElement('div');
-    lottieDiv.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit;overflow:hidden';
-
-    if(btn.tagName==='INPUT'){
-      wrapper=document.createElement('div');
-      wrapper.style.cssText='position:relative;display:block;width:100%';
-      btn.parentNode.insertBefore(wrapper,btn);
-      wrapper.appendChild(btn);
-      wrapper.appendChild(lottieDiv);
-      btn.style.position='relative';
-      btn.style.zIndex='1';
-      btn.style.width='100%';
-    }else{
-      btn.insertBefore(lottieDiv,btn.firstChild);
-      wrapper=btn;
-    }
-
-    var anim=lottie.loadAnimation({
-      container:lottieDiv,renderer:'svg',loop:false,autoplay:false,
-      path:BASE+'liquid-fill.json',
-      rendererSettings:{preserveAspectRatio:'none'}
-    });
-    anim.setSpeed(1.4);
-
-    // Hover only triggers Lottie — no text DOM manipulation
-    wrapper.addEventListener('mouseenter',function(){
-      anim.setDirection(1);anim.goToAndPlay(0,true);
-    });
-    wrapper.addEventListener('mouseleave',function(){
-      anim.setDirection(-1);anim.play();
-    });
-  }
-
-  // --- INIT ALL ---
-  initParticles();
-  initHeroSVG();
-  initDivider();
-  initEntrances();
-  loadLottie(function(){
-    initBadges();
-    initButton();
+  // Floating nav bar (matching home page — UI component, not styling)
+  var nav=document.createElement('div');
+  document.body.appendChild(nav);
+  nav.setAttribute('style','position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:0;background:rgba(20,20,20,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:50px;padding:8px 8px 8px 24px;box-shadow:0 4px 30px rgba(0,0,0,.3)');
+  [['Home','/'],['About','/#about'],['Services','/#services'],['Certs','/#certifications'],['FAQ','/#faq']].forEach(function(l){
+    var a=document.createElement('a');a.textContent=l[0];a.href=l[1];
+    a.style.cssText='color:#ccc;text-decoration:none;padding:10px 16px;font-size:.9rem;font-weight:500;transition:color .2s;white-space:nowrap';
+    a.onmouseover=function(){this.style.color='#fff'};a.onmouseout=function(){this.style.color='#ccc'};
+    nav.appendChild(a);
   });
-})();
+  var cb=document.createElement('a');cb.href='/contact';
+  cb.style.cssText='color:#1A1A1A;background:#C9A84C;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:700;text-decoration:none;margin-left:8px;position:relative;overflow:hidden;display:inline-block';
+  cb.innerHTML='<span style="position:relative;z-index:1">Contact</span>';
+  var fill=document.createElement('div');
+  fill.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px';
+  cb.appendChild(fill);
+  cb.onmouseenter=function(){fill.style.height='100%';cb.querySelector('span').style.color='#1A1A1A'};
+  cb.onmouseleave=function(){fill.style.height='0';cb.querySelector('span').style.color='#1A1A1A'};
+  nav.appendChild(cb);
 
-// ============ 9. LOTTIE LIQUID FILL HOVER — Service tab Get Started buttons only ============
-// Blue pill buttons (au-cta-btn, sc-learn-more-btn) are NOT touched — they stay as designed.
-(function(){
-  var BASE='https://lynz-tonomi.github.io/macrobrands/';
+  // 2-column form layout (DOM restructuring — can't do natively)
+  var form=document.querySelector('form');
+  if(form){
+    var wrapper=document.createElement('div');
+    wrapper.style.cssText='max-width:1100px;margin:60px auto;padding:0 5%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start';
 
-  function wireBtn(btn){
-    // Skip if already wired
-    if(btn.dataset.lottieWired) return;
-    btn.dataset.lottieWired='1';
+    var info=document.createElement('div');
+    info.innerHTML='<h2 style="font-size:2.5rem;font-weight:800;color:#fff;margin-bottom:20px;letter-spacing:-.03em">Get in Touch</h2>'+
+      '<p style="font-size:1.1rem;line-height:1.7;color:#999;margin-bottom:40px">Whether you have a finished formula or a napkin sketch, we\'ll help you figure out the next step. No pressure. No minimums for your first conversation.</p>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Location</div><div style="color:#888;font-size:1rem">California, USA</div></div>'+
+      '<div style="margin-bottom:28px"><div style="font-weight:700;color:#ccc;margin-bottom:4px;font-size:.95rem">Certifications</div><div style="color:#888;font-size:.95rem">USDA Organic · SQF Level 2 · HACCP · FDA · GMP · Kosher · NSF</div></div>';
 
-    var lottiePath=BASE+'liquid-fill.json';
+    var formWrap=document.createElement('div');
+    formWrap.style.cssText='background:#0D0D0D;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.3);border:1px solid #222';
+    formWrap.innerHTML='<h3 style="font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:24px">Request a Free Consultation</h3>';
+    formWrap.appendChild(form);
 
-    // Ensure button can contain absolute children
-    btn.style.position='relative';
-    btn.style.overflow='hidden';
+    form.querySelectorAll('input,textarea').forEach(function(inp){
+      inp.style.cssText='width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:10px;font-size:1rem;font-family:Inter,sans-serif;margin-bottom:16px;background:#fff;color:#1a1a1a;transition:border-color .2s;outline:none';
+      inp.onfocus=function(){this.style.borderColor='#C9A84C'};
+      inp.onblur=function(){this.style.borderColor='#ddd'};
+    });
 
-    // Find or create text span
-    var textSpan=btn.querySelector('span[style*="z-index"]');
-    if(!textSpan){
-      textSpan=document.createElement('span');
-      textSpan.style.cssText='position:relative;z-index:2';
-      while(btn.firstChild) textSpan.appendChild(btn.firstChild);
-      btn.appendChild(textSpan);
+    var submit=form.querySelector('[type="submit"],.w-button');
+    if(submit){
+      submit.style.cssText='width:100%;padding:16px;background:#C9A84C;color:#1A1A1A;border:none;border-radius:50px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:8px;position:relative;overflow:hidden';
+      submit.value='Send Message \u2192';
+      var sf=document.createElement('div');
+      sf.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:0;background:#fff;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px;pointer-events:none';
+      submit.style.position='relative';
+      submit.appendChild(sf);
+      submit.onmouseenter=function(){sf.style.height='100%'};
+      submit.onmouseleave=function(){sf.style.height='0'};
     }
-    textSpan.style.position='relative';
-    textSpan.style.zIndex='2';
-    textSpan.style.transition='color .3s ease';
-    textSpan.style.color='#fff';
 
-    // Lottie container — absolute fill, behind text
-    var lottieDiv=document.createElement('div');
-    lottieDiv.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden';
-    btn.insertBefore(lottieDiv,btn.firstChild);
+    wrapper.appendChild(info);
+    wrapper.appendChild(formWrap);
 
-    var anim=lottie.loadAnimation({
-      container:lottieDiv,
-      renderer:'svg',
-      loop:false,
-      autoplay:false,
-      path:lottiePath,
-      rendererSettings:{preserveAspectRatio:'none'}
-    });
-    anim.setSpeed(1.4);
-
-    btn.addEventListener('mouseenter',function(){
-      anim.setDirection(1);
-      anim.goToAndPlay(0,true);
-      textSpan.style.color='#1A1A1A';
-      btn.style.borderColor='rgba(255,255,255,0.8)';
-    });
-    btn.addEventListener('mouseleave',function(){
-      anim.setDirection(-1);
-      anim.play();
-      textSpan.style.color='#fff';
-      btn.style.borderColor='rgba(255,255,255,0.3)';
-    });
+    if(h1&&h1.parentElement){
+      h1.parentElement.insertBefore(wrapper,h1.nextSibling);
+      if(sub)sub.style.display='none';
+    }
   }
 
-  function init(){
-    function go(){
-      // Only wire white pill buttons in service tabs — leave blue pills alone
-      document.querySelectorAll('.svc-cta-btn').forEach(function(b){wireBtn(b)});
-    }
-    if(typeof lottie==='undefined'){
-      var s=document.createElement('script');
-      s.src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
-      s.onload=go;
-      document.head.appendChild(s);
-    }else{go()}
+  // H1 layout positioning only (color/font are native)
+  if(h1){
+    h1.style.cssText='text-align:center;font-size:3.5rem;padding:80px 5% 0';
   }
-
-  // Delay so service tab panels are built first
-  setTimeout(init,1000);
 })();
 
 })(); // end run
 
-/* ═══════════════════════════════════════════════════════════════
-   Section 12 — Populate native Webflow service sections
-   Injects carousel, images, SVG diagrams, and process cards
-   into the Webflow-native hero sections (data-role attributes).
-   Wrapped in setTimeout to ensure Webflow DOM is fully rendered.
-   ═══════════════════════════════════════════════════════════════ */
-(function(){
-  setTimeout(function(){
-  var ghBase='https://lynz-tonomi.github.io/macrobrands/';
-
-  /* ── Formulation: Carousel slot ── */
-  var carouselSlot=document.querySelector('[data-role="carousel-slot"]');
-  if(carouselSlot){
-    carouselSlot.style.position='relative';
-    carouselSlot.style.overflow='hidden';
-    var imgA=document.createElement('img');
-    var imgB=document.createElement('img');
-    [imgA,imgB].forEach(function(img){
-      img.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0';
-      img.alt='Product';
-      carouselSlot.appendChild(img);
-    });
-    var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel?_='+Date.now();
-    fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
-      .then(function(r){return r.json();})
-      .then(function(files){
-        /* Sort alphabetically so first image is always consistent */
-        var urls=files
-          .filter(function(f){return /\.(png|jpe?g|webp)$/i.test(f.name)&&f.download_url;})
-          .sort(function(a,b){return a.name.localeCompare(b.name);})
-          .map(function(f){return f.download_url+'?v='+Date.now();});
-        if(!urls.length)return;
-        function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
-        /* Preload ALL images upfront so transitions are instant */
-        var cached={},loaded=0;
-        urls.forEach(function(url){
-          var im=new Image();im.onload=im.onerror=function(){cached[url]=true;loaded++;if(loaded===urls.length)startCarousel();};im.src=url;
-        });
-        function startCarousel(){
-          /* Always start on first image */
-          var aActive=true;
-          imgA.src=urls[0];imgA.style.opacity='1';
-          var queue=urls.slice(1);shuffle(queue);
-          var qi=0;
-          /* Rock-solid 500ms — no async, all images pre-cached */
-          setInterval(function(){
-            if(qi>=queue.length){queue=urls.slice(0);shuffle(queue);qi=0;}
-            var nextUrl=queue[qi++];
-            var target=aActive?imgB:imgA;
-            target.src=nextUrl;
-            if(aActive){imgB.style.opacity='1';imgA.style.opacity='0';}
-            else{imgA.style.opacity='1';imgB.style.opacity='0';}
-            aActive=!aActive;
-          },500);
-        }
-      }).catch(function(e){console.warn('Native carousel fetch failed:',e);});
-  }
-
-  /* ── Formulation: Lab scientist photo ── */
-  var labSlot=document.querySelector('[data-role="lab-photo"]');
-  if(labSlot){
-    labSlot.style.position='relative';labSlot.style.overflow='hidden';
-    var labImg=document.createElement('img');
-    labImg.src=ghBase+'Lab_formulation.png';
-    labImg.alt='Lab scientist formulating';
-    labImg.style.cssText='width:100%;height:140%;object-fit:cover;object-position:center top;position:absolute;top:-20%;will-change:transform';
-    labSlot.appendChild(labImg);
-    var ticking=false;
-    function updateParallax(){
-      var rect=labSlot.getBoundingClientRect();
-      var vh=window.innerHeight||document.documentElement.clientHeight;
-      var p=(vh-rect.top)/(vh+rect.height);
-      p=Math.max(0,Math.min(1,p));
-      labImg.style.transform='translateY('+((p-0.5)*80)+'px)';
-      ticking=false;
-    }
-    window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(updateParallax);ticking=true;}},{passive:true});
-    updateParallax();
-  }
-
-  /* ── MicroThermic: Equipment SVG diagram ── */
-  var eqSlot=document.querySelector('[data-role="equipment-photo"]');
-  if(eqSlot){
-    eqSlot.style.overflow='visible';eqSlot.style.padding='6px 6px 30px';eqSlot.style.background='transparent';
-    /* Inject the same CSS keyframes needed by the SVG */
-    var mtStyle=document.createElement('style');
-    mtStyle.textContent='@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes scan{from{transform:translateY(-6px)}to{transform:translateY(520px)}}@keyframes fR{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}@keyframes fL{from{stroke-dashoffset:0}to{stroke-dashoffset:20}}@keyframes fD{from{stroke-dashoffset:16}to{stroke-dashoffset:0}}@keyframes fU{from{stroke-dashoffset:0}to{stroke-dashoffset:16}}@keyframes rotor{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes piston{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.5)}}@keyframes aiGlow{0%,100%{filter:drop-shadow(0 0 5px #fbbf24)}50%{filter:drop-shadow(0 0 22px #fbbf24) drop-shadow(0 0 44px #fbbf2422)}}@keyframes flicker{0%,88%,100%{opacity:1}90%{opacity:.2}95%{opacity:.7}}.n-fR{stroke-dasharray:7 5;animation:fR .75s linear infinite}.n-fL{stroke-dasharray:7 5;animation:fL .75s linear infinite}.n-fD{stroke-dasharray:7 5;animation:fD .75s linear infinite}.n-fU{stroke-dasharray:7 5;animation:fU .75s linear infinite}.n-fRs{stroke-dasharray:5 4;animation:fR 1.1s linear infinite}.n-fDs{stroke-dasharray:5 4;animation:fD 1.1s linear infinite}.n-fUs{stroke-dasharray:5 4;animation:fU 1.1s linear infinite}.n-fCd{stroke-dasharray:5 4;animation:fD 1.2s linear infinite}.n-fCu{stroke-dasharray:5 4;animation:fU 1.2s linear infinite}.n-fSt{stroke-dasharray:6 4;animation:fD .65s linear infinite}.n-tc{animation:flicker 6s ease-in-out infinite}.n-psi{animation:flicker 7s ease-in-out 1.8s infinite}.n-aiG{animation:aiGlow 2.4s ease-in-out infinite}';
-    document.head.appendChild(mtStyle);
-    /* Use the same inline SVG from the MicroThermic tab – FULL version, light-themed */
-    eqSlot.innerHTML='<svg viewBox="0 0 1400 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:10px"> <defs> <linearGradient id="ngPre" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#dcfce7"/><stop offset="100%" stop-color="#bbf7d0"/> </linearGradient> <linearGradient id="ngFin" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="#fecaca"/><stop offset="100%" stop-color="#fca5a5"/> </linearGradient> <linearGradient id="ngCool" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="rgba(0,0,0,0.06)"/><stop offset="100%" stop-color="rgba(0,0,0,0.03)"/> </linearGradient> <linearGradient id="ngCond" x1="0" y1="0" x2="1" y2="1"> <stop offset="0%" stop-color="rgba(0,0,0,0.08)"/><stop offset="100%" stop-color="rgba(0,0,0,0.04)"/> </linearGradient> <filter id="ngO"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter> <filter id="ngY"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter> <filter id="ngC"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter> </defs> <text x="18" y="22" fill="#333333" font-family="JetBrains Mono" font-size="8" letter-spacing="3">DUAL PRODUCT INLET</text> <text x="18" y="98" fill="#333333" font-family="JetBrains Mono" font-size="8" letter-spacing="3">PRODUCT PUMP</text> <rect x="18" y="30" width="74" height="28" rx="2" fill="#ffffff" stroke="#f59e0b" stroke-width="1"/> <text x="55" y="43" fill="#f59e0b" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">CITY WATER</text> <text x="55" y="53" fill="#f59e0b" font-family="JetBrains Mono" font-size="7" text-anchor="middle">SOURCE</text> <line x1="92" y1="44" x2="118" y2="44" stroke="#333333" stroke-width="4"/> <line x1="92" y1="44" x2="118" y2="44" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.05s"/> <rect x="112" y="36" width="22" height="17" rx="2" fill="#ffffff" stroke="#333333" stroke-width="1"/> <line x1="116" y1="40" x2="130" y2="49" stroke="#f59e0b" stroke-width="1.5"/> <line x1="130" y1="40" x2="116" y2="49" stroke="#f59e0b" stroke-width="1.5"/> <text x="123" y="63" fill="#333333" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">RUN DRY VALVE</text> <line x1="123" y1="53" x2="123" y2="190" stroke="#e8e8e8" stroke-width="6"/> <line x1="123" y1="53" x2="123" y2="190" stroke="#333333" stroke-width="3"/> <path d="M123,53 L123,190" stroke="#f97316" fill="none" class="n-fD"/> <line x1="85" y1="225" x2="990" y2="225" stroke="#e8e8e8" stroke-width="9"/> <line x1="85" y1="225" x2="990" y2="225" stroke="#333333" stroke-width="5"/> <line x1="85" y1="225" x2="155" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:0s"/> <line x1="215" y1="225" x2="275" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.12s"/> <line x1="347" y1="225" x2="383" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.22s"/> <line x1="457" y1="225" x2="530" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.32s"/> <line x1="590" y1="225" x2="665" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.42s"/> <line x1="720" y1="225" x2="798" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.52s"/> <line x1="836" y1="225" x2="990" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.62s"/> <circle cx="120" cy="225" r="19" fill="#f5f5f5" stroke="#f97316" stroke-width="2" filter="url(#ngO)"/> <g style="transform-origin:120px 225px;animation:rotor 1.3s linear infinite;"> <line x1="120" y1="213" x2="120" y2="237" stroke="#f97316" stroke-width="2.5"/> <line x1="108" y1="225" x2="132" y2="225" stroke="#f97316" stroke-width="2.5"/> <line x1="111" y1="216" x2="129" y2="234" stroke="#f97316" stroke-width="1.5" opacity=".5"/> <line x1="129" y1="216" x2="111" y2="234" stroke="#f97316" stroke-width="1.5" opacity=".5"/> </g> <text x="120" y="252" fill="#f97316" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">PUMP</text> <rect x="155" y="188" width="60" height="74" rx="2" fill="url(#ngPre)" stroke="#22c55e" stroke-width="1.5"/> <line x1="155" y1="262" x2="215" y2="188" stroke="#4ade80" stroke-width="2.5" opacity=".75"/> <line x1="155" y1="242" x2="205" y2="188" stroke="#4ade80" stroke-width="1.5" opacity=".45"/> <line x1="165" y1="262" x2="215" y2="212" stroke="#4ade80" stroke-width="1.5" opacity=".45"/> <text x="185" y="177" fill="#4ade80" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">PREHEATER</text> <g class="n-tc" filter="url(#ngY)"> <circle cx="150" cy="178" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="150" y="182" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <g class="n-psi" filter="url(#ngY)" style="animation-delay:.5s"> <circle cx="220" cy="178" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="220" y="182" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">PSI</text> </g> <rect x="143" y="312" width="84" height="34" rx="2" fill="#ffffff" stroke="#ef4444" stroke-width="1"/> <text x="185" y="324" fill="#ef4444" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle" font-weight="700">INTERNAL HOT</text> <text x="185" y="335" fill="#ef4444" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">WATER GENERATOR</text> <line x1="172" y1="262" x2="172" y2="312" stroke="#e8e8e8" stroke-width="4"/> <line x1="198" y1="262" x2="198" y2="312" stroke="#e8e8e8" stroke-width="4"/> <path d="M172,262 L172,312" stroke="#ef4444" fill="none" class="n-fDs" style="animation-delay:.1s"/> <path d="M198,312 L198,262" stroke="#ef4444" fill="none" class="n-fUs" style="animation-delay:.1s"/> <rect x="275" y="185" width="72" height="80" rx="2" fill="url(#ngFin)" stroke="#f87171" stroke-width="1.5"/> <line x1="275" y1="265" x2="347" y2="185" stroke="#fca5a5" stroke-width="3" opacity=".8"/> <line x1="275" y1="245" x2="337" y2="185" stroke="#fca5a5" stroke-width="1.5" opacity=".45"/> <line x1="285" y1="265" x2="347" y2="205" stroke="#fca5a5" stroke-width="1.5" opacity=".45"/> <text x="311" y="174" fill="#f87171" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">FINAL HEATER</text> <g class="n-tc" filter="url(#ngY)" style="animation-delay:.35s"> <circle cx="270" cy="175" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="270" y="179" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <g class="n-tc" filter="url(#ngY)" style="animation-delay:1.1s"> <circle cx="353" cy="175" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="353" y="179" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <rect x="263" y="312" width="84" height="34" rx="2" fill="#ffffff" stroke="#ef4444" stroke-width="1"/> <text x="305" y="324" fill="#ef4444" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle" font-weight="700">INTERNAL HOT</text> <text x="305" y="335" fill="#ef4444" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">WATER GENERATOR</text> <line x1="292" y1="265" x2="292" y2="312" stroke="#e8e8e8" stroke-width="4"/> <line x1="318" y1="265" x2="318" y2="312" stroke="#e8e8e8" stroke-width="4"/> <path d="M292,265 L292,312" stroke="#ef4444" fill="none" class="n-fDs" style="animation-delay:.25s"/> <path d="M318,312 L318,265" stroke="#ef4444" fill="none" class="n-fUs" style="animation-delay:.25s"/> <path d="M383,225 L383,128 L457,128 L457,225" fill="none" stroke="#e8e8e8" stroke-width="8"/> <path d="M383,225 L383,128 L457,128 L457,225" fill="none" stroke="#333333" stroke-width="5"/> <path d="M383,225 L383,128" stroke="#f97316" fill="none" class="n-fU" style="animation-delay:.08s"/> <path d="M383,128 L457,128" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.18s"/> <path d="M457,128 L457,225" stroke="#f97316" fill="none" class="n-fD" style="animation-delay:.28s"/> <rect x="360" y="108" width="120" height="38" rx="3" fill="#ffffff" stroke="#ef4444" stroke-width="2"/> <text x="420" y="124" fill="#ef4444" font-family="JetBrains Mono" font-size="9.5" text-anchor="middle" font-weight="700">HOLD TUBE BANK</text> <text x="420" y="138" fill="#ef4444" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle" opacity=".6">STERILIZATION HOLD</text> <g class="n-tc" filter="url(#ngY)" style="animation-delay:.65s"> <circle cx="463" cy="175" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="463" y="179" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <rect x="530" y="187" width="60" height="76" rx="2" fill="url(#ngCool)" stroke="#818cf8" stroke-width="1.5"/> <line x1="530" y1="187" x2="590" y2="263" stroke="#a5b4fc" stroke-width="2.5" opacity=".8"/> <line x1="530" y1="207" x2="580" y2="263" stroke="#a5b4fc" stroke-width="1.5" opacity=".4"/> <line x1="540" y1="187" x2="590" y2="237" stroke="#a5b4fc" stroke-width="1.5" opacity=".4"/> <text x="560" y="176" fill="#818cf8" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">COOLER</text> <g class="n-tc" filter="url(#ngY)" style="animation-delay:.9s"> <circle cx="524" cy="176" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="524" y="180" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <line x1="560" y1="263" x2="560" y2="298" stroke="#e8e8e8" stroke-width="4"/> <path d="M560,263 L560,298" stroke="#3b82f6" fill="none" class="n-fCd"/> <g transform="translate(560,310)"> <polygon points="-12,-10 12,-10 0,0" fill="#f5f5f5" stroke="#3b82f6" stroke-width="1.5"/> <polygon points="-12,10 12,10 0,0" fill="#f5f5f5" stroke="#3b82f6" stroke-width="1.5"/> </g> <text x="560" y="342" fill="#3b82f6" font-family="JetBrains Mono" font-size="7" text-anchor="middle" font-weight="700">FLOW CONTROL VALVE</text> <text x="560" y="354" fill="#3b82f6" font-family="JetBrains Mono" font-size="7" text-anchor="middle">CHILL WATER</text> <rect x="617" y="204" width="90" height="42" rx="19" fill="#f5f5f5" stroke="#f97316" stroke-width="1.5" filter="url(#ngO)"/> <g style="transform-origin:637px 225px;animation:piston .5s ease-in-out infinite"> <rect x="631" y="211" width="8" height="28" rx="2" fill="#f97316" opacity=".85"/> </g> <g style="transform-origin:657px 225px;animation:piston .5s ease-in-out .17s infinite"> <rect x="651" y="211" width="8" height="28" rx="2" fill="#f97316" opacity=".85"/> </g> <g style="transform-origin:677px 225px;animation:piston .5s ease-in-out .34s infinite"> <rect x="671" y="211" width="8" height="28" rx="2" fill="#f97316" opacity=".85"/> </g> <text x="662" y="260" fill="#f97316" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">IN-LINE HOMOGENIZER</text> <text x="662" y="271" fill="#333333" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">2-STAGE · 3-PISTON · VARISPEED</text> <rect x="720" y="187" width="60" height="76" rx="2" fill="url(#ngCool)" stroke="#818cf8" stroke-width="1.5"/> <line x1="720" y1="187" x2="780" y2="263" stroke="#a5b4fc" stroke-width="2.5" opacity=".8"/> <line x1="720" y1="207" x2="770" y2="263" stroke="#a5b4fc" stroke-width="1.5" opacity=".4"/> <line x1="730" y1="187" x2="780" y2="237" stroke="#a5b4fc" stroke-width="1.5" opacity=".4"/> <text x="750" y="176" fill="#818cf8" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">COOLER</text> <g class="n-tc" filter="url(#ngY)" style="animation-delay:1.2s"> <circle cx="714" cy="176" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="714" y="180" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <g class="n-psi" filter="url(#ngY)" style="animation-delay:1.8s"> <circle cx="786" cy="176" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="786" y="180" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">PSI</text> </g> <line x1="750" y1="263" x2="750" y2="298" stroke="#e8e8e8" stroke-width="4"/> <path d="M750,263 L750,298" stroke="#3b82f6" fill="none" class="n-fCd" style="animation-delay:.3s"/> <g transform="translate(750,310)"> <polygon points="-12,-10 12,-10 0,0" fill="#f5f5f5" stroke="#3b82f6" stroke-width="1.5"/> <polygon points="-12,10 12,10 0,0" fill="#f5f5f5" stroke="#3b82f6" stroke-width="1.5"/> </g> <text x="750" y="342" fill="#3b82f6" font-family="JetBrains Mono" font-size="7" text-anchor="middle" font-weight="700">FLOW CONTROL VALVE</text> <text x="750" y="354" fill="#3b82f6" font-family="JetBrains Mono" font-size="7" text-anchor="middle">CHILL WATER</text> <g transform="translate(817,225)"> <polygon points="-13,-13 13,-13 0,0" fill="#f5f5f5" stroke="#f97316" stroke-width="1.5"/> <polygon points="-13,13 13,13 0,0" fill="#f5f5f5" stroke="#f97316" stroke-width="1.5"/> </g> <text x="817" y="252" fill="#f97316" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">BACK PRESSURE</text> <text x="817" y="261" fill="#f97316" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">VALVE</text> <rect x="994" y="150" width="390" height="238" rx="4" fill="#ffffff" stroke="#333333" stroke-width="1.5" stroke-dasharray="9 4"/> <text x="1189" y="410" fill="#3b82f6" font-family="JetBrains Mono" font-size="9" text-anchor="middle" letter-spacing="3" font-weight="700">CLEAN-FILL HOOD &amp; ACCUFILL</text> <g class="n-tc" filter="url(#ngY)" style="animation-delay:1.5s"> <circle cx="1013" cy="202" r="10" fill="#ffffff" stroke="#fbbf24" stroke-width="1.5"/> <text x="1013" y="206" fill="#fbbf24" font-family="JetBrains Mono" font-size="7.5" text-anchor="middle" font-weight="700">TC</text> </g> <rect x="1005" y="218" width="92" height="46" rx="3" fill="#ffffff" stroke="#22d3ee" stroke-width="1.5"/> <text x="1051" y="236" fill="#22d3ee" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">STERILE</text> <text x="1051" y="247" fill="#22d3ee" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">PRODUCT</text> <text x="1051" y="258" fill="#22d3ee" font-family="JetBrains Mono" font-size="8" text-anchor="middle" font-weight="700">OUTLET</text> <line x1="990" y1="225" x2="1005" y2="225" stroke="#333333" stroke-width="5"/> <line x1="990" y1="225" x2="1005" y2="225" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.7s"/> <line x1="1097" y1="238" x2="1225" y2="238" stroke="#e8e8e8" stroke-width="5"/> <line x1="1097" y1="238" x2="1225" y2="238" stroke="#333333" stroke-width="3"/> <line x1="1097" y1="238" x2="1225" y2="238" stroke="#f97316" fill="none" class="n-fR" style="animation-delay:.82s"/> <g transform="translate(1235,238)"> <polygon points="-12,-12 12,-12 0,0" fill="#ffffff" stroke="#f97316" stroke-width="1.5"/> <polygon points="-12,12 12,12 0,0" fill="#ffffff" stroke="#f97316" stroke-width="1.5"/> </g> <text x="1235" y="262" fill="#f97316" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">BACK PRESSURE</text> <text x="1235" y="271" fill="#f97316" font-family="JetBrains Mono" font-size="6.5" text-anchor="middle">VALVE</text> <line x1="1235" y1="188" x2="1235" y2="226" stroke="#e8e8e8" stroke-width="5"/> <path d="M1235,188 L1235,226" stroke="#f97316" fill="none" class="n-fU" style="animation-delay:.9s"/> <rect x="1122" y="155" width="104" height="112" rx="3" fill="url(#ngCond)" stroke="#60a5fa" stroke-width="2"/> <line x1="1132" y1="170" x2="1216" y2="170" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="181" x2="1216" y2="181" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="192" x2="1216" y2="192" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="203" x2="1216" y2="203" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="214" x2="1216" y2="214" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="225" x2="1216" y2="225" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="236" x2="1216" y2="236" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="247" x2="1216" y2="247" stroke="#60a5fa" stroke-width=".5" opacity=".25"/> <line x1="1132" y1="175" x2="1216" y2="175" stroke="#93c5fd" stroke-width="1.5" fill="none" class="n-fL" style="animation-delay:0s"/> <line x1="1132" y1="197" x2="1216" y2="197" stroke="#93c5fd" stroke-width="1.5" fill="none" class="n-fR" style="animation-delay:.3s"/> <line x1="1132" y1="219" x2="1216" y2="219" stroke="#93c5fd" stroke-width="1.5" fill="none" class="n-fL" style="animation-delay:.15s"/> <line x1="1132" y1="241" x2="1216" y2="241" stroke="#93c5fd" stroke-width="1.5" fill="none" class="n-fR" style="animation-delay:.45s"/> <text x="1174" y="283" fill="#93c5fd" font-family="JetBrains Mono" font-size="9.5" text-anchor="middle" font-weight="700">CONDENSER</text> <line x1="1174" y1="267" x2="1174" y2="298" stroke="#e8e8e8" stroke-width="4"/> <path d="M1174,267 L1174,298" stroke="#3b82f6" fill="none" class="n-fCd" style="animation-delay:.6s"/> <g transform="translate(1174,310)"> <polygon points="-12,-10 12,-10 0,0" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/> <polygon points="-12,10 12,10 0,0" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/> </g> <text x="1174" y="342" fill="#3b82f6" font-family="JetBrains Mono" font-size="7" text-anchor="middle">FLOW CONTROL VALVE</text> <text x="1174" y="353" fill="#3b82f6" font-family="JetBrains Mono" font-size="7" text-anchor="middle">CHILL WATER</text> <line x1="1226" y1="192" x2="1348" y2="192" stroke="#e8e8e8" stroke-width="4"/> <line x1="1226" y1="192" x2="1348" y2="192" stroke="#333333" stroke-width="2" stroke-dasharray="5 4"/> <rect x="1332" y="183" width="22" height="18" rx="2" fill="#ffffff" stroke="#333333" stroke-width="1"/> <line x1="1336" y1="187" x2="1350" y2="197" stroke="#333333" stroke-width="1.5"/> <line x1="1350" y1="187" x2="1336" y2="197" stroke="#333333" stroke-width="1.5"/> <text x="1368" y="192" fill="#333333" font-family="JetBrains Mono" font-size="7.5" font-weight="700">CONDENSER</text> <text x="1368" y="203" fill="#333333" font-family="JetBrains Mono" font-size="7.5" font-weight="700">OUTLET</text> <line x1="1051" y1="264" x2="1051" y2="445" stroke="#e8e8e8" stroke-width="6"/> <line x1="1051" y1="264" x2="1051" y2="445" stroke="#b0e0e8" stroke-width="3"/> <path d="M1051,264 L1051,445" stroke="#22d3ee" fill="none" class="n-fSt" filter="url(#ngC)"/> <polygon points="1051,453 1041,441 1061,441" fill="#22d3ee" filter="url(#ngC)"/> <text x="1051" y="466" fill="#22d3ee" font-family="Bebas Neue,JetBrains Mono" font-size="15" text-anchor="middle" letter-spacing="6" filter="url(#ngC)">STERILE PRODUCT OUTLET</text> <text x="22" y="392" fill="#22c55e" font-family="JetBrains Mono" font-size="8" opacity=".7">TEMP_IN &#9654; 142.4°C</text> <text x="22" y="405" fill="#3b82f6" font-family="JetBrains Mono" font-size="8" opacity=".7">CHILL_T &#9654; 4.2°C</text> <text x="22" y="418" fill="#f97316" font-family="JetBrains Mono" font-size="8" opacity=".7">FLOW_RT &#9654; 18.6 L/s</text> <text x="22" y="431" fill="#fbbf24" font-family="JetBrains Mono" font-size="8" opacity=".7">HOLD_TM &#9654; 4.0 sec</text> <text x="22" y="444" fill="#818cf8" font-family="JetBrains Mono" font-size="8" opacity=".7">HOMO_PR &#9654; 280 bar</text> <path d="M8,8 L8,26 M8,8 L26,8" fill="none" stroke="#333333" stroke-width="1.5"/> <path d="M1392,8 L1392,26 M1392,8 L1374,8" fill="none" stroke="#333333" stroke-width="1.5"/> <path d="M8,482 L8,464 M8,482 L26,482" fill="none" stroke="#333333" stroke-width="1.5"/> <path d="M1392,482 L1392,464 M1392,482 L1374,482" fill="none" stroke="#333333" stroke-width="1.5"/> </svg>';
-  }
-
-  /* ── Co-Packing: 6 Process Cards ── */
-  var cpGrid=document.querySelector('[data-role="cp-cards"]');
-  if(cpGrid){
-    /* Inject CSS for card animations */
-    var cpS=document.createElement('style');
-    cpS.textContent='@keyframes ncpDraw{to{stroke-dashoffset:0}}@keyframes ncpFade{from{opacity:0}to{opacity:1}}@keyframes ncpFlow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}@keyframes ncpPop{0%,100%{opacity:0}30%,70%{opacity:1}}@keyframes ncpSwell{0%{transform:translateY(0)scaleY(1);opacity:.8}45%{transform:translateY(-4px)scaleY(1.03);opacity:1}100%{transform:translateY(0)scaleY(1);opacity:.8}}@keyframes ncpWisp{0%{transform:translateY(0);opacity:.7}100%{transform:translateY(-14px);opacity:0}}@keyframes ncpDrip{0%,100%{opacity:0;transform:scaleY(0)}30%,70%{opacity:1;transform:scaleY(1)}}@keyframes ncpSpin{to{transform:rotate(360deg)}}@keyframes ncpBelt{from{stroke-dashoffset:36}to{stroke-dashoffset:0}}@keyframes ncpSweep{0%{transform:rotate(-35deg)}55%{transform:rotate(40deg)}100%{transform:rotate(-35deg)}}.ncp-d{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:ncpDraw 1.1s cubic-bezier(.4,0,.15,1) forwards}.ncp-glow{fill:none;stroke:#C9A84C;stroke-width:1;opacity:0;animation:ncpFade .6s ease 1s forwards}.ncp-fi{opacity:0;animation:ncpFade .4s ease forwards}.ncp-pO{stroke:#f97316;stroke-width:2.5;stroke-dasharray:10 6;fill:none;animation:ncpFlow .5s linear infinite;animation-delay:2s}.ncp-liq{transform-box:fill-box;transform-origin:bottom center;animation:ncpSwell 3.5s ease-in-out infinite;animation-delay:2s}.ncp-ws{animation:ncpWisp 2.2s ease-out infinite;animation-delay:2s}.ncp-ws1{animation:ncpWisp 2.2s ease-out .7s infinite;animation-delay:2.7s}.ncp-drip{transform-box:fill-box;transform-origin:top center;animation:ncpDrip 1.4s ease-in-out infinite;animation-delay:2s;opacity:0}.ncp-imp{transform-box:fill-box;transform-origin:center;animation:ncpSpin 1s linear infinite;animation-delay:2s}.ncp-belt{animation:ncpBelt .7s linear infinite;animation-delay:2s}.ncp-ndl{transform-box:fill-box;transform-origin:50% 100%;animation:ncpSweep 3.2s ease-in-out infinite;animation-delay:2s}.ncp-lbl{fill:rgba(255,255,255,.5);font-family:monospace;font-size:9px;text-anchor:middle}.ncp-lbl2{fill:#f97316;font-family:monospace;font-size:8px;text-anchor:middle;fill-opacity:.6}.ncp-card{background:rgba(255,255,255,.03);border:1px solid #222;border-radius:14px;padding:24px;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s}.ncp-card:hover{border-color:#C9A84C;transform:translateY(-4px)}.ncp-card.ncp-active{border-color:#C9A84C;box-shadow:0 0 20px rgba(201,168,76,.15)}.ncp-expand{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s ease;opacity:0}.ncp-expand.ncp-open{max-height:400px;opacity:1}';
-    document.head.appendChild(cpS);
-
-    var ncpProcs=[
-      {title:'Tunnel Pasteurization',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><rect x="6" y="14" width="52" height="22" rx="3" class="ncp-d" style="--l:160;animation-delay:.2s"/><line x1="6" y1="25" x2="58" y2="25" class="ncp-d" style="--l:52;animation-delay:.5s"/><rect x="14" y="18" width="8" height="14" rx="2" class="ncp-d" style="--l:48;animation-delay:.7s"/><rect x="28" y="18" width="8" height="14" rx="2" class="ncp-d" style="--l:48;animation-delay:.85s"/><rect x="42" y="18" width="8" height="14" rx="2" class="ncp-d" style="--l:48;animation-delay:1s"/><path d="M18,10 Q18,6 22,6 M32,10 Q32,6 36,6 M46,10 Q46,6 50,6" class="ncp-glow" stroke-width="1.2"/></svg>',
-       desc:'Continuous hot-water tunnel for high-acid beverages \u2014 juice, tea, kombucha.',
-       specs:['High-acid (pH < 4.6)','Glass & PET','12\u201364 oz','Continuous']},
-      {title:'Retort Processing',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><ellipse cx="12" cy="24" rx="6" ry="16" class="ncp-d" style="--l:100;animation-delay:.2s"/><rect x="12" y="8" width="40" height="32" rx="2" class="ncp-d" style="--l:150;animation-delay:.4s"/><ellipse cx="52" cy="24" rx="6" ry="16" class="ncp-d" style="--l:100;animation-delay:.6s"/><circle cx="32" cy="24" r="3" class="ncp-d" style="--l:20;animation-delay:.9s"/><path d="M24,16 Q26,12 28,16 M34,16 Q36,12 38,16" class="ncp-glow" stroke-width="1.5"/></svg>',
-       desc:'Batch pressure-cooking for low-acid shelf-stable products \u2014 soups, broths, plant milks.',
-       specs:['Low-acid (pH \u2265 4.6)','Cans: 8\u201312oz','250\u00b0F+','FDA filed']},
-      {title:'ESL Bottling',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="ncp-d" style="--l:120;animation-delay:.2s"/><line x1="22" y1="28" x2="42" y2="28" class="ncp-d" style="--l:20;animation-delay:.6s"/><rect x="26" y="1" width="12" height="4" rx="1" class="ncp-d" style="--l:36;animation-delay:.4s"/><path d="M16,12 Q10,24 16,36" class="ncp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/><path d="M48,12 Q54,24 48,36" class="ncp-d" style="--l:30;animation-delay:.8s" stroke-opacity=".5"/><circle cx="10" cy="18" r="2" class="ncp-glow" fill="#C9A84C" stroke="none"/><circle cx="54" cy="30" r="2" class="ncp-glow" fill="#C9A84C" stroke="none"/></svg>',
-       desc:'Extended Shelf Life \u2014 light pasteurization + clean-fill for 180\u2013365 day refrigerated shelf life.',
-       specs:['Refrigerated','180\u2013365 day','PET & HDPE','Accelerated Shelf Life Study']},
-      {title:'Aseptic Bottling',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M24,42 L22,18 L26,8 L26,4 L38,4 L38,8 L42,18 L40,42 Z" class="ncp-d" style="--l:120;animation-delay:.2s"/><rect x="26" y="1" width="12" height="4" rx="1" class="ncp-d" style="--l:36;animation-delay:.4s"/><line x1="32" y1="10" x2="32" y2="38" class="ncp-d" style="--l:28;animation-delay:.7s" stroke-opacity=".3"/><path d="M14,6 L20,14 M50,6 L44,14 M14,42 L20,34 M50,42 L44,34" class="ncp-glow" stroke-width="1.5"/></svg>',
-       desc:'UHT sterilization + aseptic PET filling. No preservatives \u2014 12+ month ambient shelf life.',
-       specs:['Ambient','PET 2\u201364oz','No preservatives','12+ months']},
-      {title:'Aseptic Bag-in-Box',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><rect x="8" y="6" width="48" height="36" rx="2" class="ncp-d" style="--l:175;animation-delay:.2s"/><path d="M16,12 Q32,18 48,12 L46,36 Q32,30 18,36 Z" class="ncp-d" style="--l:120;animation-delay:.5s" stroke-opacity=".5"/><circle cx="44" cy="10" r="3" class="ncp-d" style="--l:20;animation-delay:.8s"/><line x1="44" y1="10" x2="56" y2="4" class="ncp-d" style="--l:16;animation-delay:.9s"/></svg>',
-       desc:'Large-format aseptic fill for foodservice, industrial, and bulk retail \u2014 2L\u201325L.',
-       specs:['2L\u201325L','Foodservice','Concentrate & RTD','Aseptic valve']},
-      {title:'Tetra Pak',
-       svg:'<svg viewBox="0 0 64 48" width="64" height="48"><path d="M18,44 L18,8 L32,2 L46,8 L46,44 Z" class="ncp-d" style="--l:140;animation-delay:.2s"/><line x1="18" y1="8" x2="46" y2="8" class="ncp-d" style="--l:28;animation-delay:.5s"/><path d="M18,8 L32,2 L46,8" class="ncp-d" style="--l:36;animation-delay:.6s"/><rect x="26" y="14" width="12" height="8" rx="1" class="ncp-d" style="--l:44;animation-delay:.8s" stroke-opacity=".4"/><circle cx="32" cy="18" r="2" class="ncp-glow" fill="#C9A84C" stroke="none"/></svg>',
-       desc:'Multi-layer carton packaging for dairy alternatives, juice, broth \u2014 200mL\u20131L.',
-       specs:['Carton','200mL\u20131L','Ambient','Sustainable']}
-    ];
-
-    /* Build: row1 (3 cards) → expansion slot → row2 (3 cards) */
-    var row1=document.createElement('div');row1.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px';
-    var expSlot=document.createElement('div');expSlot.className='ncp-expand';expSlot.style.cssText='margin:16px 0;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid transparent;padding:0 24px;grid-column:1/-1';
-    var row2=document.createElement('div');row2.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:20px';
-    var activeIdx=-1,allCards=[];
-
-    function openSlot(idx){
-      if(activeIdx===idx){expSlot.className='ncp-expand';expSlot.style.borderColor='transparent';allCards[idx].classList.remove('ncp-active');activeIdx=-1;return;}
-      if(activeIdx>=0)allCards[activeIdx].classList.remove('ncp-active');
-      activeIdx=idx;allCards[idx].classList.add('ncp-active');
-      /* Pull the full SVG diagram from the original cpProcs data in Section 5b */
-      var diagramSvg='';
-      try{var origCards=document.querySelectorAll('.cp-card');if(origCards.length>0){/* Original tab system exists — grab diagram from its data */}}catch(e){}
-      /* Use window._cpDiagrams which we populate below */
-      if(window._ncpDiagrams&&window._ncpDiagrams[idx]){diagramSvg=window._ncpDiagrams[idx];}
-      expSlot.innerHTML='<div style="padding:20px 0"><div style="font-size:.85rem;font-weight:700;color:#C9A84C;margin-bottom:12px;letter-spacing:.05em">'+ncpProcs[idx].title.toUpperCase()+' \u2014 PROCESS FLOW</div>'+diagramSvg+'</div>';
-      expSlot.style.borderColor='#222';expSlot.className='ncp-expand ncp-open';
-    }
-
-    ncpProcs.forEach(function(p,pi){
-      var card=document.createElement('div');
-      card.className='ncp-card';
-      card.style.cssText+='opacity:0;animation:ncpFade .5s ease '+(.15+pi*.1)+'s forwards';
-      card.innerHTML=
-        '<div style="margin-bottom:12px">'+p.svg+'</div>'+
-        '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px">'+p.title+'</div>'+
-        '<p style="font-size:.82rem;line-height:1.5;color:#888;margin-bottom:10px">'+p.desc+'</p>'+
-        '<ul style="list-style:none;padding:0;margin:0">'+p.specs.map(function(s){return '<li style="padding:2px 0;color:#666;font-size:.78rem"><span style="color:#C9A84C;margin-right:6px">\u25b8</span>'+s+'</li>'}).join('')+'</ul>';
-      card.onclick=function(){openSlot(pi)};
-      allCards.push(card);
-      if(pi<3)row1.appendChild(card);else row2.appendChild(card);
-    });
-
-    /* Clear existing Webflow placeholder children */
-    cpGrid.innerHTML='';
-    cpGrid.style.display='block';
-    cpGrid.appendChild(row1);
-    cpGrid.appendChild(expSlot);
-    cpGrid.appendChild(row2);
-
-    /* Auto-open Tunnel Pasteurization (index 0) on page load */
-    setTimeout(function(){ openSlot(0); },300);
-  }
-
-  /* ── MicroThermic right-align fix ── */
-  /* Push max-width constrained blocks to the right in the MT section */
-  var mtSection=document.querySelector('.svc-section.is-light');
-  if(mtSection){
-    var mtDesc=mtSection.querySelector('.svc-desc');
-    if(mtDesc) mtDesc.style.marginLeft='auto';
-    var mtBullets=mtSection.querySelector('.svc-bullet-row');
-    if(mtBullets) mtBullets.style.marginLeft='auto';
-    var mtCta=mtSection.querySelector('.svc-cta');
-    if(mtCta){mtCta.style.display='inline-block';mtCta.style.float='right';mtCta.style.clear='both';}
-  }
-
-  /* ── Section Title Canvas Icons ── */
-  /* Inject animated canvas icons into the first 3 native section headings:
-     Formulation (beaker), MicroThermic (thermometer), Co-Packing (bottle) */
-  var iconMap=[
-    {match:'Formulation',color:'#fff',draw:function(ctx,t,c){ctx.strokeStyle=c;ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle=c;ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}}},
-    {match:'MicroThermic',color:'#222',draw:function(ctx,t,c){ctx.strokeStyle=c;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-4,-26);ctx.lineTo(-4,8);ctx.arc(0,14,10,Math.PI*.8,Math.PI*.2);ctx.lineTo(4,8);ctx.lineTo(4,-26);ctx.arc(0,-26,4,0,Math.PI,true);ctx.stroke();var mH=20+Math.sin(t*2)*8;ctx.fillStyle=c;ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(0,14,6,0,Math.PI*2);ctx.fill();ctx.fillRect(-2,14-mH,4,mH);ctx.globalAlpha=.4;ctx.lineWidth=1.5;for(var i=0;i<3;i++){var wx=14+i*6;var wave=Math.sin(t*4+i*1.5)*3;ctx.beginPath();ctx.moveTo(wx,0);ctx.quadraticCurveTo(wx+wave,-8,wx,-16);ctx.stroke()}}},
-    {match:'Co-Packing',color:'#fff',draw:function(ctx,t,c){ctx.strokeStyle=c;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-10,22);ctx.lineTo(-12,-4);ctx.lineTo(-6,-16);ctx.lineTo(-6,-24);ctx.lineTo(6,-24);ctx.lineTo(6,-16);ctx.lineTo(12,-4);ctx.lineTo(10,22);ctx.closePath();ctx.stroke();ctx.fillStyle=c;ctx.globalAlpha=.5;ctx.fillRect(-7,-30,14,7);var fH=((t*20)%42);ctx.fillStyle=c;ctx.globalAlpha=.25;ctx.save();ctx.beginPath();ctx.rect(-12,22-fH,24,fH);ctx.clip();ctx.beginPath();ctx.moveTo(-10,22);ctx.lineTo(-12,-4);ctx.lineTo(-6,-16);ctx.lineTo(-6,-24);ctx.lineTo(6,-24);ctx.lineTo(6,-16);ctx.lineTo(12,-4);ctx.lineTo(10,22);ctx.closePath();ctx.fill();ctx.restore();ctx.globalAlpha=.6;ctx.lineWidth=2;var streamY=-30-((t*40)%15);ctx.beginPath();ctx.moveTo(0,streamY);ctx.lineTo(0,-24);ctx.stroke();ctx.globalAlpha=.4;var dy=-30-((t*25)%20);ctx.beginPath();ctx.arc(0,dy,1.5,0,Math.PI*2);ctx.fill()}}
-  ];
-
-  var allH2=document.querySelectorAll('.svc-h2, h2');
-  allH2.forEach(function(h2){
-    var txt=h2.textContent||'';
-    iconMap.forEach(function(im){
-      if(txt.indexOf(im.match)!==-1&&!h2._hasIcon){
-        h2._hasIcon=true;
-        /* Wrap heading in a flex row with canvas */
-        h2.style.display='flex';
-        h2.style.alignItems='center';
-        h2.style.gap='14px';
-        var cv=document.createElement('canvas');
-        cv.width=64;cv.height=64;
-        cv.style.cssText='width:48px;height:48px;flex-shrink:0';
-        cv._draw=im.draw;cv._color=im.color;
-        h2.insertBefore(cv,h2.firstChild);
-        /* Animate */
-        cv._active=true;cv._animT=0;
-        (function animIcon(){
-          if(!cv._active)return;
-          cv._animT+=.016;
-          var ctx=cv.getContext('2d');
-          ctx.clearRect(0,0,cv.width,cv.height);
-          ctx.save();ctx.translate(cv.width/2,cv.height/2);
-          cv._draw(ctx,cv._animT,cv._color);
-          ctx.restore();
-          requestAnimationFrame(animIcon);
-        })();
-        /* Pause when off screen for performance */
-        var obs=new IntersectionObserver(function(entries){
-          entries.forEach(function(e){
-            if(e.isIntersecting){
-              if(!cv._active){cv._active=true;cv._animT=cv._animT||0;
-                (function animResume(){
-                  if(!cv._active)return;
-                  cv._animT+=.016;
-                  var ctx=cv.getContext('2d');
-                  ctx.clearRect(0,0,cv.width,cv.height);
-                  ctx.save();ctx.translate(cv.width/2,cv.height/2);
-                  cv._draw(ctx,cv._animT,cv._color);
-                  ctx.restore();
-                  requestAnimationFrame(animResume);
-                })();
-              }
-            }else{cv._active=false;}
-          });
-        },{threshold:0.1});
-        obs.observe(h2);
-      }
-    });
-  });
-
-  },1500); // delay for Webflow DOM
-})();
-
-/* ═══════════════════════════════════════════════════════════════
-   Section 12a — Layout Polish (labels, stagger, carousel parallax)
-   ═══════════════════════════════════════════════════════════════ */
-(function(){
-  setTimeout(function(){
-
-    /* ── 0. Force svc-tab-panel visible when placed outside tab system ── */
-    document.querySelectorAll('.sc-section .svc-tab-panel').forEach(function(p){
-      p.style.display='block';
-    });
-
-    /* ── 1. Hide section number labels ("01 — Formulation", etc.) ── */
-    document.querySelectorAll('.svc-label').forEach(function(lbl){
-      lbl.style.display='none';
-    });
-
-    /* ── 1a. All service section descriptions are now native Webflow ── */
-    var svcAll=document.querySelectorAll('.svc-section');
-
-    /* ── 1b. Hide old "Our Services" 7-tab JS section (replaced by native sections) ── */
-    document.querySelectorAll('h2').forEach(function(h){
-      if(h.textContent.trim()==='Our Services'){
-        var sec=h.closest('section')||h.parentElement;
-        if(sec) sec.style.display='none';
-      }
-    });
-
-    /* ── 2. Stagger: Formulation=left, MicroThermic=right, Co-Packing=left ── */
-    /* First, constrain containers so grids don't stretch to full viewport */
-    document.querySelectorAll('.svc-container').forEach(function(c){
-      c.style.maxWidth='1200px';
-      c.style.marginLeft='auto';
-      c.style.marginRight='auto';
-    });
-
-    var svcSections=document.querySelectorAll('.svc-section');
-    svcSections.forEach(function(sec,i){
-      if(i>2) return; // skip Supporting Services (section 4)
-      var grid=sec.querySelector('.svc-hero-grid');
-      if(!grid) return;
-
-      var textCol=grid.children[0]; // label + h2 + desc + bullets + cta
-      var mediaCol=grid.children[1]; // img-row or card-grid
-      if(!textCol||!mediaCol) return;
-
-      if(i===0){
-        /* ── Formulation: text full-width top, two image boxes row below ── */
-        grid.style.display='grid';
-        grid.style.gridTemplateColumns='1fr';
-        grid.style.gap='32px';
-        textCol.style.textAlign='left';
-
-      } else if(i===1){
-        /* ── MicroThermic: caps left + text right, diagram full-width below ── */
-        var diagramBox=mediaCol.querySelector('.svc-img-box, [data-role="equipment-photo"]');
-        var capsBox=mediaCol.querySelector('.svc-caps-box');
-
-        grid.style.display='grid';
-        grid.style.gap='40px';
-        grid.style.alignItems='start';
-
-        if(diagramBox&&capsBox){
-          grid.style.gridTemplateColumns='1fr 1.4fr';
-          mediaCol.style.display='block';
-          mediaCol.style.overflow='visible';
-          diagramBox.style.gridColumn='1 / -1';
-          diagramBox.style.width='100%';
-          diagramBox.style.overflow='visible';
-          grid.appendChild(diagramBox);
-        }
-        textCol.style.textAlign='right';
-
-      } else if(i===2){
-        /* ── Co-Packing: text full-width top, 2×3 card grid + expansion below ── */
-        grid.style.display='grid';
-        grid.style.gridTemplateColumns='1fr';
-        grid.style.gap='32px';
-        textCol.style.textAlign='left';
-      }
-    });
-
-    /* ── 3. Product carousel + lab photo: no parallax, just clean styling ── */
-
-  },1800);
-})();
-
-/* ═══════════════════════════════════════════════════════════════
-   Section 12b — Layered Depth Parallax (Service Sections)
-   Content & background elements move at different scroll speeds:
-   - Headings:  1.3x  (faster — feels closest to viewer)
-   - Images:    0.7x  (slower — feels furthest away)
-   - Diagrams:  0.85x (medium depth)
-   - Bullets:   1.1x  (slightly fast)
-   Uses GSAP ScrollTrigger scrub for butter-smooth interpolation.
-   ═══════════════════════════════════════════════════════════════ */
-(function(){
-  setTimeout(function(){
-    if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
-
-    var svcSections=document.querySelectorAll('.svc-section');
-    if(!svcSections.length)return;
-
-    svcSections.forEach(function(sec){
-      /* — Heading: fastest layer (closest to viewer) — */
-      var h2=sec.querySelector('.svc-h2');
-      if(h2){
-        gsap.fromTo(h2,
-          {yPercent:8},
-          {yPercent:-8,ease:'none',
-           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* — Description: slightly fast — */
-      var desc=sec.querySelector('.svc-desc');
-      if(desc){
-        gsap.fromTo(desc,
-          {yPercent:5},
-          {yPercent:-5,ease:'none',
-           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* — Bullet row: medium-fast — */
-      var bullets=sec.querySelector('.svc-bullet-row');
-      if(bullets){
-        gsap.fromTo(bullets,
-          {yPercent:4},
-          {yPercent:-4,ease:'none',
-           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* — Images / diagram boxes: slowest layer (furthest away, depth) — */
-      var imgBoxes=sec.querySelectorAll('.svc-img-box, [data-role="equipment-photo"]');
-      imgBoxes.forEach(function(img){
-        gsap.fromTo(img,
-          {yPercent:-6},
-          {yPercent:6,ease:'none',
-           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      });
-
-      /* — Caps box / card grid: medium depth — */
-      var capsBox=sec.querySelector('.svc-caps-box, .svc-card-grid, [data-role="cp-cards"]');
-      if(capsBox){
-        gsap.fromTo(capsBox,
-          {yPercent:-4},
-          {yPercent:4,ease:'none',
-           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* — CTA button: matches heading speed — */
-      var cta=sec.querySelector('.svc-cta');
-      if(cta){
-        gsap.fromTo(cta,
-          {yPercent:6},
-          {yPercent:-6,ease:'none',
-           scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* — Entrance fade-up for the whole section — */
-      var container=sec.querySelector('.svc-container');
-      if(container){
-        gsap.fromTo(container,
-          {opacity:0,y:60},
-          {opacity:1,y:0,duration:1,ease:'power2.out',
-           scrollTrigger:{trigger:sec,start:'top 85%',once:true}
-          });
-      }
-    });
-
-    /* — Cross-section depth: MicroThermic img-row only (Formulation excluded) — */
-    var imgRows=document.querySelectorAll('.svc-img-row-mt');
-    imgRows.forEach(function(row){
-      var children=row.children;
-      if(children.length>=2){
-        gsap.fromTo(children[0],
-          {y:30},
-          {y:-30,ease:'none',
-           scrollTrigger:{trigger:row,start:'top bottom',end:'bottom top',scrub:true}
-          });
-        gsap.fromTo(children[1],
-          {y:-20},
-          {y:20,ease:'none',
-           scrollTrigger:{trigger:row,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-    });
-
-    /* ═══ MicroThermic Parallax Showpiece ═══
-       Everything pops, slides, scales, and moves.
-       3D perspective container + staggered entrances. */
-    var mtSec=document.querySelector('.svc-section.is-light');
-    if(mtSec){
-      /* Enable 3D perspective on the section */
-      mtSec.style.perspective='1200px';
-      mtSec.style.overflow='visible';
-
-      var mtH2=mtSec.querySelector('.svc-h2');
-      var mtDesc=mtSec.querySelector('.svc-desc');
-      var mtBullets=mtSec.querySelector('.svc-bullet-row');
-      var mtCta=mtSec.querySelector('.svc-cta');
-      var mtCaps=mtSec.querySelector('.svc-caps-box');
-      var mtDiagram=mtSec.querySelector('.svc-img-box, [data-role="equipment-photo"]');
-      var mtGrid=mtSec.querySelector('.svc-hero-grid');
-
-      /* ── Heading: dramatic scale-up + slide from right ── */
-      if(mtH2){
-        gsap.fromTo(mtH2,
-          {x:120,opacity:0,scale:.7,rotateY:-8},
-          {x:0,opacity:1,scale:1,rotateY:0,duration:1.2,ease:'power3.out',
-           scrollTrigger:{trigger:mtSec,start:'top 80%',once:true}
-          });
-        /* Continuous scroll parallax — heading floats on its own plane */
-        gsap.fromTo(mtH2,
-          {yPercent:15,rotateX:3},
-          {yPercent:-15,rotateX:-3,ease:'none',
-           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* ── Description: fade up + subtle tilt from opposite side ── */
-      if(mtDesc){
-        gsap.fromTo(mtDesc,
-          {x:-80,opacity:0,scale:.9,rotateY:5},
-          {x:0,opacity:1,scale:1,rotateY:0,duration:1,delay:.15,ease:'power3.out',
-           scrollTrigger:{trigger:mtSec,start:'top 80%',once:true}
-          });
-        gsap.fromTo(mtDesc,
-          {yPercent:10},
-          {yPercent:-10,ease:'none',
-           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* ── Bullet row: stagger each bullet item popping in ── */
-      if(mtBullets){
-        var bulletItems=mtBullets.querySelectorAll('li, .svc-bullet, [class*="bullet"]');
-        if(!bulletItems.length) bulletItems=mtBullets.children;
-        gsap.fromTo(bulletItems,
-          {y:40,opacity:0,scale:.85},
-          {y:0,opacity:1,scale:1,duration:.6,ease:'back.out(1.7)',
-           stagger:.08,
-           scrollTrigger:{trigger:mtBullets,start:'top 85%',once:true}
-          });
-        /* Scroll float */
-        gsap.fromTo(mtBullets,
-          {yPercent:8},
-          {yPercent:-8,ease:'none',
-           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* ── CTA: bounce-in pop ── */
-      if(mtCta){
-        gsap.fromTo(mtCta,
-          {y:50,opacity:0,scale:.6},
-          {y:0,opacity:1,scale:1,duration:.8,ease:'elastic.out(1,.5)',
-           scrollTrigger:{trigger:mtCta,start:'top 90%',once:true}
-          });
-      }
-
-      /* ── Caps box: scale up from small with rotation ── */
-      if(mtCaps){
-        mtCaps.style.transformStyle='preserve-3d';
-        gsap.fromTo(mtCaps,
-          {scale:.7,opacity:0,rotateX:15,y:60},
-          {scale:1,opacity:1,rotateX:0,y:0,duration:1,ease:'power3.out',
-           scrollTrigger:{trigger:mtCaps,start:'top 85%',once:true}
-          });
-        /* Counter-scroll for depth */
-        gsap.fromTo(mtCaps,
-          {yPercent:-10},
-          {yPercent:10,ease:'none',
-           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* ── Equipment SVG diagram: big scale pop + float on own depth layer ── */
-      if(mtDiagram){
-        mtDiagram.style.transformStyle='preserve-3d';
-        gsap.fromTo(mtDiagram,
-          {scale:.6,opacity:0,y:100,rotateX:10},
-          {scale:1,opacity:1,y:0,rotateX:0,duration:1.2,ease:'power4.out',
-           scrollTrigger:{trigger:mtDiagram,start:'top 90%',once:true}
-          });
-        /* Dramatic depth scroll — diagram moves opposite to text */
-        gsap.fromTo(mtDiagram,
-          {yPercent:-14,rotateX:4},
-          {yPercent:14,rotateX:-4,ease:'none',
-           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* ── Hero grid: subtle x-shift on scroll for lateral movement ── */
-      if(mtGrid){
-        gsap.fromTo(mtGrid,
-          {xPercent:3},
-          {xPercent:-3,ease:'none',
-           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-          });
-      }
-
-      /* ── Floating accent elements for extra life ── */
-      /* Add subtle animated glows behind the section */
-      var glow1=document.createElement('div');
-      glow1.style.cssText='position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.08),transparent 70%);pointer-events:none;top:15%;left:-5%;z-index:0';
-      var glow2=document.createElement('div');
-      glow2.style.cssText='position:absolute;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.06),transparent 70%);pointer-events:none;bottom:10%;right:-3%;z-index:0';
-      mtSec.style.position='relative';
-      mtSec.appendChild(glow1);
-      mtSec.appendChild(glow2);
-
-      /* Animate glows on scroll for floating effect */
-      gsap.fromTo(glow1,
-        {x:-40,y:60,scale:.8},
-        {x:40,y:-60,scale:1.2,ease:'none',
-         scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-        });
-      gsap.fromTo(glow2,
-        {x:30,y:-40,scale:1.1},
-        {x:-30,y:40,scale:.9,ease:'none',
-         scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
-        });
-    }
-
-    /* — Supporting services tab section gets depth too — */
-    var tabSection=document.querySelector('.svc-section .svc-tabs-nav, [data-tabs-nav="supporting"]');
-    if(tabSection){
-      var tabParent=tabSection.closest('.svc-section');
-      if(tabParent){
-        var tabBtns=tabParent.querySelector('[data-tabs-nav]');
-        var tabPanels=tabParent.querySelectorAll('[data-panel]');
-        if(tabBtns){
-          gsap.fromTo(tabBtns,
-            {yPercent:5},
-            {yPercent:-5,ease:'none',
-             scrollTrigger:{trigger:tabParent,start:'top bottom',end:'bottom top',scrub:true}
-            });
-        }
-        tabPanels.forEach(function(panel){
-          gsap.fromTo(panel,
-            {yPercent:-3},
-            {yPercent:3,ease:'none',
-             scrollTrigger:{trigger:tabParent,start:'top bottom',end:'bottom top',scrub:true}
-            });
-        });
-      }
-    }
-
-  },2500); // after all sections populated
-})();
-
-/* ─────────────────────────────────────────────
-   Section 13 — Native Tab Switching (Supporting Services)
-   Injects rich content from original JS panels into native Webflow tabs.
-   Wrapped in setTimeout for Webflow component DOM readiness.
-   ───────────────────────────────────────────── */
-setTimeout(function(){
-  var nav=document.querySelector('[data-tabs-nav="supporting"]');
-  if(!nav)return;
-  var btns=nav.querySelectorAll('[data-tab]');
-  var parent=nav.parentElement;
-  if(!parent)return;
-  var nativePanels=parent.querySelectorAll('[data-panel]');
-  if(!btns.length||!nativePanels.length)return;
-
-  /* Map: native panel index → original JS panel index
-     Original: 0=Formulation, 1=MicroThermic, 2=ProcessDev, 3=PAL, 4=ScaleUp, 5=CoPacking, 6=SupplyChain
-     Native:   0=ProcessDev,   1=PAL,          2=ScaleUp  (Supply Chain moved to own section) */
-  var srcMap=[2,3,4];
-
-  /* Hide the 4th tab button (Supply Chain) — now its own section */
-  if(btns.length>=4) btns[3].style.display='none';
-  /* Also hide the 4th native panel */
-  if(nativePanels.length>=4) nativePanels[3].style.display='none';
-
-  /* If original JS panels are available, inject their rich content */
-  if(window._svcPanels&&window._svcPanels.length>=7){
-    nativePanels.forEach(function(np,i){
-      var srcIdx=srcMap[i];
-      var srcPanel=window._svcPanels[srcIdx];
-      if(!srcPanel)return;
-      /* Clear the native panel's static placeholder content */
-      np.innerHTML='';
-      /* Move all children from the original JS panel into the native panel */
-      while(srcPanel.firstChild){
-        np.appendChild(srcPanel.firstChild);
-      }
-    });
-  }
-
-  function activate(idx){
-    btns.forEach(function(b){
-      b.classList.remove('is-active');
-      b.style.color='#bbb';
-      b.style.borderBottomColor='transparent';
-    });
-    nativePanels.forEach(function(p){
-      p.style.display='none';
-      p.classList.remove('is-active');
-      /* Pause canvas animations in hidden panels */
-      var cvs=p.querySelectorAll('canvas');
-      cvs.forEach(function(cv){cv._active=false;});
-    });
-    btns[idx].classList.add('is-active');
-    btns[idx].style.color='#fff';
-    btns[idx].style.borderBottomColor='#C9A84C';
-    nativePanels[idx].style.display='block';
-    nativePanels[idx].classList.add('is-active');
-    /* Trigger canvas icon animations in the active panel */
-    var activeCvs=nativePanels[idx].querySelectorAll('canvas');
-    activeCvs.forEach(function(cv){
-      if(cv._draw&&!cv._active){
-        cv._active=true;cv._animT=0;
-        (function animCv(){
-          if(!cv._active)return;
-          cv._animT+=.016;
-          var ctx=cv.getContext('2d');
-          ctx.clearRect(0,0,cv.width,cv.height);
-          ctx.save();ctx.translate(cv.width/2,cv.height/2);
-          cv._draw(ctx,cv._animT);
-          ctx.restore();
-          requestAnimationFrame(animCv);
-        })();
-      }
-    });
-    /* Re-trigger phase card animations if Process Dev panel */
-    if(idx===0){
-      var cards=nativePanels[0].querySelectorAll('.proc-phase');
-      cards.forEach(function(c){c.style.opacity='1';c.style.transform='translateY(0)';});
-      var phaseIcons=nativePanels[0].querySelectorAll('.phase-icon');
-      phaseIcons.forEach(function(cv){
-        if(!cv._active){
-          cv._active=true;
-          var pidx=parseInt(cv.getAttribute('data-phase-idx'));
-          (function animPhase(){
-            if(!cv._active)return;
-            var ctx=cv.getContext('2d');
-            ctx.clearRect(0,0,48,48);
-            ctx.save();ctx.translate(24,24);ctx.globalAlpha=1;
-            cv._drawFn&&cv._drawFn(ctx,performance.now()/1000);
-            ctx.restore();
-            requestAnimationFrame(animPhase);
-          })();
-        }
-      });
-    }
-  }
-
-  btns.forEach(function(btn,i){
-    btn.style.cursor='pointer';
-    btn.addEventListener('click',function(){activate(i);});
-  });
-
-  /* Activate first tab on load */
-  activate(0);
-},2000);
-
 })(); // outer guard
-
-/* ─────────────────────────────────────────────
-   Section 14 — Supply Chain Hero with SVG
-   draw-on pipeline (matches Co-Packing style).
-   Text content is native Webflow.
-   ───────────────────────────────────────────── */
-setTimeout(function(){
-  var scSection=document.querySelector('.sc-section');
-  if(!scSection)return;
-  var scContent=scSection.querySelector('[data-role="sc-content"]');
-  if(!scContent) return;
-
-  /* ── SVG draw-on pipeline hero ── */
-  var pipeWrap=document.createElement('div');
-  pipeWrap.style.cssText='margin:40px auto 0;max-width:960px;padding:32px 12px 0;background:rgba(255,255,255,.02);border-radius:16px;border:1px solid rgba(255,255,255,.06)';
-  pipeWrap.setAttribute('data-role','sc-pipeline');
-
-  /* Pipeline label */
-  var plbl=document.createElement('div');
-  plbl.style.cssText='text-align:center;margin-bottom:12px;font-size:.65rem;letter-spacing:4px;color:rgba(255,255,255,.25);font-family:monospace';
-  plbl.textContent='AGENTIC SUPPLY CHAIN \u2014 PROCESS FLOW';
-  pipeWrap.appendChild(plbl);
-
-  /* SVG diagram — 5 stages matching Co-Packing white-line draw-on style */
-  var svgWrap=document.createElement('div');
-  svgWrap.style.cssText='display:flex;justify-content:center;overflow:hidden';
-  svgWrap.innerHTML=
-    '<svg viewBox="0 0 900 300" width="100%" style="max-width:900px">'+
-      '<defs>'+
-        '<filter id="scgo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
-        '<filter id="scgb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
-        '<marker id="scm" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0,6 3,0 6" fill="#C9A84C"/></marker>'+
-      '</defs>'+
-      /* ─── AUTONOMI INTELLIGENCE BAR (top) ─── */
-      '<rect x="60" y="16" width="780" height="42" rx="21" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".2" class="cp-d" style="--l:1640;animation-delay:.05s"/>'+
-      '<rect x="66" y="22" width="768" height="30" rx="15" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".08" class="cp-fi" style="animation-delay:1.2s"/>'+
-      /* Neural pulse line inside bar */
-      '<line x1="90" y1="37" x2="810" y2="37" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 8" class="cp-pO" style="stroke:#C9A84C" filter="url(#scgo)"/>'+
-      /* Hub nodes along the bar */
-      '<circle cx="140" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.4s" filter="url(#scgo)"/>'+
-      '<circle cx="290" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.5s" filter="url(#scgo)"/>'+
-      '<circle cx="450" cy="37" r="6" fill="#C9A84C" fill-opacity=".8" class="cp-fi" style="animation-delay:1.3s" filter="url(#scgo)"/>'+
-      '<circle cx="610" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.6s" filter="url(#scgo)"/>'+
-      '<circle cx="760" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.7s" filter="url(#scgo)"/>'+
-      '<text x="450" y="27" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.7;letter-spacing:3px">AUTONOMI \u00b7 29 AI AGENTS \u00b7 REAL-TIME</text>'+
-      /* ─── VERTICAL DATA FEEDS (bar → stages) ─── */
-      '<line x1="140" y1="58" x2="140" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.8s"/>'+
-      '<line x1="290" y1="58" x2="290" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.9s"/>'+
-      '<line x1="450" y1="58" x2="450" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1s"/>'+
-      '<line x1="610" y1="58" x2="610" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.1s"/>'+
-      '<line x1="760" y1="58" x2="760" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.2s"/>'+
-      /* ─── GUIDELINE ─── */
-      '<line x1="40" y1="270" x2="860" y2="270" stroke="white" stroke-width=".6" stroke-opacity=".05" class="cp-d" style="--l:820;animation-delay:0s"/>'+
-      /* ═══ STAGE 1: VENDOR SOURCING (database icon) ═══ */
-      '<rect x="100" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.15s"/>'+
-      '<path d="M100,108 Q140,94 180,108" class="cp-d" style="--l:88;animation-delay:.2s"/>'+
-      '<line x1="112" y1="132" x2="168" y2="132" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.5s"/>'+
-      '<line x1="112" y1="152" x2="168" y2="152" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.55s"/>'+
-      '<line x1="112" y1="172" x2="168" y2="172" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.6s"/>'+
-      '<circle cx="122" cy="125" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.8s"/>'+
-      '<circle cx="122" cy="145" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.9s"/>'+
-      '<circle cx="122" cy="165" r="2" fill="#f97316" fill-opacity=".5" class="cp-fi" style="animation-delay:2s"/>'+
-      '<rect x="130" y="122" width="30" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2s"/>'+
-      '<rect x="130" y="142" width="24" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.1s"/>'+
-      '<rect x="130" y="162" width="28" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.2s"/>'+
-      '<text x="140" y="230" class="cp-lbl">VENDOR</text>'+
-      '<text x="140" y="241" class="cp-lbl" fill-opacity=".4">SOURCING</text>'+
-      /* ─── PIPE: vendor → procurement ─── */
-      '<line x1="180" y1="158" x2="240" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:.7s"/>'+
-      '<line x1="180" y1="158" x2="240" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
-      '<polygon points="225,158 215,154 215,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
-      /* ═══ STAGE 2: PROCUREMENT (PO document) ═══ */
-      '<rect x="250" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.3s"/>'+
-      '<rect x="268" y="120" width="44" height="56" rx="3" stroke="white" stroke-width=".8" stroke-opacity=".25" fill="none" class="cp-d" style="--l:200;animation-delay:.65s"/>'+
-      '<path d="M298,120 L312,120 L312,134 Z" stroke="white" stroke-width=".7" fill="none" stroke-opacity=".2" class="cp-d" style="--l:50;animation-delay:.75s"/>'+
-      '<line x1="274" y1="140" x2="300" y2="140" stroke="white" stroke-width=".8" stroke-opacity=".15" class="cp-fi" style="animation-delay:2.1s"/>'+
-      '<line x1="274" y1="148" x2="306" y2="148" stroke="white" stroke-width=".8" stroke-opacity=".12" class="cp-fi" style="animation-delay:2.15s"/>'+
-      '<line x1="274" y1="156" x2="296" y2="156" stroke="white" stroke-width=".8" stroke-opacity=".1" class="cp-fi" style="animation-delay:2.2s"/>'+
-      '<path d="M280,164 L286,170 L300,158" stroke="#4ade80" stroke-width="1.5" fill="none" class="cp-d" style="--l:32;animation-delay:1.6s" filter="url(#scgb)"/>'+
-      '<text x="290" y="230" class="cp-lbl">PROCUREMENT</text>'+
-      '<text x="290" y="241" class="cp-lbl" fill-opacity=".4">AI AGENTS</text>'+
-      /* ─── PIPE: procurement → production ─── */
-      '<line x1="330" y1="158" x2="400" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:.9s"/>'+
-      '<line x1="330" y1="158" x2="400" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
-      '<polygon points="385,158 375,154 375,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
-      /* ═══ STAGE 3: PRODUCTION (factory w/ gear) ═══ */
-      '<rect x="410" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.4s"/>'+
-      '<path d="M410,108 L430,94 L450,108 L470,94 L490,108" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.45s"/>'+
-      '<circle cx="450" cy="150" r="16" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.8s"/>'+
-      '<circle cx="450" cy="150" r="6" stroke="white" stroke-width="1" fill="none" class="cp-imp"/>'+
-      '<line x1="450" y1="132" x2="450" y2="126" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.85s"/>'+
-      '<line x1="450" y1="168" x2="450" y2="174" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.87s"/>'+
-      '<line x1="432" y1="150" x2="426" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.89s"/>'+
-      '<line x1="468" y1="150" x2="474" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.91s"/>'+
-      '<rect x="422" y="94" width="8" height="18" rx="1" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-d" style="--l:52;animation-delay:.7s"/>'+
-      '<path d="M426,90 Q428,84 430,90" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-ws"/>'+
-      '<path d="M424,84 Q427,78 430,84" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-ws1"/>'+
-      '<text x="450" y="230" class="cp-lbl">PRODUCTION</text>'+
-      '<text x="450" y="241" class="cp-lbl" fill-opacity=".4">SCHEDULING</text>'+
-      /* ─── PIPE: production → quality ─── */
-      '<line x1="490" y1="158" x2="560" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:1.1s"/>'+
-      '<line x1="490" y1="158" x2="560" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
-      '<polygon points="545,158 535,154 535,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
-      /* ═══ STAGE 4: QUALITY (shield + checkmark) ═══ */
-      '<rect x="570" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.5s"/>'+
-      '<path d="M610,118 L632,126 L632,154 Q632,172 610,178 Q588,172 588,154 L588,126 Z" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:180;animation-delay:.85s"/>'+
-      '<path d="M610,124 L626,130 L626,152 Q626,166 610,172 Q594,166 594,152 L594,130 Z" fill="white" fill-opacity=".03" class="cp-fi" style="animation-delay:2s"/>'+
-      '<path d="M600,148 L607,156 L622,140" stroke="#4ade80" stroke-width="2" fill="none" stroke-linecap="round" class="cp-d" style="--l:36;animation-delay:1.4s" filter="url(#scgb)"/>'+
-      '<text x="610" y="195" class="cp-lbl" style="font-size:7px;fill:#4ade80;fill-opacity:.5">COA \u2713</text>'+
-      '<text x="610" y="230" class="cp-lbl">QUALITY</text>'+
-      '<text x="610" y="241" class="cp-lbl" fill-opacity=".4">INTELLIGENCE</text>'+
-      /* ─── PIPE: quality → logistics ─── */
-      '<line x1="650" y1="158" x2="710" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:1.3s"/>'+
-      '<line x1="650" y1="158" x2="710" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
-      '<polygon points="698,158 688,154 688,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
-      /* ═══ STAGE 5: LOGISTICS (truck + route) ═══ */
-      '<rect x="720" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.6s"/>'+
-      '<rect x="734" y="140" width="36" height="24" rx="3" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:120;animation-delay:.95s"/>'+
-      '<path d="M770,148 L782,148 L786,156 L786,164 L770,164" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:60;animation-delay:1s"/>'+
-      '<circle cx="744" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.1s"/>'+
-      '<circle cx="778" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.15s"/>'+
-      '<circle cx="744" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/>'+
-      '<circle cx="778" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.35s"/>'+
-      '<circle cx="740" cy="126" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.4s"/>'+
-      '<circle cx="752" cy="122" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.5s"/>'+
-      '<circle cx="764" cy="126" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.6s"/>'+
-      '<circle cx="776" cy="122" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.7s"/>'+
-      '<path d="M740,126 Q746,120 752,122 Q758,124 764,126 Q770,120 776,122" stroke="#f97316" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-d" style="--l:40;animation-delay:1.5s"/>'+
-      '<text x="760" y="230" class="cp-lbl">LOGISTICS</text>'+
-      '<text x="760" y="241" class="cp-lbl" fill-opacity=".4">&amp; 3PL</text>'+
-      /* ─── STAGE NUMBERS ─── */
-      '<text x="140" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">01</text>'+
-      '<text x="290" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">02</text>'+
-      '<text x="450" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">03</text>'+
-      '<text x="610" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">04</text>'+
-      '<text x="760" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">05</text>'+
-    '</svg>';
-  pipeWrap.appendChild(svgWrap);
-
-  /* Reorder: Heading → SVG Pipeline → Paragraph → Bullets → CTA */
-  var svcH2=scContent.querySelector('.svc-h2');
-  var svcDesc=scContent.querySelector('.svc-desc');
-  var bulletRow=scContent.querySelector('.svc-bullet-row');
-
-  /* Insert pipeline right after the heading */
-  if(svcH2&&svcH2.nextSibling){
-    scContent.insertBefore(pipeWrap,svcH2.nextSibling);
-  }else{
-    scContent.appendChild(pipeWrap);
-  }
-
-  /* Move paragraph after the pipeline (middle position) */
-  if(svcDesc){
-    if(pipeWrap.nextSibling){
-      scContent.insertBefore(svcDesc,pipeWrap.nextSibling);
-    }else{
-      scContent.appendChild(svcDesc);
-    }
-  }
-
-  /* ── Replay animations when scrolled into view ── */
-  if(typeof IntersectionObserver!=='undefined'){
-    var svg=pipeWrap.querySelector('svg');
-    var obs=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting&&svg){
-          /* Re-trigger CSS animations by cloning SVG */
-          var clone=svg.cloneNode(true);
-          svg.parentNode.replaceChild(clone,svg);
-          svg=clone;
-        }
-      });
-    },{threshold:0.15});
-    obs.observe(pipeWrap);
-  }
-
-},2000);
