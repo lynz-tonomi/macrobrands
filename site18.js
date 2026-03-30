@@ -2385,9 +2385,9 @@ setTimeout(function(){
 })(); // outer guard
 
 /* ─────────────────────────────────────────────
-   Section 14 — Supply Chain section enhancements
-   Text content is native Webflow. JS adds animated
-   white-line Lottie-style canvas agent pipeline.
+   Section 14 — Supply Chain Hero with SVG
+   draw-on pipeline (matches Co-Packing style).
+   Text content is native Webflow.
    ───────────────────────────────────────────── */
 setTimeout(function(){
   var scSection=document.querySelector('.sc-section');
@@ -2395,132 +2395,132 @@ setTimeout(function(){
   var scContent=scSection.querySelector('[data-role="sc-content"]');
   if(!scContent) return;
 
-  /* ── Agent pipeline: 5 animated white-line canvas icons ── */
-  var agents=[
-    {label:'Vendor\nSourcing',draw:function(ctx,t){
-      /* Clipboard */
-      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
-      ctx.beginPath();ctx.roundRect(-12,-18,24,34,3);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(-6,-18);ctx.lineTo(-6,-22);ctx.lineTo(6,-22);ctx.lineTo(6,-18);ctx.stroke();
-      /* Animated checklines */
-      var n=3;for(var i=0;i<n;i++){
-        var ly=-8+i*10;var prog=Math.min(1,Math.max(0,(t*1.5-i*.3)%2));
-        ctx.globalAlpha=.3+prog*.5;
-        ctx.beginPath();ctx.moveTo(-7,ly);ctx.lineTo(-7+14*prog,ly);ctx.stroke();
-      }ctx.globalAlpha=1;
-    }},
-    {label:'Procurement\nAI Agents',draw:function(ctx,t){
-      /* Shield with checkmark */
-      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
-      var sc=1+Math.sin(t*2)*.03;ctx.scale(sc,sc);
-      ctx.beginPath();ctx.moveTo(0,-20);ctx.lineTo(16,-12);ctx.lineTo(16,4);
-      ctx.quadraticCurveTo(16,20,0,24);ctx.quadraticCurveTo(-16,20,-16,4);
-      ctx.lineTo(-16,-12);ctx.closePath();ctx.stroke();
-      ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-6,2);ctx.lineTo(-1,9);ctx.lineTo(8,-4);ctx.stroke();
-      /* Pulse glow */
-      ctx.globalAlpha=Math.sin(t*3)*.08+.04;ctx.lineWidth=6;
-      ctx.beginPath();ctx.moveTo(0,-20);ctx.lineTo(16,-12);ctx.lineTo(16,4);
-      ctx.quadraticCurveTo(16,20,0,24);ctx.quadraticCurveTo(-16,20,-16,4);
-      ctx.lineTo(-16,-12);ctx.closePath();ctx.stroke();ctx.globalAlpha=1;
-    }},
-    {label:'Production\nScheduling',draw:function(ctx,t){
-      /* Gear */
-      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
-      ctx.rotate(t*.6);
-      var teeth=8,oR=18,iR=12;
-      ctx.beginPath();
-      for(var i=0;i<teeth;i++){
-        var a1=i/teeth*Math.PI*2,a2=(i+.3)/teeth*Math.PI*2,a3=(i+.5)/teeth*Math.PI*2,a4=(i+.8)/teeth*Math.PI*2;
-        if(i===0)ctx.moveTo(Math.cos(a1)*iR,Math.sin(a1)*iR);
-        ctx.lineTo(Math.cos(a2)*oR,Math.sin(a2)*oR);
-        ctx.lineTo(Math.cos(a3)*oR,Math.sin(a3)*oR);
-        ctx.lineTo(Math.cos(a4)*iR,Math.sin(a4)*iR);
-      }ctx.closePath();ctx.stroke();
-      ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.stroke();
-    }},
-    {label:'Quality\nIntelligence',draw:function(ctx,t){
-      /* Magnifying glass with sparkle */
-      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';
-      ctx.beginPath();ctx.arc(-3,-3,12,0,Math.PI*2);ctx.stroke();
-      ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(5.5,5.5);ctx.lineTo(16,16);ctx.stroke();
-      /* Animated sparkle inside lens */
-      ctx.lineWidth=1.5;ctx.globalAlpha=.4+Math.sin(t*4)*.4;
-      var sx=-5,sy=-5;
-      ctx.beginPath();ctx.moveTo(sx,sy-5);ctx.lineTo(sx,sy+5);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(sx-5,sy);ctx.lineTo(sx+5,sy);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(sx-3.5,sy-3.5);ctx.lineTo(sx+3.5,sy+3.5);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(sx+3.5,sy-3.5);ctx.lineTo(sx-3.5,sy+3.5);ctx.stroke();
-      ctx.globalAlpha=1;
-    }},
-    {label:'Logistics\n& 3PL',draw:function(ctx,t){
-      /* Truck */
-      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
-      /* Cargo box */
-      ctx.beginPath();ctx.rect(-18,-10,22,18);ctx.stroke();
-      /* Cab */
-      ctx.beginPath();ctx.moveTo(4,-10);ctx.lineTo(4,-4);ctx.lineTo(16,0);ctx.lineTo(16,8);ctx.lineTo(4,8);ctx.stroke();
-      /* Wheels */
-      var bounce=Math.sin(t*8)*.8;
-      ctx.beginPath();ctx.arc(-10,8+bounce,4,0,Math.PI*2);ctx.stroke();
-      ctx.beginPath();ctx.arc(10,8+bounce,4,0,Math.PI*2);ctx.stroke();
-      /* Road line */
-      ctx.globalAlpha=.3;ctx.lineWidth=1;
-      ctx.setLineDash([4,4]);ctx.lineDashOffset=-t*30;
-      ctx.beginPath();ctx.moveTo(-24,14);ctx.lineTo(22,14);ctx.stroke();
-      ctx.setLineDash([]);ctx.globalAlpha=1;
-    }}
-  ];
-
+  /* ── SVG draw-on pipeline hero ── */
   var pipeWrap=document.createElement('div');
-  pipeWrap.style.cssText='margin:40px auto;max-width:960px;padding:32px 20px;background:rgba(255,255,255,.02);border-radius:16px;border:1px solid rgba(255,255,255,.06)';
+  pipeWrap.style.cssText='margin:40px auto 0;max-width:960px;padding:32px 12px 0;background:rgba(255,255,255,.02);border-radius:16px;border:1px solid rgba(255,255,255,.06)';
   pipeWrap.setAttribute('data-role','sc-pipeline');
 
-  /* Header line */
-  var hdr=document.createElement('div');
-  hdr.style.cssText='text-align:center;margin-bottom:24px;font-size:.7rem;letter-spacing:4px;color:#555;font-family:Inter,sans-serif';
-  hdr.textContent='AUTONOMI \u00B7 29 AI AGENTS \u00B7 REAL-TIME';
-  pipeWrap.appendChild(hdr);
+  /* Pipeline label */
+  var plbl=document.createElement('div');
+  plbl.style.cssText='text-align:center;margin-bottom:12px;font-size:.65rem;letter-spacing:4px;color:rgba(255,255,255,.25);font-family:monospace';
+  plbl.textContent='AGENTIC SUPPLY CHAIN \u2014 PROCESS FLOW';
+  pipeWrap.appendChild(plbl);
 
-  /* Pipeline row */
-  var row=document.createElement('div');
-  row.style.cssText='display:flex;align-items:center;justify-content:center;gap:0;position:relative';
-  pipeWrap.appendChild(row);
-
-  agents.forEach(function(agent,idx){
-    /* Card */
-    var card=document.createElement('div');
-    card.style.cssText='display:flex;flex-direction:column;align-items:center;width:140px;position:relative;z-index:1';
-
-    /* Canvas icon — animated white lines */
-    var cv=document.createElement('canvas');
-    cv.width=80;cv.height=80;
-    cv.style.cssText='width:60px;height:60px;margin-bottom:8px';
-    cv._draw=agent.draw;cv._animT=0;cv._active=false;
-    card.appendChild(cv);
-
-    /* Label */
-    var lbl=document.createElement('div');
-    lbl.style.cssText='text-align:center;line-height:1.4';
-    var lines=agent.label.split('\n');
-    lbl.innerHTML='<span style="color:#fff;font-size:.8rem;font-weight:600;display:block">'+lines[0]+'</span>';
-    if(lines[1]) lbl.innerHTML+='<span style="color:#666;font-size:.7rem;display:block">'+lines[1]+'</span>';
-    card.appendChild(lbl);
-
-    row.appendChild(card);
-
-    /* Arrow between cards */
-    if(idx<agents.length-1){
-      var arrow=document.createElement('div');
-      arrow.style.cssText='width:28px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:1.2rem;margin-top:-24px';
-      arrow.textContent='\u25B8';
-      row.appendChild(arrow);
-    }
-  });
-
-  /* Connecting line behind cards */
-  var line=document.createElement('div');
-  line.style.cssText='position:absolute;top:30px;left:70px;right:70px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1) 10%,rgba(255,255,255,.1) 90%,transparent);z-index:0';
-  row.appendChild(line);
+  /* SVG diagram — 5 stages matching Co-Packing white-line draw-on style */
+  var svgWrap=document.createElement('div');
+  svgWrap.style.cssText='display:flex;justify-content:center;overflow:hidden';
+  svgWrap.innerHTML=
+    '<svg viewBox="0 0 900 300" width="100%" style="max-width:900px">'+
+      '<defs>'+
+        '<filter id="scgo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+        '<filter id="scgb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+        '<marker id="scm" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0,6 3,0 6" fill="#C9A84C"/></marker>'+
+      '</defs>'+
+      /* ─── AUTONOMI INTELLIGENCE BAR (top) ─── */
+      '<rect x="60" y="16" width="780" height="42" rx="21" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".2" class="cp-d" style="--l:1640;animation-delay:.05s"/>'+
+      '<rect x="66" y="22" width="768" height="30" rx="15" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".08" class="cp-fi" style="animation-delay:1.2s"/>'+
+      /* Neural pulse line inside bar */
+      '<line x1="90" y1="37" x2="810" y2="37" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 8" class="cp-pO" style="stroke:#C9A84C" filter="url(#scgo)"/>'+
+      /* Hub nodes along the bar */
+      '<circle cx="140" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.4s" filter="url(#scgo)"/>'+
+      '<circle cx="290" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.5s" filter="url(#scgo)"/>'+
+      '<circle cx="450" cy="37" r="6" fill="#C9A84C" fill-opacity=".8" class="cp-fi" style="animation-delay:1.3s" filter="url(#scgo)"/>'+
+      '<circle cx="610" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.6s" filter="url(#scgo)"/>'+
+      '<circle cx="760" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.7s" filter="url(#scgo)"/>'+
+      '<text x="450" y="27" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.7;letter-spacing:3px">AUTONOMI \u00b7 29 AI AGENTS \u00b7 REAL-TIME</text>'+
+      /* ─── VERTICAL DATA FEEDS (bar → stages) ─── */
+      '<line x1="140" y1="58" x2="140" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.8s"/>'+
+      '<line x1="290" y1="58" x2="290" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.9s"/>'+
+      '<line x1="450" y1="58" x2="450" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1s"/>'+
+      '<line x1="610" y1="58" x2="610" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.1s"/>'+
+      '<line x1="760" y1="58" x2="760" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.2s"/>'+
+      /* ─── GUIDELINE ─── */
+      '<line x1="40" y1="270" x2="860" y2="270" stroke="white" stroke-width=".6" stroke-opacity=".05" class="cp-d" style="--l:820;animation-delay:0s"/>'+
+      /* ═══ STAGE 1: VENDOR SOURCING (database icon) ═══ */
+      '<rect x="100" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.15s"/>'+
+      '<path d="M100,108 Q140,94 180,108" class="cp-d" style="--l:88;animation-delay:.2s"/>'+
+      '<line x1="112" y1="132" x2="168" y2="132" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.5s"/>'+
+      '<line x1="112" y1="152" x2="168" y2="152" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.55s"/>'+
+      '<line x1="112" y1="172" x2="168" y2="172" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.6s"/>'+
+      '<circle cx="122" cy="125" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.8s"/>'+
+      '<circle cx="122" cy="145" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.9s"/>'+
+      '<circle cx="122" cy="165" r="2" fill="#f97316" fill-opacity=".5" class="cp-fi" style="animation-delay:2s"/>'+
+      '<rect x="130" y="122" width="30" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2s"/>'+
+      '<rect x="130" y="142" width="24" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.1s"/>'+
+      '<rect x="130" y="162" width="28" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.2s"/>'+
+      '<text x="140" y="230" class="cp-lbl">VENDOR</text>'+
+      '<text x="140" y="241" class="cp-lbl" fill-opacity=".4">SOURCING</text>'+
+      /* ─── PIPE: vendor → procurement ─── */
+      '<line x1="180" y1="158" x2="240" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:.7s"/>'+
+      '<line x1="180" y1="158" x2="240" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+      '<polygon points="225,158 215,154 215,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+      /* ═══ STAGE 2: PROCUREMENT (PO document) ═══ */
+      '<rect x="250" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.3s"/>'+
+      '<rect x="268" y="120" width="44" height="56" rx="3" stroke="white" stroke-width=".8" stroke-opacity=".25" fill="none" class="cp-d" style="--l:200;animation-delay:.65s"/>'+
+      '<path d="M298,120 L312,120 L312,134 Z" stroke="white" stroke-width=".7" fill="none" stroke-opacity=".2" class="cp-d" style="--l:50;animation-delay:.75s"/>'+
+      '<line x1="274" y1="140" x2="300" y2="140" stroke="white" stroke-width=".8" stroke-opacity=".15" class="cp-fi" style="animation-delay:2.1s"/>'+
+      '<line x1="274" y1="148" x2="306" y2="148" stroke="white" stroke-width=".8" stroke-opacity=".12" class="cp-fi" style="animation-delay:2.15s"/>'+
+      '<line x1="274" y1="156" x2="296" y2="156" stroke="white" stroke-width=".8" stroke-opacity=".1" class="cp-fi" style="animation-delay:2.2s"/>'+
+      '<path d="M280,164 L286,170 L300,158" stroke="#4ade80" stroke-width="1.5" fill="none" class="cp-d" style="--l:32;animation-delay:1.6s" filter="url(#scgb)"/>'+
+      '<text x="290" y="230" class="cp-lbl">PROCUREMENT</text>'+
+      '<text x="290" y="241" class="cp-lbl" fill-opacity=".4">AI AGENTS</text>'+
+      /* ─── PIPE: procurement → production ─── */
+      '<line x1="330" y1="158" x2="400" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:.9s"/>'+
+      '<line x1="330" y1="158" x2="400" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+      '<polygon points="385,158 375,154 375,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+      /* ═══ STAGE 3: PRODUCTION (factory w/ gear) ═══ */
+      '<rect x="410" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.4s"/>'+
+      '<path d="M410,108 L430,94 L450,108 L470,94 L490,108" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.45s"/>'+
+      '<circle cx="450" cy="150" r="16" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.8s"/>'+
+      '<circle cx="450" cy="150" r="6" stroke="white" stroke-width="1" fill="none" class="cp-imp"/>'+
+      '<line x1="450" y1="132" x2="450" y2="126" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.85s"/>'+
+      '<line x1="450" y1="168" x2="450" y2="174" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.87s"/>'+
+      '<line x1="432" y1="150" x2="426" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.89s"/>'+
+      '<line x1="468" y1="150" x2="474" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.91s"/>'+
+      '<rect x="422" y="94" width="8" height="18" rx="1" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-d" style="--l:52;animation-delay:.7s"/>'+
+      '<path d="M426,90 Q428,84 430,90" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-ws"/>'+
+      '<path d="M424,84 Q427,78 430,84" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-ws1"/>'+
+      '<text x="450" y="230" class="cp-lbl">PRODUCTION</text>'+
+      '<text x="450" y="241" class="cp-lbl" fill-opacity=".4">SCHEDULING</text>'+
+      /* ─── PIPE: production → quality ─── */
+      '<line x1="490" y1="158" x2="560" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:1.1s"/>'+
+      '<line x1="490" y1="158" x2="560" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+      '<polygon points="545,158 535,154 535,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+      /* ═══ STAGE 4: QUALITY (shield + checkmark) ═══ */
+      '<rect x="570" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.5s"/>'+
+      '<path d="M610,118 L632,126 L632,154 Q632,172 610,178 Q588,172 588,154 L588,126 Z" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:180;animation-delay:.85s"/>'+
+      '<path d="M610,124 L626,130 L626,152 Q626,166 610,172 Q594,166 594,152 L594,130 Z" fill="white" fill-opacity=".03" class="cp-fi" style="animation-delay:2s"/>'+
+      '<path d="M600,148 L607,156 L622,140" stroke="#4ade80" stroke-width="2" fill="none" stroke-linecap="round" class="cp-d" style="--l:36;animation-delay:1.4s" filter="url(#scgb)"/>'+
+      '<text x="610" y="195" class="cp-lbl" style="font-size:7px;fill:#4ade80;fill-opacity:.5">COA \u2713</text>'+
+      '<text x="610" y="230" class="cp-lbl">QUALITY</text>'+
+      '<text x="610" y="241" class="cp-lbl" fill-opacity=".4">INTELLIGENCE</text>'+
+      /* ─── PIPE: quality → logistics ─── */
+      '<line x1="650" y1="158" x2="710" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:1.3s"/>'+
+      '<line x1="650" y1="158" x2="710" y2="158" class="cp-pO" filter="url(#scgo)"/>'+
+      '<polygon points="698,158 688,154 688,162" fill="#f97316" class="cp-ap" filter="url(#scgo)"/>'+
+      /* ═══ STAGE 5: LOGISTICS (truck + route) ═══ */
+      '<rect x="720" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.6s"/>'+
+      '<rect x="734" y="140" width="36" height="24" rx="3" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:120;animation-delay:.95s"/>'+
+      '<path d="M770,148 L782,148 L786,156 L786,164 L770,164" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:60;animation-delay:1s"/>'+
+      '<circle cx="744" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.1s"/>'+
+      '<circle cx="778" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.15s"/>'+
+      '<circle cx="744" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/>'+
+      '<circle cx="778" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.35s"/>'+
+      '<circle cx="740" cy="126" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.4s"/>'+
+      '<circle cx="752" cy="122" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.5s"/>'+
+      '<circle cx="764" cy="126" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.6s"/>'+
+      '<circle cx="776" cy="122" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.7s"/>'+
+      '<path d="M740,126 Q746,120 752,122 Q758,124 764,126 Q770,120 776,122" stroke="#f97316" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-d" style="--l:40;animation-delay:1.5s"/>'+
+      '<text x="760" y="230" class="cp-lbl">LOGISTICS</text>'+
+      '<text x="760" y="241" class="cp-lbl" fill-opacity=".4">&amp; 3PL</text>'+
+      /* ─── STAGE NUMBERS ─── */
+      '<text x="140" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">01</text>'+
+      '<text x="290" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">02</text>'+
+      '<text x="450" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">03</text>'+
+      '<text x="610" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">04</text>'+
+      '<text x="760" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">05</text>'+
+    '</svg>';
+  pipeWrap.appendChild(svgWrap);
 
   /* Insert pipeline after the bullet row */
   var bulletRow=scContent.querySelector('.svc-bullet-row');
@@ -2530,33 +2530,19 @@ setTimeout(function(){
     scContent.appendChild(pipeWrap);
   }
 
-  /* ── Animate all pipeline canvases with IntersectionObserver ── */
-  var allCvs=pipeWrap.querySelectorAll('canvas');
-  function startAnim(cv){
-    if(cv._draw&&!cv._active){
-      cv._active=true;cv._animT=cv._animT||0;
-      (function loop(){
-        if(!cv._active)return;
-        cv._animT+=.016;
-        var ctx=cv.getContext('2d');
-        ctx.clearRect(0,0,cv.width,cv.height);
-        ctx.save();ctx.translate(cv.width/2,cv.height/2);
-        cv._draw(ctx,cv._animT);
-        ctx.restore();
-        requestAnimationFrame(loop);
-      })();
-    }
-  }
+  /* ── Replay animations when scrolled into view ── */
   if(typeof IntersectionObserver!=='undefined'){
+    var svg=pipeWrap.querySelector('svg');
     var obs=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if(e.isIntersecting){
-          allCvs.forEach(startAnim);
-        }else{
-          allCvs.forEach(function(cv){cv._active=false;});
+        if(e.isIntersecting&&svg){
+          /* Re-trigger CSS animations by cloning SVG */
+          var clone=svg.cloneNode(true);
+          svg.parentNode.replaceChild(clone,svg);
+          svg=clone;
         }
       });
-    },{threshold:0.1});
+    },{threshold:0.15});
     obs.observe(pipeWrap);
   }
 
