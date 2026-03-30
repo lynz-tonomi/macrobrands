@@ -2089,11 +2089,17 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       if(cpDesc) cpDesc.textContent='Scaling from pilot to full production is where most emerging brands stall \u2014 quality drifts, timelines slip, and per-unit costs balloon. Our co-packing operation is built to prevent all three. We run tunnel pasteurization, retort, aseptic hot-fill, ESL bottling, and HPP cold-press across multiple lines, each with dedicated CIP systems and allergen-segregated bays so your product never touches someone else\u2019s run. From 5,000-unit test batches to million-case annual contracts, every job gets a dedicated production coordinator, real-time batch dashboards, and a quality hold protocol that won\u2019t release a single pallet until COA, micro, and sensory all clear. We handle procurement, warehousing, and 3PL coordination so you get one invoice and one point of contact from raw ingredient to delivered case.';
     }
 
-    /* Supply Chain — longer paragraph */
+    /* Supply Chain — longer paragraph + center alignment */
     var scSec=document.querySelector('.sc-section');
     if(scSec){
       var scDesc=scSec.querySelector('.svc-desc');
-      if(scDesc) scDesc.textContent='The food and beverage industry loses billions every year to manual coordination \u2014 reordering ingredients too late, missing quality flags mid-run, filing compliance paperwork after the fact, and paying premium freight because nobody saw the stockout coming. Autonomi\u2019s agentic supply chain replaces that patchwork with 29 purpose-built AI agents that monitor, decide, and act across your entire operation in real time. From vendor sourcing and procurement automation to production scheduling, quality intelligence, and last-mile logistics, every handoff is orchestrated by agents that share a unified data layer \u2014 so a raw-material delay in stage one automatically adjusts your production calendar, notifies your 3PL, and updates your retail buyer before anyone picks up a phone. The result: fewer stockouts, tighter margins, full traceability from farm to shelf, and a supply chain that gets smarter with every order.';
+      if(scDesc){
+        scDesc.textContent='The food and beverage industry loses billions every year to manual coordination \u2014 reordering ingredients too late, missing quality flags mid-run, filing compliance paperwork after the fact, and paying premium freight because nobody saw the stockout coming. Autonomi\u2019s agentic supply chain replaces that patchwork with 29 purpose-built AI agents that monitor, decide, and act across your entire operation in real time. From vendor sourcing and procurement automation to production scheduling, quality intelligence, and last-mile logistics, every handoff is orchestrated by agents that share a unified data layer \u2014 so a raw-material delay in stage one automatically adjusts your production calendar, notifies your 3PL, and updates your retail buyer before anyone picks up a phone. The result: fewer stockouts, tighter margins, full traceability from farm to shelf, and a supply chain that gets smarter with every order.';
+        scDesc.style.textAlign='center';
+        scDesc.style.maxWidth='800px';
+        scDesc.style.marginLeft='auto';
+        scDesc.style.marginRight='auto';
+      }
     }
 
     /* ── 1b. Hide old "Our Services" 7-tab JS section (replaced by native sections) ── */
