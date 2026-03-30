@@ -1186,6 +1186,8 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
     /* Hide native service cards */
     var nativeGrid=document.querySelector('.services-grid');
     if(nativeGrid)nativeGrid.style.display='none';
+    /* Auto-open Tunnel Pasteurization on load */
+    setTimeout(function(){ openSlot(0); },300);
   }
 
 
@@ -1993,6 +1995,9 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     cpGrid.appendChild(row1);
     cpGrid.appendChild(expSlot);
     cpGrid.appendChild(row2);
+
+    /* Auto-open Tunnel Pasteurization (index 0) on page load */
+    setTimeout(function(){ openSlot(0); },300);
   }
 
   /* ── MicroThermic right-align fix ── */
