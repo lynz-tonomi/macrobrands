@@ -2091,23 +2091,8 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       lbl.style.display='none';
     });
 
-    /* ── 1a. Update all service section descriptions with longer copy ── */
-    var formSec=document.getElementById('svc-formulation');
-    if(formSec){
-      var formDesc=formSec.querySelector('.svc-desc');
-      if(formDesc) formDesc.textContent='Your recipe is just the starting point. Our food scientists reverse-engineer your kitchen formula and rebuild it for commercial production \u2014 adjusting pH, water activity, viscosity, and emulsion stability so it survives thermal processing without sacrificing flavor or mouthfeel. Whether you\u2019re targeting retort, aseptic, tunnel pasteurization, or cold fill, we dial in every ingredient ratio, source clean-label alternatives when needed, and run accelerated shelf-life studies so you go into your first production run with a formula that\u2019s locked, validated, and ready to scale.';
-    }
-
-    /* MicroThermic — description is now native in Webflow Designer (no JS override needed) */
+    /* ── 1a. All service section descriptions are now native Webflow ── */
     var svcAll=document.querySelectorAll('.svc-section');
-
-    /* Co-Packing — longer paragraph */
-    if(svcAll[2]){
-      var cpDesc=svcAll[2].querySelector('.svc-desc');
-      if(cpDesc) cpDesc.textContent='Scaling from pilot to full production is where most emerging brands stall \u2014 quality drifts, timelines slip, and per-unit costs balloon. Our co-packing operation is built to prevent all three. We run tunnel pasteurization, retort, aseptic hot-fill, ESL bottling, and HPP cold-press across multiple lines, each with dedicated CIP systems and allergen-segregated bays so your product never touches someone else\u2019s run. From 5,000-unit test batches to million-case annual contracts, every job gets a dedicated production coordinator, real-time batch dashboards, and a quality hold protocol that won\u2019t release a single pallet until COA, micro, and sensory all clear. We handle procurement, warehousing, and 3PL coordination so you get one invoice and one point of contact from raw ingredient to delivered case.';
-    }
-
-    /* Supply Chain — all text & layout now native Webflow (no JS overrides) */
 
     /* ── 1b. Hide old "Our Services" 7-tab JS section (replaced by native sections) ── */
     document.querySelectorAll('h2').forEach(function(h){
