@@ -291,11 +291,11 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 (function(){
   if(window.location.pathname.match(/\/contact/))return;
   setTimeout(function(){
+  /* Build panels off-DOM — no longer depends on .section-dark existing.
+     Panels are exported via window._svcPanels for Section 13 to inject
+     into native Webflow tab panels. If .section-dark exists, also render there. */
   var sd=document.querySelector('.section-dark');
-  if(!sd)return;
-
-  // Find or create content wrapper inside section-dark
-  var cw=sd;
+  var cw=sd||document.createElement('div'); // off-DOM fallback
 
   // Tab data — short names with canvas animated icons
   var tabs=[
