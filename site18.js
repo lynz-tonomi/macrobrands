@@ -1071,6 +1071,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   // Activate first tab
   buttons[0].onclick();
 
+  // Export panels for native Webflow tab integration (Section 13)
+  window._svcPanels=panels;
+  window._svcButtons=buttons;
+
   // Co-Packing process cards with expandable SVG diagrams (index 5)
   if(panels.length>5){
     var coPackPanel=panels[5];
@@ -1978,7 +1982,8 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
 
 /* ─────────────────────────────────────────────
    Section 13 — Native Tab Switching (Supporting Services)
-   Wrapped in setTimeout for Webflow component DOM readiness
+   Injects rich content from original JS panels into native Webflow tabs.
+   Wrapped in setTimeout for Webflow component DOM readiness.
    ───────────────────────────────────────────── */
 setTimeout(function(){
   var nav=document.querySelector('[data-tabs-nav="supporting"]');
@@ -1986,8 +1991,28 @@ setTimeout(function(){
   var btns=nav.querySelectorAll('[data-tab]');
   var parent=nav.parentElement;
   if(!parent)return;
-  var panels=parent.querySelectorAll('[data-panel]');
-  if(!btns.length||!panels.length)return;
+  var nativePanels=parent.querySelectorAll('[data-panel]');
+  if(!btns.length||!nativePanels.length)return;
+
+  /* Map: native panel index → original JS panel index
+     Original: 0=Formulation, 1=MicroThermic, 2=ProcessDev, 3=PAL, 4=ScaleUp, 5=CoPacking, 6=SupplyChain
+     Native:   0=ProcessDev,   1=PAL,          2=ScaleUp,    3=SupplyChain */
+  var srcMap=[2,3,4,6];
+
+  /* If original JS panels are available, inject their rich content */
+  if(window._svcPanels&&window._svcPanels.length>=7){
+    nativePanels.forEach(function(np,i){
+      var srcIdx=srcMap[i];
+      var srcPanel=window._svcPanels[srcIdx];
+      if(!srcPanel)return;
+      /* Clear the native panel's static placeholder content */
+      np.innerHTML='';
+      /* Move all children from the original JS panel into the native panel */
+      while(srcPanel.firstChild){
+        np.appendChild(srcPanel.firstChild);
+      }
+    });
+  }
 
   function activate(idx){
     btns.forEach(function(b){
@@ -1995,15 +2020,56 @@ setTimeout(function(){
       b.style.color='#bbb';
       b.style.borderBottomColor='transparent';
     });
-    panels.forEach(function(p){
+    nativePanels.forEach(function(p){
       p.style.display='none';
       p.classList.remove('is-active');
+      /* Pause canvas animations in hidden panels */
+      var cvs=p.querySelectorAll('canvas');
+      cvs.forEach(function(cv){cv._active=false;});
     });
     btns[idx].classList.add('is-active');
     btns[idx].style.color='#fff';
     btns[idx].style.borderBottomColor='#C9A84C';
-    panels[idx].style.display='block';
-    panels[idx].classList.add('is-active');
+    nativePanels[idx].style.display='block';
+    nativePanels[idx].classList.add('is-active');
+    /* Trigger canvas icon animations in the active panel */
+    var activeCvs=nativePanels[idx].querySelectorAll('canvas');
+    activeCvs.forEach(function(cv){
+      if(cv._draw&&!cv._active){
+        cv._active=true;cv._animT=0;
+        (function animCv(){
+          if(!cv._active)return;
+          cv._animT+=.016;
+          var ctx=cv.getContext('2d');
+          ctx.clearRect(0,0,cv.width,cv.height);
+          ctx.save();ctx.translate(cv.width/2,cv.height/2);
+          cv._draw(ctx,cv._animT);
+          ctx.restore();
+          requestAnimationFrame(animCv);
+        })();
+      }
+    });
+    /* Re-trigger phase card animations if Process Dev panel */
+    if(idx===0){
+      var cards=nativePanels[0].querySelectorAll('.proc-phase');
+      cards.forEach(function(c){c.style.opacity='1';c.style.transform='translateY(0)';});
+      var phaseIcons=nativePanels[0].querySelectorAll('.phase-icon');
+      phaseIcons.forEach(function(cv){
+        if(!cv._active){
+          cv._active=true;
+          var pidx=parseInt(cv.getAttribute('data-phase-idx'));
+          (function animPhase(){
+            if(!cv._active)return;
+            var ctx=cv.getContext('2d');
+            ctx.clearRect(0,0,48,48);
+            ctx.save();ctx.translate(24,24);ctx.globalAlpha=1;
+            cv._drawFn&&cv._drawFn(ctx,performance.now()/1000);
+            ctx.restore();
+            requestAnimationFrame(animPhase);
+          })();
+        }
+      });
+    }
   }
 
   btns.forEach(function(btn,i){
