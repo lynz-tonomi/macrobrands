@@ -2386,26 +2386,31 @@ setTimeout(function(){
 
 /* ─────────────────────────────────────────────
    Section 14 — Supply Chain as standalone section
-   Injects rich JS content from panel index 6 into the
-   sc-section's svc-tab-panel (formerly hidden inside tabs).
+   Creates a container inside sc-section and injects
+   rich JS content from panel index 6 (network diagram,
+   AI agent animations).
    ───────────────────────────────────────────── */
 setTimeout(function(){
   var scSection=document.querySelector('.sc-section');
   if(!scSection)return;
-  var scPanel=scSection.querySelector('.svc-tab-panel');
-  if(!scPanel)return;
+  if(!window._svcPanels||window._svcPanels.length<7)return;
 
-  /* Make panel visible (in case Webflow style hides it) */
+  /* Use existing svc-tab-panel if published, or create one */
+  var scPanel=scSection.querySelector('.svc-tab-panel');
+  if(!scPanel){
+    scPanel=document.createElement('div');
+    scPanel.className='svc-tab-panel';
+    scPanel.style.cssText='max-width:1200px;margin:0 auto;padding:40px 20px';
+    scSection.appendChild(scPanel);
+  }
   scPanel.style.display='block';
 
-  /* Inject rich Supply Chain content from Section 5b */
-  if(window._svcPanels&&window._svcPanels.length>=7){
-    var srcPanel=window._svcPanels[6]; // Supply Chain = index 6
-    if(srcPanel){
-      scPanel.innerHTML='';
-      while(srcPanel.firstChild){
-        scPanel.appendChild(srcPanel.firstChild);
-      }
+  /* Inject rich Supply Chain content from Section 5b panel 6 */
+  var srcPanel=window._svcPanels[6];
+  if(srcPanel&&srcPanel.children.length>0){
+    scPanel.innerHTML='';
+    while(srcPanel.firstChild){
+      scPanel.appendChild(srcPanel.firstChild);
     }
   }
 
@@ -2455,4 +2460,4 @@ setTimeout(function(){
     },{threshold:0.1});
     obs.observe(scPanel);
   }
-},2500);
+},1900); // Run BEFORE Section 13 (2000ms) to grab panel 6 first
