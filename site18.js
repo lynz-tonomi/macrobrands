@@ -2249,6 +2249,143 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       }
     });
 
+    /* ═══ MicroThermic Parallax Showpiece ═══
+       Everything pops, slides, scales, and moves.
+       3D perspective container + staggered entrances. */
+    var mtSec=document.querySelector('.svc-section.is-light');
+    if(mtSec){
+      /* Enable 3D perspective on the section */
+      mtSec.style.perspective='1200px';
+      mtSec.style.overflow='visible';
+
+      var mtH2=mtSec.querySelector('.svc-h2');
+      var mtDesc=mtSec.querySelector('.svc-desc');
+      var mtBullets=mtSec.querySelector('.svc-bullet-row');
+      var mtCta=mtSec.querySelector('.svc-cta');
+      var mtCaps=mtSec.querySelector('.svc-caps-box');
+      var mtDiagram=mtSec.querySelector('.svc-img-box, [data-role="equipment-photo"]');
+      var mtGrid=mtSec.querySelector('.svc-hero-grid');
+
+      /* ── Heading: dramatic scale-up + slide from right ── */
+      if(mtH2){
+        gsap.fromTo(mtH2,
+          {x:120,opacity:0,scale:.7,rotateY:-8},
+          {x:0,opacity:1,scale:1,rotateY:0,duration:1.2,ease:'power3.out',
+           scrollTrigger:{trigger:mtSec,start:'top 80%',once:true}
+          });
+        /* Continuous scroll parallax — heading floats on its own plane */
+        gsap.fromTo(mtH2,
+          {yPercent:15,rotateX:3},
+          {yPercent:-15,rotateX:-3,ease:'none',
+           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* ── Description: fade up + subtle tilt from opposite side ── */
+      if(mtDesc){
+        gsap.fromTo(mtDesc,
+          {x:-80,opacity:0,scale:.9,rotateY:5},
+          {x:0,opacity:1,scale:1,rotateY:0,duration:1,delay:.15,ease:'power3.out',
+           scrollTrigger:{trigger:mtSec,start:'top 80%',once:true}
+          });
+        gsap.fromTo(mtDesc,
+          {yPercent:10},
+          {yPercent:-10,ease:'none',
+           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* ── Bullet row: stagger each bullet item popping in ── */
+      if(mtBullets){
+        var bulletItems=mtBullets.querySelectorAll('li, .svc-bullet, [class*="bullet"]');
+        if(!bulletItems.length) bulletItems=mtBullets.children;
+        gsap.fromTo(bulletItems,
+          {y:40,opacity:0,scale:.85},
+          {y:0,opacity:1,scale:1,duration:.6,ease:'back.out(1.7)',
+           stagger:.08,
+           scrollTrigger:{trigger:mtBullets,start:'top 85%',once:true}
+          });
+        /* Scroll float */
+        gsap.fromTo(mtBullets,
+          {yPercent:8},
+          {yPercent:-8,ease:'none',
+           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* ── CTA: bounce-in pop ── */
+      if(mtCta){
+        gsap.fromTo(mtCta,
+          {y:50,opacity:0,scale:.6},
+          {y:0,opacity:1,scale:1,duration:.8,ease:'elastic.out(1,.5)',
+           scrollTrigger:{trigger:mtCta,start:'top 90%',once:true}
+          });
+      }
+
+      /* ── Caps box: scale up from small with rotation ── */
+      if(mtCaps){
+        mtCaps.style.transformStyle='preserve-3d';
+        gsap.fromTo(mtCaps,
+          {scale:.7,opacity:0,rotateX:15,y:60},
+          {scale:1,opacity:1,rotateX:0,y:0,duration:1,ease:'power3.out',
+           scrollTrigger:{trigger:mtCaps,start:'top 85%',once:true}
+          });
+        /* Counter-scroll for depth */
+        gsap.fromTo(mtCaps,
+          {yPercent:-10},
+          {yPercent:10,ease:'none',
+           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* ── Equipment SVG diagram: big scale pop + float on own depth layer ── */
+      if(mtDiagram){
+        mtDiagram.style.transformStyle='preserve-3d';
+        gsap.fromTo(mtDiagram,
+          {scale:.6,opacity:0,y:100,rotateX:10},
+          {scale:1,opacity:1,y:0,rotateX:0,duration:1.2,ease:'power4.out',
+           scrollTrigger:{trigger:mtDiagram,start:'top 90%',once:true}
+          });
+        /* Dramatic depth scroll — diagram moves opposite to text */
+        gsap.fromTo(mtDiagram,
+          {yPercent:-14,rotateX:4},
+          {yPercent:14,rotateX:-4,ease:'none',
+           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* ── Hero grid: subtle x-shift on scroll for lateral movement ── */
+      if(mtGrid){
+        gsap.fromTo(mtGrid,
+          {xPercent:3},
+          {xPercent:-3,ease:'none',
+           scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+          });
+      }
+
+      /* ── Floating accent elements for extra life ── */
+      /* Add subtle animated glows behind the section */
+      var glow1=document.createElement('div');
+      glow1.style.cssText='position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.08),transparent 70%);pointer-events:none;top:15%;left:-5%;z-index:0';
+      var glow2=document.createElement('div');
+      glow2.style.cssText='position:absolute;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.06),transparent 70%);pointer-events:none;bottom:10%;right:-3%;z-index:0';
+      mtSec.style.position='relative';
+      mtSec.appendChild(glow1);
+      mtSec.appendChild(glow2);
+
+      /* Animate glows on scroll for floating effect */
+      gsap.fromTo(glow1,
+        {x:-40,y:60,scale:.8},
+        {x:40,y:-60,scale:1.2,ease:'none',
+         scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+        });
+      gsap.fromTo(glow2,
+        {x:30,y:-40,scale:1.1},
+        {x:-30,y:40,scale:.9,ease:'none',
+         scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}
+        });
+    }
+
     /* — Supporting services tab section gets depth too — */
     var tabSection=document.querySelector('.svc-section .svc-tabs-nav, [data-tabs-nav="supporting"]');
     if(tabSection){
