@@ -2078,27 +2078,43 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       var grid=sec.querySelector('.svc-hero-grid');
       if(!grid) return;
 
-      /* Make hero-grid a 2-column layout: text + media side by side */
       var textCol=grid.children[0]; // label + h2 + desc + bullets + cta
       var mediaCol=grid.children[1]; // img-row or card-grid
       if(!textCol||!mediaCol) return;
 
-      /* Ensure children respect column boundaries */
-      grid.style.display='grid';
-      grid.style.gap='48px';
-      grid.style.alignItems='center';
       textCol.style.minWidth='0';
       mediaCol.style.minWidth='0';
-      mediaCol.style.overflow='hidden';
 
-      var isRight=(i===1); // MicroThermic = text on right
-      if(isRight){
-        /* Swap visual order: media first, text second */
-        grid.style.gridTemplateColumns='1fr 1fr';
-        mediaCol.style.order='-1';
+      if(i===1){
+        /* ── MicroThermic: text right, diagram full-width below ── */
+        /* Pull the SVG diagram box OUT of the media column, make it span full width */
+        var diagramBox=mediaCol.querySelector('.svc-img-box, [data-role="equipment-photo"]');
+        var capsBox=mediaCol.querySelector('.svc-caps-box');
+
+        grid.style.display='grid';
+        grid.style.gap='40px';
+        grid.style.alignItems='start';
+
+        if(diagramBox&&capsBox){
+          /* 2-col top: caps left, text right */
+          grid.style.gridTemplateColumns='1fr 1.4fr';
+          mediaCol.style.display='block'; // stack caps only
+          mediaCol.style.overflow='visible';
+          /* Move diagram to span full width below the grid */
+          diagramBox.style.gridColumn='1 / -1';
+          diagramBox.style.width='100%';
+          diagramBox.style.overflow='visible';
+          grid.appendChild(diagramBox); // moves diagram out of mediaCol into grid as 3rd child
+        }
         textCol.style.textAlign='right';
+
       } else {
+        /* ── Formulation / Co-Packing: text left, media right ── */
+        grid.style.display='grid';
         grid.style.gridTemplateColumns='1fr 1fr';
+        grid.style.gap='48px';
+        grid.style.alignItems='center';
+        mediaCol.style.overflow='hidden';
         textCol.style.textAlign='left';
       }
     });
