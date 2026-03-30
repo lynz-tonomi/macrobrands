@@ -2065,6 +2065,13 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
     });
 
     /* ── 2. Stagger: Formulation=left, MicroThermic=right, Co-Packing=left ── */
+    /* First, constrain containers so grids don't stretch to full viewport */
+    document.querySelectorAll('.svc-container').forEach(function(c){
+      c.style.maxWidth='1200px';
+      c.style.marginLeft='auto';
+      c.style.marginRight='auto';
+    });
+
     var svcSections=document.querySelectorAll('.svc-section');
     svcSections.forEach(function(sec,i){
       if(i>2) return; // skip Supporting Services (section 4)
@@ -2074,22 +2081,24 @@ document.querySelectorAll('.section-light').forEach(function(s){if(s.textContent
       /* Make hero-grid a 2-column layout: text + media side by side */
       var textCol=grid.children[0]; // label + h2 + desc + bullets + cta
       var mediaCol=grid.children[1]; // img-row or card-grid
-
       if(!textCol||!mediaCol) return;
 
+      /* Ensure children respect column boundaries */
       grid.style.display='grid';
       grid.style.gap='48px';
-      grid.style.alignItems='start';
+      grid.style.alignItems='center';
+      textCol.style.minWidth='0';
+      mediaCol.style.minWidth='0';
+      mediaCol.style.overflow='hidden';
 
       var isRight=(i===1); // MicroThermic = text on right
       if(isRight){
-        grid.style.gridTemplateColumns='1.2fr 1fr';
-        grid.style.direction='rtl'; // flip column order
-        textCol.style.direction='ltr';
-        mediaCol.style.direction='ltr';
+        /* Swap visual order: media first, text second */
+        grid.style.gridTemplateColumns='1fr 1fr';
+        mediaCol.style.order='-1';
         textCol.style.textAlign='right';
       } else {
-        grid.style.gridTemplateColumns='1fr 1.2fr';
+        grid.style.gridTemplateColumns='1fr 1fr';
         textCol.style.textAlign='left';
       }
     });
