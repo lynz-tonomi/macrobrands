@@ -1550,13 +1550,14 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
 
         // Handle resize: rebuild SVG
         var resizeTimer;
-        window.addEventListener('resize',function(){
-          clearTimeout(resizeTimer);
-          resizeTimer=setTimeout(function(){
-            svg.remove();
-            // Lines will be stale — acceptable trade-off vs full rebuild complexity
-          },500);
-        });
+    // Handle resize: rebuild SVG
+    var resizeTimer;
+    window.addEventListener('resize',function(){
+      clearTimeout(resizeTimer);
+      resizeTimer=setTimeout(function(){
+        svg.remove();
+      },500);
+    });
   },3000); // 3s delay: GSAP loads ~1s, sections render ~2s, then measure positions
 })();
 
