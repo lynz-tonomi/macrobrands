@@ -2210,13 +2210,7 @@ if(false){(function(){
         ScrollTrigger.refresh();
       },200);
 
-      // Parallax header elements
-      hdr.querySelectorAll('h2').forEach(function(h){
-        gsap.from(h,{y:30,opacity:0,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 70%',scrub:0.6}});
-      });
-      hdr.querySelectorAll('p').forEach(function(p){
-        gsap.from(p,{y:20,opacity:0,ease:'none',scrollTrigger:{trigger:p,start:'top 95%',end:'top 72%',scrub:0.6}});
-      });
+      // Parallax header elements removed — timeline controls their opacity now
     }
   }
   // Learn More CTA is now a native Webflow element in sc-header — no JS needed
