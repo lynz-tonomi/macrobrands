@@ -2006,20 +2006,17 @@ if(false){(function(){
     });
   },{threshold:0.2});
   observer.observe(vidWrap);
-  // Shorten description — match services section brevity
+  // Shorten description — concise single line
   if(hdr){
     var pars=hdr.querySelectorAll('p');
     if(pars.length>=1){
-      pars[0].innerHTML='29 AI agents orchestrate procurement, production, quality, and logistics in real time — eliminating the manual coordination that costs F&amp;B brands millions annually.';
+      pars[0].innerHTML='29 AI agents automate procurement, production, quality, and logistics — in real time.';
     }
-    if(pars.length>=2){
-      pars[1].innerHTML='<span style="color:#C9A84C;font-weight:600">Autonomous agents that monitor, decide, and act</span> across your entire operation.';
-    }
-    // Hide any extra paragraphs beyond 2
-    for(var pi=2;pi<pars.length;pi++){pars[pi].style.display='none';}
+    // Hide all extra paragraphs
+    for(var pi=1;pi<pars.length;pi++){pars[pi].style.display='none';}
   }
 
-  // ── INJECT SUPPLY CHAIN PROCESS FLOW SVG BELOW HEADER ──
+  // ── INJECT SUPPLY CHAIN PROCESS FLOW SVG BELOW DESCRIPTION (inside header) ──
   if(hdr){
     var scFlow=document.createElement('div');
     scFlow.id='sc-flow-viz';
@@ -2155,8 +2152,8 @@ if(false){(function(){
           '</div>'+
         '</div>'+
       '</div>';
-    // Insert after header, before video
-    hdr.parentNode.insertBefore(scFlow,hdr.nextSibling);
+    // Insert at end of header, below description text
+    hdr.appendChild(scFlow);
 
     // GSAP parallax reveal for the flow diagram
     if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
