@@ -2141,15 +2141,16 @@ if(false){(function(){
             pinSpacing:true,
             anticipatePin:1,
             onLeave:function(){
-              // Pin released — show original video section, hide pin video
-              if(window._scVidParentRef)window._scVidParentRef.style.display='';
-              if(window._pinVidEl)window._pinVidEl.pause();
+              // Pin released — show original video section, hand off playback
+              if(window._scVidParentRef){window._scVidParentRef.style.display='';window._scVidWhiteRef.style.display='none';}
               if(window._scVidRef){window._scVidRef.currentTime=window._pinVidEl?window._pinVidEl.currentTime:0;window._scVidRef.play().catch(function(){});}
+              if(window._pinVidEl)window._pinVidEl.pause();
             },
             onEnterBack:function(){
               // Scrolling back into pin — hide video section, resume pin video
-              if(window._scVidParentRef)window._scVidParentRef.style.display='none';
+              if(window._scVidParentRef){window._scVidParentRef.style.display='none';}
               if(window._scVidRef)window._scVidRef.pause();
+              if(window._pinVidEl){window._pinVidEl.play().catch(function(){});}
             }
           }
         });
