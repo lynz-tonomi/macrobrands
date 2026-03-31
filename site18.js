@@ -1774,17 +1774,21 @@ if(false){(function(){
           }
 
           // Create a viewport-centered process flow overlay (clone of the expand content)
+          // Delay creation — openSlot(0) runs after 300ms and populates the expand
           var zoomOverlay=document.createElement('div');
           zoomOverlay.className='cp-zoom-overlay';
           zoomOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:20;opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden';
-          // Clone the process flow content into the overlay
-          var flowClone=expandSlot.querySelector('div');
-          if(flowClone){
-            var zoomContent=flowClone.cloneNode(true);
-            zoomContent.style.cssText='width:90%;max-width:1200px';
-            zoomOverlay.appendChild(zoomContent);
-          }
           cpSection.appendChild(zoomOverlay);
+
+          // Populate zoom overlay after expand content is ready
+          setTimeout(function(){
+            var flowClone=expandSlot.querySelector('div');
+            if(flowClone){
+              var zoomContent=flowClone.cloneNode(true);
+              zoomContent.style.cssText='width:90%;max-width:1200px';
+              zoomOverlay.appendChild(zoomContent);
+            }
+          },500);
 
           // Black overlay for fade-to-black transition
           var blackOverlay=document.createElement('div');
