@@ -2089,24 +2089,23 @@ if(false){(function(){
           }
         });
 
-        // 0-60%: traces draw
+        // 0-60%: traces draw + zoom starts together
         tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.004,duration:6},0);
+        tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:9},0);
         // 10-50%: spawned nodes appear
         tl.to(spawns,{opacity:1,ease:'none',stagger:.015,duration:4},1);
         // 20-60%: junction dots
         tl.to(juncs,{opacity:.6,ease:'none',stagger:.004,duration:4},2);
+        // 30-50%: fade out text
+        tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:2},3);
         // 40-70%: endpoint nodes
         tl.to(allNodes,{opacity:1,ease:'none',duration:3},4);
         // 50-70%: module cards
         tl.to(mods,{opacity:1,y:-12,ease:'none',duration:2},5);
-        // 60-80%: zoom begins (scale to 6)
-        tl.to(scFlowEl,{scale:6,ease:'power1.in',duration:4},6);
-        // 60-70%: fade out text and cards
-        tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:1},6);
-        tl.to(mods,{opacity:0,duration:1},6);
-        // 60-80%: circuit background image fades in during zoom
+        tl.to(mods,{opacity:0,duration:1.5},7);
+        // 80-100%: circuit background fades in when zoom fills viewport
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
-        if(circBgEl) tl.to(circBgEl,{opacity:.85,ease:'power1.in',duration:3},6.5);
+        if(circBgEl) tl.to(circBgEl,{opacity:.35,ease:'power1.in',duration:2},8);
         // 90-100%: fade to black
         tl.to(pinSec,{backgroundColor:'#000',duration:1},9);
 
