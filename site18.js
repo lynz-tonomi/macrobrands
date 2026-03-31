@@ -13,7 +13,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   var script=document.createElement('script');
   script.src='https://unpkg.com/lenis@1.1.18/dist/lenis.min.js';
   script.onload=function(){
-    var lenis=new Lenis({lerp:0.08,duration:1.4,smoothWheel:true,wheelMultiplier:0.8});
+    var lenis=new Lenis({lerp:0.12,duration:1.2,smoothWheel:true,wheelMultiplier:1});
     window._lenis=lenis;
     // Connect Lenis to GSAP ScrollTrigger
     if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
@@ -2137,7 +2137,7 @@ if(false){(function(){
           scrollTrigger:{
             trigger:pinSec,
             start:'top top',
-            end:'+=200%',
+            end:'+=160%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
