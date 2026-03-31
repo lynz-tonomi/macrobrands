@@ -2062,41 +2062,62 @@ if(false){(function(){
           p.style.strokeDasharray=len;
           p.style.strokeDashoffset=len;
         });
-        // Use the pinned section as trigger so animations play during the pin
+        // Build a single timeline for all circuit animations, scrubbed by the pin
         var pinSec=document.getElementById('autonomi-ai');
-        // Traces draw during first 60% of pin scroll
-        gsap.to(paths,{strokeDashoffset:0,ease:'none',stagger:.006,scrollTrigger:{trigger:pinSec,start:'top top',end:'+=90%',scrub:true}});
-        // Junction dots appear as traces grow
+        var scFlowEl=document.querySelector('#sc-flow-viz');
+        if(scFlowEl){scFlowEl.style.transformOrigin='50% 45%';scFlowEl.style.willChange='transform';}
+        pinSec.style.overflow='hidden';
         var juncs=scFlow.querySelectorAll('.ai-junc');
-        gsap.to(juncs,{opacity:.6,ease:'none',stagger:.005,scrollTrigger:{trigger:pinSec,start:'top top',end:'+=70%',scrub:true}});
-        // Endpoint nodes appear
         var allNodes=scFlow.querySelectorAll('.ai-node-w,.ai-node-b');
-        allNodes.forEach(function(n,i){
-          gsap.to(n,{opacity:1,scale:1.5,ease:'none',scrollTrigger:{trigger:pinSec,start:'+=40%',end:'+=80%',scrub:true}});
-        });
-        // Blinking on nodes after they appear
-        allNodes.forEach(function(n){
-          gsap.to(n,{opacity:.2,duration:.7+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:1+Math.random()*2});
-        });
-        // Module cards animate in
         var mods=scFlow.querySelectorAll('.ai-mod-card');
-        mods.forEach(function(m,i){
-          gsap.to(m,{opacity:1,y:-12,ease:'none',scrollTrigger:{trigger:pinSec,start:'+=60%',end:'+=90%',scrub:true}});
-        });
-        // Spawned nodes appear
         var spawns=scFlow.querySelectorAll('.ai-spawn');
-        gsap.to(spawns,{opacity:1,ease:'none',stagger:.02,scrollTrigger:{trigger:pinSec,start:'+=30%',end:'+=80%',scrub:true}});
+
+        var tl=gsap.timeline({
+          scrollTrigger:{
+            trigger:pinSec,
+            start:'top top',
+            end:'+=150%',
+            scrub:1,
+            pin:true,
+            pinSpacing:true,
+            anticipatePin:1
+          }
+        });
+
+        // 0-60%: traces draw
+        tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.004,duration:6},0);
+        // 10-50%: spawned nodes appear
+        tl.to(spawns,{opacity:1,ease:'none',stagger:.015,duration:4},1);
+        // 20-60%: junction dots
+        tl.to(juncs,{opacity:.6,ease:'none',stagger:.004,duration:4},2);
+        // 40-70%: endpoint nodes
+        tl.to(allNodes,{opacity:1,ease:'none',duration:3},4);
+        // 50-70%: module cards
+        tl.to(mods,{opacity:1,y:-12,ease:'none',duration:2},5);
+        // 60-80%: zoom begins (scale to 6)
+        tl.to(scFlowEl,{scale:6,ease:'power1.in',duration:4},6);
+        // 60-70%: fade out text and cards
+        tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:1},6);
+        tl.to(mods,{opacity:0,duration:1},6);
+        // 90-100%: fade to black
+        tl.to(pinSec,{backgroundColor:'#000',duration:1},9);
+
+        // Non-timeline blinking (runs independently)
+        allNodes.forEach(function(n){
+          gsap.to(n,{opacity:.2,duration:.7+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:2+Math.random()*2});
+        });
         spawns.forEach(function(s){
           gsap.to(s,{opacity:.2,duration:.9+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*2});
         });
         // Department nodes: glow in when traces fully complete
+        // Dept nodes are on the timeline (add before zoom)
         var deptRings=scFlow.querySelectorAll('.ai-dept');
-        gsap.to(deptRings,{attr:{'fill-opacity':.12,'stroke-opacity':.8},ease:'none',stagger:.04,scrollTrigger:{trigger:pinSec,start:'+=70%',end:'+=100%',scrub:true}});
         var deptInner=scFlow.querySelectorAll('.ai-dept-inner');
-        gsap.to(deptInner,{opacity:1,attr:{'fill-opacity':1},ease:'none',stagger:.04,scrollTrigger:{trigger:pinSec,start:'+=70%',end:'+=100%',scrub:true}});
         var deptLabels=scFlow.querySelectorAll('.ai-dept-label');
-        gsap.to(deptLabels,{attr:{'fill-opacity':1},ease:'none',stagger:.03,scrollTrigger:{trigger:pinSec,start:'+=80%',end:'+=100%',scrub:true}});
-        // Dept rings pulse
+        tl.to(deptRings,{attr:{'fill-opacity':.12,'stroke-opacity':.8},stagger:.03,duration:2},5);
+        tl.to(deptInner,{opacity:1,attr:{'fill-opacity':1},stagger:.03,duration:2},5);
+        tl.to(deptLabels,{attr:{'fill-opacity':1},stagger:.02,duration:1.5},5.5);
+        // Dept rings pulse (independent)
         deptRings.forEach(function(d){
           gsap.to(d,{attr:{'fill-opacity':.03,'stroke-opacity':.3},duration:1.5+Math.random()*.8,repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*2});
         });
@@ -2116,78 +2137,7 @@ if(false){(function(){
   }
   // Learn More CTA is now a native Webflow element in sc-header — no JS needed
 
-  // ── PIN + ZOOM INTO CHIP ON SCROLL ──
-  if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'&&sec&&hdr){
-    // Ensure section has proper overflow for pinning
-    sec.style.overflow='hidden';
-
-    // Create a scroll-driven zoom: pin the section, scale SVG into the chip
-    var scFlowEl=document.querySelector('#sc-flow-viz');
-    if(scFlowEl){
-      // Set transform origin to chip center
-      scFlowEl.style.transformOrigin='50% 45%';
-      scFlowEl.style.willChange='transform';
-
-      // Pin the entire section while zooming
-      ScrollTrigger.create({
-        trigger:sec,
-        start:'top top',
-        end:'+=150%',
-        pin:true,
-        pinSpacing:true,
-        anticipatePin:1
-      });
-
-      // Zoom into the chip (scale from 1 to 6)
-      gsap.to(scFlowEl,{
-        scale:6,
-        ease:'power1.in',
-        scrollTrigger:{
-          trigger:sec,
-          start:'top top',
-          end:'+=150%',
-          scrub:1
-        }
-      });
-
-      // Fade out heading text, badge, description, CTA as zoom starts
-      var fadeEls=hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn, .ai-mod-card');
-      gsap.to(fadeEls,{
-        opacity:0,
-        ease:'none',
-        scrollTrigger:{
-          trigger:sec,
-          start:'top top',
-          end:'+=40%',
-          scrub:true
-        }
-      });
-
-      // Fade out labels and module cards during zoom
-      gsap.to('.ai-dept-label, .ai-mod-card',{
-        opacity:0,
-        ease:'none',
-        scrollTrigger:{
-          trigger:sec,
-          start:'top top',
-          end:'+=30%',
-          scrub:true
-        }
-      });
-
-      // Fade the whole section to black at the very end of zoom (transition to video)
-      gsap.to(sec,{
-        backgroundColor:'#000',
-        ease:'none',
-        scrollTrigger:{
-          trigger:sec,
-          start:'+=120%',
-          end:'+=150%',
-          scrub:true
-        }
-      });
-    }
-  }
+  // Pin + zoom is handled by the unified timeline in the circuit animation block above
 
   },500);
 })();
