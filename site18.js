@@ -15,15 +15,14 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   script.onload=function(){
     var lenis=new Lenis({lerp:0.12,duration:1.2,smoothWheel:true,wheelMultiplier:1});
     window._lenis=lenis;
-    // Connect Lenis to GSAP ScrollTrigger
-    if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
+    // Connect Lenis to ScrollTrigger + standalone RAF (never rely on GSAP ticker alone)
+    if(typeof ScrollTrigger!=='undefined'){
       lenis.on('scroll',ScrollTrigger.update);
-      gsap.ticker.add(function(time){lenis.raf(time*1000)});
-      gsap.ticker.lagSmoothing(0);
-    } else {
-      function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
-      requestAnimationFrame(raf);
     }
+    // Always use standalone RAF — GSAP ticker can sleep and kill Lenis
+    function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+    requestAnimationFrame(raf);
+    if(typeof gsap!=='undefined'){gsap.ticker.lagSmoothing(0);}
   };
   document.head.appendChild(script);
 })();
