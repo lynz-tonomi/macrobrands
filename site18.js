@@ -8,9 +8,8 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
 }
 
-// ── Smooth scroll via CSS (no Lenis — it freezes when tab loses focus) ──
-// Native scroll + GSAP scrub provides smooth animation without RAF dependency
-document.documentElement.style.scrollBehavior='smooth';
+// ── No Lenis smooth scroll — it freezes when tab loses focus/GSAP ticker sleeps ──
+// Native scroll + GSAP ScrollTrigger scrub:0.3 provides smooth animation natively
 
 // ============ 1. FRAME SCRUBBER ============
 (function(){
