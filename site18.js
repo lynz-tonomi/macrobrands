@@ -2034,6 +2034,11 @@ if(false){(function(){
 
     // ── MODULE OVERLAY CARDS ──
     scFlow.style.position='relative';
+    // Circuit background image — fades in during zoom
+    var circBg=document.createElement('div');
+    circBg.className='ai-circ-bg';
+    circBg.style.cssText='position:absolute;inset:0;background:url(https://lynz-tonomi.github.io/macrobrands/blue%20circuite.png) center/cover no-repeat;opacity:0;z-index:0;pointer-events:none';
+    scFlow.insertBefore(circBg,scFlow.firstChild);
     var moduleData=[
       {name:'SOURCING',sub:'Vendor Discovery',icon:'\u{1F50D}',x:8.4,y:3.1,color:'#00BFFF'},
       {name:'LOGISTICS',sub:'Route Optimization',icon:'\u{1F69A}',x:91.6,y:2.0,color:'#00BFFF'},
@@ -2099,6 +2104,9 @@ if(false){(function(){
         // 60-70%: fade out text and cards
         tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:1},6);
         tl.to(mods,{opacity:0,duration:1},6);
+        // 60-80%: circuit background image fades in during zoom
+        var circBgEl=scFlow.querySelector('.ai-circ-bg');
+        if(circBgEl) tl.to(circBgEl,{opacity:.85,ease:'power1.in',duration:3},6.5);
         // 90-100%: fade to black
         tl.to(pinSec,{backgroundColor:'#000',duration:1},9);
 
