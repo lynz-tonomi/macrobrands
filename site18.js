@@ -1304,24 +1304,29 @@ if(false){(function(){
       if(mtSec){
         // Build 2-column grid: text left, Equipment Capabilities right
         var mtTextCol=mtSec.querySelector(".svc-text-right");
-        var mtCapsBox=mtSec.querySelector(".svc-caps-box");
+        var mtCapsBox=mtSec.querySelector(".svc-caps-box"); // lives in .svc-img-row-mt natively
         if(mtTextCol&&mtCapsBox){
           // Make the text column a 2-col grid
           mtTextCol.style.cssText+=";display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start";
-          // Create left wrapper for all text elements
+          // Create left wrapper for all existing text children
           var mtLeftCol=document.createElement("div");
           mtLeftCol.style.cssText="display:flex;flex-direction:column;gap:0";
-          // Move all children except caps-box into left wrapper
           var mtKids=Array.from(mtTextCol.children);
           mtTextCol.insertBefore(mtLeftCol,mtTextCol.firstChild);
-          mtKids.forEach(function(k){if(k!==mtCapsBox&&k!==mtLeftCol)mtLeftCol.appendChild(k)});
+          mtKids.forEach(function(k){if(k!==mtLeftCol)mtLeftCol.appendChild(k)});
+          // Move caps-box from img-row into text grid as 2nd column
+          mtTextCol.appendChild(mtCapsBox);
           // Style caps-box: yellow/gold theme
           mtCapsBox.style.cssText+=";margin-top:0;background:linear-gradient(135deg,#c9a84c 0%,#a8872e 100%);border:none;border-radius:16px;padding:24px;color:#1a1a1a;font-size:13px;overflow:hidden";
           // Style caps heading + items for dark text on gold
-          var capsTitle=mtCapsBox.querySelector('.svc-caps-title,[class*=caps-title],h3,h4');
-          if(capsTitle)capsTitle.style.cssText+=";color:#1a1a1a;font-weight:700";
-          var capsItems=mtCapsBox.querySelectorAll('li,p,[class*=caps-item]');
-          capsItems.forEach(function(ci){ci.style.cssText+=";color:#2a2a2a;border-color:rgba(0,0,0,0.15)"});
+          var capsHeadings=mtCapsBox.querySelectorAll('h3,h4,[class*=caps-title],[class*=caps-heading]');
+          capsHeadings.forEach(function(ch){ch.style.cssText+=";color:#1a1a1a;font-weight:700"});
+          var capsAll=mtCapsBox.querySelectorAll('*');
+          capsAll.forEach(function(el){
+            var cs=getComputedStyle(el);
+            if(cs.color==='rgb(153, 153, 153)'||cs.color==='rgb(255, 255, 255)')el.style.color='#1a1a1a';
+            if(cs.borderBottomColor==='rgb(34, 34, 34)')el.style.borderColor='rgba(0,0,0,0.15)';
+          });
           // GSAP parallax slide-in from right
           if(typeof gsap!=='undefined'){
             gsap.set(mtCapsBox,{x:200,opacity:0});
