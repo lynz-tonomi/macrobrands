@@ -1938,6 +1938,7 @@ if(false){(function(){
       var revealH=[],revealP=[],revealC=[];
       sects.forEach(function(sec2){
         if(sec2.closest('.video-hero-wrap'))return;
+        if(sec2.classList.contains('sc-section'))return;
         sec2.querySelectorAll('h2').forEach(function(h){gsap.set(h,{y:80,opacity:0});revealH.push(h)});
         sec2.querySelectorAll('p').forEach(function(p){gsap.set(p,{y:50,opacity:0});revealP.push(p)});
         sec2.querySelectorAll('.card-light,.service-card').forEach(function(c){
