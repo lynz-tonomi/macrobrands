@@ -1975,7 +1975,7 @@ if(false){(function(){
   if(nativeSCH2)nativeSCH2.style.display='none';
   var nativeSCDesc=sec.querySelector('.svc-desc.is-centered');
   if(nativeSCDesc){
-    nativeSCDesc.innerHTML='Autonomi replaces manual coordination with 29 AI agents that monitor, decide, and act across your entire supply chain in real time.';
+    nativeSCDesc.innerHTML='Autonomi manages all aspect of manufacturing &amp; supply chain and deploys a fleet of AI agents that monitor, decide, and act across your entire supply chain in real time.';
     nativeSCDesc.style.cssText='font-size:1.15rem;color:rgba(255,255,255,0.7);line-height:1.7;max-width:640px;margin:12px auto 0;text-align:center';
   }
   // Style header content — above the video
