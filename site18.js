@@ -1868,8 +1868,9 @@ if(false){(function(){
       cutout.srcset='';
       cutout.sizes='';
       cutout.src='https://lynz-tonomi.github.io/macrobrands/Aura-Bottle-bg-wide-transparent.png';
-      cutout.loading='eager';
-      cutout.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:3;pointer-events:none;display:block'
+      cutout.setAttribute('loading','eager');
+      cutout.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:3;pointer-events:none;display:block';
+      var cutoutSrc=cutout.src;cutout.removeAttribute('src');cutout.src=cutoutSrc;
     }
     // Measure viewport to scale text to fit width
     var vw=window.innerWidth;
