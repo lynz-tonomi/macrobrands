@@ -1906,7 +1906,7 @@ if(false){(function(){
     }
 
     // Row 1: "FROM CONCEPT" — 25% smaller, starts centered, scrolls RIGHT
-    var r1=makeRow('FROM CONCEPT','21%','top',0.69);
+    var r1=makeRow('FROM CONCEPT','calc(21% + 50px)','top',0.69);
     r1.wrap.setAttribute('data-row','1');
     r1.wrap.style.zIndex='1';
     // Row 2: "THROUGH PRODUCTION" — full width, starts centered, scrolls LEFT, IN FRONT of bottle
