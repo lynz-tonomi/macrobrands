@@ -245,7 +245,7 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:auto;width:180px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
+    nl.setAttribute('style','height:auto;width:256px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
     // Make any parent container transparent
     var nlParent=nl.parentElement;
     if(nlParent&&nlParent!==document.body){
@@ -2304,7 +2304,7 @@ if(false){(function(){
   }
   // Match logo size to home page (180px instead of native 256px)
   var contactLogo=document.querySelector('.nav-logo');
-  if(contactLogo){contactLogo.style.width='180px';contactLogo.style.height='auto';}
+  if(contactLogo){contactLogo.style.width='256px';contactLogo.style.height='auto';}
 })();
 
 })(); // end run
