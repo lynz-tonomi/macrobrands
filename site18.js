@@ -1985,7 +1985,8 @@ if(false){(function(){
   }
   // Look for native Webflow bg video in sc-section or the section-dark-alt sibling below it
   var vidWrap=null;var scVid=null;
-  var darkAlt=sec.nextElementSibling;
+  // When GSAP pins sc-section, it wraps it in a pin-spacer div — walk from pin-spacer if needed
+  var darkAlt=sec.nextElementSibling||(sec.parentElement.classList.contains('pin-spacer')?sec.parentElement.nextElementSibling:null);
   // Walk siblings to find section-dark-alt with a video
   while(darkAlt&&!darkAlt.querySelector('video')){darkAlt=darkAlt.nextElementSibling}
   // Hide the old "How It Works" content-wrapper text inside section-dark-alt, keep only the video
