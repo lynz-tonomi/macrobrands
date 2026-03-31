@@ -2030,18 +2030,19 @@ if(false){(function(){
   vidParent.style.position='relative';
   vidParent.appendChild(vidWhite);
   scVid.pause();
+  // White overlay fade via ScrollTrigger scrub
   if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
     gsap.to(vidWhite,{opacity:0,duration:1,ease:'power2.out',scrollTrigger:{trigger:vidParent,start:'top 80%',end:'top 20%',scrub:0.6}});
-    ScrollTrigger.create({trigger:vidParent,start:'bottom bottom',end:'top top',onEnter:function(){scVid.currentTime=0;scVid.play().catch(function(){})},onLeave:function(){scVid.pause()},onEnterBack:function(){scVid.currentTime=0;scVid.play().catch(function(){})},onLeaveBack:function(){scVid.pause()}});
-  } else {
-    var vidObserver=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){scVid.play().catch(function(){});}
-        else{scVid.pause();}
-      });
-    },{threshold:1.0});
-    vidObserver.observe(vidParent);
   }
+  // Play/pause via IntersectionObserver — checks actual pixel visibility
+  // (ScrollTrigger fires during pin overlap before section is truly visible)
+  var vidObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&e.intersectionRatio>=0.95){scVid.currentTime=0;scVid.play().catch(function(){});}
+      else if(!e.isIntersecting){scVid.pause();}
+    });
+  },{threshold:[0,0.95]});
+  vidObserver.observe(vidParent);
   // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
     var pars=hdr.querySelectorAll('p.sc-desc');
