@@ -2087,8 +2087,6 @@ if(false){(function(){
           gsap.to(m,{opacity:1,y:-12,ease:'none',scrollTrigger:{trigger:scFlow,start:'top 20%',end:'top 5%',scrub:true}});
         });
 
-        });
-
         // Spawned nodes: appear progressively
         var spawns=scFlow.querySelectorAll('.ai-spawn');
         gsap.to(spawns,{opacity:1,ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 50%',end:'top 10%',scrub:true}});
