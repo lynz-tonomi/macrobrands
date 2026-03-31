@@ -1209,12 +1209,13 @@ if(false){(function(){
         })();
       });
 
-      // ── 2. PRODUCT CAROUSEL → #svc-formulation ──
-      var formSec=document.querySelector('#svc-formulation .svc-container');
-      if(formSec){
-        var carouselWrap=document.createElement('div');
-        carouselWrap.id='svc-carousel-wrap';
-        carouselWrap.style.cssText='border-radius:16px;overflow:hidden;background:#000;border:1px solid #222;height:380px;position:relative;margin-top:24px';
+      // ── 2. PRODUCT CAROUSEL + PARALLAX → native .svc-img-box in #svc-formulation ──
+      var formImgBoxes=document.querySelectorAll('#svc-formulation .svc-img-row .svc-img-box');
+      if(formImgBoxes.length>=2){
+        // First box → product carousel
+        var box0=formImgBoxes[0];
+        box0.id='svc-carousel-wrap';
+        box0.style.cssText+='position:relative;overflow:hidden';
         var imgA=document.createElement('img');
         imgA.id='svc-carousel-img-a';
         imgA.alt='Product';
@@ -1223,29 +1224,19 @@ if(false){(function(){
         imgB.id='svc-carousel-img-b';
         imgB.alt='Product';
         imgB.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0';
-        carouselWrap.appendChild(imgA);
-        carouselWrap.appendChild(imgB);
+        box0.appendChild(imgA);
+        box0.appendChild(imgB);
 
-        // ── 4. PARALLAX SCIENTIST IMAGE alongside carousel ──
-        var parallaxWrap=document.createElement('div');
-        parallaxWrap.id='svc-parallax-form-wrap';
-        parallaxWrap.style.cssText='border-radius:16px;overflow:hidden;border:1px solid #222;height:380px;position:relative';
+        // Second box → parallax scientist image
+        var box1=formImgBoxes[1];
+        box1.id='svc-parallax-form-wrap';
+        box1.style.cssText+='position:relative;overflow:hidden';
         var parallaxImg=document.createElement('img');
         parallaxImg.id='svc-parallax-form-img';
         parallaxImg.src=ghBase+'Lab_formulation.png';
         parallaxImg.alt='Lab scientist formulating';
         parallaxImg.style.cssText='width:100%;height:140%;object-fit:cover;object-position:center top;position:absolute;top:-20%;will-change:transform';
-        parallaxWrap.appendChild(parallaxImg);
-
-        // Grid wrapper for carousel + parallax side by side
-        var gridWrap=document.createElement('div');
-        gridWrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-top:24px';
-        gridWrap.appendChild(carouselWrap);
-        gridWrap.appendChild(parallaxWrap);
-
-        var heroGrid=formSec.querySelector('.svc-hero-grid');
-        if(heroGrid)heroGrid.parentNode.insertBefore(gridWrap,heroGrid.nextSibling);
-        else formSec.appendChild(gridWrap);
+        box1.appendChild(parallaxImg);
 
         // Parallax scroll handler
         (function(){
@@ -1304,6 +1295,108 @@ if(false){(function(){
             })
             .catch(function(e){console.warn('Carousel fetch failed:',e);});
         })();
+      }
+
+      // ── 2b. MICROTHERMIC DIAGRAM → native .svc-img-box in #svc-microthermic ──
+      var mtImgBox=document.querySelector('#svc-microthermic .svc-img-row-mt .svc-img-box');
+      if(mtImgBox){
+        mtImgBox.style.cssText+='background:#000;padding:6px;overflow:hidden';
+        var mtStyle=document.createElement('style');
+        mtStyle.textContent='@keyframes mtBlink{0%,100%{opacity:1}50%{opacity:.25}}@keyframes mtRotor{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes mtPiston{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.5)}}@keyframes mtGlow{0%,100%{filter:drop-shadow(0 0 5px #fbbf24)}50%{filter:drop-shadow(0 0 22px #fbbf24)}}@keyframes mtFlicker{0%,88%,100%{opacity:1}90%{opacity:.2}95%{opacity:.7}}.mt-fR{stroke-dasharray:7 5;animation:mtFR .75s linear infinite}.mt-fD{stroke-dasharray:7 5;animation:mtFD .75s linear infinite}.mt-fU{stroke-dasharray:7 5;animation:mtFU .75s linear infinite}.mt-fL{stroke-dasharray:7 5;animation:mtFL .75s linear infinite}@keyframes mtFR{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}@keyframes mtFL{from{stroke-dashoffset:0}to{stroke-dashoffset:20}}@keyframes mtFD{from{stroke-dashoffset:16}to{stroke-dashoffset:0}}@keyframes mtFU{from{stroke-dashoffset:0}to{stroke-dashoffset:16}}.mt-tc{animation:mtFlicker 6s ease-in-out infinite}.mt-psi{animation:mtFlicker 7s ease-in-out 1.8s infinite}.mt-aiG{animation:mtGlow 2.4s ease-in-out infinite}';
+        document.head.appendChild(mtStyle);
+        mtImgBox.innerHTML='<svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:12px;background:#000">'+
+          '<defs><linearGradient id="mtgPre" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#14532d"/><stop offset="100%" stop-color="#052e16"/></linearGradient>'+
+          '<linearGradient id="mtgFin" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#3b0000"/></linearGradient>'+
+          '<linearGradient id="mtgCool" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.14)"/><stop offset="100%" stop-color="rgba(255,255,255,0.06)"/></linearGradient>'+
+          '<filter id="mtgO"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+          '<filter id="mtgY"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
+          '<!-- Labels -->'+
+          '<text x="10" y="16" fill="#fff" font-family="monospace" font-size="6" letter-spacing="2">DUAL PRODUCT INLET</text>'+
+          '<text x="10" y="72" fill="#fff" font-family="monospace" font-size="6" letter-spacing="2">PRODUCT PUMP</text>'+
+          '<!-- City Water -->'+
+          '<rect x="10" y="22" width="54" height="20" rx="2" fill="#000" stroke="#f59e0b" stroke-width="1"/>'+
+          '<text x="37" y="32" fill="#f59e0b" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">CITY WATER</text>'+
+          '<text x="37" y="39" fill="#f59e0b" font-family="monospace" font-size="5" text-anchor="middle">SOURCE</text>'+
+          '<!-- Pipe to valve -->'+
+          '<line x1="64" y1="32" x2="82" y2="32" stroke="#fff" stroke-width="3"/>'+
+          '<line x1="64" y1="32" x2="82" y2="32" stroke="#f97316" fill="none" class="mt-fR"/>'+
+          '<!-- Run Dry Valve -->'+
+          '<rect x="78" y="26" width="16" height="12" rx="2" fill="#000" stroke="#fff" stroke-width="1"/>'+
+          '<text x="86" y="46" fill="#fff" font-family="monospace" font-size="5" text-anchor="middle">RUN DRY VALVE</text>'+
+          '<!-- Down pipe -->'+
+          '<line x1="86" y1="38" x2="86" y2="138" stroke="#0a1525" stroke-width="4"/>'+
+          '<line x1="86" y1="38" x2="86" y2="138" stroke="#fff" stroke-width="2"/>'+
+          '<line x1="86" y1="38" x2="86" y2="138" stroke="#f97316" fill="none" class="mt-fD"/>'+
+          '<!-- Main pipe -->'+
+          '<line x1="60" y1="162" x2="480" y2="162" stroke="#080f1e" stroke-width="6"/>'+
+          '<line x1="60" y1="162" x2="480" y2="162" stroke="#fff" stroke-width="3.5"/>'+
+          '<line x1="60" y1="162" x2="120" y2="162" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:0s"/>'+
+          '<line x1="155" y1="162" x2="200" y2="162" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:.12s"/>'+
+          '<line x1="250" y1="162" x2="280" y2="162" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:.22s"/>'+
+          '<line x1="330" y1="162" x2="385" y2="162" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:.32s"/>'+
+          '<line x1="420" y1="162" x2="480" y2="162" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:.42s"/>'+
+          '<!-- Product Pump -->'+
+          '<circle cx="84" cy="162" r="14" fill="#0c1828" stroke="#f97316" stroke-width="1.5" filter="url(#mtgO)"/>'+
+          '<g style="transform-origin:84px 162px;animation:mtRotor 1.3s linear infinite">'+
+          '<line x1="84" y1="152" x2="84" y2="172" stroke="#f97316" stroke-width="2"/>'+
+          '<line x1="74" y1="162" x2="94" y2="162" stroke="#f97316" stroke-width="2"/></g>'+
+          '<text x="84" y="182" fill="#f97316" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">PUMP</text>'+
+          '<!-- Preheater -->'+
+          '<rect x="115" y="135" width="42" height="54" rx="2" fill="url(#mtgPre)" stroke="#22c55e" stroke-width="1.2"/>'+
+          '<line x1="115" y1="189" x2="157" y2="135" stroke="#4ade80" stroke-width="2" opacity=".7"/>'+
+          '<text x="136" y="128" fill="#4ade80" font-family="monospace" font-size="6" text-anchor="middle" font-weight="700">PREHEATER</text>'+
+          '<g class="mt-tc" filter="url(#mtgY)"><circle cx="112" cy="128" r="7" fill="#000" stroke="#fbbf24" stroke-width="1"/><text x="112" y="131" fill="#fbbf24" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">TC</text></g>'+
+          '<!-- Final Heater -->'+
+          '<rect x="200" y="133" width="50" height="58" rx="2" fill="url(#mtgFin)" stroke="#f87171" stroke-width="1.2"/>'+
+          '<line x1="200" y1="191" x2="250" y2="133" stroke="#fca5a5" stroke-width="2.5" opacity=".7"/>'+
+          '<text x="225" y="126" fill="#f87171" font-family="monospace" font-size="6" text-anchor="middle" font-weight="700">FINAL HEATER</text>'+
+          '<g class="mt-tc" filter="url(#mtgY)" style="animation-delay:.35s"><circle cx="196" cy="126" r="7" fill="#000" stroke="#fbbf24" stroke-width="1"/><text x="196" y="129" fill="#fbbf24" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">TC</text></g>'+
+          '<g class="mt-tc" filter="url(#mtgY)" style="animation-delay:1.1s"><circle cx="254" cy="126" r="7" fill="#000" stroke="#fbbf24" stroke-width="1"/><text x="254" y="129" fill="#fbbf24" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">TC</text></g>'+
+          '<!-- Hold Tube Bank -->'+
+          '<path d="M280,162 L280,92 L330,92 L330,162" fill="none" stroke="#080f1e" stroke-width="5"/>'+
+          '<path d="M280,162 L280,92 L330,92 L330,162" fill="none" stroke="#fff" stroke-width="3"/>'+
+          '<path d="M280,162 L280,92" stroke="#f97316" fill="none" class="mt-fU" style="animation-delay:.08s"/>'+
+          '<path d="M280,92 L330,92" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:.18s"/>'+
+          '<path d="M330,92 L330,162" stroke="#f97316" fill="none" class="mt-fD" style="animation-delay:.28s"/>'+
+          '<rect x="264" y="78" width="82" height="26" rx="2" fill="#000" stroke="#ef4444" stroke-width="1.5"/>'+
+          '<text x="305" y="90" fill="#ef4444" font-family="monospace" font-size="7" text-anchor="middle" font-weight="700">HOLD TUBE BANK</text>'+
+          '<text x="305" y="100" fill="#ef4444" font-family="monospace" font-size="5" text-anchor="middle" opacity=".6">STERILIZATION HOLD</text>'+
+          '<!-- Cooler -->'+
+          '<rect x="385" y="135" width="42" height="54" rx="2" fill="url(#mtgCool)" stroke="#818cf8" stroke-width="1.2"/>'+
+          '<line x1="385" y1="135" x2="427" y2="189" stroke="#a5b4fc" stroke-width="2" opacity=".7"/>'+
+          '<text x="406" y="128" fill="#818cf8" font-family="monospace" font-size="6" text-anchor="middle" font-weight="700">COOLER</text>'+
+          '<!-- Homogenizer -->'+
+          '<rect x="440" y="148" width="60" height="28" rx="12" fill="#080f1e" stroke="#f97316" stroke-width="1.2" filter="url(#mtgO)"/>'+
+          '<g style="transform-origin:453px 162px;animation:mtPiston .5s ease-in-out infinite"><rect x="449" y="152" width="5" height="20" rx="1.5" fill="#f97316" opacity=".85"/></g>'+
+          '<g style="transform-origin:467px 162px;animation:mtPiston .5s ease-in-out .17s infinite"><rect x="463" y="152" width="5" height="20" rx="1.5" fill="#f97316" opacity=".85"/></g>'+
+          '<g style="transform-origin:481px 162px;animation:mtPiston .5s ease-in-out .34s infinite"><rect x="477" y="152" width="5" height="20" rx="1.5" fill="#f97316" opacity=".85"/></g>'+
+          '<text x="470" y="186" fill="#f97316" font-family="monospace" font-size="5" text-anchor="middle" font-weight="700">HOMOGENIZER</text>'+
+          '<text x="470" y="194" fill="#fff" font-family="monospace" font-size="4.5" text-anchor="middle">2-STAGE 3-PISTON</text>'+
+          '<!-- Sterile Outlet -->'+
+          '<line x1="500" y1="162" x2="560" y2="162" stroke="#080f1e" stroke-width="5"/>'+
+          '<line x1="500" y1="162" x2="560" y2="162" stroke="#fff" stroke-width="3"/>'+
+          '<line x1="500" y1="162" x2="560" y2="162" stroke="#f97316" fill="none" class="mt-fR" style="animation-delay:.55s"/>'+
+          '<rect x="530" y="148" width="60" height="28" rx="2" fill="#000" stroke="#22d3ee" stroke-width="1.2"/>'+
+          '<text x="560" y="160" fill="#22d3ee" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">STERILE</text>'+
+          '<text x="560" y="168" fill="#22d3ee" font-family="monospace" font-size="5.5" text-anchor="middle" font-weight="700">PRODUCT</text>'+
+          '<!-- Sterile drop -->'+
+          '<line x1="560" y1="176" x2="560" y2="320" stroke="#041522" stroke-width="4"/>'+
+          '<line x1="560" y1="176" x2="560" y2="320" stroke="#0e4a5a" stroke-width="2"/>'+
+          '<line x1="560" y1="176" x2="560" y2="320" stroke="#22d3ee" fill="none" class="mt-fD" style="animation-delay:.65s"/>'+
+          '<polygon points="560,328 553,318 567,318" fill="#22d3ee"/>'+
+          '<text x="560" y="338" fill="#22d3ee" font-family="monospace" font-size="7" text-anchor="middle" letter-spacing="3" font-weight="700">STERILE PRODUCT OUTLET</text>'+
+          '<!-- Live readouts -->'+
+          '<text x="14" y="260" fill="#22c55e" font-family="monospace" font-size="6" opacity=".7">TEMP_IN  142.4\u00b0C</text>'+
+          '<text x="14" y="272" fill="#3b82f6" font-family="monospace" font-size="6" opacity=".7">CHILL_T  4.2\u00b0C</text>'+
+          '<text x="14" y="284" fill="#f97316" font-family="monospace" font-size="6" opacity=".7">FLOW_RT  18.6 L/s</text>'+
+          '<text x="14" y="296" fill="#fbbf24" font-family="monospace" font-size="6" opacity=".7">HOLD_TM  4.0 sec</text>'+
+          '<text x="14" y="308" fill="#818cf8" font-family="monospace" font-size="6" opacity=".7">HOMO_PR  280 bar</text>'+
+          '<!-- Corner brackets -->'+
+          '<path d="M4,4 L4,18 M4,4 L18,4" fill="none" stroke="#fff" stroke-width="1"/>'+
+          '<path d="M676,4 L676,18 M676,4 L662,4" fill="none" stroke="#fff" stroke-width="1"/>'+
+          '<path d="M4,336 L4,322 M4,336 L18,336" fill="none" stroke="#fff" stroke-width="1"/>'+
+          '<path d="M676,336 L676,322 M676,336 L662,336" fill="none" stroke="#fff" stroke-width="1"/>'+
+          '</svg>';
       }
 
       // ── 3. CO-PACKING EXPANDABLE CARDS → #svc-copacking ──
