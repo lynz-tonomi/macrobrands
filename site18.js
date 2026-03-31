@@ -1302,24 +1302,32 @@ if(false){(function(){
       // ── 2b. MICROTHERMIC DIAGRAM → #svc-microthermic (full original SVG) ──
       var mtSec=document.getElementById("svc-microthermic");
       if(mtSec){
-        // Move Equipment Capabilities (caps-box) up to row 1 beside text
+        // Move Equipment Capabilities (caps-box) beside heading in a flex row
         var mtTextCol=mtSec.querySelector(".svc-text-right");
         var mtCapsBox=mtSec.querySelector(".svc-caps-box");
-        if(mtTextCol&&mtCapsBox){
-          // Insert caps-box into text column, after bullet row
-          var bulletRow=mtTextCol.querySelector(".svc-bullet-row");
-          if(bulletRow)bulletRow.parentNode.insertBefore(mtCapsBox,bulletRow.nextSibling);
-          else mtTextCol.appendChild(mtCapsBox);
-          mtCapsBox.style.cssText+=";margin-top:24px;background:#111;border:1px solid #222;border-radius:16px;padding:24px;color:#999";
+        var mtH2=mtTextCol?mtTextCol.querySelector(".svc-h2"):null;
+        if(mtTextCol&&mtCapsBox&&mtH2){
+          // Create flex wrapper around heading + caps
+          var mtFlexRow=document.createElement("div");
+          mtFlexRow.style.cssText="display:flex;align-items:flex-start;gap:32px;width:100%";
+          // Wrap heading in a div to take remaining space
+          var mtHeadWrap=document.createElement("div");
+          mtHeadWrap.style.cssText="flex:1;min-width:0";
+          mtH2.parentNode.insertBefore(mtFlexRow,mtH2);
+          mtFlexRow.appendChild(mtHeadWrap);
+          mtHeadWrap.appendChild(mtH2);
+          // Style and move caps box
+          mtCapsBox.style.cssText+=";flex:0 0 340px;margin-top:0;background:#111;border:1px solid #222;border-radius:16px;padding:20px;color:#999;font-size:13px";
+          mtFlexRow.appendChild(mtCapsBox);
         }
-        // Make img-box full width: change img-row-mt to single column
+        // Make img-box full width with dark background for SVG
         var mtImgRow=mtSec.querySelector(".svc-img-row-mt");
         if(mtImgRow){
           mtImgRow.style.cssText+=";display:block;width:100%";
         }
         var mtImgBox=mtSec.querySelector(".svc-img-box");
         if(mtImgBox){
-          mtImgBox.style.cssText+=";width:100%;background:transparent;border:none;overflow:hidden;padding:0";
+          mtImgBox.style.cssText+=";width:100%;background:#0a0f1a;border:none;overflow:hidden;padding:24px;border-radius:16px";
           // Inject original CSS animations
           var mtStyle=document.createElement("style");
           mtStyle.textContent='@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} } @keyframes scan { from{transform:translateY(-6px)} to{transform:translateY(520px)} } @keyframes fR { from{stroke-dashoffset:20} to{stroke-dashoffset:0} } @keyframes fL { from{stroke-dashoffset:0} to{stroke-dashoffset:20} } @keyframes fD { from{stroke-dashoffset:16} to{stroke-dashoffset:0} } @keyframes fU { from{stroke-dashoffset:0} to{stroke-dashoffset:16} } @keyframes rotor { from{transform:rotate(0deg)} to{transform:rotate(360deg)} } @keyframes piston { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.5)} } @keyframes aiGlow { 0%,100%{filter:drop-shadow(0 0 5px #fbbf24)} 50%{filter:drop-shadow(0 0 22px #fbbf24) drop-shadow(0 0 44px #fbbf2422)} } @keyframes flicker { 0%,88%,100%{opacity:1} 90%{opacity:.2} 95%{opacity:.7} } .fR { stroke-dasharray:7 5; animation:fR .75s linear infinite; } .fL { stroke-dasharray:7 5; animation:fL .75s linear infinite; } .fD { stroke-dasharray:7 5; animation:fD .75s linear infinite; } .fU { stroke-dasharray:7 5; animation:fU .75s linear infinite; } .fRs { stroke-dasharray:5 4; animation:fR 1.1s linear infinite; } .fDs { stroke-dasharray:5 4; animation:fD 1.1s linear infinite; } .fUs { stroke-dasharray:5 4; animation:fU 1.1s linear infinite; } .fCd { stroke-dasharray:5 4; animation:fD 1.2s linear infinite; } .fCu { stroke-dasharray:5 4; animation:fU 1.2s linear infinite; } .fSt { stroke-dasharray:6 4; animation:fD .65s linear infinite; } .tc { animation:flicker 6s ease-in-out infinite; } .psi { animation:flicker 7s ease-in-out 1.8s infinite; } .aiG { animation:aiGlow 2.4s ease-in-out infinite; }';
