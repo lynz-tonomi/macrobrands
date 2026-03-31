@@ -2268,6 +2268,14 @@ if(false){(function(){
       inp.onfocus=function(){this.style.borderColor='#C9A84C'};
       inp.onblur=function(){this.style.borderColor='#ddd'};
     });
+    // Fix reCAPTCHA visibility — give it a light background
+    var recaptcha=form.querySelector('.w-form-formrecaptcha, .g-recaptcha, [data-recaptcha]');
+    if(recaptcha){recaptcha.style.cssText='background:#fff;border-radius:10px;padding:8px;margin-bottom:16px;overflow:hidden';}
+    // Also ensure any iframe inside captcha is visible
+    setTimeout(function(){
+      var rc=form.querySelector('.w-form-formrecaptcha, .g-recaptcha, [data-recaptcha]');
+      if(rc){rc.style.background='#fff';rc.style.borderRadius='10px';rc.style.padding='8px';rc.style.marginBottom='16px';}
+    },1000);
 
     var submit=form.querySelector('[type="submit"],.w-button');
     if(submit){
@@ -2294,6 +2302,9 @@ if(false){(function(){
   if(h1){
     h1.style.cssText='text-align:center;font-size:3.5rem;padding:80px 5% 0';
   }
+  // Match logo size to home page (180px instead of native 256px)
+  var contactLogo=document.querySelector('.nav-logo');
+  if(contactLogo){contactLogo.style.maxWidth='180px';}
 })();
 
 })(); // end run
