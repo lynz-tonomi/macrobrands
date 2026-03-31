@@ -1320,8 +1320,14 @@ if(false){(function(){
           mtCapsBox.style.cssText+=";flex:0 0 340px;margin-top:0;background:#111;border:1px solid #222;border-radius:16px;padding:20px;color:#999;font-size:13px";
           mtFlexRow.appendChild(mtCapsBox);
         }
-        // After DOM restructure, refresh ScrollTrigger so reveal animations fire correctly
-        if(typeof ScrollTrigger!=='undefined')setTimeout(function(){ScrollTrigger.refresh()},100);
+        // After DOM restructure, force heading/desc visible (GSAP batch sets opacity:0 on h2/p and ScrollTrigger batch may not fire after reparenting)
+        setTimeout(function(){
+          var mtH2el=mtSec.querySelector(".svc-h2");
+          var mtDescEl=mtSec.querySelector(".svc-desc");
+          if(mtH2el)gsap.set(mtH2el,{opacity:1,y:0});
+          if(mtDescEl)gsap.set(mtDescEl,{opacity:1,y:0});
+          if(typeof ScrollTrigger!=='undefined')ScrollTrigger.refresh();
+        },1200);
         // Make img-box full width with dark background for SVG
         var mtImgRow=mtSec.querySelector(".svc-img-row-mt");
         if(mtImgRow){
