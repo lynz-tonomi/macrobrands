@@ -1947,7 +1947,7 @@ if(false){(function(){
   var sec=document.getElementById('autonomi-ai');
   if(!sec)return;
   // Section layout: header text on top, video below
-  sec.style.cssText='position:relative;overflow:visible;background:#000';
+  sec.style.cssText='position:relative;overflow:visible;background:#000;min-height:100vh';
   // Hide native "Supply Chain Intelligence" heading; move + shorten its desc under sc-header h2
   var nativeSCH2=sec.querySelector('.svc-h2-for-sc');
   if(nativeSCH2)nativeSCH2.style.display='none';
@@ -2066,7 +2066,7 @@ if(false){(function(){
         var pinSec=document.getElementById('autonomi-ai');
         var scFlowEl=document.querySelector('#sc-flow-viz');
         if(scFlowEl){scFlowEl.style.transformOrigin='50% 45%';scFlowEl.style.willChange='transform';}
-        pinSec.style.overflow='hidden';
+        pinSec.style.overflow='clip';
         var juncs=scFlow.querySelectorAll('.ai-junc');
         var allNodes=scFlow.querySelectorAll('.ai-node-w,.ai-node-b');
         var mods=scFlow.querySelectorAll('.ai-mod-card');
@@ -2124,6 +2124,8 @@ if(false){(function(){
         deptInner.forEach(function(d){
           gsap.to(d,{opacity:.3,duration:1+Math.random()*.6,repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*1.5});
         });
+        // Force ScrollTrigger to recalculate after dynamic content injection
+        ScrollTrigger.refresh();
       },200);
 
       // Parallax header elements
