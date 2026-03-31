@@ -1188,6 +1188,37 @@ if(false){(function(){
         el.style.textAlign='left';
       });
 
+      // ── 0b. SHORTEN DESCRIPTIONS + BIGGER FONTS ──
+      var shortCopy={
+        'svc-formulation':'We reverse-engineer your kitchen recipe for commercial production — adjusting pH, stability, and shelf life so your formula is locked, validated, and ready to scale from day one.',
+        'svc-microthermic':'Our in-house MicroThermics UHT/HTST processor lets you validate your exact thermal curve on a bench-top unit before committing to a full production run. Send us a half-gallon sample and get validated time-temperature data within days.',
+        'svc-copacking':'From pilot batches to full-scale production runs, our co-packing operation keeps quality consistent, timelines tight, and per-unit costs under control. Retort, aseptic, hot-fill, and cold-fill — all under one roof.',
+        'svc-supporting':'End-to-end support from process development through FDA filing. Our in-house Process Authority and QA team handle thermal validation, regulatory compliance, and shelf-life testing so you can focus on building your brand.'
+      };
+      Object.keys(shortCopy).forEach(function(secId){
+        var sec=document.getElementById(secId);
+        if(!sec)return;
+        var desc=sec.querySelector('.svc-desc');
+        if(desc) desc.textContent=shortCopy[secId];
+      });
+      // Bigger, more legible fonts across all service sections
+      document.querySelectorAll('.svc-h2').forEach(function(h){
+        h.style.cssText+=';font-size:3rem;line-height:1.15;font-weight:800;letter-spacing:-0.02em';
+      });
+      document.querySelectorAll('.svc-desc').forEach(function(p){
+        p.style.cssText+=';font-size:1.25rem;line-height:1.75;color:#444;max-width:680px';
+      });
+      document.querySelectorAll('.svc-label').forEach(function(l){
+        l.style.cssText+=';font-size:0.85rem;letter-spacing:0.12em;font-weight:600;color:#C9A84C';
+      });
+      document.querySelectorAll('.svc-bullet-item').forEach(function(bi){
+        bi.style.cssText+=';font-size:1rem';
+      });
+      // Also boost About section and general content readability
+      document.querySelectorAll('.section-body').forEach(function(p){
+        p.style.cssText+=';font-size:1.2rem;line-height:1.8;color:#444';
+      });
+
       // ── 1. ANIMATED CANVAS ICONS next to section headings ──
       var iconDefs={
         'svc-formulation':function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#fff';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}},
