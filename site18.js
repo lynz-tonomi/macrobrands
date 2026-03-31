@@ -2048,7 +2048,7 @@ if(false){(function(){
     // Circuit background image — fades in during zoom
     var circBg=document.createElement('div');
     circBg.className='ai-circ-bg';
-    circBg.style.cssText='position:absolute;inset:0;background:url(https://lynz-tonomi.github.io/macrobrands/blue-circuite2.png) 50% calc(47% - 10px)/cover no-repeat;opacity:0;z-index:0;pointer-events:none';
+    circBg.style.cssText='position:absolute;inset:0;background:url(https://lynz-tonomi.github.io/macrobrands/blue-circuite2.png) calc(50% + 5px) calc(47% - 15px)/cover no-repeat;opacity:0;z-index:0;pointer-events:none';
     scFlow.insertBefore(circBg,scFlow.firstChild);
     // LED blinking nodes on circuit background
     var ledPositions=[
