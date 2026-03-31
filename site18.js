@@ -2038,86 +2038,166 @@ if(false){(function(){
     svg+='<linearGradient id="scanGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="45%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="50%" stop-color="#C9A84C" stop-opacity=".6"/><stop offset="55%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient>';
     svg+='</defs>';
 
-    // ── CENTRAL CHIP ──
-    svg+='<rect x="530" y="330" width="140" height="140" rx="12" fill="#111" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".8"/>';
-    svg+='<rect x="550" y="350" width="100" height="100" rx="6" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".4"/>';
-    svg+='<rect x="558" y="358" width="84" height="84" rx="4" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
-    svg+='<text x="600" y="412" fill="#C9A84C" font-family="Inter,sans-serif" font-size="42" font-weight="800" text-anchor="middle" fill-opacity=".9">AI</text>';
-    // Corner dots
-    svg+='<circle cx="563" cy="363" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    svg+='<circle cx="637" cy="363" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    svg+='<circle cx="563" cy="437" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    svg+='<circle cx="637" cy="437" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    // Scanning effect — animated rect with gradient
-    svg+='<clipPath id="chipClip"><rect x="530" y="330" width="140" height="140" rx="12"/></clipPath>';
-    svg+='<rect id="ai-scan-line" x="530" y="330" width="140" height="140" fill="url(#scanGrad)" clip-path="url(#chipClip)" opacity=".8"><animate attributeName="y" values="260;400;260" dur="2.5s" repeatCount="indefinite"/></rect>';
+    // ── CENTRAL CHIP (detailed) ──
+    // Chip substrate / PCB pad
+    svg+='<rect x="510" y="310" width="180" height="180" rx="4" fill="#0d0d0d" stroke="#333" stroke-width="1" stroke-opacity=".4"/>';
+    // Outer package body
+    svg+='<rect x="520" y="320" width="160" height="160" rx="10" fill="#141414" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".85"/>';
+    // Package edge bevel
+    svg+='<rect x="524" y="324" width="152" height="152" rx="8" fill="none" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".2"/>';
+    // Inner die area
+    svg+='<rect x="542" y="342" width="116" height="116" rx="4" fill="#080808" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".5"/>';
+    // Die inner border
+    svg+='<rect x="548" y="348" width="104" height="104" rx="3" fill="none" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".25"/>';
 
-    // ── PINS ──
-    var cx=600,cy=400;
-    for(var i=0;i<7;i++){
-      var px=548+i*16;
-      svg+='<line x1="'+px+'" y1="330" x2="'+px+'" y2="318" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
-      svg+='<line x1="'+px+'" y1="470" x2="'+px+'" y2="482" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
+    // ── DIE INTERNAL DETAILS ──
+    // Transistor grid pattern (top-left quadrant)
+    for(var gy=0;gy<4;gy++){for(var gx=0;gx<4;gx++){
+      svg+='<rect x="'+(552+gx*12)+'" y="'+(352+gy*10)+'" width="8" height="6" rx="1" fill="#C9A84C" fill-opacity=".06" stroke="#C9A84C" stroke-width=".3" stroke-opacity=".12"/>';
+    }}
+    // Register block (top-right)
+    svg+='<rect x="608" y="352" width="40" height="28" rx="2" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
+    svg+='<text x="628" y="362" fill="#C9A84C" font-family="monospace" font-size="5" text-anchor="middle" fill-opacity=".25">REG</text>';
+    // Register lines
+    for(var ri=0;ri<4;ri++){
+      svg+='<line x1="612" y1="'+(366+ri*4)+'" x2="644" y2="'+(366+ri*4)+'" stroke="#C9A84C" stroke-width=".4" stroke-opacity=".15"/>';
     }
-    for(var i=0;i<7;i++){
-      var py=348+i*16;
-      svg+='<line x1="530" y1="'+py+'" x2="518" y2="'+py+'" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
-      svg+='<line x1="670" y1="'+py+'" x2="682" y2="'+py+'" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
+    // Cache block (bottom-left)
+    svg+='<rect x="552" y="410" width="44" height="36" rx="2" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
+    svg+='<text x="574" y="420" fill="#C9A84C" font-family="monospace" font-size="5" text-anchor="middle" fill-opacity=".25">CACHE</text>';
+    // Cache rows
+    for(var ci=0;ci<5;ci++){
+      svg+='<line x1="555" y1="'+(424+ci*4)+'" x2="593" y2="'+(424+ci*4)+'" stroke="#C9A84C" stroke-width=".3" stroke-opacity=".12"/>';
+    }
+    // ALU block (bottom-right)
+    svg+='<rect x="604" y="410" width="44" height="36" rx="2" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
+    svg+='<text x="626" y="420" fill="#C9A84C" font-family="monospace" font-size="5" text-anchor="middle" fill-opacity=".25">ALU</text>';
+    // ALU logic gates
+    for(var ai=0;ai<3;ai++){for(var aj=0;aj<3;aj++){
+      svg+='<circle cx="'+(612+ai*12)+'" cy="'+(428+aj*6)+'" r="1.5" fill="none" stroke="#C9A84C" stroke-width=".4" stroke-opacity=".15"/>';
+    }}
+    // Internal routing lines (data bus)
+    svg+='<line x1="552" y1="395" x2="648" y2="395" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".15"/>';
+    svg+='<line x1="552" y1="398" x2="648" y2="398" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".12"/>';
+    svg+='<line x1="552" y1="401" x2="648" y2="401" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".1"/>';
+    // Vertical data bus
+    svg+='<line x1="600" y1="352" x2="600" y2="448" stroke="#C9A84C" stroke-width=".4" stroke-opacity=".1"/>';
+    svg+='<line x1="603" y1="352" x2="603" y2="448" stroke="#C9A84C" stroke-width=".4" stroke-opacity=".08"/>';
+    // I/O controller block (center-left)
+    svg+='<rect x="552" y="384" width="20" height="14" rx="1" fill="none" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".18"/>';
+    svg+='<text x="562" y="393" fill="#C9A84C" font-family="monospace" font-size="4" text-anchor="middle" fill-opacity=".2">I/O</text>';
+    // Memory controller (center-right)
+    svg+='<rect x="628" y="384" width="20" height="14" rx="1" fill="none" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".18"/>';
+    svg+='<text x="638" y="393" fill="#C9A84C" font-family="monospace" font-size="4" text-anchor="middle" fill-opacity=".2">MEM</text>';
+
+    // Wire bond connections (die to package - thin lines from die edge to pins)
+    for(var wb=0;wb<9;wb++){
+      var wbx=548+wb*12;
+      svg+='<line x1="'+wbx+'" y1="342" x2="'+(wbx-2)+'" y2="324" stroke="#C9A84C" stroke-width=".3" stroke-opacity=".15"/>';
+      svg+='<line x1="'+wbx+'" y1="458" x2="'+(wbx-2)+'" y2="476" stroke="#C9A84C" stroke-width=".3" stroke-opacity=".15"/>';
+    }
+    for(var wb=0;wb<9;wb++){
+      var wby=348+wb*12;
+      svg+='<line x1="542" y1="'+wby+'" x2="524" y2="'+(wby-2)+'" stroke="#C9A84C" stroke-width=".3" stroke-opacity=".15"/>';
+      svg+='<line x1="658" y1="'+wby+'" x2="676" y2="'+(wby-2)+'" stroke="#C9A84C" stroke-width=".3" stroke-opacity=".15"/>';
+    }
+
+    // AI text (centered, prominent)
+    svg+='<text x="600" y="393" fill="#C9A84C" font-family="Inter,sans-serif" font-size="26" font-weight="800" text-anchor="middle" fill-opacity=".85">AI</text>';
+    // Subtitle
+    svg+='<text x="600" y="375" fill="#C9A84C" font-family="monospace" font-size="6" text-anchor="middle" fill-opacity=".3" letter-spacing="2">AUTONOMI</text>';
+
+    // Corner alignment marks on die
+    svg+='<path d="M550,350 L550,356 M550,350 L556,350" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".3"/>';
+    svg+='<path d="M650,350 L650,356 M650,350 L644,350" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".3"/>';
+    svg+='<path d="M550,450 L550,444 M550,450 L556,450" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".3"/>';
+    svg+='<path d="M650,450 L650,444 M650,450 L644,450" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".3"/>';
+    // Pin 1 marker
+    svg+='<circle cx="532" cy="332" r="3" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".3"/>';
+
+    // Scanning effect — animated scan line sweeping across chip
+    svg+='<clipPath id="chipClip"><rect x="520" y="320" width="160" height="160" rx="10"/></clipPath>';
+    svg+='<rect id="ai-scan-line" x="520" y="320" width="160" height="160" fill="url(#scanGrad)" clip-path="url(#chipClip)" opacity=".8"><animate attributeName="y" values="240;420;240" dur="3s" repeatCount="indefinite"/></rect>';
+
+    // ── PINS (more, detailed with ball grid) ──
+    // Top pins (10)
+    for(var i=0;i<10;i++){
+      var px=534+i*14;
+      svg+='<line x1="'+px+'" y1="320" x2="'+px+'" y2="306" stroke="#fff" stroke-width="1.8" stroke-opacity=".4"/>';
+      svg+='<circle cx="'+px+'" cy="304" r="1.5" fill="#fff" fill-opacity=".2"/>';
+    }
+    // Bottom pins (10)
+    for(var i=0;i<10;i++){
+      var px=534+i*14;
+      svg+='<line x1="'+px+'" y1="480" x2="'+px+'" y2="494" stroke="#fff" stroke-width="1.8" stroke-opacity=".4"/>';
+      svg+='<circle cx="'+px+'" cy="496" r="1.5" fill="#fff" fill-opacity=".2"/>';
+    }
+    // Left pins (10)
+    for(var i=0;i<10;i++){
+      var py=334+i*14;
+      svg+='<line x1="520" y1="'+py+'" x2="506" y2="'+py+'" stroke="#fff" stroke-width="1.8" stroke-opacity=".4"/>';
+      svg+='<circle cx="504" cy="'+py+'" r="1.5" fill="#fff" fill-opacity=".2"/>';
+    }
+    // Right pins (10)
+    for(var i=0;i<10;i++){
+      var py=334+i*14;
+      svg+='<line x1="680" y1="'+py+'" x2="694" y2="'+py+'" stroke="#fff" stroke-width="1.8" stroke-opacity=".4"/>';
+      svg+='<circle cx="696" cy="'+py+'" r="1.5" fill="#fff" fill-opacity=".2"/>';
     }
 
     // ── CIRCUIT TRACES — white, branching, extending far beyond viewBox ──
     var traces=[
-      // === TOP — main trunks ===
-      {d:'M564,318 L564,250 L480,250 L480,160 L380,160 L380,60 L300,60 L300,-40'},
-      {d:'M580,318 L580,220 L580,120 L580,0 L580,-80'},
-      {d:'M596,318 L596,260 L650,260 L650,140 L720,140 L720,20 L720,-60'},
-      {d:'M612,318 L612,240 L700,240 L700,100 L780,100 L780,-20'},
-      {d:'M628,318 L628,270 L760,270 L760,180 L860,180 L860,60 L860,-40'},
-      // === BOTTOM — main trunks ===
-      {d:'M564,482 L564,540 L480,540 L480,640 L380,640 L380,740 L300,740 L300,860'},
-      {d:'M580,482 L580,560 L580,680 L580,800 L580,880'},
-      {d:'M596,482 L596,530 L660,530 L660,660 L720,660 L720,800 L720,880'},
-      {d:'M612,482 L612,550 L720,550 L720,680 L800,680 L800,860'},
-      {d:'M628,482 L628,520 L780,520 L780,620 L880,620 L880,860'},
-      // === LEFT — main trunks ===
-      {d:'M518,364 L440,364 L440,280 L320,280 L320,200 L180,200 L60,200 L-60,200'},
-      {d:'M518,380 L400,380 L400,380 L280,380 L160,380 L40,380 L-60,380'},
-      {d:'M518,396 L420,396 L420,460 L300,460 L200,460 L80,460 L-40,460'},
-      {d:'M518,412 L440,412 L440,520 L340,520 L240,520 L120,520 L-20,520'},
-      {d:'M518,428 L460,428 L460,560 L360,560 L240,560 L100,560 L-40,560'},
-      // === RIGHT — main trunks ===
-      {d:'M682,364 L760,364 L760,280 L880,280 L880,200 L1020,200 L1140,200 L1260,200'},
-      {d:'M682,380 L800,380 L800,320 L940,320 L1060,320 L1180,320 L1300,320'},
-      {d:'M682,396 L780,396 L780,460 L900,460 L1020,460 L1160,460 L1280,460'},
-      {d:'M682,412 L760,412 L760,520 L880,520 L1020,520 L1160,520 L1280,520'},
-      {d:'M682,428 L740,428 L740,580 L860,580 L1000,580 L1160,580 L1280,580'},
+      // === TOP — main trunks (from top pins at y=306) ===
+      {d:'M548,306 L548,250 L460,250 L460,160 L360,160 L360,60 L280,60 L280,-40'},
+      {d:'M576,306 L576,220 L576,120 L576,0 L576,-80'},
+      {d:'M590,306 L590,260 L650,260 L650,140 L720,140 L720,20 L720,-60'},
+      {d:'M618,306 L618,240 L710,240 L710,100 L790,100 L790,-20'},
+      {d:'M646,306 L646,270 L770,270 L770,180 L870,180 L870,60 L870,-40'},
+      // === BOTTOM — main trunks (from bottom pins at y=496) ===
+      {d:'M548,496 L548,540 L460,540 L460,640 L360,640 L360,740 L280,740 L280,860'},
+      {d:'M576,496 L576,560 L576,680 L576,800 L576,880'},
+      {d:'M590,496 L590,530 L660,530 L660,660 L720,660 L720,800 L720,880'},
+      {d:'M618,496 L618,550 L730,550 L730,680 L810,680 L810,860'},
+      {d:'M646,496 L646,520 L790,520 L790,620 L890,620 L890,860'},
+      // === LEFT — main trunks (from left pins at x=504) ===
+      {d:'M504,348 L440,348 L440,280 L320,280 L320,200 L180,200 L60,200 L-60,200'},
+      {d:'M504,376 L400,376 L400,376 L280,376 L160,376 L40,376 L-60,376'},
+      {d:'M504,390 L420,390 L420,460 L300,460 L200,460 L80,460 L-40,460'},
+      {d:'M504,418 L440,418 L440,520 L340,520 L240,520 L120,520 L-20,520'},
+      {d:'M504,446 L460,446 L460,560 L360,560 L240,560 L100,560 L-40,560'},
+      // === RIGHT — main trunks (from right pins at x=696) ===
+      {d:'M696,348 L760,348 L760,280 L880,280 L880,200 L1020,200 L1140,200 L1260,200'},
+      {d:'M696,376 L800,376 L800,320 L940,320 L1060,320 L1180,320 L1300,320'},
+      {d:'M696,390 L780,390 L780,460 L900,460 L1020,460 L1160,460 L1280,460'},
+      {d:'M696,418 L760,418 L760,520 L880,520 L1020,520 L1160,520 L1280,520'},
+      {d:'M696,446 L740,446 L740,580 L860,580 L1000,580 L1160,580 L1280,580'},
       // === DIAGONALS ===
-      {d:'M530,330 L460,260 L380,260 L280,160 L180,100 L60,40 L-40,-20'},
-      {d:'M540,330 L490,280 L400,280 L300,200 L200,140 L80,60 L-40,0'},
-      {d:'M670,330 L740,260 L820,260 L920,160 L1020,100 L1140,40 L1260,-20'},
-      {d:'M660,330 L710,280 L800,280 L900,200 L1000,140 L1120,60 L1260,0'},
-      {d:'M530,470 L460,540 L380,540 L280,640 L180,700 L60,760 L-40,820'},
-      {d:'M540,470 L490,520 L400,520 L300,600 L200,660 L80,740 L-40,800'},
-      {d:'M670,470 L740,540 L820,540 L920,640 L1020,700 L1140,760 L1260,820'},
-      {d:'M660,470 L710,520 L800,520 L900,600 L1000,660 L1120,740 L1260,800'}
+      {d:'M520,320 L450,250 L370,250 L270,150 L170,90 L50,30 L-50,-30'},
+      {d:'M530,320 L480,270 L390,270 L290,190 L190,130 L70,50 L-50,-10'},
+      {d:'M680,320 L750,250 L830,250 L930,150 L1030,90 L1150,30 L1270,-30'},
+      {d:'M670,320 L720,270 L810,270 L910,190 L1010,130 L1130,50 L1270,-10'},
+      {d:'M520,480 L450,550 L370,550 L270,650 L170,710 L50,770 L-50,830'},
+      {d:'M530,480 L480,530 L390,530 L290,610 L190,670 L70,750 L-50,810'},
+      {d:'M680,480 L750,550 L830,550 L930,650 L1030,710 L1150,770 L1270,830'},
+      {d:'M670,480 L720,530 L810,530 L910,610 L1010,670 L1130,750 L1270,810'}
     ];
 
     // ── BRANCH TRACES — fork off from main traces ──
     var branches=[
       // Branches off top traces
-      {d:'M480,250 L420,250 L420,180 L340,180 L340,80 L280,80 L200,-20'},
-      {d:'M650,260 L650,200 L720,200 L800,200 L860,160 L940,120 L1020,80 L1100,-20'},
-      {d:'M580,120 L520,120 L520,60 L460,60 L400,20 L340,-40'},
-      {d:'M760,270 L820,270 L820,220 L900,220 L960,180 L1040,140 L1120,80 L1200,-20'},
+      {d:'M460,250 L400,250 L400,180 L320,180 L320,80 L260,80 L180,-20'},
+      {d:'M650,260 L650,200 L730,200 L810,200 L870,160 L950,120 L1030,80 L1110,-20'},
+      {d:'M576,120 L516,120 L516,60 L456,60 L396,20 L336,-40'},
+      {d:'M770,270 L830,270 L830,220 L910,220 L970,180 L1050,140 L1130,80 L1210,-20'},
       // Branches off bottom traces
-      {d:'M480,540 L420,540 L420,620 L340,620 L280,680 L200,740 L120,820'},
-      {d:'M660,530 L660,600 L720,600 L800,640 L880,700 L960,780 L1040,860'},
-      {d:'M720,550 L780,550 L780,620 L840,620 L900,680 L980,760 L1060,860'},
-      {d:'M580,680 L520,680 L520,740 L460,740 L400,800 L340,860'},
+      {d:'M460,540 L400,540 L400,620 L320,620 L260,680 L180,740 L100,820'},
+      {d:'M660,530 L660,600 L730,600 L810,640 L890,700 L970,780 L1050,860'},
+      {d:'M730,550 L790,550 L790,620 L850,620 L910,680 L990,760 L1070,860'},
+      {d:'M576,680 L516,680 L516,740 L456,740 L396,800 L336,860'},
       // Branches off left traces
       {d:'M320,280 L320,220 L240,220 L180,160 L100,120 L20,60 L-60,0'},
       {d:'M300,460 L300,520 L220,520 L160,580 L80,640 L-20,720'},
-      {d:'M400,380 L400,320 L320,320 L240,280 L140,240 L40,200 L-60,160'},
+      {d:'M400,376 L400,316 L320,316 L240,276 L140,236 L40,196 L-60,156'},
       {d:'M340,520 L340,580 L260,580 L180,640 L100,700 L-20,780'},
       // Branches off right traces
       {d:'M880,280 L880,220 L960,220 L1040,180 L1120,120 L1200,60 L1280,0'},
