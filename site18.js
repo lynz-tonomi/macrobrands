@@ -8,24 +8,9 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
 }
 
-// ── Lenis smooth scroll ──
-(function(){
-  var script=document.createElement('script');
-  script.src='https://unpkg.com/lenis@1.1.18/dist/lenis.min.js';
-  script.onload=function(){
-    var lenis=new Lenis({lerp:0.12,duration:1.2,smoothWheel:true,wheelMultiplier:1});
-    window._lenis=lenis;
-    // Connect Lenis to ScrollTrigger + standalone RAF (never rely on GSAP ticker alone)
-    if(typeof ScrollTrigger!=='undefined'){
-      lenis.on('scroll',ScrollTrigger.update);
-    }
-    // Always use standalone RAF — GSAP ticker can sleep and kill Lenis
-    function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
-    requestAnimationFrame(raf);
-    if(typeof gsap!=='undefined'){gsap.ticker.lagSmoothing(0);}
-  };
-  document.head.appendChild(script);
-})();
+// ── Smooth scroll via CSS (no Lenis — it freezes when tab loses focus) ──
+// Native scroll + GSAP scrub provides smooth animation without RAF dependency
+document.documentElement.style.scrollBehavior='smooth';
 
 // ============ 1. FRAME SCRUBBER ============
 (function(){
