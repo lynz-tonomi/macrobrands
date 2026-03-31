@@ -1864,6 +1864,10 @@ if(false){(function(){
           }
 
           // ── Phase 2: Fade in centered process flow + zoom 100% → 150% (2.5 → 6.5) ──
+          // Hide original expand slot so it doesn't show behind the zoom overlay
+          if(expandSlot){
+            cpTL.to(expandSlot,{opacity:0,duration:0.5,ease:'power2.in'},2);
+          }
           // Show the centered zoom overlay
           cpTL.to(zoomOverlay,{opacity:1,duration:1,ease:'power2.out'},2.5);
           // Zoom from 100% to 150%
