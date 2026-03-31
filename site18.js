@@ -2119,6 +2119,80 @@ if(false){(function(){
     }
   }
   // Learn More CTA is now a native Webflow element in sc-header — no JS needed
+
+  // ── PIN + ZOOM INTO CHIP ON SCROLL ──
+  if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'&&sec&&hdr){
+    // Ensure section has proper overflow for pinning
+    sec.style.overflow='hidden';
+
+    // Create a scroll-driven zoom: pin the section, scale SVG into the chip
+    var scFlowEl=document.querySelector('#sc-flow-viz');
+    if(scFlowEl){
+      // Set transform origin to chip center
+      scFlowEl.style.transformOrigin='50% 45%';
+      scFlowEl.style.willChange='transform';
+
+      // Pin the entire section while zooming
+      ScrollTrigger.create({
+        trigger:sec,
+        start:'top top',
+        end:'+=150%',
+        pin:true,
+        pinSpacing:true,
+        anticipatePin:1
+      });
+
+      // Zoom into the chip (scale from 1 to 6)
+      gsap.to(scFlowEl,{
+        scale:6,
+        ease:'power1.in',
+        scrollTrigger:{
+          trigger:sec,
+          start:'top top',
+          end:'+=150%',
+          scrub:1
+        }
+      });
+
+      // Fade out heading text, badge, description, CTA as zoom starts
+      var fadeEls=hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn, .ai-mod-card');
+      gsap.to(fadeEls,{
+        opacity:0,
+        ease:'none',
+        scrollTrigger:{
+          trigger:sec,
+          start:'top top',
+          end:'+=40%',
+          scrub:true
+        }
+      });
+
+      // Fade out labels and module cards during zoom
+      gsap.to('.ai-dept-label, .ai-mod-card',{
+        opacity:0,
+        ease:'none',
+        scrollTrigger:{
+          trigger:sec,
+          start:'top top',
+          end:'+=30%',
+          scrub:true
+        }
+      });
+
+      // Fade the whole section to black at the very end of zoom (transition to video)
+      gsap.to(sec,{
+        backgroundColor:'#000',
+        ease:'none',
+        scrollTrigger:{
+          trigger:sec,
+          start:'+=120%',
+          end:'+=150%',
+          scrub:true
+        }
+      });
+    }
+  }
+
   },500);
 })();
 
