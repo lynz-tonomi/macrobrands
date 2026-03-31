@@ -2307,6 +2307,148 @@ if(false){(function(){
   if(contactLogo){contactLogo.style.width='256px';contactLogo.style.height='auto';}
 })();
 
+// ============ MOBILE RESPONSIVE OVERRIDES ============
+(function(){
+  var mq=document.createElement('style');
+  mq.textContent=
+    '@media(max-width:768px){'+
+      /* ── Floating nav bar: compact for mobile ── */
+      '.fixed-nav,div[style*="position:fixed"][style*="bottom:24px"]{'+
+        'padding:6px 6px 6px 12px !important;'+
+        'border-radius:40px !important;'+
+        'bottom:12px !important;'+
+        'max-width:95vw !important;'+
+        'overflow-x:auto !important;'+
+      '}'+
+      'div[style*="position:fixed"][style*="bottom:24px"] a{'+
+        'padding:8px 10px !important;'+
+        'font-size:.75rem !important;'+
+      '}'+
+      /* ── Nav logo ── */
+      '.nav-logo{'+
+        'width:180px !important;'+
+        'top:12px !important;'+
+      '}'+
+      /* ── Service tabs row: scrollable ── */
+      'div[style*="justify-content:space-between"][style*="border-bottom:1px solid #222"]{'+
+        'overflow-x:auto !important;'+
+        '-webkit-overflow-scrolling:touch !important;'+
+        'gap:0 !important;'+
+        'flex-wrap:nowrap !important;'+
+        'justify-content:flex-start !important;'+
+      '}'+
+      'div[style*="justify-content:space-between"][style*="border-bottom:1px solid #222"] button{'+
+        'flex:0 0 auto !important;'+
+        'padding:10px 12px !important;'+
+        'font-size:.72rem !important;'+
+      '}'+
+      /* ── Tab panel headings ── */
+      'div[style*="animation:tabFadeIn"] h3{'+
+        'font-size:1.8rem !important;'+
+      '}'+
+      /* ── Bullet columns → single column ── */
+      'ul[style*="columns:2"]{'+
+        'columns:1 !important;'+
+      '}'+
+      /* ── 2-column grids → stack ── */
+      'div[style*="grid-template-columns:2fr 1fr"],'+
+      'div[style*="grid-template-columns:1fr 1fr"]{'+
+        'grid-template-columns:1fr !important;'+
+        'gap:20px !important;'+
+      '}'+
+      /* ── 4-column process phases → 2 columns ── */
+      'div[style*="grid-template-columns:repeat(4"]{'+
+        'grid-template-columns:1fr 1fr !important;'+
+        'gap:12px !important;'+
+      '}'+
+      /* ── Phase card arrows: hide on mobile ── */
+      '.proc-phase div[style*="position:absolute;right:-12px"]{'+
+        'display:none !important;'+
+      '}'+
+      /* ── Carousel & parallax image boxes ── */
+      '#carousel-wrap,#parallax-form-wrap,'+
+      '#svc-parallax-form-wrap,[id*="carousel-wrap"]{'+
+        'height:260px !important;'+
+      '}'+
+      /* ── Co-packing expandable cards ── */
+      '.cp-card{'+
+        'padding:16px !important;'+
+      '}'+
+      /* ── SVGs: ensure they fit ── */
+      'svg[viewBox="0 0 900 300"],'+
+      'svg[viewBox="0 0 900 720"]{'+
+        'max-width:100% !important;'+
+      '}'+
+      /* ── Supply chain section header ── */
+      '.sc-header{'+
+        'padding:40px 20px 30px !important;'+
+      '}'+
+      '.sc-header h2{'+
+        'font-size:clamp(1.4rem,5vw,2rem) !important;'+
+        'white-space:normal !important;'+
+      '}'+
+      /* ── Supply chain module cards ── */
+      '.ai-mod-card{'+
+        'padding:5px 8px !important;'+
+        'font-size:.7rem !important;'+
+      '}'+
+      '.ai-mod-card span{font-size:14px !important;}'+
+      '.ai-mod-card div div:first-child{font-size:8px !important;}'+
+      '.ai-mod-card div div:last-child{font-size:7px !important;}'+
+      /* ── Contact page ── */
+      'div[style*="grid-template-columns:1fr 1fr"][style*="max-width:1100px"]{'+
+        'grid-template-columns:1fr !important;'+
+        'gap:24px !important;'+
+        'margin:24px auto !important;'+
+        'padding:0 4% !important;'+
+      '}'+
+      'div[style*="max-width:1100px"] h2{'+
+        'font-size:1.8rem !important;'+
+      '}'+
+      'div[style*="background:#0D0D0D"][style*="border-radius:16px"][style*="padding:40px"]{'+
+        'padding:20px !important;'+
+      '}'+
+      'h1[style*="font-size:3.5rem"]{'+
+        'font-size:2rem !important;'+
+        'padding:40px 4% 0 !important;'+
+      '}'+
+      /* ── Hero overlay text ── */
+      'div[style*="clamp(3rem,7vw,5.5rem)"]{'+
+        'font-size:clamp(1.5rem,6vw,3rem) !important;'+
+      '}'+
+      /* ── Who-we-serve / general section padding ── */
+      '.section-dark,.section-light,.section-dark-alt,.svc-section,.sc-section{'+
+        'padding-left:16px !important;'+
+        'padding-right:16px !important;'+
+      '}'+
+      /* ── Palette / brand showcase grid ── */
+      '#pal-grid{'+
+        'grid-template-columns:1fr !important;'+
+      '}'+
+    '}'+
+    /* ── Extra small (phones < 480px) ── */
+    '@media(max-width:480px){'+
+      '.nav-logo{'+
+        'width:140px !important;'+
+      '}'+
+      'div[style*="position:fixed"][style*="bottom:24px"] a{'+
+        'padding:6px 8px !important;'+
+        'font-size:.7rem !important;'+
+      '}'+
+      '.sc-header h2{'+
+        'font-size:1.2rem !important;'+
+      '}'+
+      '#carousel-wrap,#parallax-form-wrap,'+
+      '#svc-parallax-form-wrap{'+
+        'height:200px !important;'+
+      '}'+
+      'div[style*="grid-template-columns:repeat(4"]{'+
+        'grid-template-columns:1fr !important;'+
+      '}'+
+    '}';
+  document.head.appendChild(mq);
+})();
+
 })(); // end run
 
 })(); // outer guard
