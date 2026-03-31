@@ -2011,29 +2011,24 @@ if(false){(function(){
     sec.appendChild(vidWrap);
   }
   // Only play when scrolled into view, pause when out
-  // White overlay on video section — fades out as video enters view
+  // Smooth white-to-video transition using ScrollTrigger
   var vidParent=vidWrap.closest('section')||vidWrap.parentElement;
   var vidWhite=document.createElement('div');
   vidWhite.style.cssText='position:absolute;inset:0;background:#fff;z-index:10;pointer-events:none';
   vidParent.style.position='relative';
   vidParent.appendChild(vidWhite);
   scVid.pause();
-  var vidObserver=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        // Fade white overlay out, then play video
-        gsap.to(vidWhite,{opacity:0,duration:.8,ease:'power1.out',onComplete:function(){
-          vidWhite.style.display='none';
-          scVid.play().catch(function(){});
-        }});
-      } else {
-        scVid.pause();
-        vidWhite.style.display='';
-        vidWhite.style.opacity='1';
-      }
-    });
-  },{threshold:0.95});
-  vidObserver.observe(vidParent);
+  if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
+    gsap.to(vidWhite,{opacity:0,duration:1,ease:'power2.out',scrollTrigger:{trigger:vidParent,start:'top 80%',end:'top 20%',scrub:1,onEnter:function(){scVid.play().catch(function(){})},onLeaveBack:function(){scVid.pause()}}});
+  } else {
+    var vidObserver=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){scVid.play().catch(function(){});}
+        else{scVid.pause();}
+      });
+    },{threshold:0.5});
+    vidObserver.observe(vidParent);
+  }
   // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
     var pars=hdr.querySelectorAll('p.sc-desc');
@@ -2053,7 +2048,7 @@ if(false){(function(){
     // Circuit background image — fades in during zoom
     var circBg=document.createElement('div');
     circBg.className='ai-circ-bg';
-    circBg.style.cssText='position:absolute;inset:0;background:url(https://lynz-tonomi.github.io/macrobrands/blue-circuite2.png) 50% calc(47% - 20px)/cover no-repeat;opacity:0;z-index:0;pointer-events:none';
+    circBg.style.cssText='position:absolute;inset:0;background:url(https://lynz-tonomi.github.io/macrobrands/blue-circuite2.png) 50% calc(47% - 10px)/cover no-repeat;opacity:0;z-index:0;pointer-events:none';
     scFlow.insertBefore(circBg,scFlow.firstChild);
     var moduleData=[
       {name:'SOURCING',sub:'Vendor Discovery',icon:'\u{1F50D}',x:8.4,y:3.1,color:'#00BFFF'},
@@ -2122,12 +2117,11 @@ if(false){(function(){
         // 60-80%: circuit background fades in when traces are fully drawn
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl) tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:2},6);
-        // 85-100%: fade everything to white on max zoom
-        // Create a white overlay for the fade-out
+        // 65-85%: fade everything to white — finishes before zoom ends
         var whiteOver=document.createElement('div');
         whiteOver.style.cssText='position:absolute;inset:0;background:#fff;opacity:0;z-index:9999;pointer-events:none';
         pinSec.appendChild(whiteOver);
-        tl.to(whiteOver,{opacity:1,ease:'power2.in',duration:1.5},8.5);
+        tl.to(whiteOver,{opacity:1,ease:'power1.in',duration:2},6.5);
 
         // Non-timeline blinking (runs independently)
         allNodes.forEach(function(n){
