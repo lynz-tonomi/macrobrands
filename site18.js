@@ -1833,7 +1833,7 @@ if(false){(function(){
             scrollTrigger:{
               trigger:cpSection,
               start:'bottom bottom',
-              end:'+=450%',
+              end:'+=550%',
               scrub:0.4,
               pin:true,
               pinSpacing:true,
@@ -1882,26 +1882,26 @@ if(false){(function(){
             duration:3
           },3.5);
 
-          // ── Phase 3: Hold on zoomed process flow (6.5 → 8) ──
-          cpTL.to({},{duration:1.5});
+          // ── Phase 3: Hold on zoomed process flow (6.5 → 10) ──
+          cpTL.to({},{duration:3.5});
 
-          // ── Phase 4: Fade to black (8 → 9.5) ──
-          cpTL.to(zoomOverlay,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},8);
-          cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},8);
+          // ── Phase 4: Fade to black (10 → 11.5) ──
+          cpTL.to(zoomOverlay,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},10);
+          cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},10);
 
-          // ── Phase 5: Hold on black (9.5 → 10) ──
+          // ── Phase 5: Hold on black (11.5 → 12) ──
           cpTL.to({},{duration:0.5});
 
-          // ── Phase 6: Fade in Supporting Services from black (10 → 11.5) ──
-          cpTL.to(blackOverlay,{opacity:0,duration:1.5,ease:'power2.out'},10);
+          // ── Phase 6: Fade in Supporting Services from black (12 → 13.5) ──
+          cpTL.to(blackOverlay,{opacity:0,duration:1.5,ease:'power2.out'},12);
           cpTL.to(supOverlay,{
             opacity:1,
             duration:1.5,
             ease:'power2.out',
             onStart:function(){supOverlay.style.pointerEvents='auto';}
-          },10);
+          },12);
 
-          // ── Phase 7: Hold on Supporting Services (11.5 → 12.5) ──
+          // ── Phase 7: Hold on Supporting Services (13.5 → 14.5) ──
           cpTL.to({},{duration:1});
 
         })();
