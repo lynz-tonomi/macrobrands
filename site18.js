@@ -2001,6 +2001,8 @@ if(false){(function(){
     scVid=nativeVid;
     nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
     nativeVid.autoplay=false;nativeVid.removeAttribute('autoplay');
+    nativeVid.preload='auto';nativeVid.setAttribute('preload','auto');
+    nativeVid.load();
     nativeVid.pause();
     // Override Webflow's background-video CSS (z-index:-100, top/left/right/bottom:-100%)
     nativeVid.style.cssText='position:relative !important;z-index:0 !important;width:100% !important;height:auto !important;display:block !important;top:0 !important;left:0 !important;right:auto !important;bottom:auto !important;min-width:0 !important;min-height:0 !important;aspect-ratio:16/9';
