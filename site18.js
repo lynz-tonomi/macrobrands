@@ -1773,15 +1773,28 @@ if(false){(function(){
             expandSlot.style.transition='none';
           }
 
+          // Create a viewport-centered process flow overlay (clone of the expand content)
+          var zoomOverlay=document.createElement('div');
+          zoomOverlay.className='cp-zoom-overlay';
+          zoomOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:20;opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden';
+          // Clone the process flow content into the overlay
+          var flowClone=expandSlot.querySelector('div');
+          if(flowClone){
+            var zoomContent=flowClone.cloneNode(true);
+            zoomContent.style.cssText='width:90%;max-width:1200px';
+            zoomOverlay.appendChild(zoomContent);
+          }
+          cpSection.appendChild(zoomOverlay);
+
           // Black overlay for fade-to-black transition
           var blackOverlay=document.createElement('div');
-          blackOverlay.style.cssText='position:absolute;inset:0;z-index:25;background:#111;opacity:0;pointer-events:none';
+          blackOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:25;background:#111;opacity:0;pointer-events:none';
           cpSection.appendChild(blackOverlay);
 
           // Clone Supporting Services into an overlay inside the pinned section
           var supOverlay=document.createElement('div');
           supOverlay.className='cp-sup-overlay';
-          supOverlay.style.cssText='position:absolute;inset:0;z-index:30;opacity:0;overflow-y:auto;background:#111;pointer-events:none';
+          supOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:30;opacity:0;overflow-y:auto;background:#111;pointer-events:none';
           var supClone=supSection.cloneNode(true);
           supClone.style.cssText='width:100%;min-height:100%;position:relative';
           supClone.removeAttribute('id');
@@ -1850,43 +1863,22 @@ if(false){(function(){
             cpTL.to(cpWrapEl,{opacity:0,duration:1},0.5);
           }
 
-          // ── Phase 2: Center + Zoom into process flow — 100% → 150% (2.5 → 6.5) ──
-          if(expandSlot){
-            // Calculate where to move expand so it's centered in the visible viewport
-            // Pin at bottom-bottom means viewport shows bottom portion of section
-            var secRect=cpSection.getBoundingClientRect();
-            var expRect=expandSlot.getBoundingClientRect();
-            var viewH=window.innerHeight;
-            // We want expand center to be at viewport center
-            var expCenterY=expRect.top+expRect.height/2-secRect.top;
-            var viewCenterY=secRect.height-viewH/2; // visible viewport center relative to section
-            var moveY=viewCenterY-expCenterY;
-
-            // First: slide expand to viewport center (2.5 → 3.5)
-            cpTL.to(expandSlot,{
-              y:moveY,
-              opacity:1,
-              ease:'power2.out',
-              duration:1
-            },2.5);
-
-            // Then: zoom from 100% → 150% (3.5 → 6.5)
-            cpTL.to(expandSlot,{
-              scale:1.5,
-              opacity:1,
-              transformOrigin:'center center',
-              ease:'power1.inOut',
-              duration:3
-            },3.5);
-          }
+          // ── Phase 2: Fade in centered process flow + zoom 100% → 150% (2.5 → 6.5) ──
+          // Show the centered zoom overlay
+          cpTL.to(zoomOverlay,{opacity:1,duration:1,ease:'power2.out'},2.5);
+          // Zoom from 100% to 150%
+          cpTL.to(zoomOverlay,{
+            scale:1.5,
+            transformOrigin:'center center',
+            ease:'power1.inOut',
+            duration:3
+          },3.5);
 
           // ── Phase 3: Hold on zoomed process flow (6.5 → 8) ──
           cpTL.to({},{duration:1.5});
 
           // ── Phase 4: Fade to black (8 → 9.5) ──
-          if(expandSlot){
-            cpTL.to(expandSlot,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},8);
-          }
+          cpTL.to(zoomOverlay,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},8);
           cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},8);
 
           // ── Phase 5: Hold on black (9.5 → 10) ──
