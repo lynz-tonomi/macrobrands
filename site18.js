@@ -2011,13 +2011,29 @@ if(false){(function(){
     sec.appendChild(vidWrap);
   }
   // Only play when scrolled into view, pause when out
-  var observer=new IntersectionObserver(function(entries){
+  // White overlay on video section — fades out as video enters view
+  var vidParent=vidWrap.closest('section')||vidWrap.parentElement;
+  var vidWhite=document.createElement('div');
+  vidWhite.style.cssText='position:absolute;inset:0;background:#fff;z-index:10;pointer-events:none';
+  vidParent.style.position='relative';
+  vidParent.appendChild(vidWhite);
+  scVid.pause();
+  var vidObserver=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      if(e.isIntersecting){scVid.play().catch(function(){})}
-      else{scVid.pause()}
+      if(e.isIntersecting){
+        // Fade white overlay out, then play video
+        gsap.to(vidWhite,{opacity:0,duration:.8,ease:'power1.out',onComplete:function(){
+          vidWhite.style.display='none';
+          scVid.play().catch(function(){});
+        }});
+      } else {
+        scVid.pause();
+        vidWhite.style.display='';
+        vidWhite.style.opacity='1';
+      }
     });
-  },{threshold:0.2});
-  observer.observe(vidWrap);
+  },{threshold:0.95});
+  vidObserver.observe(vidParent);
   // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
     var pars=hdr.querySelectorAll('p.sc-desc');
@@ -2103,11 +2119,15 @@ if(false){(function(){
         // 50-70%: module cards
         tl.to(mods,{opacity:1,y:-12,ease:'none',duration:2},5);
         tl.to(mods,{opacity:0,duration:1.5},7);
-        // 80-100%: circuit background fades in when zoom fills viewport
+        // 60-80%: circuit background fades in when traces are fully drawn
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
-        if(circBgEl) tl.to(circBgEl,{opacity:.35,ease:'power1.in',duration:2},8);
-        // 90-100%: fade to black
-        tl.to(pinSec,{backgroundColor:'#000',duration:1},9);
+        if(circBgEl) tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:2},6);
+        // 85-100%: fade everything to white on max zoom
+        // Create a white overlay for the fade-out
+        var whiteOver=document.createElement('div');
+        whiteOver.style.cssText='position:absolute;inset:0;background:#fff;opacity:0;z-index:9999;pointer-events:none';
+        pinSec.appendChild(whiteOver);
+        tl.to(whiteOver,{opacity:1,ease:'power2.in',duration:1.5},8.5);
 
         // Non-timeline blinking (runs independently)
         allNodes.forEach(function(n){
