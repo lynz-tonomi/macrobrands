@@ -2168,11 +2168,9 @@ if(false){(function(){
         // 60-80%: circuit background fades in when traces are fully drawn
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl) tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:2},6);
-        // 65-85%: fade everything to white — finishes before zoom ends
-        var whiteOver=document.createElement('div');
-        whiteOver.style.cssText='position:absolute;inset:0;background:#fff;opacity:0;z-index:9999;pointer-events:none';
-        pinSec.appendChild(whiteOver);
-        tl.to(whiteOver,{opacity:1,ease:'power1.in',duration:2},6.5);
+        // 65-85%: fade to white — use scFlowEl opacity + section bg
+        tl.to(scFlowEl,{opacity:0,ease:'power1.in',duration:2},6.5);
+        tl.to(pinSec,{backgroundColor:'#fff',ease:'none',duration:1.5},6.5);
 
 
         // LED nodes: fade in with background, then blink randomly
