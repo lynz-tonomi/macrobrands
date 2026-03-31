@@ -2136,44 +2136,51 @@ if(false){(function(){
             trigger:pinSec,
             start:'top top',
             end:'+=200%',
-            scrub:0.6,
+            scrub:0.3,
             pin:true,
             pinSpacing:true,
             anticipatePin:1
           }
         });
 
-        // 0-60%: traces draw + zoom starts together
-        tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.004,duration:6},0);
-        tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:9},0);
-        // 10-50%: spawned nodes appear
-        tl.to(spawns,{opacity:1,ease:'none',stagger:.015,duration:4},1);
-        // 20-60%: junction dots
-        tl.to(juncs,{opacity:.6,ease:'none',stagger:.004,duration:4},2);
-        // 30-50%: fade out text
-        tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:2},3);
-        // 40-70%: endpoint nodes
-        tl.to(allNodes,{opacity:1,ease:'none',duration:3},4);
-        // 50-70%: module cards with parallax depth
+        // Timeline positions (out of 10 total):
+        // 0-5: traces draw
+        // 0-8: zoom
+        // 1-4: spawns
+        // 1.5-4.5: junctions
+        // 2-3.5: fade text
+        // 3-5.5: endpoint nodes
+        // 4-5.5: module cards in
+        // 5-6: cards drift + fade
+        // 4.5-5.5: circuit bg in
+        // 5.5-6: circuit bg out
+        // 6.5-8: fade to white + SVG gone
+
+        tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:5},0);
+        tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:8},0);
+        tl.to(spawns,{opacity:1,ease:'none',stagger:.012,duration:3},1);
+        tl.to(juncs,{opacity:.6,ease:'none',stagger:.003,duration:3},1.5);
+        tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:1.5},2);
+        tl.to(allNodes,{opacity:1,ease:'none',duration:2.5},3);
+        // Module cards with parallax depth
         var depths=[1.2,0.7,1.5,0.9,1.3,0.6,1.1,0.8,1.4];
         mods.forEach(function(card,i){
           var d=depths[i%depths.length];
-          // Cards appear at slightly different times
-          tl.to(card,{opacity:1,y:-12*d,ease:'none',duration:1.8+d*0.4},4.8+i*0.12);
-          // During zoom, each card drifts at its own depth speed
-          tl.to(card,{y:-40*d,scale:1+d*0.3,ease:'power1.in',duration:2},6);
-          // Fade out at different rates
-          tl.to(card,{opacity:0,duration:1+d*0.3},6.8+i*0.05);
+          tl.to(card,{opacity:1,y:-12*d,ease:'none',duration:1.5},3.8+i*0.08);
+          tl.to(card,{y:-30*d,scale:1+d*0.3,ease:'power1.in',duration:1.5},5);
+          tl.to(card,{opacity:0,duration:0.8},5.5+i*0.03);
         });
-        // 55-70%: circuit background fades in
+        // Circuit background: quick flash
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl){
-          tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:1.5},5.5);
-          tl.to(circBgEl,{opacity:0,ease:'power1.out',duration:1},7);
+          tl.to(circBgEl,{opacity:.4,ease:'power1.in',duration:1},4.5);
+          tl.to(circBgEl,{opacity:0,ease:'power1.out',duration:0.8},5.5);
         }
-        // 75-90%: fade everything to white
-        tl.to(pinSec,{backgroundColor:'#fff',ease:'power1.in',duration:1.5},7.5);
-        tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},7.5);
+        // Fade to white — starts at 65%, done by 80%
+        tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
+        tl.to(pinSec,{backgroundColor:'#fff',ease:'power1.in',duration:1.5},6.5);
+        // Empty tween to pad timeline to 10 for clean pin end
+        tl.to({},{duration:2},8);
 
 
         // LED nodes: fade in with background, then blink randomly
