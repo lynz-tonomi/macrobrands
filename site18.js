@@ -2030,19 +2030,25 @@ if(false){(function(){
   vidParent.style.position='relative';
   vidParent.appendChild(vidWhite);
   scVid.pause();
-  // White overlay fade via ScrollTrigger scrub
-  if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
-    gsap.to(vidWhite,{opacity:0,duration:1,ease:'power2.out',scrollTrigger:{trigger:vidParent,start:'top 80%',end:'top 20%',scrub:0.6}});
-  }
-  // Play/pause via IntersectionObserver — checks actual pixel visibility
-  // (ScrollTrigger fires during pin overlap before section is truly visible)
-  var vidObserver=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting&&e.intersectionRatio>=0.95){scVid.currentTime=0;scVid.play().catch(function(){});}
-      else if(!e.isIntersecting){scVid.pause();}
-    });
-  },{threshold:[0,0.95]});
-  vidObserver.observe(vidParent);
+  // Move video into pin section for seamless white→video transition
+  // Store references globally so the timeline can access them
+  window._scVidRef=scVid;
+  window._scVidParentRef=vidParent;
+  window._scVidWhiteRef=vidWhite;
+  // Hide the original video section — video will play inside the pin section
+  vidParent.style.display='none';
+  // Create a video container inside the pin section
+  var pinVidWrap=document.createElement('div');
+  pinVidWrap.style.cssText='position:absolute;inset:0;z-index:20;overflow:hidden;opacity:0';
+  pinVidWrap.className='pin-vid-wrap';
+  // Clone the video into the pin section
+  var pinVid=scVid.cloneNode(true);
+  pinVid.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+  pinVid.muted=true;pinVid.loop=true;pinVid.playsInline=true;
+  pinVid.preload='auto';pinVid.load();
+  pinVidWrap.appendChild(pinVid);
+  window._pinVidEl=pinVid;
+  window._pinVidWrap=pinVidWrap;
   // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
     var pars=hdr.querySelectorAll('p.sc-desc');
@@ -2129,11 +2135,22 @@ if(false){(function(){
           scrollTrigger:{
             trigger:pinSec,
             start:'top top',
-            end:'+=160%',
+            end:'+=200%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
-            anticipatePin:1
+            anticipatePin:1,
+            onLeave:function(){
+              // Pin released — show original video section, hide pin video
+              if(window._scVidParentRef)window._scVidParentRef.style.display='';
+              if(window._pinVidEl)window._pinVidEl.pause();
+              if(window._scVidRef){window._scVidRef.currentTime=window._pinVidEl?window._pinVidEl.currentTime:0;window._scVidRef.play().catch(function(){});}
+            },
+            onEnterBack:function(){
+              // Scrolling back into pin — hide video section, resume pin video
+              if(window._scVidParentRef)window._scVidParentRef.style.display='none';
+              if(window._scVidRef)window._scVidRef.pause();
+            }
           }
         });
 
@@ -2172,8 +2189,15 @@ if(false){(function(){
         // Fade to white — starts at 65%, done by 80%
         tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
         tl.to(pinSec,{backgroundColor:'#fff',ease:'power1.in',duration:1.5},6.5);
-        // Short pad after white fade for clean pin end
-        tl.to({},{duration:0.5},8);
+        // 8-9.5: fade video in from white
+        if(window._pinVidWrap){
+          pinSec.appendChild(window._pinVidWrap);
+          tl.to(window._pinVidWrap,{opacity:1,ease:'power2.out',duration:1.5,
+            onStart:function(){window._pinVidEl.currentTime=0;window._pinVidEl.play().catch(function(){});}
+          },8);
+        }
+        // Pad after video fade-in for viewing time before pin releases
+        tl.to({},{duration:1},9.5);
 
 
         // LED nodes: fade in with background, then blink randomly
