@@ -1748,7 +1748,7 @@ if(false){(function(){
 
         // ── 3b. CO-PACKING PARALLAX ZOOM ANIMATION ──
         // User scrolls through full section first → pin at bottom → scatter cards →
-        // zoom process flow → fade to black → fade in Supporting Services
+        // zoom process flow → fade to black → unpin → real Supporting Services below
         (function(){
           var cpSection=document.querySelector('#svc-copacking');
           var supSection=document.querySelector('#svc-supporting');
@@ -1767,20 +1767,18 @@ if(false){(function(){
             card.style.transform='translateY(0)';
           });
 
-          // Force expand visible and kill CSS transition so GSAP has full control
+          // Hide the expand slot entirely — we clone its content into a zoom overlay
           if(expandSlot){
-            gsap.set(expandSlot,{opacity:1,maxHeight:'500px',overflow:'visible'});
             expandSlot.style.transition='none';
           }
 
-          // Create a viewport-centered process flow overlay (clone of the expand content)
-          // Delay creation — openSlot(0) runs after 300ms and populates the expand
+          // Create a viewport-centered process flow overlay (clone of expand content)
           var zoomOverlay=document.createElement('div');
           zoomOverlay.className='cp-zoom-overlay';
           zoomOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:20;opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden';
           cpSection.appendChild(zoomOverlay);
 
-          // Populate zoom overlay after expand content is ready
+          // Populate zoom overlay after openSlot(0) fires at 300ms
           setTimeout(function(){
             var flowClone=expandSlot.querySelector('div');
             if(flowClone){
@@ -1790,23 +1788,15 @@ if(false){(function(){
             }
           },500);
 
-          // Black overlay for fade-to-black transition
+          // Black overlay for fade-to-black — ends the pin sequence
           var blackOverlay=document.createElement('div');
+          blackOverlay.className='cp-black-overlay';
           blackOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:25;background:#111;opacity:0;pointer-events:none';
           cpSection.appendChild(blackOverlay);
 
-          // Clone Supporting Services into an overlay inside the pinned section
-          var supOverlay=document.createElement('div');
-          supOverlay.className='cp-sup-overlay';
-          supOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:30;opacity:0;overflow-y:auto;background:#111;pointer-events:none';
-          var supClone=supSection.cloneNode(true);
-          supClone.style.cssText='width:100%;min-height:100%;position:relative';
-          supClone.removeAttribute('id');
-          supOverlay.appendChild(supClone);
-          cpSection.appendChild(supOverlay);
-
-          // Hide original supporting services section
-          supSection.style.display='none';
+          // Style real Supporting Services: starts hidden with black bg, fades in after pin
+          gsap.set(supSection,{opacity:0});
+          supSection.style.background='#111';
 
           // Allow overflow on card rows so scattered cards can exit frame
           var cpWrapEl=cpSection.querySelector('.svc-container > div:last-child');
@@ -1816,8 +1806,6 @@ if(false){(function(){
           if(container){container.style.overflow='visible';}
 
           // Scatter directions: cards fly outward based on grid position
-          // Row 1: [0]=left, [1]=up, [2]=right
-          // Row 2: [3]=left, [4]=down, [5]=right
           var scatterDirs=[
             {x:'-140%',y:'-40%',rotate:-12},
             {x:'0%',y:'-130%',rotate:0},
@@ -1827,13 +1815,12 @@ if(false){(function(){
             {x:'140%',y:'40%',rotate:-12}
           ];
 
-          // Build GSAP timeline — pin starts when bottom of section hits bottom of viewport
-          // This means user has scrolled through ALL content before animation begins
+          // Build GSAP timeline — pin at bottom bottom, ends with fade to black
           var cpTL=gsap.timeline({
             scrollTrigger:{
               trigger:cpSection,
               start:'bottom bottom',
-              end:'+=550%',
+              end:'+=400%',
               scrub:0.4,
               pin:true,
               pinSpacing:true,
@@ -1844,7 +1831,7 @@ if(false){(function(){
             }
           });
 
-          // ── Phase 1: Cards scatter outward + heading fades (0 → 2.5) ──
+          // ── Phase 1: Cards scatter + heading fades + hide expand (0 → 2.5) ──
           cpCards.forEach(function(card,i){
             cpTL.to(card,{
               x:scatterDirs[i].x,
@@ -1856,25 +1843,19 @@ if(false){(function(){
               duration:2
             },0.1+i*0.12);
           });
-
-          // Fade out the hero heading area simultaneously
           if(heroGrid){
             cpTL.to(heroGrid,{opacity:0,y:-80,duration:2,ease:'power2.in'},0);
           }
-
-          // Also fade out the card wrapper's border-top line
           if(cpWrapEl){
             cpTL.to(cpWrapEl,{opacity:0,duration:1},0.5);
           }
-
-          // ── Phase 2: Fade in centered process flow + zoom 100% → 150% (2.5 → 6.5) ──
-          // Hide original expand slot so it doesn't show behind the zoom overlay
+          // Hide expand slot at start of scatter
           if(expandSlot){
-            cpTL.to(expandSlot,{opacity:0,duration:0.5,ease:'power2.in'},2);
+            cpTL.to(expandSlot,{opacity:0,duration:0.8,ease:'power2.in'},0.2);
           }
-          // Show the centered zoom overlay
+
+          // ── Phase 2: Show zoom overlay + zoom 100%→150% (2.5 → 6.5) ──
           cpTL.to(zoomOverlay,{opacity:1,duration:1,ease:'power2.out'},2.5);
-          // Zoom from 100% to 150%
           cpTL.to(zoomOverlay,{
             scale:1.5,
             transformOrigin:'center center',
@@ -1882,27 +1863,28 @@ if(false){(function(){
             duration:3
           },3.5);
 
-          // ── Phase 3: Hold on zoomed process flow (6.5 → 10) ──
-          cpTL.to({},{duration:3.5});
+          // ── Phase 3: Hold on zoomed process flow (6.5 → 9) ──
+          cpTL.to({},{duration:2.5});
 
-          // ── Phase 4: Fade to black (10 → 11.5) ──
-          cpTL.to(zoomOverlay,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},10);
-          cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},10);
+          // ── Phase 4: Fade to black (9 → 10.5) ──
+          cpTL.to(zoomOverlay,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},9);
+          cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},9);
 
-          // ── Phase 5: Hold on black (11.5 → 12) ──
-          cpTL.to({},{duration:0.5});
-
-          // ── Phase 6: Fade in Supporting Services from black (12 → 13.5) ──
-          cpTL.to(blackOverlay,{opacity:0,duration:1.5,ease:'power2.out'},12);
-          cpTL.to(supOverlay,{
-            opacity:1,
-            duration:1.5,
-            ease:'power2.out',
-            onStart:function(){supOverlay.style.pointerEvents='auto';}
-          },12);
-
-          // ── Phase 7: Hold on Supporting Services (13.5 → 14.5) ──
+          // ── Phase 5: Hold on black (10.5 → 11.5) ──
           cpTL.to({},{duration:1});
+
+          // Fade in real Supporting Services as user scrolls past the pin
+          gsap.to(supSection,{
+            opacity:1,
+            duration:0.5,
+            ease:'power2.out',
+            scrollTrigger:{
+              trigger:supSection,
+              start:'top 90%',
+              end:'top 50%',
+              scrub:true
+            }
+          });
 
         })();
       }
