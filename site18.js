@@ -2195,76 +2195,71 @@ if(false){(function(){
           });
         }
         // Electricity charges traveling along circuit paths at full zoom
-        var chargeGroup=document.createElementNS('http://www.w3.org/2000/svg','g');
-        chargeGroup.setAttribute('class','ai-charges');
-        chargeGroup.style.opacity='0';
-        svg.appendChild(chargeGroup);
-        // Create charge particles for each trace path
-        paths.forEach(function(p,pi){
-          var isBlue=p.getAttribute('stroke')==='#00DFFF';
-          var color=isBlue?'#00DFFF':'#fff';
-          var len=p.getTotalLength();
-          if(len<50)return;
-          // Create 2-3 charge dots per path
-          var numCharges=len>300?3:2;
-          for(var ci=0;ci<numCharges;ci++){
-            var charge=document.createElementNS('http://www.w3.org/2000/svg','circle');
-            charge.setAttribute('r',isBlue?'2.5':'2');
-            charge.setAttribute('fill',color);
-            charge.setAttribute('filter','url(#aig)');
-            charge.style.opacity='0';
-            // Animate along the path using animateMotion
-            var motion=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
-            motion.setAttribute('dur',(1.5+Math.random()*2)+'s');
-            motion.setAttribute('repeatCount','indefinite');
-            motion.setAttribute('begin',(ci*0.6+Math.random()*1.5)+'s');
-            // Use the path's d attribute for the motion path
-            var pathD=p.getAttribute('d');
-            if(pathD){
-              var mpath=document.createElementNS('http://www.w3.org/2000/svg','mpath');
-              mpath.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href','');
-              motion.setAttribute('path',pathD);
+        var chipSvg=document.getElementById('ai-chip-svg');
+        if(chipSvg){
+          var chargeGroup=document.createElementNS('http://www.w3.org/2000/svg','g');
+          chargeGroup.setAttribute('class','ai-charges');
+          chargeGroup.style.opacity='0';
+          chipSvg.appendChild(chargeGroup);
+          // Animate charge dots along paths using getPointAtLength
+          var chargeActive=false;
+          var chargeDots=[];
+          paths.forEach(function(p,pi){
+            if(pi%2!==0)return;// every other path to keep performance
+            var isBlue=p.getAttribute('stroke')==='#00DFFF';
+            var color=isBlue?'#00DFFF':'#fff';
+            var len=p.getTotalLength();
+            if(len<80)return;
+            for(var ci=0;ci<2;ci++){
+              var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+              dot.setAttribute('r',isBlue?'3':'2.5');
+              dot.setAttribute('fill',color);
+              dot.setAttribute('filter','url(#aig)');
+              dot.style.opacity='0.9';
+              chargeGroup.appendChild(dot);
+              // Glow halo
+              var halo=document.createElementNS('http://www.w3.org/2000/svg','circle');
+              halo.setAttribute('r',isBlue?'7':'5');
+              halo.setAttribute('fill',color);
+              halo.setAttribute('opacity',isBlue?'0.25':'0.15');
+              halo.setAttribute('filter','url(#aig)');
+              chargeGroup.appendChild(halo);
+              chargeDots.push({dot:dot,halo:halo,path:p,len:len,offset:ci*0.5+Math.random()*0.3,speed:0.3+Math.random()*0.4});
             }
-            charge.appendChild(motion);
-            // Glow trail behind charge
-            var trail=document.createElementNS('http://www.w3.org/2000/svg','circle');
-            trail.setAttribute('r',isBlue?'5':'4');
-            trail.setAttribute('fill',color);
-            trail.setAttribute('opacity',isBlue?'.15':'.1');
-            trail.setAttribute('filter','url(#aig)');
-            var trailMotion=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
-            trailMotion.setAttribute('dur',motion.getAttribute('dur'));
-            trailMotion.setAttribute('repeatCount','indefinite');
-            trailMotion.setAttribute('begin',(parseFloat(motion.getAttribute('begin'))+0.05)+'s');
-            if(pathD)trailMotion.setAttribute('path',pathD);
-            trail.appendChild(trailMotion);
-            chargeGroup.appendChild(trail);
-            chargeGroup.appendChild(charge);
-            // Fade in each charge dot
-            gsap.to(charge,{opacity:1,duration:0.3,delay:ci*0.2+Math.random()*0.5});
+          });
+          // Chip pin sparks
+          var sparkPins=[
+            {x:548,y:298},{x:572,y:298},{x:596,y:298},{x:620,y:298},{x:644,y:298},
+            {x:548,y:502},{x:572,y:502},{x:596,y:502},{x:620,y:502},{x:644,y:502},
+            {x:498,y:345},{x:498,y:375},{x:498,y:405},{x:498,y:435},{x:498,y:460},
+            {x:702,y:345},{x:702,y:375},{x:702,y:405},{x:702,y:435},{x:702,y:460}
+          ];
+          sparkPins.forEach(function(sp){
+            var spark=document.createElementNS('http://www.w3.org/2000/svg','circle');
+            spark.setAttribute('cx',sp.x);spark.setAttribute('cy',sp.y);
+            spark.setAttribute('r','2');spark.setAttribute('fill','#fff');
+            spark.setAttribute('filter','url(#aig)');
+            chargeGroup.appendChild(spark);
+            gsap.to(spark,{attr:{r:4},opacity:0,duration:0.2,repeat:-1,repeatDelay:0.5+Math.random()*2,yoyo:false,ease:'power2.out',delay:Math.random()*3});
+          });
+          // RAF loop to move charges along paths
+          function animateCharges(time){
+            if(!chargeActive){requestAnimationFrame(animateCharges);return;}
+            var t=time*0.001;
+            chargeDots.forEach(function(c){
+              var pos=((t*c.speed+c.offset)%1)*c.len;
+              try{
+                var pt=c.path.getPointAtLength(pos);
+                c.dot.setAttribute('cx',pt.x);c.dot.setAttribute('cy',pt.y);
+                c.halo.setAttribute('cx',pt.x);c.halo.setAttribute('cy',pt.y);
+              }catch(e){}
+            });
+            requestAnimationFrame(animateCharges);
           }
-        });
-        // Chip connector sparks — small bright flashes at chip pin endpoints
-        var sparkPositions=[
-          // Top pins
-          {x:548,y:298},{x:560,y:298},{x:572,y:298},{x:584,y:298},{x:596,y:298},{x:608,y:298},{x:620,y:298},{x:632,y:298},{x:644,y:298},{x:656,y:298},
-          // Bottom pins
-          {x:548,y:502},{x:560,y:502},{x:572,y:502},{x:584,y:502},{x:596,y:502},{x:608,y:502},{x:620,y:502},{x:632,y:502},{x:644,y:502},{x:656,y:502},
-          // Left pins
-          {x:498,y:340},{x:498,y:355},{x:498,y:370},{x:498,y:385},{x:498,y:400},{x:498,y:415},{x:498,y:430},{x:498,y:445},{x:498,y:460},
-          // Right pins
-          {x:702,y:340},{x:702,y:355},{x:702,y:370},{x:702,y:385},{x:702,y:400},{x:702,y:415},{x:702,y:430},{x:702,y:445},{x:702,y:460}
-        ];
-        sparkPositions.forEach(function(sp){
-          var spark=document.createElementNS('http://www.w3.org/2000/svg','circle');
-          spark.setAttribute('cx',sp.x);spark.setAttribute('cy',sp.y);
-          spark.setAttribute('r','1.5');spark.setAttribute('fill','#fff');
-          spark.setAttribute('filter','url(#aig)');spark.style.opacity='0';
-          chargeGroup.appendChild(spark);
-          gsap.to(spark,{opacity:1,duration:0.1,repeat:-1,repeatDelay:0.3+Math.random()*1.5,yoyo:true,ease:'power3.out',delay:Math.random()*2});
-        });
-        // Fade charge group in at full zoom (position 5)
-        tl.to(chargeGroup,{opacity:1,ease:'none',duration:0.8},5);
+          requestAnimationFrame(animateCharges);
+          // Fade charge group in at full zoom (position 5), activate animation
+          tl.to(chargeGroup,{opacity:1,ease:'none',duration:0.8,onStart:function(){chargeActive=true;}},5);
+        }
 
         // Non-timeline blinking (runs independently)
         allNodes.forEach(function(n){
