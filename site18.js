@@ -2029,7 +2029,7 @@ if(false){(function(){
   scVid.pause();
   if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
     gsap.to(vidWhite,{opacity:0,duration:1,ease:'power2.out',scrollTrigger:{trigger:vidParent,start:'top 80%',end:'top 20%',scrub:0.6}});
-    ScrollTrigger.create({trigger:vidParent,start:'bottom bottom',end:'top top',onEnter:function(){scVid.play().catch(function(){})},onLeave:function(){scVid.pause()},onEnterBack:function(){scVid.play().catch(function(){})},onLeaveBack:function(){scVid.pause()}});
+    ScrollTrigger.create({trigger:vidParent,start:'bottom bottom',end:'top top',onEnter:function(){scVid.currentTime=0;scVid.play().catch(function(){})},onLeave:function(){scVid.pause()},onEnterBack:function(){scVid.currentTime=0;scVid.play().catch(function(){})},onLeaveBack:function(){scVid.pause()}});
   } else {
     var vidObserver=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
