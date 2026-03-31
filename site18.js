@@ -1754,11 +1754,6 @@ if(false){(function(){
           var supSection=document.querySelector('#svc-supporting');
           if(!cpSection||!supSection||typeof gsap==='undefined'||!gsap.registerPlugin)return;
 
-          // Force section to 100vh
-          cpSection.style.height='100vh';
-          cpSection.style.minHeight='100vh';
-          cpSection.style.maxHeight='100vh';
-
           // References
           var heroGrid=cpSection.querySelector('.svc-hero-grid');
           var cpCards=cpSection.querySelectorAll('.cp-card');
