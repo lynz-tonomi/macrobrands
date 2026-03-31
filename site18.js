@@ -1948,16 +1948,23 @@ if(false){(function(){
   if(!sec)return;
   // Section layout: header text on top, video below
   sec.style.cssText='position:relative;overflow:hidden;background:#000';
-  // Hide native Webflow "Supply Chain Intelligence" heading + long desc (duplicate of sc-header)
+  // Hide native "Supply Chain Intelligence" heading; move + shorten its desc under sc-header h2
   var nativeSCH2=sec.querySelector('.svc-h2-for-sc');
   if(nativeSCH2)nativeSCH2.style.display='none';
   var nativeSCDesc=sec.querySelector('.svc-desc.is-centered');
-  if(nativeSCDesc)nativeSCDesc.style.display='none';
+  if(nativeSCDesc){
+    nativeSCDesc.innerHTML='Autonomi replaces manual coordination with 29 AI agents that monitor, decide, and act across your entire supply chain in real time.';
+    nativeSCDesc.style.cssText='font-size:1.15rem;color:rgba(255,255,255,0.7);line-height:1.7;max-width:640px;margin:12px auto 0;text-align:center';
+  }
   // Style header content — above the video
   var hdr=sec.querySelector('.sc-header');
   if(hdr){
     hdr.style.cssText='position:relative;z-index:2;text-align:center;max-width:800px;margin:0 auto;padding:80px 40px 60px';
-    hdr.querySelectorAll('h2').forEach(function(h){h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0'});
+    hdr.querySelectorAll('h2').forEach(function(h){
+      h.style.cssText='font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin:16px 0';
+      // Move shortened native desc right after the heading
+      if(nativeSCDesc&&!nativeSCDesc._moved){nativeSCDesc._moved=true;h.parentNode.insertBefore(nativeSCDesc,h.nextSibling);}
+    });
     hdr.querySelectorAll('p').forEach(function(p){p.style.cssText='font-size:1.1rem;color:rgba(255,255,255,0.75);line-height:1.7;max-width:600px;margin:0 auto';
       if(p.textContent.indexOf('Autonomi')!==-1){p.innerHTML=p.innerHTML.replace('Autonomi','<img src=\"https://lynz-tonomi.github.io/macrobrands/Autonomi-logo-blue.png\" alt=\"Autonomi\" style=\"height:52px;vertical-align:-12px;margin:0 4px\">')}
     });
@@ -2011,14 +2018,10 @@ if(false){(function(){
     });
   },{threshold:0.2});
   observer.observe(vidWrap);
-  // Shorten description — concise single line
+  // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
-    var pars=hdr.querySelectorAll('p');
-    if(pars.length>=1){
-      pars[0].innerHTML='29 AI agents automate procurement, production, quality, and logistics — in real time.';
-    }
-    // Hide all extra paragraphs
-    for(var pi=1;pi<pars.length;pi++){pars[pi].style.display='none';}
+    var pars=hdr.querySelectorAll('p.sc-desc');
+    pars.forEach(function(p){p.style.display='none';});
   }
 
   // ── INJECT SUPPLY CHAIN PROCESS FLOW SVG BELOW DESCRIPTION (inside header) ──
