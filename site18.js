@@ -2180,8 +2180,8 @@ if(false){(function(){
         // Fade to white — starts at 65%, done by 80%
         tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
         tl.to(pinSec,{backgroundColor:'#fff',ease:'power1.in',duration:1.5},6.5);
-        // Empty tween to pad timeline to 10 for clean pin end
-        tl.to({},{duration:2},8);
+        // Short pad after white fade for clean pin end
+        tl.to({},{duration:0.5},8);
 
 
         // LED nodes: fade in with background, then blink randomly
