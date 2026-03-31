@@ -1745,6 +1745,110 @@ if(false){(function(){
 
         // Auto-open first card (Tunnel Pasteurization) after 300ms
         setTimeout(function(){openSlot(0);},300);
+
+        // ── 3b. CO-PACKING PARALLAX ZOOM ANIMATION ──
+        // Pin section → cards scatter out → zoom into process flow → fade in Supporting Services
+        (function(){
+          var cpSection=document.querySelector('#svc-copacking');
+          var supSection=document.querySelector('#svc-supporting');
+          if(!cpSection||!supSection||typeof gsap==='undefined'||!gsap.registerPlugin)return;
+
+          // Ensure section has relative positioning and overflow hidden for pin
+          cpSection.style.overflow='hidden';
+          cpSection.style.position='relative';
+
+          // References
+          var heroGrid=cpSection.querySelector('.svc-hero-grid');
+          var cpCards=cpSection.querySelectorAll('.cp-card');
+          var expandSlot=cpSection.querySelector('.cp-expand');
+
+          // Clone the Supporting Services section content into an overlay inside the pinned section
+          var supOverlay=document.createElement('div');
+          supOverlay.className='cp-sup-overlay';
+          supOverlay.style.cssText='position:absolute;inset:0;z-index:30;opacity:0;overflow-y:auto;background:#111;pointer-events:none';
+          // Clone the sup section's inner content
+          var supClone=supSection.cloneNode(true);
+          supClone.style.cssText='width:100%;min-height:100%;position:relative';
+          supClone.removeAttribute('id');
+          supOverlay.appendChild(supClone);
+          cpSection.appendChild(supOverlay);
+
+          // Hide original supporting services section (will be replaced by the overlay fade-in)
+          supSection.style.display='none';
+
+          // Scatter directions for 6 cards based on position:
+          // Row 1: [0]=up-left, [1]=up, [2]=up-right
+          // Row 2: [3]=down-left, [4]=down, [5]=down-right
+          var scatterDirs=[
+            {x:'-120%',y:'-100%',rotate:-15},
+            {x:'0%',y:'-120%',rotate:0},
+            {x:'120%',y:'-100%',rotate:15},
+            {x:'-120%',y:'100%',rotate:15},
+            {x:'0%',y:'120%',rotate:0},
+            {x:'120%',y:'100%',rotate:-15}
+          ];
+
+          // Build GSAP timeline
+          var cpTL=gsap.timeline({
+            scrollTrigger:{
+              trigger:cpSection,
+              start:'top top',
+              end:'+=300%',
+              scrub:0.4,
+              pin:true,
+              pinSpacing:true,
+              anticipatePin:1
+            }
+          });
+
+          // Phase 1: Hold (0 → 0.5)
+          cpTL.to({},{duration:0.5});
+
+          // Phase 2: Cards scatter outward + hero heading fades (0.5 → 3)
+          cpCards.forEach(function(card,i){
+            cpTL.to(card,{
+              x:scatterDirs[i].x,
+              y:scatterDirs[i].y,
+              rotation:scatterDirs[i].rotate,
+              opacity:0,
+              scale:0.7,
+              ease:'power2.in',
+              duration:2
+            },0.5+i*0.15);
+          });
+
+          // Fade out the hero heading area
+          if(heroGrid){
+            cpTL.to(heroGrid,{opacity:0,y:-60,duration:1.5,ease:'power2.in'},0.5);
+          }
+
+          // Phase 3: Zoom into process flow diagram (3 → 6)
+          if(expandSlot){
+            // Force the expand slot visible and centered
+            cpTL.to(expandSlot,{
+              scale:2.2,
+              y:'-20vh',
+              transformOrigin:'center center',
+              ease:'power2.inOut',
+              duration:3
+            },3);
+          }
+
+          // Phase 4: Fade out process flow, fade in Supporting Services overlay (6 → 8)
+          if(expandSlot){
+            cpTL.to(expandSlot,{opacity:0,duration:1.5,ease:'power2.in'},6);
+          }
+          cpTL.to(supOverlay,{
+            opacity:1,
+            duration:1.5,
+            ease:'power2.out',
+            onStart:function(){supOverlay.style.pointerEvents='auto';}
+          },6.5);
+
+          // Phase 5: Hold on Supporting Services (8 → 9)
+          cpTL.to({},{duration:1});
+
+        })();
       }
 
       // ── 4. SUPPORTING SERVICES TAB SWITCHING ──
