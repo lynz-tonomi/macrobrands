@@ -2304,7 +2304,7 @@ if(false){(function(){
   }
   // Match logo size to home page (180px instead of native 256px)
   var contactLogo=document.querySelector('.nav-logo');
-  if(contactLogo){contactLogo.style.maxWidth='180px';}
+  if(contactLogo){contactLogo.style.width='180px';contactLogo.style.height='auto';}
 })();
 
 })(); // end run
