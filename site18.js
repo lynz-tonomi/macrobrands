@@ -2186,7 +2186,7 @@ if(false){(function(){
         // LED nodes: fade in with background, then blink randomly
         var ledWrap=scFlow.querySelector('.ai-led-wrap');
         if(ledWrap){
-          tl.to(ledWrap,{opacity:1,ease:'none',duration:1.5},6.5);
+          tl.to(ledWrap,{opacity:1,ease:'none',duration:1},4.5);
           var leds=ledWrap.querySelectorAll('.ai-led');
           leds.forEach(function(led){
             var delay=Math.random()*3;
