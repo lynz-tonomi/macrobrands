@@ -1201,23 +1201,33 @@ if(false){(function(){
         var desc=sec.querySelector('.svc-desc');
         if(desc) desc.textContent=shortCopy[secId];
       });
-      // Bigger, more legible fonts across all service sections
-      document.querySelectorAll('.svc-h2').forEach(function(h){
-        h.style.cssText+=';font-size:3rem;line-height:1.15;font-weight:800;letter-spacing:-0.02em';
-      });
-      document.querySelectorAll('.svc-desc').forEach(function(p){
-        p.style.cssText+=';font-size:1.25rem;line-height:1.75;color:#444;max-width:680px';
-      });
-      document.querySelectorAll('.svc-label').forEach(function(l){
-        l.style.cssText+=';font-size:0.85rem;letter-spacing:0.12em;font-weight:600;color:#C9A84C';
-      });
-      document.querySelectorAll('.svc-bullet-item').forEach(function(bi){
-        bi.style.cssText+=';font-size:1rem';
-      });
-      // Also boost About section and general content readability
-      document.querySelectorAll('.section-body').forEach(function(p){
-        p.style.cssText+=';font-size:1.2rem;line-height:1.8;color:#444';
-      });
+      // ── GLOBAL FONT + LEGIBILITY BOOST ──
+      // Inject a style block for global readability
+      var readStyle=document.createElement('style');
+      readStyle.textContent=
+        // Service section headings
+        '.svc-h2{font-size:3rem !important;line-height:1.15 !important;font-weight:800 !important;letter-spacing:-0.02em !important}'+
+        // Service descriptions — bright on dark bg
+        '.svc-desc{font-size:1.25rem !important;line-height:1.8 !important;color:rgba(255,255,255,0.85) !important;max-width:680px}'+
+        // Service labels
+        '.svc-label{font-size:0.85rem !important;letter-spacing:0.12em !important;font-weight:600 !important;color:#C9A84C !important}'+
+        // Service bullet items
+        '.svc-bullet-item{font-size:1rem !important}'+
+        '.svc-check{color:#C9A84C !important}'+
+        // About / light section body text
+        '.section-body{font-size:1.2rem !important;line-height:1.8 !important;color:#333 !important}'+
+        // Dark section text legibility
+        '.section-dark p,.section-dark span,.section-dark li,.section-dark-alt p,.section-dark-alt span,.section-dark-alt li{color:rgba(255,255,255,0.8) !important;font-size:1.1rem !important;line-height:1.75 !important}'+
+        '.section-dark h2,.section-dark h3,.section-dark-alt h2,.section-dark-alt h3{color:#fff !important}'+
+        '.section-dark .section-subhead,.section-dark-alt .section-subhead{color:rgba(255,255,255,0.7) !important;font-size:1.15rem !important;line-height:1.7 !important}'+
+        // Card text on light bg
+        '.card-text{font-size:1.05rem !important;line-height:1.7 !important;color:#555 !important}'+
+        // General body text boost
+        'p{line-height:1.75 !important}'+
+        // Co-packing card text on dark bg
+        '.svc-section p,.svc-section li,.svc-section span{color:rgba(255,255,255,0.8) !important}'+
+        '.svc-section h3,.svc-section h4{color:#fff !important}';
+      document.head.appendChild(readStyle);
 
       // ── 1. ANIMATED CANVAS ICONS next to section headings ──
       var iconDefs={
