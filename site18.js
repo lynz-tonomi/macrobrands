@@ -1816,7 +1816,7 @@ if(false){(function(){
             scrollTrigger:{
               trigger:cpSection,
               start:'bottom bottom',
-              end:'+=350%',
+              end:'+=450%',
               scrub:0.4,
               pin:true,
               pinSpacing:true,
@@ -1850,38 +1850,41 @@ if(false){(function(){
             cpTL.to(cpWrapEl,{opacity:0,duration:1},0.5);
           }
 
-          // ── Phase 2: Zoom into process flow diagram (2.5 → 5.5) ──
+          // ── Phase 2: Zoom deep into process flow center (2.5 → 6.5) ──
           if(expandSlot){
             cpTL.to(expandSlot,{
-              scale:2.5,
-              y:'-30vh',
+              scale:3,
+              y:'-25vh',
               opacity:1,
               transformOrigin:'center center',
-              ease:'power2.inOut',
-              duration:3
+              ease:'power1.inOut',
+              duration:4
             },2.5);
           }
 
-          // ── Phase 3: Fade to black (5.5 → 7) ──
-          // Process flow fades out while black overlay comes in
-          if(expandSlot){
-            cpTL.to(expandSlot,{opacity:0,scale:3,duration:1.5,ease:'power2.in'},5.5);
-          }
-          cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},5.5);
+          // ── Phase 3: Hold on zoomed process flow (6.5 → 8) ──
+          // Let user appreciate the diagram fully zoomed in
+          cpTL.to({},{duration:1.5});
 
-          // ── Phase 4: Hold on black (7 → 7.5) ──
+          // ── Phase 4: Fade to black (8 → 9.5) ──
+          if(expandSlot){
+            cpTL.to(expandSlot,{opacity:0,scale:3.5,duration:1.5,ease:'power2.in'},8);
+          }
+          cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},8);
+
+          // ── Phase 5: Hold on black (9.5 → 10) ──
           cpTL.to({},{duration:0.5});
 
-          // ── Phase 5: Fade in Supporting Services from black (7.5 → 9) ──
-          cpTL.to(blackOverlay,{opacity:0,duration:1.5,ease:'power2.out'},7.5);
+          // ── Phase 6: Fade in Supporting Services from black (10 → 11.5) ──
+          cpTL.to(blackOverlay,{opacity:0,duration:1.5,ease:'power2.out'},10);
           cpTL.to(supOverlay,{
             opacity:1,
             duration:1.5,
             ease:'power2.out',
             onStart:function(){supOverlay.style.pointerEvents='auto';}
-          },7.5);
+          },10);
 
-          // ── Phase 6: Hold on Supporting Services (9 → 10) ──
+          // ── Phase 7: Hold on Supporting Services (11.5 → 12.5) ──
           cpTL.to({},{duration:1});
 
         })();
