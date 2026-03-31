@@ -1236,11 +1236,210 @@ if(false){(function(){
 
       // ── 1. ANIMATED CANVAS ICONS next to section headings ──
       var iconDefs={
-        'svc-formulation':function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#fff';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}},
-        'svc-microthermic':function(ctx,t){ctx.strokeStyle='#333';ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-4,-26);ctx.lineTo(-4,8);ctx.arc(0,14,10,Math.PI*.8,Math.PI*.2);ctx.lineTo(4,8);ctx.lineTo(4,-26);ctx.arc(0,-26,4,0,Math.PI,true);ctx.stroke();var mH=20+Math.sin(t*2)*8;ctx.fillStyle='#ef4444';ctx.globalAlpha=.8;ctx.beginPath();ctx.arc(0,14,6,0,Math.PI*2);ctx.fill();ctx.fillRect(-2,14-mH,4,mH);ctx.globalAlpha=.7;ctx.strokeStyle='#ef4444';ctx.lineWidth=2.5;for(var i=0;i<3;i++){var wx=14+i*6;var wave=Math.sin(t*4+i*1.5)*3;ctx.beginPath();ctx.moveTo(wx,0);ctx.quadraticCurveTo(wx+wave,-8,wx,-16);ctx.stroke()}},
-        'svc-copacking':function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-10,22);ctx.lineTo(-12,-4);ctx.lineTo(-6,-16);ctx.lineTo(-6,-24);ctx.lineTo(6,-24);ctx.lineTo(6,-16);ctx.lineTo(12,-4);ctx.lineTo(10,22);ctx.closePath();ctx.stroke();ctx.fillStyle='#fff';ctx.globalAlpha=.5;ctx.fillRect(-7,-30,14,7);var fH=((t*20)%42);ctx.fillStyle='#fff';ctx.globalAlpha=.25;ctx.save();ctx.beginPath();ctx.rect(-12,22-fH,24,fH);ctx.clip();ctx.beginPath();ctx.moveTo(-10,22);ctx.lineTo(-12,-4);ctx.lineTo(-6,-16);ctx.lineTo(-6,-24);ctx.lineTo(6,-24);ctx.lineTo(6,-16);ctx.lineTo(12,-4);ctx.lineTo(10,22);ctx.closePath();ctx.fill();ctx.restore();ctx.globalAlpha=.6;ctx.lineWidth=2;var streamY=-30-((t*40)%15);ctx.beginPath();ctx.moveTo(0,streamY);ctx.lineTo(0,-24);ctx.stroke();ctx.globalAlpha=.4;var dy=-30-((t*25)%20);ctx.beginPath();ctx.arc(0,dy,1.5,0,Math.PI*2);ctx.fill()}
-,
-        'svc-supporting':function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.lineCap='round';/* Gear icon */var a=t*1.5;for(var i=0;i<6;i++){var ang=a+i*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(ang)*12,Math.sin(ang)*12);ctx.lineTo(Math.cos(ang)*18,Math.sin(ang)*18);ctx.stroke()}ctx.beginPath();ctx.arc(0,0,12,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.4;ctx.beginPath();ctx.arc(0,0,8,0,Math.PI*2);ctx.fill()}
+        'svc-formulation':function(ctx,t){
+          // Detailed Erlenmeyer flask with measurement lines, bubbling liquid, vapour
+          var c='#fff';ctx.strokeStyle=c;ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
+          var b=1+Math.sin(t*2.5)*.015;ctx.scale(b,b);
+          // Flask body
+          ctx.beginPath();ctx.moveTo(-7,-28);ctx.lineTo(-7,-12);ctx.lineTo(-20,24);ctx.lineTo(20,24);ctx.lineTo(7,-12);ctx.lineTo(7,-28);ctx.stroke();
+          // Neck rim
+          ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-9,-28);ctx.lineTo(9,-28);ctx.stroke();
+          // Measurement tick marks
+          ctx.lineWidth=1;ctx.globalAlpha=.4;
+          for(var i=0;i<4;i++){var my=20-i*8;var mw=4+i*1;ctx.beginPath();ctx.moveTo(-18+i*2.5,my);ctx.lineTo(-18+i*2.5+mw,my);ctx.stroke();}
+          // Liquid fill with animated wave surface
+          ctx.globalAlpha=.2;ctx.fillStyle=c;
+          var wv=Math.sin(t*3)*2.5;var wv2=Math.sin(t*3+2)*1.5;
+          ctx.beginPath();ctx.moveTo(-17,8+wv);ctx.bezierCurveTo(-8,5-wv,8,5+wv2,17,8-wv);ctx.lineTo(20,24);ctx.lineTo(-20,24);ctx.closePath();ctx.fill();
+          // Second liquid layer
+          ctx.globalAlpha=.1;ctx.beginPath();ctx.moveTo(-17,12+wv2);ctx.bezierCurveTo(-6,9-wv2,6,9+wv,17,12-wv2);ctx.lineTo(20,24);ctx.lineTo(-20,24);ctx.closePath();ctx.fill();
+          // Bubbles rising
+          ctx.globalAlpha=.55;ctx.fillStyle=c;
+          for(var i=0;i<6;i++){
+            var bx=-8+Math.sin(i*2.1+t*1.5)*6;
+            var by=22-((t*18+i*12)%30);
+            var br=0.8+Math.sin(i*3)*.5;
+            if(by>5){ctx.beginPath();ctx.arc(bx,by,br,0,Math.PI*2);ctx.fill();}
+          }
+          // Vapour wisps above flask
+          ctx.globalAlpha=.25;ctx.strokeStyle=c;ctx.lineWidth=1;
+          for(var i=0;i<3;i++){
+            var vx=-3+i*3;var vy=-30-((t*12+i*8)%18);var vw=Math.sin(t*3+i*2)*3;
+            ctx.beginPath();ctx.moveTo(vx,vy+6);ctx.quadraticCurveTo(vx+vw,vy+3,vx,vy);ctx.stroke();
+          }
+          // Stirring rod
+          ctx.globalAlpha=.6;ctx.strokeStyle=c;ctx.lineWidth=1.2;
+          var rodAng=Math.sin(t*2)*.15;
+          ctx.save();ctx.rotate(rodAng);
+          ctx.beginPath();ctx.moveTo(2,-34);ctx.lineTo(2,2);ctx.stroke();
+          ctx.restore();
+        },
+        'svc-microthermic':function(ctx,t){
+          // Detailed thermometer with graduated scale, mercury column, radiating heat
+          var c='#444';ctx.strokeStyle=c;ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
+          // Thermometer outer shell
+          ctx.beginPath();
+          ctx.moveTo(-5,-32);ctx.lineTo(-5,6);ctx.arc(0,12,12,Math.PI*0.92,Math.PI*0.08);ctx.lineTo(5,6);ctx.lineTo(5,-32);
+          ctx.arc(0,-32,5,0,Math.PI,true);ctx.stroke();
+          // Inner tube
+          ctx.lineWidth=1;ctx.globalAlpha=.3;
+          ctx.beginPath();ctx.moveTo(-2.5,-28);ctx.lineTo(-2.5,6);ctx.moveTo(2.5,-28);ctx.lineTo(2.5,6);ctx.stroke();
+          // Scale ticks
+          ctx.globalAlpha=.5;ctx.lineWidth=.8;
+          for(var i=0;i<8;i++){var ty=-26+i*4.5;var tw=(i%2===0)?5:3;ctx.beginPath();ctx.moveTo(5,ty);ctx.lineTo(5+tw,ty);ctx.stroke();}
+          // Mercury bulb
+          var mH=22+Math.sin(t*1.8)*6;
+          ctx.fillStyle='#ef4444';ctx.globalAlpha=.85;
+          ctx.beginPath();ctx.arc(0,12,8,0,Math.PI*2);ctx.fill();
+          // Mercury column rising
+          ctx.fillRect(-2,12-mH,4,mH);
+          // Mercury column highlight
+          ctx.fillStyle='#ff8888';ctx.globalAlpha=.3;ctx.fillRect(-0.5,12-mH,1.5,mH);
+          // Degree markers on mercury side
+          ctx.fillStyle=c;ctx.globalAlpha=.35;ctx.font='5px sans-serif';ctx.textAlign='left';
+          var labels=['20','40','60','80'];
+          for(var i=0;i<4;i++){ctx.fillText(labels[i],11,-24+i*8);}
+          // Heat waves radiating
+          ctx.globalAlpha=.6;ctx.strokeStyle='#ef4444';ctx.lineWidth=1.5;
+          for(var i=0;i<4;i++){
+            var wx=18+i*5;var amp=Math.sin(t*3.5+i*1.2)*3;
+            ctx.beginPath();ctx.moveTo(wx,4);ctx.quadraticCurveTo(wx+amp,-4,wx,-12);ctx.stroke();
+          }
+          // Small heat particles
+          ctx.fillStyle='#ef4444';ctx.globalAlpha=.4;
+          for(var i=0;i<5;i++){
+            var px=20+Math.sin(t*2+i*1.7)*8;var py=-8+Math.cos(t*1.5+i*2.3)*10;
+            ctx.beginPath();ctx.arc(px,py,.8,0,Math.PI*2);ctx.fill();
+          }
+        },
+        'svc-copacking':function(ctx,t){
+          // Detailed bottle on conveyor belt with cap, label, fill animation
+          var c='#fff';ctx.strokeStyle=c;ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
+          // Bottle body - detailed shape with shoulder
+          ctx.beginPath();
+          ctx.moveTo(-10,24);ctx.lineTo(-12,4);ctx.quadraticCurveTo(-12,-2,-8,-8);
+          ctx.lineTo(-5,-14);ctx.lineTo(-5,-22);ctx.lineTo(5,-22);ctx.lineTo(5,-14);
+          ctx.lineTo(8,-8);ctx.quadraticCurveTo(12,-2,12,4);ctx.lineTo(10,24);ctx.closePath();ctx.stroke();
+          // Cap
+          ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-6,-22);ctx.lineTo(-6,-27);ctx.lineTo(6,-27);ctx.lineTo(6,-22);ctx.stroke();
+          ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-7,-27);ctx.lineTo(7,-27);ctx.stroke();
+          // Cap ridges
+          ctx.lineWidth=.6;ctx.globalAlpha=.4;
+          for(var i=0;i<5;i++){var cx=-5+i*2.5;ctx.beginPath();ctx.moveTo(cx,-27);ctx.lineTo(cx,-22);ctx.stroke();}
+          // Label area
+          ctx.globalAlpha=.15;ctx.fillStyle=c;
+          ctx.fillRect(-10,2,20,14);
+          ctx.globalAlpha=.3;ctx.strokeStyle=c;ctx.lineWidth=.8;
+          ctx.strokeRect(-10,2,20,14);
+          // Label text lines
+          ctx.globalAlpha=.2;ctx.lineWidth=.8;
+          ctx.beginPath();ctx.moveTo(-7,6);ctx.lineTo(7,6);ctx.stroke();
+          ctx.beginPath();ctx.moveTo(-7,9);ctx.lineTo(4,9);ctx.stroke();
+          ctx.beginPath();ctx.moveTo(-7,12);ctx.lineTo(6,12);ctx.stroke();
+          // Liquid filling animation
+          var fH=((t*14)%38);
+          ctx.fillStyle=c;ctx.globalAlpha=.12;
+          ctx.save();
+          ctx.beginPath();ctx.rect(-12,24-fH,24,fH);ctx.clip();
+          ctx.beginPath();
+          ctx.moveTo(-10,24);ctx.lineTo(-12,4);ctx.quadraticCurveTo(-12,-2,-8,-8);
+          ctx.lineTo(-5,-14);ctx.lineTo(-5,-22);ctx.lineTo(5,-22);ctx.lineTo(5,-14);
+          ctx.lineTo(8,-8);ctx.quadraticCurveTo(12,-2,12,4);ctx.lineTo(10,24);ctx.closePath();ctx.fill();
+          ctx.restore();
+          // Conveyor belt
+          ctx.globalAlpha=.5;ctx.strokeStyle=c;ctx.lineWidth=1.5;
+          ctx.beginPath();ctx.moveTo(-30,26);ctx.lineTo(30,26);ctx.stroke();
+          // Conveyor rollers
+          ctx.globalAlpha=.3;ctx.lineWidth=1;
+          var rollOff=(t*20)%10;
+          for(var i=-3;i<4;i++){
+            var rx=-25+i*10+rollOff;
+            ctx.beginPath();ctx.arc(rx,28,2.5,0,Math.PI*2);ctx.stroke();
+            // Roller rotation lines
+            var ra=t*4;
+            ctx.beginPath();ctx.moveTo(rx+Math.cos(ra)*1.5,28+Math.sin(ra)*1.5);
+            ctx.lineTo(rx-Math.cos(ra)*1.5,28-Math.sin(ra)*1.5);ctx.stroke();
+          }
+          // Filling stream from top
+          ctx.globalAlpha=.5;ctx.strokeStyle=c;ctx.lineWidth=1;
+          var streamOff=(t*30)%8;
+          ctx.setLineDash([2,3]);
+          ctx.beginPath();ctx.moveTo(0,-34);ctx.lineTo(0,-27);ctx.stroke();
+          ctx.setLineDash([]);
+          // Droplets
+          ctx.globalAlpha=.4;ctx.fillStyle=c;
+          for(var i=0;i<3;i++){
+            var dy=-34+((t*25+i*10)%12);
+            var dx=Math.sin(i*1.5)*.8;
+            ctx.beginPath();ctx.arc(dx,dy,1,0,Math.PI*2);ctx.fill();
+          }
+        },
+        'svc-supporting':function(ctx,t){
+          // Detailed gear + wrench combo with inner details
+          var c='#fff';ctx.strokeStyle=c;ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
+          // Main gear - rotating
+          var ga=t*0.8;ctx.save();ctx.rotate(ga);
+          var teeth=8;var outerR=16;var innerR=12;var toothH=5;
+          ctx.beginPath();
+          for(var i=0;i<teeth;i++){
+            var a1=i*Math.PI*2/teeth-Math.PI/(teeth*2);
+            var a2=i*Math.PI*2/teeth+Math.PI/(teeth*2);
+            var a3=(i+0.5)*Math.PI*2/teeth-Math.PI/(teeth*2.5);
+            var a4=(i+0.5)*Math.PI*2/teeth+Math.PI/(teeth*2.5);
+            if(i===0)ctx.moveTo(Math.cos(a1)*innerR,Math.sin(a1)*innerR);
+            ctx.lineTo(Math.cos(a1)*(innerR+toothH),Math.sin(a1)*(innerR+toothH));
+            ctx.lineTo(Math.cos(a2)*(innerR+toothH),Math.sin(a2)*(innerR+toothH));
+            ctx.lineTo(Math.cos(a3)*innerR,Math.sin(a3)*innerR);
+          }
+          ctx.closePath();ctx.stroke();
+          // Inner circles
+          ctx.beginPath();ctx.arc(0,0,7,0,Math.PI*2);ctx.stroke();
+          ctx.beginPath();ctx.arc(0,0,3,0,Math.PI*2);ctx.stroke();
+          // Spokes
+          ctx.globalAlpha=.25;ctx.lineWidth=1;
+          for(var i=0;i<4;i++){var sa=i*Math.PI/2;ctx.beginPath();ctx.moveTo(Math.cos(sa)*3.5,Math.sin(sa)*3.5);ctx.lineTo(Math.cos(sa)*6.5,Math.sin(sa)*6.5);ctx.stroke();}
+          ctx.globalAlpha=1;
+          ctx.restore();
+          // Small gear - counter-rotating
+          ctx.save();ctx.translate(18,-14);ctx.rotate(-ga*1.6);
+          ctx.lineWidth=1.5;
+          var teeth2=6;var outerR2=9;var innerR2=6;var toothH2=3.5;
+          ctx.beginPath();
+          for(var i=0;i<teeth2;i++){
+            var a1=i*Math.PI*2/teeth2-Math.PI/(teeth2*2);
+            var a2=i*Math.PI*2/teeth2+Math.PI/(teeth2*2);
+            var a3=(i+0.5)*Math.PI*2/teeth2-Math.PI/(teeth2*2.5);
+            if(i===0)ctx.moveTo(Math.cos(a1)*innerR2,Math.sin(a1)*innerR2);
+            ctx.lineTo(Math.cos(a1)*(innerR2+toothH2),Math.sin(a1)*(innerR2+toothH2));
+            ctx.lineTo(Math.cos(a2)*(innerR2+toothH2),Math.sin(a2)*(innerR2+toothH2));
+            ctx.lineTo(Math.cos(a3)*innerR2,Math.sin(a3)*innerR2);
+          }
+          ctx.closePath();ctx.stroke();
+          ctx.beginPath();ctx.arc(0,0,3.5,0,Math.PI*2);ctx.stroke();
+          ctx.restore();
+          // Wrench
+          ctx.globalAlpha=.7;ctx.lineWidth=1.5;
+          ctx.save();ctx.translate(-14,16);ctx.rotate(-.6+Math.sin(t*2)*.1);
+          ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(18,-18);ctx.stroke();
+          // Wrench head
+          ctx.lineWidth=1.2;
+          ctx.beginPath();ctx.arc(19,-19,5,Math.PI*0.8,Math.PI*1.8);ctx.stroke();
+          ctx.beginPath();ctx.arc(19,-19,5,Math.PI*-.2,Math.PI*.3);ctx.stroke();
+          // Wrench handle grip lines
+          ctx.globalAlpha=.3;ctx.lineWidth=.8;
+          for(var i=0;i<3;i++){
+            var gp=3+i*3;
+            ctx.beginPath();ctx.moveTo(gp*Math.cos(-.78)-1,gp*Math.sin(-.78)+1);
+            ctx.lineTo(gp*Math.cos(-.78)+1,gp*Math.sin(-.78)-1);ctx.stroke();
+          }
+          ctx.restore();
+          // Small decorative dots
+          ctx.globalAlpha=.2;ctx.fillStyle=c;
+          for(var i=0;i<4;i++){
+            var dx=-22+Math.sin(t+i*1.5)*3;var dy=8+Math.cos(t*1.2+i*2)*5;
+            ctx.beginPath();ctx.arc(dx,dy,.7,0,Math.PI*2);ctx.fill();
+          }
+        }
       };
 
       Object.keys(iconDefs).forEach(function(secId){
@@ -1249,8 +1448,8 @@ if(false){(function(){
         var heading=sec.querySelector('h2')||sec.querySelector('h3');
         if(!heading)return;
         var cv=document.createElement('canvas');
-        cv.width=120;cv.height=120;
-        cv.style.cssText='display:block;flex-shrink:0;width:60px;height:60px';
+        cv.width=200;cv.height=200;
+        cv.style.cssText='display:block;flex-shrink:0;width:80px;height:80px';
         // Wrap heading + canvas in a flex row
         var iconRow=document.createElement('div');
         iconRow.style.cssText='display:flex;align-items:center;gap:16px';
@@ -1260,10 +1459,10 @@ if(false){(function(){
         var drawFn=iconDefs[secId];
         (function animLoop(){
           var ctx=cv.getContext('2d');
-          ctx.clearRect(0,0,120,120);
+          ctx.clearRect(0,0,200,200);
           ctx.save();
-          ctx.translate(60,60);
-          ctx.scale(1.6,1.6);
+          ctx.translate(100,100);
+          ctx.scale(2.2,2.2);
           ctx.globalAlpha=1;
           drawFn(ctx,performance.now()/1000);
           ctx.restore();
