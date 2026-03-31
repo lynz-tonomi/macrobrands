@@ -2022,26 +2022,14 @@ if(false){(function(){
     vidWrap.appendChild(scVid);
     sec.appendChild(vidWrap);
   }
-  // Only play when scrolled into view, pause when out
-  // Smooth white-to-video transition using ScrollTrigger
+  // Hide the original video section — only the pin video will be used
   var vidParent=vidWrap.closest('section')||vidWrap.parentElement;
-  var vidWhite=document.createElement('div');
-  vidWhite.style.cssText='position:absolute;inset:0;background:#fff;z-index:10;pointer-events:none';
-  vidParent.style.position='relative';
-  vidParent.appendChild(vidWhite);
-  scVid.pause();
-  // Move video into pin section for seamless white→video transition
-  // Store references globally so the timeline can access them
-  window._scVidRef=scVid;
-  window._scVidParentRef=vidParent;
-  window._scVidWhiteRef=vidWhite;
-  // Hide the original video section — video will play inside the pin section
   vidParent.style.display='none';
-  // Create a video container inside the pin section
+  scVid.pause();
+  // Create pin video container (fades in from white inside pinned section)
   var pinVidWrap=document.createElement('div');
   pinVidWrap.style.cssText='position:absolute;inset:0;z-index:20;overflow:hidden;opacity:0';
   pinVidWrap.className='pin-vid-wrap';
-  // Clone the video into the pin section
   var pinVid=scVid.cloneNode(true);
   pinVid.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
   pinVid.muted=true;pinVid.loop=true;pinVid.playsInline=true;
@@ -2139,21 +2127,7 @@ if(false){(function(){
             scrub:0.3,
             pin:true,
             pinSpacing:true,
-            anticipatePin:1,
-            onLeave:function(){
-              // Pin released — show original video section, hide pin video, hand off playback
-              if(window._pinVidWrap)window._pinVidWrap.style.display='none';
-              if(window._scVidParentRef){window._scVidParentRef.style.display='';window._scVidWhiteRef.style.display='none';}
-              if(window._scVidRef){window._scVidRef.currentTime=window._pinVidEl?window._pinVidEl.currentTime:0;window._scVidRef.play().catch(function(){});}
-              if(window._pinVidEl)window._pinVidEl.pause();
-            },
-            onEnterBack:function(){
-              // Scrolling back into pin — hide video section, restore pin video
-              if(window._pinVidWrap)window._pinVidWrap.style.display='';
-              if(window._scVidParentRef){window._scVidParentRef.style.display='none';}
-              if(window._scVidRef)window._scVidRef.pause();
-              if(window._pinVidEl){window._pinVidEl.play().catch(function(){});}
-            }
+            anticipatePin:1
           }
         });
 
