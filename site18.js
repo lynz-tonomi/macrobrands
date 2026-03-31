@@ -2044,12 +2044,34 @@ if(false){(function(){
     hdr.appendChild(scFlow);
 
     // ── MODULE OVERLAY CARDS ──
-    scFlow.style.position='relative';
+    scFlow.style.position='relative';scFlow.style.perspective='800px';
     // Circuit background image — fades in during zoom
     var circBg=document.createElement('div');
     circBg.className='ai-circ-bg';
     circBg.style.cssText='position:absolute;inset:0;background:url(https://lynz-tonomi.github.io/macrobrands/blue-circuite2.png) 50% calc(47% - 10px)/cover no-repeat;opacity:0;z-index:0;pointer-events:none';
     scFlow.insertBefore(circBg,scFlow.firstChild);
+    // LED blinking nodes on circuit background
+    var ledPositions=[
+      {x:12,y:8,c:'b'},{x:22,y:5,c:'w'},{x:35,y:3,c:'b'},{x:48,y:6,c:'w'},{x:62,y:4,c:'b'},{x:75,y:7,c:'w'},{x:88,y:5,c:'b'},
+      {x:5,y:18,c:'w'},{x:15,y:22,c:'b'},{x:28,y:15,c:'w'},{x:72,y:16,c:'b'},{x:85,y:20,c:'w'},{x:95,y:17,c:'b'},
+      {x:3,y:32,c:'b'},{x:18,y:35,c:'w'},{x:30,y:28,c:'b'},{x:70,y:30,c:'w'},{x:82,y:33,c:'b'},{x:97,y:28,c:'w'},
+      {x:7,y:48,c:'w'},{x:20,y:45,c:'b'},{x:32,y:50,c:'w'},{x:68,y:48,c:'b'},{x:80,y:52,c:'w'},{x:93,y:46,c:'b'},
+      {x:4,y:62,c:'b'},{x:16,y:58,c:'w'},{x:25,y:65,c:'b'},{x:75,y:60,c:'w'},{x:84,y:66,c:'b'},{x:96,y:58,c:'w'},
+      {x:10,y:75,c:'w'},{x:22,y:78,c:'b'},{x:35,y:72,c:'w'},{x:65,y:74,c:'b'},{x:78,y:70,c:'w'},{x:90,y:76,c:'b'},
+      {x:15,y:88,c:'b'},{x:30,y:92,c:'w'},{x:45,y:85,c:'b'},{x:55,y:90,c:'w'},{x:70,y:88,c:'b'},{x:85,y:92,c:'w'}
+    ];
+    var ledContainer=document.createElement('div');
+    ledContainer.className='ai-led-wrap';
+    ledContainer.style.cssText='position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0';
+    ledPositions.forEach(function(led){
+      var dot=document.createElement('div');
+      var isBlue=led.c==='b';
+      var color=isBlue?'#00DFFF':'#fff';
+      dot.className='ai-led';
+      dot.style.cssText='position:absolute;left:'+led.x+'%;top:'+led.y+'%;width:4px;height:4px;border-radius:50%;background:'+color+';box-shadow:0 0 6px 2px '+color+(isBlue?'80':'60')+';opacity:0;transform:translate(-50%,-50%)';
+      ledContainer.appendChild(dot);
+    });
+    circBg.appendChild(ledContainer);
     var moduleData=[
       {name:'SOURCING',sub:'Vendor Discovery',icon:'\u{1F50D}',x:8.4,y:3.1,color:'#00BFFF'},
       {name:'LOGISTICS',sub:'Route Optimization',icon:'\u{1F69A}',x:91.6,y:2.0,color:'#00BFFF'},
@@ -2065,7 +2087,8 @@ if(false){(function(){
       var card=document.createElement('div');
       card.className='ai-mod-card';
       card.style.cssText='position:absolute;left:'+m.x+'%;top:'+m.y+'%;transform:translate(-50%,-50%) translateY(12px);opacity:0;background:#111;border:1px solid '+m.color+'40;border-radius:8px;padding:8px 14px;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:8px;';
-      card.innerHTML='<span style="font-size:18px">'+m.icon+'</span><div><div style="font-size:10px;font-family:monospace;letter-spacing:2px;color:'+m.color+';font-weight:bold">'+m.name+'</div><div style="font-size:9px;color:#666;font-family:sans-serif;margin-top:2px">'+m.sub+'</div></div>';
+      var iconSvgs={SOURCING:'<svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"><animate attributeName="r" values="7;8;7" dur="2s" repeatCount="indefinite"/></circle><line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"><animate attributeName="x2" values="21;22;21" dur="2s" repeatCount="indefinite"/><animate attributeName="y2" values="21;22;21" dur="2s" repeatCount="indefinite"/></line></svg>',LOGISTICS:'<svg viewBox="0 0 24 24" width="20" height="20"><rect x="1" y="8" width="14" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 11h4l3 4v3h-7v-7z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="19" r="2" fill="currentColor"><animate attributeName="cy" values="19;18.5;19" dur="1.5s" repeatCount="indefinite"/></circle><circle cx="18" cy="19" r="2" fill="currentColor"><animate attributeName="cy" values="19;18.5;19" dur="1.5s" begin="0.3s" repeatCount="indefinite"/></circle><animateTransform attributeName="transform" type="translate" values="0,0;1,0;0,0" dur="2s" repeatCount="indefinite"/></svg>',FORECASTING:'<svg viewBox="0 0 24 24" width="20" height="20"><polyline points="3,18 8,12 13,15 21,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"><animate attributeName="stroke-dashoffset" values="30;0" dur="2s" repeatCount="indefinite"/></polyline><polyline points="17,6 21,6 21,10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="0;1;1" dur="2s" repeatCount="indefinite"/></polyline></svg>',SCHEDULING:'<svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="7" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="8s" repeatCount="indefinite"/></line><line x1="12" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="3s" repeatCount="indefinite"/></line></svg>',MONITORING:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="currentColor"><animate attributeName="r" values="3;3.5;3" dur="1.8s" repeatCount="indefinite"/></circle><animate attributeName="opacity" values="1;0.7;1" dur="2.5s" repeatCount="indefinite"/></svg>',ANALYTICS:'<svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="14" width="4" height="7" rx="0.5" fill="currentColor"><animate attributeName="height" values="7;9;7" dur="2s" repeatCount="indefinite"/><animate attributeName="y" values="14;12;14" dur="2s" repeatCount="indefinite"/></rect><rect x="10" y="9" width="4" height="12" rx="0.5" fill="currentColor"><animate attributeName="height" values="12;10;12" dur="2s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="y" values="9;11;9" dur="2s" begin="0.4s" repeatCount="indefinite"/></rect><rect x="17" y="5" width="4" height="16" rx="0.5" fill="currentColor"><animate attributeName="height" values="16;14;16" dur="2s" begin="0.8s" repeatCount="indefinite"/><animate attributeName="y" values="5;7;5" dur="2s" begin="0.8s" repeatCount="indefinite"/></rect></svg>',INVENTORY:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" fill="none" stroke="currentColor" stroke-width="1.5"><animateTransform attributeName="transform" type="rotate" values="0 12 12;3 12 12;-3 12 12;0 12 12" dur="4s" repeatCount="indefinite"/></animateTransform></path><polyline points="3.27,6.96 12,12.01 20.73,6.96" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/><line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="1" opacity="0.5"/></svg>',COMPLIANCE:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="1.5"><animate attributeName="opacity" values="1;0.8;1" dur="2s" repeatCount="indefinite"/></path><polyline points="9,12 11,14 15,10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="10" stroke-dashoffset="10"><animate attributeName="stroke-dashoffset" values="10;0;0;10" dur="3s" repeatCount="indefinite"/></polyline></svg>',TRACEABILITY:'<svg viewBox="0 0 24 24" width="20" height="20"><rect x="4" y="4" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="4" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="14" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="14" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/></line><line x1="7" y1="10" x2="7" y2="14" stroke="currentColor" stroke-width="1"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.3s" repeatCount="indefinite"/></line><line x1="17" y1="10" x2="17" y2="14" stroke="currentColor" stroke-width="1"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.6s" repeatCount="indefinite"/></line><line x1="10" y1="17" x2="14" y2="17" stroke="currentColor" stroke-width="1"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.9s" repeatCount="indefinite"/></line></svg>'};
+      card.innerHTML='<span style="color:'+m.color+';display:flex;align-items:center">'+(iconSvgs[m.name]||m.icon)+'</span><div><div style="font-size:10px;font-family:monospace;letter-spacing:2px;color:'+m.color+';font-weight:bold">'+m.name+'</div><div style="font-size:9px;color:#666;font-family:sans-serif;margin-top:2px">'+m.sub+'</div></div>';
       scFlow.appendChild(card);
     });
 
@@ -2111,9 +2134,17 @@ if(false){(function(){
         tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:2},3);
         // 40-70%: endpoint nodes
         tl.to(allNodes,{opacity:1,ease:'none',duration:3},4);
-        // 50-70%: module cards
-        tl.to(mods,{opacity:1,y:-12,ease:'none',duration:2},5);
-        tl.to(mods,{opacity:0,duration:1.5},7);
+        // 50-70%: module cards with parallax depth
+        var depths=[1.2,0.7,1.5,0.9,1.3,0.6,1.1,0.8,1.4];
+        mods.forEach(function(card,i){
+          var d=depths[i%depths.length];
+          // Cards appear at slightly different times
+          tl.to(card,{opacity:1,y:-12*d,ease:'none',duration:1.8+d*0.4},4.8+i*0.12);
+          // During zoom, each card drifts at its own depth speed
+          tl.to(card,{y:-40*d,scale:1+d*0.3,ease:'power1.in',duration:2},6);
+          // Fade out at different rates
+          tl.to(card,{opacity:0,duration:1+d*0.3},6.8+i*0.05);
+        });
         // 60-80%: circuit background fades in when traces are fully drawn
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl) tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:2},6);
@@ -2123,6 +2154,18 @@ if(false){(function(){
         pinSec.appendChild(whiteOver);
         tl.to(whiteOver,{opacity:1,ease:'power1.in',duration:2},6.5);
 
+
+        // LED nodes: fade in with background, then blink randomly
+        var ledWrap=scFlow.querySelector('.ai-led-wrap');
+        if(ledWrap){
+          tl.to(ledWrap,{opacity:1,ease:'none',duration:1.5},6.5);
+          var leds=ledWrap.querySelectorAll('.ai-led');
+          leds.forEach(function(led){
+            var delay=Math.random()*3;
+            var dur=0.4+Math.random()*0.8;
+            gsap.to(led,{opacity:1,duration:0.15,repeat:-1,repeatDelay:dur+Math.random()*2,yoyo:true,ease:'power2.out',delay:delay});
+          });
+        }
         // Non-timeline blinking (runs independently)
         allNodes.forEach(function(n){
           gsap.to(n,{opacity:.2,duration:.7+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:2+Math.random()*2});
