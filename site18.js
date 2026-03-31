@@ -2135,7 +2135,7 @@ if(false){(function(){
           scrollTrigger:{
             trigger:pinSec,
             start:'top top',
-            end:'+=150%',
+            end:'+=200%',
             scrub:0.6,
             pin:true,
             pinSpacing:true,
@@ -2165,16 +2165,15 @@ if(false){(function(){
           // Fade out at different rates
           tl.to(card,{opacity:0,duration:1+d*0.3},6.8+i*0.05);
         });
-        // 60-70%: circuit background fades in when traces are fully drawn
+        // 55-70%: circuit background fades in
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl){
-          tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:1.5},6);
-          // Fade bg out before white transition
-          tl.to(circBgEl,{opacity:0,ease:'power1.out',duration:1},7.5);
+          tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:1.5},5.5);
+          tl.to(circBgEl,{opacity:0,ease:'power1.out',duration:1},7);
         }
-        // 80-95%: fade to white — use scFlowEl opacity + section bg
-        tl.to(scFlowEl,{opacity:0,ease:'power1.in',duration:1.5},8);
-        tl.to(pinSec,{backgroundColor:'#fff',ease:'none',duration:1.5},8);
+        // 75-90%: fade everything to white
+        tl.to(pinSec,{backgroundColor:'#fff',ease:'power1.in',duration:1.5},7.5);
+        tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},7.5);
 
 
         // LED nodes: fade in with background, then blink randomly
