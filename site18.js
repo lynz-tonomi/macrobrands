@@ -1676,9 +1676,16 @@ if(false){(function(){
           c.onmouseleave=function(){this.style.transform='';this.style.boxShadow=''};
         });
       });
-      ScrollTrigger.batch(revealH,{start:'top 90%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:1,ease:'power3.out',stagger:.15})}});
-      ScrollTrigger.batch(revealP,{start:'top 92%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,duration:.8,ease:'power2.out',stagger:.1})}});
-      ScrollTrigger.batch(revealC,{start:'top 95%',onEnter:function(b){gsap.to(b,{y:0,opacity:1,scale:1,duration:1,ease:'power3.out',stagger:.12})}});
+      // Parallax scrub reveals — each element animates tied to scroll position
+      revealH.forEach(function(h){
+        gsap.to(h,{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 60%',scrub:true}});
+      });
+      revealP.forEach(function(p){
+        gsap.to(p,{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:p,start:'top 95%',end:'top 65%',scrub:true}});
+      });
+      revealC.forEach(function(c){
+        gsap.to(c,{y:0,opacity:1,scale:1,ease:'none',scrollTrigger:{trigger:c,start:'top 98%',end:'top 65%',scrub:true}});
+      });
     }
   },1000);
 })();
