@@ -1449,6 +1449,9 @@ if(false){(function(){
       if(supSec){
         var tabBtns=supSec.querySelectorAll('.svc-tabs-btn');
         var tabPanels=supSec.querySelectorAll('.svc-tab-panel');
+        // Hide Supply Chain tab (last btn + last panel) — content moved to next section
+        if(tabBtns.length>=4){tabBtns[3].style.display='none'}
+        if(tabPanels.length>=4){tabPanels[3].style.display='none'}
         tabBtns.forEach(function(btn,idx){
           btn.style.cursor='pointer';
           btn.addEventListener('click',function(){
