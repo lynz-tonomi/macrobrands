@@ -1754,6 +1754,11 @@ if(false){(function(){
           var supSection=document.querySelector('#svc-supporting');
           if(!cpSection||!supSection||typeof gsap==='undefined'||!gsap.registerPlugin)return;
 
+          // Force section to 100vh
+          cpSection.style.height='100vh';
+          cpSection.style.minHeight='100vh';
+          cpSection.style.maxHeight='100vh';
+
           // References
           var heroGrid=cpSection.querySelector('.svc-hero-grid');
           var cpCards=cpSection.querySelectorAll('.cp-card');
@@ -1850,11 +1855,11 @@ if(false){(function(){
             cpTL.to(cpWrapEl,{opacity:0,duration:1},0.5);
           }
 
-          // ── Phase 2: Zoom deep into process flow center (2.5 → 6.5) ──
+          // ── Phase 2: Zoom into process flow center — 100% → 150% (2.5 → 6.5) ──
           if(expandSlot){
             cpTL.to(expandSlot,{
-              scale:3,
-              y:'-25vh',
+              scale:1.5,
+              y:'-10vh',
               opacity:1,
               transformOrigin:'center center',
               ease:'power1.inOut',
@@ -1863,12 +1868,11 @@ if(false){(function(){
           }
 
           // ── Phase 3: Hold on zoomed process flow (6.5 → 8) ──
-          // Let user appreciate the diagram fully zoomed in
           cpTL.to({},{duration:1.5});
 
           // ── Phase 4: Fade to black (8 → 9.5) ──
           if(expandSlot){
-            cpTL.to(expandSlot,{opacity:0,scale:3.5,duration:1.5,ease:'power2.in'},8);
+            cpTL.to(expandSlot,{opacity:0,scale:1.6,duration:1.5,ease:'power2.in'},8);
           }
           cpTL.to(blackOverlay,{opacity:1,duration:1.5,ease:'power2.inOut'},8);
 
