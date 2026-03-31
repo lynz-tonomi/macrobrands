@@ -1948,6 +1948,11 @@ if(false){(function(){
   if(!sec)return;
   // Section layout: header text on top, video below
   sec.style.cssText='position:relative;overflow:hidden;background:#000';
+  // Hide native Webflow "Supply Chain Intelligence" heading + long desc (duplicate of sc-header)
+  var nativeSCH2=sec.querySelector('.svc-h2-for-sc');
+  if(nativeSCH2)nativeSCH2.style.display='none';
+  var nativeSCDesc=sec.querySelector('.svc-desc.is-centered');
+  if(nativeSCDesc)nativeSCDesc.style.display='none';
   // Style header content — above the video
   var hdr=sec.querySelector('.sc-header');
   if(hdr){
