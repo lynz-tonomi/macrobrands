@@ -2175,7 +2175,6 @@ if(false){(function(){
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl){
           tl.to(circBgEl,{opacity:.4,ease:'power1.in',duration:1},4.5);
-          tl.to(circBgEl,{opacity:0,ease:'power1.out',duration:0.8},5.5);
         }
         // Fade to white — starts at 65%, done by 80%
         tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
