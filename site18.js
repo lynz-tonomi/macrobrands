@@ -2028,119 +2028,139 @@ if(false){(function(){
   if(hdr){
     var scFlow=document.createElement('div');
     scFlow.id='sc-flow-viz';
-    scFlow.style.cssText='max-width:800px;margin:40px auto 20px;padding:0 20px';
-    // Build SVG — AI chip center with circuit traces in all directions
-    var svg='<svg id="ai-chip-svg" viewBox="0 0 800 600" width="100%" style="display:block;margin:0 auto;overflow:visible">';
+    scFlow.style.cssText='max-width:100%;margin:40px auto 20px;padding:0;overflow:hidden';
+    // Build SVG — AI chip center with branching circuit traces expanding beyond view
+    var svg='<svg id="ai-chip-svg" viewBox="0 0 1200 800" width="100%" style="display:block;margin:0 auto;overflow:visible">';
     svg+='<defs>';
     svg+='<filter id="aig" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
     svg+='<filter id="aig2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+    // Scan line gradient
+    svg+='<linearGradient id="scanGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="45%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="50%" stop-color="#C9A84C" stop-opacity=".6"/><stop offset="55%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient>';
     svg+='</defs>';
 
     // ── CENTRAL CHIP ──
-    // Outer chip body
-    svg+='<rect x="330" y="230" width="140" height="140" rx="12" fill="#111" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".8"/>';
-    // Inner die
-    svg+='<rect x="350" y="250" width="100" height="100" rx="6" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".4"/>';
-    // Die inner border
-    svg+='<rect x="358" y="258" width="84" height="84" rx="4" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
-    // AI text
-    svg+='<text x="400" y="312" fill="#C9A84C" font-family="Inter,sans-serif" font-size="42" font-weight="800" text-anchor="middle" fill-opacity=".9">AI</text>';
-    // Corner dots on die
-    svg+='<circle cx="363" cy="263" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    svg+='<circle cx="437" cy="263" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    svg+='<circle cx="363" cy="337" r="2" fill="#C9A84C" fill-opacity=".3"/>';
-    svg+='<circle cx="437" cy="337" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<rect x="530" y="330" width="140" height="140" rx="12" fill="#111" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".8"/>';
+    svg+='<rect x="550" y="350" width="100" height="100" rx="6" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".4"/>';
+    svg+='<rect x="558" y="358" width="84" height="84" rx="4" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
+    svg+='<text x="600" y="412" fill="#C9A84C" font-family="Inter,sans-serif" font-size="42" font-weight="800" text-anchor="middle" fill-opacity=".9">AI</text>';
+    // Corner dots
+    svg+='<circle cx="563" cy="363" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<circle cx="637" cy="363" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<circle cx="563" cy="437" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<circle cx="637" cy="437" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    // Scanning effect — animated rect with gradient
+    svg+='<clipPath id="chipClip"><rect x="530" y="330" width="140" height="140" rx="12"/></clipPath>';
+    svg+='<rect id="ai-scan-line" x="530" y="330" width="140" height="140" fill="url(#scanGrad)" clip-path="url(#chipClip)" opacity=".8"><animate attributeName="y" values="260;400;260" dur="2.5s" repeatCount="indefinite"/></rect>';
 
-    // ── PINS along chip edges ──
-    var pinColor='#C9A84C';
-    // Top pins
+    // ── PINS ──
+    var cx=600,cy=400;
     for(var i=0;i<7;i++){
-      var px=348+i*16;
-      svg+='<line x1="'+px+'" y1="230" x2="'+px+'" y2="218" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
+      var px=548+i*16;
+      svg+='<line x1="'+px+'" y1="330" x2="'+px+'" y2="318" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
+      svg+='<line x1="'+px+'" y1="470" x2="'+px+'" y2="482" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
     }
-    // Bottom pins
     for(var i=0;i<7;i++){
-      var px=348+i*16;
-      svg+='<line x1="'+px+'" y1="370" x2="'+px+'" y2="382" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
-    }
-    // Left pins
-    for(var i=0;i<7;i++){
-      var py=248+i*16;
-      svg+='<line x1="330" y1="'+py+'" x2="318" y2="'+py+'" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
-    }
-    // Right pins
-    for(var i=0;i<7;i++){
-      var py=248+i*16;
-      svg+='<line x1="470" y1="'+py+'" x2="482" y2="'+py+'" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
+      var py=348+i*16;
+      svg+='<line x1="530" y1="'+py+'" x2="518" y2="'+py+'" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
+      svg+='<line x1="670" y1="'+py+'" x2="682" y2="'+py+'" stroke="#fff" stroke-width="2" stroke-opacity=".4"/>';
     }
 
-    // ── CIRCUIT TRACES (all class="ct" for GSAP targeting) ──
-    // Each trace: path from chip outward, with endpoint node
+    // ── CIRCUIT TRACES — white, branching, extending far beyond viewBox ──
     var traces=[
-      // === TOP traces ===
-      {d:'M364,218 L364,160 L310,160 L310,100 L260,100',node:[260,100]},
-      {d:'M380,218 L380,140 L380,60',node:[380,60]},
-      {d:'M396,218 L396,170 L440,170 L440,80 L500,80',node:[500,80]},
-      {d:'M412,218 L412,150 L480,150 L480,40',node:[480,40]},
-      {d:'M428,218 L428,180 L540,180 L540,120 L620,120',node:[620,120]},
-      // === BOTTOM traces ===
-      {d:'M364,382 L364,440 L300,440 L300,500 L240,500',node:[240,500]},
-      {d:'M380,382 L380,460 L380,540',node:[380,540]},
-      {d:'M396,382 L396,430 L460,430 L460,520',node:[460,520]},
-      {d:'M412,382 L412,450 L520,450 L520,500 L580,500',node:[580,500]},
-      {d:'M428,382 L428,420 L560,420 L560,480 L640,480',node:[640,480]},
-      // === LEFT traces ===
-      {d:'M318,264 L260,264 L260,200 L180,200',node:[180,200]},
-      {d:'M318,280 L240,280 L240,280 L160,280',node:[160,280]},
-      {d:'M318,296 L200,296 L200,340 L120,340',node:[120,340]},
-      {d:'M318,312 L260,312 L260,380 L180,380 L180,440',node:[180,440]},
-      {d:'M318,328 L270,328 L270,420 L200,420 L140,420',node:[140,420]},
-      // === RIGHT traces ===
-      {d:'M482,264 L540,264 L540,200 L620,200',node:[620,200]},
-      {d:'M482,280 L560,280 L560,240 L680,240',node:[680,240]},
-      {d:'M482,296 L600,296 L600,340 L700,340',node:[700,340]},
-      {d:'M482,312 L540,312 L540,400 L640,400',node:[640,400]},
-      {d:'M482,328 L520,328 L520,380 L600,380 L660,380',node:[660,380]},
-      // === DIAGONAL traces ===
-      // Top-left
-      {d:'M330,230 L280,180 L220,180 L160,140',node:[160,140]},
-      {d:'M340,230 L310,200 L250,200 L200,160 L140,160',node:[140,160]},
-      // Top-right
-      {d:'M470,230 L520,180 L580,180 L640,140',node:[640,140]},
-      {d:'M460,230 L490,200 L550,200 L600,160 L660,160',node:[660,160]},
-      // Bottom-left
-      {d:'M330,370 L280,420 L220,420 L160,460',node:[160,460]},
-      {d:'M340,370 L310,400 L240,400 L180,460 L120,460',node:[120,460]},
-      // Bottom-right
-      {d:'M470,370 L520,420 L580,420 L640,460',node:[640,460]},
-      {d:'M460,370 L490,400 L550,400 L620,460 L680,460',node:[680,460]}
+      // === TOP — main trunks ===
+      {d:'M564,318 L564,250 L480,250 L480,160 L380,160 L380,60 L300,60 L300,-40'},
+      {d:'M580,318 L580,220 L580,120 L580,0 L580,-80'},
+      {d:'M596,318 L596,260 L650,260 L650,140 L720,140 L720,20 L720,-60'},
+      {d:'M612,318 L612,240 L700,240 L700,100 L780,100 L780,-20'},
+      {d:'M628,318 L628,270 L760,270 L760,180 L860,180 L860,60 L860,-40'},
+      // === BOTTOM — main trunks ===
+      {d:'M564,482 L564,540 L480,540 L480,640 L380,640 L380,740 L300,740 L300,860'},
+      {d:'M580,482 L580,560 L580,680 L580,800 L580,880'},
+      {d:'M596,482 L596,530 L660,530 L660,660 L720,660 L720,800 L720,880'},
+      {d:'M612,482 L612,550 L720,550 L720,680 L800,680 L800,860'},
+      {d:'M628,482 L628,520 L780,520 L780,620 L880,620 L880,860'},
+      // === LEFT — main trunks ===
+      {d:'M518,364 L440,364 L440,280 L320,280 L320,200 L180,200 L60,200 L-60,200'},
+      {d:'M518,380 L400,380 L400,380 L280,380 L160,380 L40,380 L-60,380'},
+      {d:'M518,396 L420,396 L420,460 L300,460 L200,460 L80,460 L-40,460'},
+      {d:'M518,412 L440,412 L440,520 L340,520 L240,520 L120,520 L-20,520'},
+      {d:'M518,428 L460,428 L460,560 L360,560 L240,560 L100,560 L-40,560'},
+      // === RIGHT — main trunks ===
+      {d:'M682,364 L760,364 L760,280 L880,280 L880,200 L1020,200 L1140,200 L1260,200'},
+      {d:'M682,380 L800,380 L800,320 L940,320 L1060,320 L1180,320 L1300,320'},
+      {d:'M682,396 L780,396 L780,460 L900,460 L1020,460 L1160,460 L1280,460'},
+      {d:'M682,412 L760,412 L760,520 L880,520 L1020,520 L1160,520 L1280,520'},
+      {d:'M682,428 L740,428 L740,580 L860,580 L1000,580 L1160,580 L1280,580'},
+      // === DIAGONALS ===
+      {d:'M530,330 L460,260 L380,260 L280,160 L180,100 L60,40 L-40,-20'},
+      {d:'M540,330 L490,280 L400,280 L300,200 L200,140 L80,60 L-40,0'},
+      {d:'M670,330 L740,260 L820,260 L920,160 L1020,100 L1140,40 L1260,-20'},
+      {d:'M660,330 L710,280 L800,280 L900,200 L1000,140 L1120,60 L1260,0'},
+      {d:'M530,470 L460,540 L380,540 L280,640 L180,700 L60,760 L-40,820'},
+      {d:'M540,470 L490,520 L400,520 L300,600 L200,660 L80,740 L-40,800'},
+      {d:'M670,470 L740,540 L820,540 L920,640 L1020,700 L1140,760 L1260,820'},
+      {d:'M660,470 L710,520 L800,520 L900,600 L1000,660 L1120,740 L1260,800'}
     ];
 
-    traces.forEach(function(tr,i){
-      svg+='<path class="ct" d="'+tr.d+'" fill="none" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".6" stroke-linecap="round" stroke-linejoin="round"/>';
-      // Junction node at endpoint
-      svg+='<circle class="ct-node" cx="'+tr.node[0]+'" cy="'+tr.node[1]+'" r="4" fill="none" stroke="#C9A84C" stroke-width="1.2" stroke-opacity="0"/>';
-      svg+='<circle class="ct-dot" cx="'+tr.node[0]+'" cy="'+tr.node[1]+'" r="2" fill="#C9A84C" fill-opacity="0"/>';
+    // ── BRANCH TRACES — fork off from main traces ──
+    var branches=[
+      // Branches off top traces
+      {d:'M480,250 L420,250 L420,180 L340,180 L340,80 L280,80 L200,-20'},
+      {d:'M650,260 L650,200 L720,200 L800,200 L860,160 L940,120 L1020,80 L1100,-20'},
+      {d:'M580,120 L520,120 L520,60 L460,60 L400,20 L340,-40'},
+      {d:'M760,270 L820,270 L820,220 L900,220 L960,180 L1040,140 L1120,80 L1200,-20'},
+      // Branches off bottom traces
+      {d:'M480,540 L420,540 L420,620 L340,620 L280,680 L200,740 L120,820'},
+      {d:'M660,530 L660,600 L720,600 L800,640 L880,700 L960,780 L1040,860'},
+      {d:'M720,550 L780,550 L780,620 L840,620 L900,680 L980,760 L1060,860'},
+      {d:'M580,680 L520,680 L520,740 L460,740 L400,800 L340,860'},
+      // Branches off left traces
+      {d:'M320,280 L320,220 L240,220 L180,160 L100,120 L20,60 L-60,0'},
+      {d:'M300,460 L300,520 L220,520 L160,580 L80,640 L-20,720'},
+      {d:'M400,380 L400,320 L320,320 L240,280 L140,240 L40,200 L-60,160'},
+      {d:'M340,520 L340,580 L260,580 L180,640 L100,700 L-20,780'},
+      // Branches off right traces
+      {d:'M880,280 L880,220 L960,220 L1040,180 L1120,120 L1200,60 L1280,0'},
+      {d:'M900,460 L900,520 L980,520 L1060,580 L1140,640 L1220,720'},
+      {d:'M940,320 L940,260 L1020,260 L1100,220 L1180,160 L1260,100'},
+      {d:'M880,520 L880,580 L960,580 L1040,640 L1120,700 L1220,780'}
+    ];
+
+    // Draw all main traces
+    traces.forEach(function(tr){
+      svg+='<path class="ct" d="'+tr.d+'" fill="none" stroke="#fff" stroke-width="1.2" stroke-opacity=".5" stroke-linecap="round" stroke-linejoin="round"/>';
     });
 
-    // Small junction nodes at bends (decorative)
-    var junctions=[[310,160],[440,170],[480,150],[540,180],[300,440],[460,430],[520,450],[560,420],[260,264],[240,280],[200,296],[260,312],[270,328],[540,264],[560,280],[600,296],[540,312],[520,328],[280,180],[520,180],[280,420],[520,420]];
+    // Draw all branch traces (thinner)
+    branches.forEach(function(br){
+      svg+='<path class="ct ct-branch" d="'+br.d+'" fill="none" stroke="#fff" stroke-width=".8" stroke-opacity=".35" stroke-linecap="round" stroke-linejoin="round"/>';
+    });
+
+    // Junction nodes at key bends
+    var junctions=[
+      [480,250],[650,260],[700,240],[760,270],[480,540],[660,530],[720,550],[780,520],
+      [440,280],[400,380],[420,460],[440,520],[460,560],[760,280],[800,320],[780,460],[760,520],[740,580],
+      [320,280],[280,380],[300,460],[340,520],[240,560],[880,280],[940,320],[900,460],[880,520],[860,580],
+      [460,260],[490,280],[740,260],[710,280],[460,540],[490,520],[740,540],[710,520],
+      // Branch junctions
+      [420,180],[520,120],[820,220],[420,620],[660,600],[780,620],[320,220],[300,520],[400,320],[340,580],
+      [880,220],[900,520],[940,260],[880,580]
+    ];
     junctions.forEach(function(j){
-      svg+='<circle class="ct-junc" cx="'+j[0]+'" cy="'+j[1]+'" r="2.5" fill="#C9A84C" fill-opacity="0"/>';
+      svg+='<circle class="ct-junc" cx="'+j[0]+'" cy="'+j[1]+'" r="2" fill="#fff" fill-opacity="0"/>';
     });
 
-    // Labels at outer endpoints
+    // Labels at far endpoints
     var labels=[
-      [260,90,'SOURCING','top'],[500,70,'PROCUREMENT','top'],[620,110,'LOGISTICS','top'],
-      [240,515,'PRODUCTION','bottom'],[580,515,'QUALITY','bottom'],[640,495,'COMPLIANCE','bottom'],
-      [120,330,'INVENTORY','left'],[140,410,'SCHEDULING','left'],
-      [700,350,'ANALYTICS','right'],[680,250,'FORECASTING','right']
+      [300,50,'SOURCING','top'],[720,10,'PROCUREMENT','top'],[860,50,'LOGISTICS','top'],
+      [300,750,'PRODUCTION','bottom'],[720,810,'QUALITY','bottom'],[880,630,'COMPLIANCE','bottom'],
+      [50,190,'INVENTORY','left'],[50,370,'FORECASTING','left'],[50,450,'SCHEDULING','left'],
+      [1150,190,'ANALYTICS','right'],[1150,310,'MONITORING','right'],[1150,450,'TRACEABILITY','right']
     ];
     labels.forEach(function(lb){
-      var anchor=lb[3]==='left'?'end':lb[3]==='right'?'start':'middle';
+      var anchor=lb[3]==='left'?'start':lb[3]==='right'?'end':'middle';
       var oy=lb[3]==='top'?-6:lb[3]==='bottom'?14:4;
-      var ox=lb[3]==='left'?-8:lb[3]==='right'?8:0;
-      svg+='<text class="ct-label" x="'+(lb[0]+ox)+'" y="'+(lb[1]+oy)+'" fill="#C9A84C" font-family="monospace" font-size="8" font-weight="600" letter-spacing="2" text-anchor="'+anchor+'" fill-opacity="0" text-transform="uppercase">'+lb[2]+'</text>';
+      svg+='<text class="ct-label" x="'+lb[0]+'" y="'+(lb[1]+oy)+'" fill="#fff" font-family="monospace" font-size="9" font-weight="600" letter-spacing="2.5" text-anchor="'+anchor+'" fill-opacity="0" text-transform="uppercase">'+lb[2]+'</text>';
     });
 
     svg+='</svg>';
@@ -2150,7 +2170,6 @@ if(false){(function(){
 
     // ── GSAP SCROLL-DRIVEN CIRCUIT EXPANSION ──
     if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
-      // Measure and set up each trace path
       setTimeout(function(){
         var paths=scFlow.querySelectorAll('.ct');
         paths.forEach(function(p){
@@ -2158,19 +2177,14 @@ if(false){(function(){
           p.style.strokeDasharray=len;
           p.style.strokeDashoffset=len;
         });
-        // Scrub: traces grow outward
-        gsap.to(paths,{strokeDashoffset:0,ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 85%',end:'top 20%',scrub:true}});
-        // Endpoint nodes appear as traces reach them
-        var nodes=scFlow.querySelectorAll('.ct-node');
-        gsap.to(nodes,{attr:{'stroke-opacity':.6},ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 60%',end:'top 15%',scrub:true}});
-        var dots=scFlow.querySelectorAll('.ct-dot');
-        gsap.to(dots,{attr:{'fill-opacity':.7},ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 60%',end:'top 15%',scrub:true}});
-        // Junction dots
+        // Scrub: all traces grow outward on scroll
+        gsap.to(paths,{strokeDashoffset:0,ease:'none',stagger:.01,scrollTrigger:{trigger:scFlow,start:'top 90%',end:'top -50%',scrub:true}});
+        // Junction dots appear
         var juncs=scFlow.querySelectorAll('.ct-junc');
-        gsap.to(juncs,{attr:{'fill-opacity':.4},ease:'none',stagger:.015,scrollTrigger:{trigger:scFlow,start:'top 75%',end:'top 25%',scrub:true}});
-        // Labels fade in
+        gsap.to(juncs,{attr:{'fill-opacity':.45},ease:'none',stagger:.008,scrollTrigger:{trigger:scFlow,start:'top 80%',end:'top -20%',scrub:true}});
+        // Labels fade in later
         var lbls=scFlow.querySelectorAll('.ct-label');
-        gsap.to(lbls,{attr:{'fill-opacity':.7},ease:'none',stagger:.03,scrollTrigger:{trigger:scFlow,start:'top 50%',end:'top 10%',scrub:true}});
+        gsap.to(lbls,{attr:{'fill-opacity':.6},ease:'none',stagger:.03,scrollTrigger:{trigger:scFlow,start:'top 50%',end:'top 0%',scrub:true}});
       },200);
 
       // Parallax header elements
