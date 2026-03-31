@@ -2165,12 +2165,16 @@ if(false){(function(){
           // Fade out at different rates
           tl.to(card,{opacity:0,duration:1+d*0.3},6.8+i*0.05);
         });
-        // 60-80%: circuit background fades in when traces are fully drawn
+        // 60-70%: circuit background fades in when traces are fully drawn
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
-        if(circBgEl) tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:2},6);
-        // 65-85%: fade to white — use scFlowEl opacity + section bg
-        tl.to(scFlowEl,{opacity:0,ease:'power1.in',duration:2},6.5);
-        tl.to(pinSec,{backgroundColor:'#fff',ease:'none',duration:1.5},6.5);
+        if(circBgEl){
+          tl.to(circBgEl,{opacity:.5,ease:'power1.in',duration:1.5},6);
+          // Fade bg out before white transition
+          tl.to(circBgEl,{opacity:0,ease:'power1.out',duration:1},7.5);
+        }
+        // 80-95%: fade to white — use scFlowEl opacity + section bg
+        tl.to(scFlowEl,{opacity:0,ease:'power1.in',duration:1.5},8);
+        tl.to(pinSec,{backgroundColor:'#fff',ease:'none',duration:1.5},8);
 
 
         // LED nodes: fade in with background, then blink randomly
