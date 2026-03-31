@@ -1850,16 +1850,34 @@ if(false){(function(){
             cpTL.to(cpWrapEl,{opacity:0,duration:1},0.5);
           }
 
-          // ── Phase 2: Zoom into process flow center — 100% → 150% (2.5 → 6.5) ──
+          // ── Phase 2: Center + Zoom into process flow — 100% → 150% (2.5 → 6.5) ──
           if(expandSlot){
+            // Calculate where to move expand so it's centered in the visible viewport
+            // Pin at bottom-bottom means viewport shows bottom portion of section
+            var secRect=cpSection.getBoundingClientRect();
+            var expRect=expandSlot.getBoundingClientRect();
+            var viewH=window.innerHeight;
+            // We want expand center to be at viewport center
+            var expCenterY=expRect.top+expRect.height/2-secRect.top;
+            var viewCenterY=secRect.height-viewH/2; // visible viewport center relative to section
+            var moveY=viewCenterY-expCenterY;
+
+            // First: slide expand to viewport center (2.5 → 3.5)
+            cpTL.to(expandSlot,{
+              y:moveY,
+              opacity:1,
+              ease:'power2.out',
+              duration:1
+            },2.5);
+
+            // Then: zoom from 100% → 150% (3.5 → 6.5)
             cpTL.to(expandSlot,{
               scale:1.5,
-              y:'-10vh',
               opacity:1,
               transformOrigin:'center center',
               ease:'power1.inOut',
-              duration:4
-            },2.5);
+              duration:3
+            },3.5);
           }
 
           // ── Phase 3: Hold on zoomed process flow (6.5 → 8) ──
