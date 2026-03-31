@@ -1762,6 +1762,16 @@ if(false){(function(){
           var cpCards=cpSection.querySelectorAll('.cp-card');
           var expandSlot=cpSection.querySelector('.cp-expand');
 
+          // Clear CSS animations on cards so GSAP can control transforms
+          // (animation-fill-mode:forwards overrides inline styles)
+          cpCards.forEach(function(card){
+            card.style.animation='none';
+            card.style.opacity='1';
+            card.style.transform='translateY(0)';
+          });
+          if(heroGrid){heroGrid.style.animation='none';}
+          if(expandSlot){expandSlot.style.animation='none';}
+
           // Clone the Supporting Services section content into an overlay inside the pinned section
           var supOverlay=document.createElement('div');
           supOverlay.className='cp-sup-overlay';
@@ -1775,6 +1785,12 @@ if(false){(function(){
 
           // Hide original supporting services section (will be replaced by the overlay fade-in)
           supSection.style.display='none';
+
+          // Make card rows and wrapper allow overflow for scatter
+          var cpWrapEl=cpSection.querySelector('.svc-container > div:last-child');
+          if(cpWrapEl){cpWrapEl.style.overflow='visible';}
+          var gridRows=cpSection.querySelectorAll('.svc-container div[style*="grid-template"]');
+          gridRows.forEach(function(r){r.style.overflow='visible';});
 
           // Scatter directions for 6 cards based on position:
           // Row 1: [0]=up-left, [1]=up, [2]=up-right
