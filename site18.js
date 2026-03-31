@@ -2024,148 +2024,155 @@ if(false){(function(){
     pars.forEach(function(p){p.style.display='none';});
   }
 
-  // ── INJECT SUPPLY CHAIN PROCESS FLOW SVG BELOW DESCRIPTION (inside header) ──
+  // ── INJECT AI CHIP CIRCUIT SVG WITH SCROLL-DRIVEN EXPANDING TRACES ──
   if(hdr){
     var scFlow=document.createElement('div');
     scFlow.id='sc-flow-viz';
-    scFlow.style.cssText='max-width:960px;margin:0 auto 20px;padding:0 20px;opacity:0;transform:translateY(40px)';
-    scFlow.innerHTML=
-      '<style>'+
-      '.cp-d{stroke:white;stroke-width:1.2;fill:none;stroke-opacity:.35;stroke-dasharray:var(--l,400);stroke-dashoffset:var(--l,400);animation:rsvg-draw 1.4s cubic-bezier(.4,0,.2,1) forwards}'+
-      '.cp-fi{opacity:0;animation:rsvg-fadeIn .5s ease forwards}'+
-      '.cp-lbl{font-family:monospace;font-size:8px;fill:white;fill-opacity:.55;text-anchor:middle;letter-spacing:2px;text-transform:uppercase}'+
-      '@keyframes cp-pulseO{0%{stroke-dashoffset:30}100%{stroke-dashoffset:0}}'+
-      '.cp-pO{stroke:#C9A84C;stroke-width:2;stroke-dasharray:8 6;fill:none;animation:cp-pulseO .6s linear infinite;animation-delay:1.8s}'+
-      '@keyframes cp-arrowPop{0%,100%{opacity:0}30%,70%{opacity:1}}'+
-      '.cp-ap{opacity:0;animation:cp-arrowPop 1.8s ease-in-out infinite;animation-delay:2s}'+
-      '@keyframes cp-steam{0%{transform:translateY(0);opacity:.3}100%{transform:translateY(-10px);opacity:0}}'+
-      '.cp-ws{animation:cp-steam 2s ease-out infinite;animation-delay:2s;transform-box:fill-box;transform-origin:center}'+
-      '.cp-ws1{animation:cp-steam 2s ease-out .8s infinite;animation-delay:2.8s;transform-box:fill-box;transform-origin:center}'+
-      '.cp-imp{stroke:white;stroke-width:1;fill:none;stroke-opacity:.2}'+
-      '</style>'+
-      '<svg viewBox="0 0 900 300" width="100%" style="max-width:900px;margin:0 auto;display:block">'+
-        '<defs>'+
-          '<filter id="scgo2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
-          '<filter id="scgb2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
-        '</defs>'+
-        /* Autonomi Intelligence bar */
-        '<rect x="60" y="16" width="780" height="42" rx="21" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".2" class="cp-d" style="--l:1640;animation-delay:.05s"/>'+
-        '<line x1="90" y1="37" x2="810" y2="37" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 8" class="cp-pO" filter="url(#scgo2)"/>'+
-        /* Hub nodes */
-        '<circle cx="140" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.4s" filter="url(#scgo2)"/>'+
-        '<circle cx="290" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.5s" filter="url(#scgo2)"/>'+
-        '<circle cx="450" cy="37" r="6" fill="#C9A84C" fill-opacity=".8" class="cp-fi" style="animation-delay:1.3s" filter="url(#scgo2)"/>'+
-        '<circle cx="610" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.6s" filter="url(#scgo2)"/>'+
-        '<circle cx="760" cy="37" r="4" fill="#C9A84C" fill-opacity=".6" class="cp-fi" style="animation-delay:1.7s" filter="url(#scgo2)"/>'+
-        '<text x="450" y="27" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.7;letter-spacing:3px">AUTONOMI \u00b7 29 AI AGENTS \u00b7 REAL-TIME</text>'+
-        /* Vertical data feeds */
-        '<line x1="140" y1="58" x2="140" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.8s"/>'+
-        '<line x1="290" y1="58" x2="290" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:.9s"/>'+
-        '<line x1="450" y1="58" x2="450" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1s"/>'+
-        '<line x1="610" y1="58" x2="610" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.1s"/>'+
-        '<line x1="760" y1="58" x2="760" y2="108" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 5" stroke-opacity=".25" class="cp-d" style="--l:50;animation-delay:1.2s"/>'+
-        /* Baseline */
-        '<line x1="40" y1="270" x2="860" y2="270" stroke="white" stroke-width=".6" stroke-opacity=".05" class="cp-d" style="--l:820;animation-delay:0s"/>'+
-        /* Stage 1: Vendor Sourcing */
-        '<rect x="100" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.15s"/>'+
-        '<path d="M100,108 Q140,94 180,108" class="cp-d" style="--l:88;animation-delay:.2s"/>'+
-        '<line x1="112" y1="132" x2="168" y2="132" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.5s"/>'+
-        '<line x1="112" y1="152" x2="168" y2="152" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.55s"/>'+
-        '<line x1="112" y1="172" x2="168" y2="172" stroke="white" stroke-width=".8" stroke-opacity=".2" class="cp-d" style="--l:56;animation-delay:.6s"/>'+
-        '<circle cx="122" cy="125" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.8s"/>'+
-        '<circle cx="122" cy="145" r="2" fill="#4ade80" fill-opacity=".5" class="cp-fi" style="animation-delay:1.9s"/>'+
-        '<circle cx="122" cy="165" r="2" fill="#f97316" fill-opacity=".5" class="cp-fi" style="animation-delay:2s"/>'+
-        '<rect x="130" y="122" width="30" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2s"/>'+
-        '<rect x="130" y="142" width="24" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.1s"/>'+
-        '<rect x="130" y="162" width="28" height="5" rx="1" fill="white" fill-opacity=".06" class="cp-fi" style="animation-delay:2.2s"/>'+
-        '<text x="140" y="230" class="cp-lbl">VENDOR</text>'+
-        '<text x="140" y="241" class="cp-lbl" fill-opacity=".4">SOURCING</text>'+
-        /* Pipe: vendor → procurement */
-        '<line x1="180" y1="158" x2="240" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:.7s"/>'+
-        '<line x1="180" y1="158" x2="240" y2="158" class="cp-pO" filter="url(#scgo2)"/>'+
-        '<polygon points="225,158 215,154 215,162" fill="#f97316" class="cp-ap" filter="url(#scgo2)"/>'+
-        /* Stage 2: Procurement */
-        '<rect x="250" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.3s"/>'+
-        '<rect x="268" y="120" width="44" height="56" rx="3" stroke="white" stroke-width=".8" stroke-opacity=".25" fill="none" class="cp-d" style="--l:200;animation-delay:.65s"/>'+
-        '<path d="M298,120 L312,120 L312,134 Z" stroke="white" stroke-width=".7" fill="none" stroke-opacity=".2" class="cp-d" style="--l:50;animation-delay:.75s"/>'+
-        '<line x1="274" y1="140" x2="300" y2="140" stroke="white" stroke-width=".8" stroke-opacity=".15" class="cp-fi" style="animation-delay:2.1s"/>'+
-        '<line x1="274" y1="148" x2="306" y2="148" stroke="white" stroke-width=".8" stroke-opacity=".12" class="cp-fi" style="animation-delay:2.15s"/>'+
-        '<line x1="274" y1="156" x2="296" y2="156" stroke="white" stroke-width=".8" stroke-opacity=".1" class="cp-fi" style="animation-delay:2.2s"/>'+
-        '<path d="M280,164 L286,170 L300,158" stroke="#4ade80" stroke-width="1.5" fill="none" class="cp-d" style="--l:32;animation-delay:1.6s" filter="url(#scgb2)"/>'+
-        '<text x="290" y="230" class="cp-lbl">PROCUREMENT</text>'+
-        '<text x="290" y="241" class="cp-lbl" fill-opacity=".4">AI AGENTS</text>'+
-        /* Pipe: procurement → production */
-        '<line x1="330" y1="158" x2="400" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:.9s"/>'+
-        '<line x1="330" y1="158" x2="400" y2="158" class="cp-pO" filter="url(#scgo2)"/>'+
-        '<polygon points="385,158 375,154 375,162" fill="#f97316" class="cp-ap" filter="url(#scgo2)"/>'+
-        /* Stage 3: Production */
-        '<rect x="410" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.4s"/>'+
-        '<path d="M410,108 L430,94 L450,108 L470,94 L490,108" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.45s"/>'+
-        '<circle cx="450" cy="150" r="16" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:100;animation-delay:.8s"/>'+
-        '<circle cx="450" cy="150" r="6" stroke="white" stroke-width="1" fill="none" class="cp-imp"/>'+
-        '<line x1="450" y1="132" x2="450" y2="126" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.85s"/>'+
-        '<line x1="450" y1="168" x2="450" y2="174" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.87s"/>'+
-        '<line x1="432" y1="150" x2="426" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.89s"/>'+
-        '<line x1="468" y1="150" x2="474" y2="150" stroke="white" stroke-width="2" class="cp-d" style="--l:6;animation-delay:.91s"/>'+
-        '<rect x="422" y="94" width="8" height="18" rx="1" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-d" style="--l:52;animation-delay:.7s"/>'+
-        '<path d="M426,90 Q428,84 430,90" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".3" class="cp-ws"/>'+
-        '<path d="M424,84 Q427,78 430,84" stroke="white" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-ws1"/>'+
-        '<text x="450" y="230" class="cp-lbl">PRODUCTION</text>'+
-        '<text x="450" y="241" class="cp-lbl" fill-opacity=".4">SCHEDULING</text>'+
-        /* Pipe: production → quality */
-        '<line x1="490" y1="158" x2="560" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:70;animation-delay:1.1s"/>'+
-        '<line x1="490" y1="158" x2="560" y2="158" class="cp-pO" filter="url(#scgo2)"/>'+
-        '<polygon points="545,158 535,154 535,162" fill="#f97316" class="cp-ap" filter="url(#scgo2)"/>'+
-        /* Stage 4: Quality */
-        '<rect x="570" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.5s"/>'+
-        '<path d="M610,118 L632,126 L632,154 Q632,172 610,178 Q588,172 588,154 L588,126 Z" stroke="white" stroke-width="1.2" fill="none" class="cp-d" style="--l:180;animation-delay:.85s"/>'+
-        '<path d="M610,124 L626,130 L626,152 Q626,166 610,172 Q594,166 594,152 L594,130 Z" fill="white" fill-opacity=".03" class="cp-fi" style="animation-delay:2s"/>'+
-        '<path d="M600,148 L607,156 L622,140" stroke="#4ade80" stroke-width="2" fill="none" stroke-linecap="round" class="cp-d" style="--l:36;animation-delay:1.4s" filter="url(#scgb2)"/>'+
-        '<text x="610" y="195" class="cp-lbl" style="font-size:7px;fill:#4ade80;fill-opacity:.5">COA \u2713</text>'+
-        '<text x="610" y="230" class="cp-lbl">QUALITY</text>'+
-        '<text x="610" y="241" class="cp-lbl" fill-opacity=".4">INTELLIGENCE</text>'+
-        /* Pipe: quality → logistics */
-        '<line x1="650" y1="158" x2="710" y2="158" stroke="white" stroke-width="1.5" stroke-opacity=".15" class="cp-d" style="--l:60;animation-delay:1.3s"/>'+
-        '<line x1="650" y1="158" x2="710" y2="158" class="cp-pO" filter="url(#scgo2)"/>'+
-        '<polygon points="698,158 688,154 688,162" fill="#f97316" class="cp-ap" filter="url(#scgo2)"/>'+
-        /* Stage 5: Logistics */
-        '<rect x="720" y="108" width="80" height="100" rx="8" class="cp-d" style="--l:360;animation-delay:.6s"/>'+
-        '<rect x="734" y="140" width="36" height="24" rx="3" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:120;animation-delay:.95s"/>'+
-        '<path d="M770,148 L782,148 L786,156 L786,164 L770,164" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:60;animation-delay:1s"/>'+
-        '<circle cx="744" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.1s"/>'+
-        '<circle cx="778" cy="166" r="5" stroke="white" stroke-width="1" fill="none" class="cp-d" style="--l:32;animation-delay:1.15s"/>'+
-        '<circle cx="744" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.3s"/>'+
-        '<circle cx="778" cy="166" r="2" fill="white" fill-opacity=".3" class="cp-fi" style="animation-delay:2.35s"/>'+
-        '<circle cx="740" cy="126" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.4s"/>'+
-        '<circle cx="752" cy="122" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.5s"/>'+
-        '<circle cx="764" cy="126" r="1.5" fill="#f97316" fill-opacity=".3" class="cp-fi" style="animation-delay:2.6s"/>'+
-        '<circle cx="776" cy="122" r="2" fill="#f97316" fill-opacity=".4" class="cp-fi" style="animation-delay:2.7s"/>'+
-        '<path d="M740,126 Q746,120 752,122 Q758,124 764,126 Q770,120 776,122" stroke="#f97316" stroke-width=".8" fill="none" stroke-opacity=".25" class="cp-d" style="--l:40;animation-delay:1.5s"/>'+
-        '<text x="760" y="230" class="cp-lbl">LOGISTICS</text>'+
-        '<text x="760" y="241" class="cp-lbl" fill-opacity=".4">&amp; 3PL</text>'+
-        /* Stage numbers */
-        '<text x="140" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">01</text>'+
-        '<text x="290" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">02</text>'+
-        '<text x="450" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">03</text>'+
-        '<text x="610" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">04</text>'+
-        '<text x="760" y="258" class="cp-lbl" style="font-size:7px;fill:#C9A84C;fill-opacity:.35">05</text>'+
-      '</svg>'+
-      /* ROI callout */
-      '<div style="display:flex;justify-content:center;margin-top:24px">'+
-        '<div style="display:inline-flex;align-items:center;gap:16px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:16px 28px">'+
-          '<div style="font-size:2.4rem;font-weight:800;color:#C9A84C;line-height:1">15%</div>'+
-          '<div style="text-align:left">'+
-            '<div style="font-size:.85rem;font-weight:700;color:#fff;letter-spacing:.03em">Profit Efficiency Gain</div>'+
-            '<div style="font-size:.8rem;color:#999;line-height:1.4;margin-top:2px">For $100M\u2013$200M F&amp;B brands, that\u2019s<br><span style="color:#C9A84C;font-weight:600">$15M\u2013$30M</span> back to the bottom line</div>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-    // Insert at end of header, below description text
+    scFlow.style.cssText='max-width:800px;margin:40px auto 20px;padding:0 20px';
+    // Build SVG — AI chip center with circuit traces in all directions
+    var svg='<svg id="ai-chip-svg" viewBox="0 0 800 600" width="100%" style="display:block;margin:0 auto;overflow:visible">';
+    svg+='<defs>';
+    svg+='<filter id="aig" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+    svg+='<filter id="aig2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+    svg+='</defs>';
+
+    // ── CENTRAL CHIP ──
+    // Outer chip body
+    svg+='<rect x="330" y="230" width="140" height="140" rx="12" fill="#111" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".8"/>';
+    // Inner die
+    svg+='<rect x="350" y="250" width="100" height="100" rx="6" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".4"/>';
+    // Die inner border
+    svg+='<rect x="358" y="258" width="84" height="84" rx="4" fill="none" stroke="#C9A84C" stroke-width=".6" stroke-opacity=".2"/>';
+    // AI text
+    svg+='<text x="400" y="312" fill="#C9A84C" font-family="Inter,sans-serif" font-size="42" font-weight="800" text-anchor="middle" fill-opacity=".9">AI</text>';
+    // Corner dots on die
+    svg+='<circle cx="363" cy="263" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<circle cx="437" cy="263" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<circle cx="363" cy="337" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+    svg+='<circle cx="437" cy="337" r="2" fill="#C9A84C" fill-opacity=".3"/>';
+
+    // ── PINS along chip edges ──
+    var pinColor='#C9A84C';
+    // Top pins
+    for(var i=0;i<7;i++){
+      var px=348+i*16;
+      svg+='<line x1="'+px+'" y1="230" x2="'+px+'" y2="218" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
+    }
+    // Bottom pins
+    for(var i=0;i<7;i++){
+      var px=348+i*16;
+      svg+='<line x1="'+px+'" y1="370" x2="'+px+'" y2="382" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
+    }
+    // Left pins
+    for(var i=0;i<7;i++){
+      var py=248+i*16;
+      svg+='<line x1="330" y1="'+py+'" x2="318" y2="'+py+'" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
+    }
+    // Right pins
+    for(var i=0;i<7;i++){
+      var py=248+i*16;
+      svg+='<line x1="470" y1="'+py+'" x2="482" y2="'+py+'" stroke="'+pinColor+'" stroke-width="2" stroke-opacity=".5"/>';
+    }
+
+    // ── CIRCUIT TRACES (all class="ct" for GSAP targeting) ──
+    // Each trace: path from chip outward, with endpoint node
+    var traces=[
+      // === TOP traces ===
+      {d:'M364,218 L364,160 L310,160 L310,100 L260,100',node:[260,100]},
+      {d:'M380,218 L380,140 L380,60',node:[380,60]},
+      {d:'M396,218 L396,170 L440,170 L440,80 L500,80',node:[500,80]},
+      {d:'M412,218 L412,150 L480,150 L480,40',node:[480,40]},
+      {d:'M428,218 L428,180 L540,180 L540,120 L620,120',node:[620,120]},
+      // === BOTTOM traces ===
+      {d:'M364,382 L364,440 L300,440 L300,500 L240,500',node:[240,500]},
+      {d:'M380,382 L380,460 L380,540',node:[380,540]},
+      {d:'M396,382 L396,430 L460,430 L460,520',node:[460,520]},
+      {d:'M412,382 L412,450 L520,450 L520,500 L580,500',node:[580,500]},
+      {d:'M428,382 L428,420 L560,420 L560,480 L640,480',node:[640,480]},
+      // === LEFT traces ===
+      {d:'M318,264 L260,264 L260,200 L180,200',node:[180,200]},
+      {d:'M318,280 L240,280 L240,280 L160,280',node:[160,280]},
+      {d:'M318,296 L200,296 L200,340 L120,340',node:[120,340]},
+      {d:'M318,312 L260,312 L260,380 L180,380 L180,440',node:[180,440]},
+      {d:'M318,328 L270,328 L270,420 L200,420 L140,420',node:[140,420]},
+      // === RIGHT traces ===
+      {d:'M482,264 L540,264 L540,200 L620,200',node:[620,200]},
+      {d:'M482,280 L560,280 L560,240 L680,240',node:[680,240]},
+      {d:'M482,296 L600,296 L600,340 L700,340',node:[700,340]},
+      {d:'M482,312 L540,312 L540,400 L640,400',node:[640,400]},
+      {d:'M482,328 L520,328 L520,380 L600,380 L660,380',node:[660,380]},
+      // === DIAGONAL traces ===
+      // Top-left
+      {d:'M330,230 L280,180 L220,180 L160,140',node:[160,140]},
+      {d:'M340,230 L310,200 L250,200 L200,160 L140,160',node:[140,160]},
+      // Top-right
+      {d:'M470,230 L520,180 L580,180 L640,140',node:[640,140]},
+      {d:'M460,230 L490,200 L550,200 L600,160 L660,160',node:[660,160]},
+      // Bottom-left
+      {d:'M330,370 L280,420 L220,420 L160,460',node:[160,460]},
+      {d:'M340,370 L310,400 L240,400 L180,460 L120,460',node:[120,460]},
+      // Bottom-right
+      {d:'M470,370 L520,420 L580,420 L640,460',node:[640,460]},
+      {d:'M460,370 L490,400 L550,400 L620,460 L680,460',node:[680,460]}
+    ];
+
+    traces.forEach(function(tr,i){
+      svg+='<path class="ct" d="'+tr.d+'" fill="none" stroke="#C9A84C" stroke-width="1.2" stroke-opacity=".6" stroke-linecap="round" stroke-linejoin="round"/>';
+      // Junction node at endpoint
+      svg+='<circle class="ct-node" cx="'+tr.node[0]+'" cy="'+tr.node[1]+'" r="4" fill="none" stroke="#C9A84C" stroke-width="1.2" stroke-opacity="0"/>';
+      svg+='<circle class="ct-dot" cx="'+tr.node[0]+'" cy="'+tr.node[1]+'" r="2" fill="#C9A84C" fill-opacity="0"/>';
+    });
+
+    // Small junction nodes at bends (decorative)
+    var junctions=[[310,160],[440,170],[480,150],[540,180],[300,440],[460,430],[520,450],[560,420],[260,264],[240,280],[200,296],[260,312],[270,328],[540,264],[560,280],[600,296],[540,312],[520,328],[280,180],[520,180],[280,420],[520,420]];
+    junctions.forEach(function(j){
+      svg+='<circle class="ct-junc" cx="'+j[0]+'" cy="'+j[1]+'" r="2.5" fill="#C9A84C" fill-opacity="0"/>';
+    });
+
+    // Labels at outer endpoints
+    var labels=[
+      [260,90,'SOURCING','top'],[500,70,'PROCUREMENT','top'],[620,110,'LOGISTICS','top'],
+      [240,515,'PRODUCTION','bottom'],[580,515,'QUALITY','bottom'],[640,495,'COMPLIANCE','bottom'],
+      [120,330,'INVENTORY','left'],[140,410,'SCHEDULING','left'],
+      [700,350,'ANALYTICS','right'],[680,250,'FORECASTING','right']
+    ];
+    labels.forEach(function(lb){
+      var anchor=lb[3]==='left'?'end':lb[3]==='right'?'start':'middle';
+      var oy=lb[3]==='top'?-6:lb[3]==='bottom'?14:4;
+      var ox=lb[3]==='left'?-8:lb[3]==='right'?8:0;
+      svg+='<text class="ct-label" x="'+(lb[0]+ox)+'" y="'+(lb[1]+oy)+'" fill="#C9A84C" font-family="monospace" font-size="8" font-weight="600" letter-spacing="2" text-anchor="'+anchor+'" fill-opacity="0" text-transform="uppercase">'+lb[2]+'</text>';
+    });
+
+    svg+='</svg>';
+
+    scFlow.innerHTML=svg;
     hdr.appendChild(scFlow);
 
-    // GSAP parallax reveal for the flow diagram
+    // ── GSAP SCROLL-DRIVEN CIRCUIT EXPANSION ──
     if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
-      gsap.to(scFlow,{opacity:1,y:0,ease:'none',scrollTrigger:{trigger:scFlow,start:'top 92%',end:'top 55%',scrub:true}});
+      // Measure and set up each trace path
+      setTimeout(function(){
+        var paths=scFlow.querySelectorAll('.ct');
+        paths.forEach(function(p){
+          var len=p.getTotalLength();
+          p.style.strokeDasharray=len;
+          p.style.strokeDashoffset=len;
+        });
+        // Scrub: traces grow outward
+        gsap.to(paths,{strokeDashoffset:0,ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 85%',end:'top 20%',scrub:true}});
+        // Endpoint nodes appear as traces reach them
+        var nodes=scFlow.querySelectorAll('.ct-node');
+        gsap.to(nodes,{attr:{'stroke-opacity':.6},ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 60%',end:'top 15%',scrub:true}});
+        var dots=scFlow.querySelectorAll('.ct-dot');
+        gsap.to(dots,{attr:{'fill-opacity':.7},ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 60%',end:'top 15%',scrub:true}});
+        // Junction dots
+        var juncs=scFlow.querySelectorAll('.ct-junc');
+        gsap.to(juncs,{attr:{'fill-opacity':.4},ease:'none',stagger:.015,scrollTrigger:{trigger:scFlow,start:'top 75%',end:'top 25%',scrub:true}});
+        // Labels fade in
+        var lbls=scFlow.querySelectorAll('.ct-label');
+        gsap.to(lbls,{attr:{'fill-opacity':.7},ease:'none',stagger:.03,scrollTrigger:{trigger:scFlow,start:'top 50%',end:'top 10%',scrub:true}});
+      },200);
+
       // Parallax header elements
       hdr.querySelectorAll('h2').forEach(function(h){
         gsap.from(h,{y:30,opacity:0,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 70%',scrub:true}});
