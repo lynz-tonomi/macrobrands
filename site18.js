@@ -1180,6 +1180,14 @@ if(false){(function(){
 
       var ghBase='https://lynz-tonomi.github.io/macrobrands/';
 
+      // ── 0. ALIGN SERVICE CONTAINERS to match About section (no padding, left-aligned) ──
+      document.querySelectorAll('.svc-container').forEach(function(c){
+        c.style.cssText+=';padding-left:0;padding-right:0';
+      });
+      document.querySelectorAll('.svc-h2,.svc-desc,.svc-label').forEach(function(el){
+        el.style.textAlign='left';
+      });
+
       // ── 1. ANIMATED CANVAS ICONS next to section headings ──
       var iconDefs={
         'svc-formulation':function(ctx,t){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.lineCap='round';var b=1+Math.sin(t*3)*.04;ctx.scale(b,b);ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-15,15);ctx.lineTo(15,15);ctx.lineTo(8,-20);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-8,-20);ctx.lineTo(-8,-28);ctx.lineTo(8,-28);ctx.lineTo(8,-20);ctx.stroke();var wave=Math.sin(t*4)*3;ctx.fillStyle='#fff';ctx.globalAlpha=.15;ctx.beginPath();ctx.moveTo(-12,5+wave);ctx.quadraticCurveTo(0,1-wave,12,5+wave);ctx.lineTo(15,15);ctx.lineTo(-15,15);ctx.closePath();ctx.fill();ctx.globalAlpha=.6;for(var i=0;i<3;i++){var by=-3-((t*30+i*15)%25);ctx.beginPath();ctx.arc(-4+i*4,by,1.5,0,Math.PI*2);ctx.fill()}},
