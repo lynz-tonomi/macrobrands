@@ -1840,10 +1840,15 @@ if(false){(function(){
 
           // Phase 3: Zoom into process flow diagram (3 → 6)
           if(expandSlot){
-            // Force the expand slot visible and centered
+            // Force expand visible and override CSS transition/opacity
+            gsap.set(expandSlot,{opacity:1,maxHeight:'500px',overflow:'visible'});
+            expandSlot.style.transition='none';
+
+            // Zoom in on the process flow
             cpTL.to(expandSlot,{
               scale:2.2,
               y:'-20vh',
+              opacity:1,
               transformOrigin:'center center',
               ease:'power2.inOut',
               duration:3
@@ -1852,7 +1857,7 @@ if(false){(function(){
 
           // Phase 4: Fade out process flow, fade in Supporting Services overlay (6 → 8)
           if(expandSlot){
-            cpTL.to(expandSlot,{opacity:0,duration:1.5,ease:'power2.in'},6);
+            cpTL.to(expandSlot,{opacity:0,scale:2.5,duration:1.5,ease:'power2.in'},6);
           }
           cpTL.to(supOverlay,{
             opacity:1,
