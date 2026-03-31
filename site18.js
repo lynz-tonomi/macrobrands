@@ -1444,6 +1444,39 @@ if(false){(function(){
         setTimeout(function(){openSlot(0);},300);
       }
 
+      // ── 4. SUPPORTING SERVICES TAB SWITCHING ──
+      var supSec=document.getElementById('svc-supporting');
+      if(supSec){
+        var tabBtns=supSec.querySelectorAll('.svc-tabs-btn');
+        var tabPanels=supSec.querySelectorAll('.svc-tab-panel');
+        tabBtns.forEach(function(btn,idx){
+          btn.style.cursor='pointer';
+          btn.addEventListener('click',function(){
+            tabBtns.forEach(function(b){b.classList.remove('is-active')});
+            tabPanels.forEach(function(p){p.classList.remove('is-active');p.style.maxHeight='0';p.style.opacity='0';p.style.overflow='hidden';p.style.transition='max-height .4s ease, opacity .3s ease'});
+            btn.classList.add('is-active');
+            var panel=tabPanels[idx];
+            if(panel){
+              panel.classList.add('is-active');
+              panel.style.maxHeight='2000px';
+              panel.style.opacity='1';
+            }
+          });
+        });
+        // Ensure first panel is visible with proper styles
+        if(tabPanels[0]){
+          tabPanels[0].style.maxHeight='2000px';
+          tabPanels[0].style.opacity='1';
+        }
+        // Set inactive panels to hidden
+        for(var ti=1;ti<tabPanels.length;ti++){
+          tabPanels[ti].style.maxHeight='0';
+          tabPanels[ti].style.opacity='0';
+          tabPanels[ti].style.overflow='hidden';
+          tabPanels[ti].style.transition='max-height .4s ease, opacity .3s ease';
+        }
+      }
+
     },600); // end setTimeout — wait for Webflow elements
 })();
 // ── END service section native animations ──
@@ -1598,9 +1631,12 @@ if(false){(function(){
     nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
     nativeVid.pause();
     // Override Webflow's background-video CSS (z-index:-100, top/left/right/bottom:-100%)
-    nativeVid.style.cssText='position:relative !important;z-index:0 !important;width:100% !important;height:auto !important;display:block !important;top:0 !important;left:0 !important;right:auto !important;bottom:auto !important;min-width:0 !important;min-height:0 !important';
+    nativeVid.style.cssText='position:relative !important;z-index:0 !important;width:100% !important;height:auto !important;display:block !important;top:0 !important;left:0 !important;right:auto !important;bottom:auto !important;min-width:0 !important;min-height:0 !important;aspect-ratio:16/9';
     vidWrap=nativeVid.closest('.w-background-video')||nativeVid.parentElement;
-    vidWrap.style.cssText='position:relative;width:100%;overflow:visible;height:auto';
+    vidWrap.style.cssText='position:relative;width:100%;overflow:visible;height:auto;aspect-ratio:16/9';
+    // Ensure parent section has proper height for video
+    var vidSection=vidWrap.closest('section');
+    if(vidSection){vidSection.style.minHeight='auto';vidSection.style.overflow='hidden'}
   } else {
     vidWrap=document.createElement('div');
     vidWrap.style.cssText='position:relative;width:100%;overflow:hidden';
