@@ -340,7 +340,7 @@ if(false){(function(){
           '<a href="/contact" class="cta-liquid-fill cta-outline" style="padding:12px 28px;font-size:.9rem;border-radius:50px;border:1.5px solid #C9A84C;color:#C9A84C;background:transparent;text-decoration:none;display:inline-block;position:relative;overflow:hidden"><span style="position:relative;z-index:1">Get Started →</span><div class="fill-bg" style="position:absolute;bottom:0;left:0;width:100%;height:0;background:#C9A84C;transition:height .4s cubic-bezier(.4,0,.2,1);z-index:0;border-radius:50px"></div></a>'+
         '</div>'+
         /* Bottom row: beaker left, parallax scientist right */
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">'+
+        '<div style="display:flex;flex-direction:column;gap:24px">'+
           '<div id="carousel-wrap" style="border-radius:16px;overflow:hidden;background:#000;border:1px solid #222;height:380px;position:relative">'+
             '<img id="carousel-img-a" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
             '<img id="carousel-img-b" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:lighten;transition:opacity .35s ease;opacity:0" alt="Product">'+
@@ -554,7 +554,7 @@ if(false){(function(){
             '@keyframes rsvg-blink{0%,90%,100%{opacity:1}93%{opacity:0}96%{opacity:.8}}'+
             '.rsvg-temp{animation:rsvg-blink 8s ease-in-out infinite;animation-delay:2s}'+
             '</style>'+
-            '<svg width="70%" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;margin:0 auto">'+
+            '<svg width="100%" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;margin:0 auto">'+
             '<defs>'+
             '<marker id="rsvg-mh" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="#ff5533"/></marker>'+
             '<marker id="rsvg-mw" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="#38bdf8"/></marker>'+
