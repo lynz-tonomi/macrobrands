@@ -1227,6 +1227,7 @@ if(false){(function(){
       readStyle.textContent=
         // Service section headings
         '.svc-h2{font-size:3rem !important;line-height:1.15 !important;font-weight:800 !important;letter-spacing:-0.02em !important}'+
+        '.svc-card h3{text-transform:capitalize !important;font-size:3rem !important;font-weight:800 !important;letter-spacing:-0.02em !important;line-height:1.15 !important}'+
         // Service descriptions — bright on dark bg, dark on light bg
         '.svc-desc{font-size:1.25rem !important;line-height:1.8 !important;color:rgba(255,255,255,0.85) !important;max-width:680px}'+
         '#svc-microthermic .svc-desc{color:#333 !important}'+
