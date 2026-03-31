@@ -2062,44 +2062,40 @@ if(false){(function(){
           p.style.strokeDasharray=len;
           p.style.strokeDashoffset=len;
         });
-        // Scrub: traces complete when section is 100% in viewport
-        gsap.to(paths,{strokeDashoffset:0,ease:'none',stagger:.006,scrollTrigger:{trigger:scFlow,start:'top 95%',end:'top 10%',scrub:true}});
+        // Use the pinned section as trigger so animations play during the pin
+        var pinSec=document.getElementById('autonomi-ai');
+        // Traces draw during first 60% of pin scroll
+        gsap.to(paths,{strokeDashoffset:0,ease:'none',stagger:.006,scrollTrigger:{trigger:pinSec,start:'top top',end:'+=90%',scrub:true}});
         // Junction dots appear as traces grow
         var juncs=scFlow.querySelectorAll('.ai-junc');
-        gsap.to(juncs,{opacity:.6,ease:'none',stagger:.005,scrollTrigger:{trigger:scFlow,start:'top 80%',end:'top 20%',scrub:true}});
-        // Labels fade in near completion
-        var lbls=scFlow.querySelectorAll('.ai-label');
-        gsap.to(lbls,{opacity:.6,ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 40%',end:'top 10%',scrub:true}});
-        // Endpoint nodes: appear + start blinking when traces reach them
+        gsap.to(juncs,{opacity:.6,ease:'none',stagger:.005,scrollTrigger:{trigger:pinSec,start:'top top',end:'+=70%',scrub:true}});
+        // Endpoint nodes appear
         var allNodes=scFlow.querySelectorAll('.ai-node-w,.ai-node-b');
         allNodes.forEach(function(n,i){
-          var delay=.02*i;
-          // Scrub-linked appear
-          gsap.to(n,{opacity:1,scale:1.8,ease:'none',scrollTrigger:{trigger:scFlow,start:'top 30%',end:'top 10%',scrub:true,onEnter:function(){
-            // Connection burst + blink
-            gsap.fromTo(n,{scale:2.5,opacity:1},{scale:1,opacity:.8,duration:.4,ease:'elastic.out(1,.5)'});
-            gsap.to(n,{opacity:.2,duration:.7+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:.3+Math.random()});
-          }}});
+          gsap.to(n,{opacity:1,scale:1.5,ease:'none',scrollTrigger:{trigger:pinSec,start:'+=40%',end:'+=80%',scrub:true}});
         });
-        // Module cards: animate in when traces complete (section fully in view)
+        // Blinking on nodes after they appear
+        allNodes.forEach(function(n){
+          gsap.to(n,{opacity:.2,duration:.7+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:1+Math.random()*2});
+        });
+        // Module cards animate in
         var mods=scFlow.querySelectorAll('.ai-mod-card');
         mods.forEach(function(m,i){
-          gsap.to(m,{opacity:1,y:-12,ease:'none',scrollTrigger:{trigger:scFlow,start:'top 20%',end:'top 5%',scrub:true}});
+          gsap.to(m,{opacity:1,y:-12,ease:'none',scrollTrigger:{trigger:pinSec,start:'+=60%',end:'+=90%',scrub:true}});
         });
-
-        // Spawned nodes: appear progressively
+        // Spawned nodes appear
         var spawns=scFlow.querySelectorAll('.ai-spawn');
-        gsap.to(spawns,{opacity:1,ease:'none',stagger:.02,scrollTrigger:{trigger:scFlow,start:'top 50%',end:'top 10%',scrub:true}});
+        gsap.to(spawns,{opacity:1,ease:'none',stagger:.02,scrollTrigger:{trigger:pinSec,start:'+=30%',end:'+=80%',scrub:true}});
         spawns.forEach(function(s){
           gsap.to(s,{opacity:.2,duration:.9+Math.random()*.5,repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*2});
         });
         // Department nodes: glow in when traces fully complete
         var deptRings=scFlow.querySelectorAll('.ai-dept');
-        gsap.to(deptRings,{attr:{'fill-opacity':.12,'stroke-opacity':.8},ease:'none',stagger:.04,scrollTrigger:{trigger:scFlow,start:'top 10%',end:'top -5%',scrub:true}});
+        gsap.to(deptRings,{attr:{'fill-opacity':.12,'stroke-opacity':.8},ease:'none',stagger:.04,scrollTrigger:{trigger:pinSec,start:'+=70%',end:'+=100%',scrub:true}});
         var deptInner=scFlow.querySelectorAll('.ai-dept-inner');
-        gsap.to(deptInner,{opacity:1,attr:{'fill-opacity':1},ease:'none',stagger:.04,scrollTrigger:{trigger:scFlow,start:'top 10%',end:'top -5%',scrub:true}});
+        gsap.to(deptInner,{opacity:1,attr:{'fill-opacity':1},ease:'none',stagger:.04,scrollTrigger:{trigger:pinSec,start:'+=70%',end:'+=100%',scrub:true}});
         var deptLabels=scFlow.querySelectorAll('.ai-dept-label');
-        gsap.to(deptLabels,{attr:{'fill-opacity':1},ease:'none',stagger:.03,scrollTrigger:{trigger:scFlow,start:'top 5%',end:'top -10%',scrub:true}});
+        gsap.to(deptLabels,{attr:{'fill-opacity':1},ease:'none',stagger:.03,scrollTrigger:{trigger:pinSec,start:'+=80%',end:'+=100%',scrub:true}});
         // Dept rings pulse
         deptRings.forEach(function(d){
           gsap.to(d,{attr:{'fill-opacity':.03,'stroke-opacity':.3},duration:1.5+Math.random()*.8,repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*2});
