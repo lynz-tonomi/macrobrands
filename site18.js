@@ -8,6 +8,26 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
 }
 
+// ── Lenis smooth scroll ──
+(function(){
+  var script=document.createElement('script');
+  script.src='https://unpkg.com/lenis@1.1.18/dist/lenis.min.js';
+  script.onload=function(){
+    var lenis=new Lenis({lerp:0.08,duration:1.4,smoothWheel:true,wheelMultiplier:0.8});
+    window._lenis=lenis;
+    // Connect Lenis to GSAP ScrollTrigger
+    if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
+      lenis.on('scroll',ScrollTrigger.update);
+      gsap.ticker.add(function(time){lenis.raf(time*1000)});
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+      requestAnimationFrame(raf);
+    }
+  };
+  document.head.appendChild(script);
+})();
+
 // ============ 1. FRAME SCRUBBER ============
 (function(){
   var w=document.querySelector('.video-hero-wrap');
@@ -1589,9 +1609,9 @@ if(false){(function(){
           // GSAP parallax scroll: caps slides in from right and moves at different rate
           if(typeof gsap!=='undefined'){
             gsap.set(mtCapsBox,{x:300,opacity:0});
-            gsap.to(mtCapsBox,{x:0,opacity:1,ease:'none',scrollTrigger:{trigger:mtSec,start:'top 80%',end:'top 30%',scrub:true}});
+            gsap.to(mtCapsBox,{x:0,opacity:1,ease:'none',scrollTrigger:{trigger:mtSec,start:'top 80%',end:'top 30%',scrub:0.6}});
             // Parallax vertical offset: caps moves slower than page scroll
-            gsap.to(mtCapsBox,{y:-60,ease:'none',scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:true}});
+            gsap.to(mtCapsBox,{y:-60,ease:'none',scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:0.6}});
           }
         }
         // After DOM restructure, force heading/desc visible (GSAP batch sets opacity:0 on h2/p)
@@ -1895,9 +1915,9 @@ if(false){(function(){
 
     // GSAP: centered at midpoint (50% scroll), spreading outward
     // Row 1: starts left, crosses center, ends right
-    gsap.fromTo(r1.wrap,{x:'-20%'},{x:'20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r1.wrap,{x:'-20%'},{x:'20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:0.6}});
     // Row 2: starts right, crosses center, ends left
-    gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.fromTo(r2.wrap,{x:'20%'},{x:'-20%',ease:'none',scrollTrigger:{trigger:sec,start:'top bottom',end:'bottom top',scrub:0.6}});
 
     // Cutout gentle parallax — only if visible
     // Cutout bottle stays locked in position — no parallax movement, must align with background
@@ -1910,7 +1930,7 @@ if(false){(function(){
       bulb.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center 80%;z-index:0;pointer-events:none';
     }
     // Bulb slides full canvas in from left on scroll
-    if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:true}})}
+    if(bulb&&hasGsap){gsap.fromTo(bulb,{x:'-100%',opacity:0},{x:'0%',opacity:1,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 70%',end:'top top',scrub:0.6}})}
 
     // Apple parallax on content sections
     var sects=document.querySelectorAll('[id=who-we-serve],[id=about],[id=team],[id=certifications],[id=process-dev],[id=faq],[id=contact-cta],.section-dark,.section-light,.section-dark-alt,.svc-section,.sc-section');
@@ -1929,13 +1949,13 @@ if(false){(function(){
       });
       // Parallax scrub reveals — each element animates tied to scroll position
       revealH.forEach(function(h){
-        gsap.to(h,{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 60%',scrub:true}});
+        gsap.to(h,{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 60%',scrub:0.6}});
       });
       revealP.forEach(function(p){
-        gsap.to(p,{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:p,start:'top 95%',end:'top 65%',scrub:true}});
+        gsap.to(p,{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:p,start:'top 95%',end:'top 65%',scrub:0.6}});
       });
       revealC.forEach(function(c){
-        gsap.to(c,{y:0,opacity:1,scale:1,ease:'none',scrollTrigger:{trigger:c,start:'top 98%',end:'top 65%',scrub:true}});
+        gsap.to(c,{y:0,opacity:1,scale:1,ease:'none',scrollTrigger:{trigger:c,start:'top 98%',end:'top 65%',scrub:0.6}});
       });
     }
   },1000);
@@ -2019,7 +2039,7 @@ if(false){(function(){
   vidParent.appendChild(vidWhite);
   scVid.pause();
   if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
-    gsap.to(vidWhite,{opacity:0,duration:1,ease:'power2.out',scrollTrigger:{trigger:vidParent,start:'top 80%',end:'top 20%',scrub:1,onEnter:function(){scVid.play().catch(function(){})},onLeaveBack:function(){scVid.pause()}}});
+    gsap.to(vidWhite,{opacity:0,duration:1,ease:'power2.out',scrollTrigger:{trigger:vidParent,start:'top 80%',end:'top 20%',scrub:0.6,onEnter:function(){scVid.play().catch(function(){})},onLeaveBack:function(){scVid.pause()}}});
   } else {
     var vidObserver=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
@@ -2116,7 +2136,7 @@ if(false){(function(){
             trigger:pinSec,
             start:'top top',
             end:'+=150%',
-            scrub:1,
+            scrub:0.6,
             pin:true,
             pinSpacing:true,
             anticipatePin:1
@@ -2194,10 +2214,10 @@ if(false){(function(){
 
       // Parallax header elements
       hdr.querySelectorAll('h2').forEach(function(h){
-        gsap.from(h,{y:30,opacity:0,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 70%',scrub:true}});
+        gsap.from(h,{y:30,opacity:0,ease:'none',scrollTrigger:{trigger:h,start:'top 95%',end:'top 70%',scrub:0.6}});
       });
       hdr.querySelectorAll('p').forEach(function(p){
-        gsap.from(p,{y:20,opacity:0,ease:'none',scrollTrigger:{trigger:p,start:'top 95%',end:'top 72%',scrub:true}});
+        gsap.from(p,{y:20,opacity:0,ease:'none',scrollTrigger:{trigger:p,start:'top 95%',end:'top 72%',scrub:0.6}});
       });
     }
   }
