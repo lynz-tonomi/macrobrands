@@ -1320,6 +1320,8 @@ if(false){(function(){
           mtCapsBox.style.cssText+=";flex:0 0 340px;margin-top:0;background:#111;border:1px solid #222;border-radius:16px;padding:20px;color:#999;font-size:13px";
           mtFlexRow.appendChild(mtCapsBox);
         }
+        // After DOM restructure, refresh ScrollTrigger so reveal animations fire correctly
+        if(typeof ScrollTrigger!=='undefined')setTimeout(function(){ScrollTrigger.refresh()},100);
         // Make img-box full width with dark background for SVG
         var mtImgRow=mtSec.querySelector(".svc-img-row-mt");
         if(mtImgRow){
