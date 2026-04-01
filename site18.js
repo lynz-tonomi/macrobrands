@@ -1834,7 +1834,7 @@ if(false){(function(){
         // ── Phase 3 (4→5.5): Hold on closed doors (darkness) ──
         fdTL.to({},{duration:1.5});
 
-        // ── Phase 4 (5.5→8): Doors open to reveal black ──
+        // ── Phase 4 (5.5→8): Doors open ──
         fdTL.to(doorLeft,{
           x:'-105%',
           ease:'power2.inOut',
@@ -1846,24 +1846,25 @@ if(false){(function(){
           duration:2.5
         },5.5);
 
-        // ── Phase 5 (7→10): Supporting Services zooms in from center ──
-        // Starts scaled down + transparent, zooms to full size
+        // ── Supporting Services sits behind doors, revealed as they open ──
+        // z-index 28 = behind doors (30) but in front of backdrop (25)
+        // Starts at scale 0.85 so it looks like it's already in the room, not flying in
         gsap.set(supSection,{
           position:'fixed',top:'0',left:'0',right:'0',
-          zIndex:28,opacity:0,scale:0.5,
-          transformOrigin:'center 40%',
-          filter:'blur(3px)'
+          zIndex:28,opacity:0,scale:0.85,
+          transformOrigin:'center 40%'
         });
-        // Fade in + scale up
+        // Fade backdrop out + supSection in at the same time doors start opening
+        fdTL.to(fdBackdrop,{opacity:0,ease:'power1.out',duration:1.5},5.5);
+        fdTL.to(supSection,{opacity:1,ease:'power2.out',duration:1.2},5.5);
+        // Scale from 0.85→1 as doors finish opening — subtle zoom settle
         fdTL.to(supSection,{
-          opacity:1,
           scale:1,
-          filter:'blur(0px)',
-          ease:'power2.out',
-          duration:3
-        },7);
+          ease:'power1.out',
+          duration:2.5
+        },5.5);
 
-        // ── Phase 6 (10→11): Hold on full Supporting Services ──
+        // ── Phase 5 (8→9): Hold on full Supporting Services ──
         fdTL.to({},{duration:1});
 
         // On pin leave — restore supSection to normal document flow
