@@ -1767,8 +1767,7 @@ if(false){(function(){
           card.style.transform='translateY(0)';
         });
 
-        // Kill expand CSS transitions
-        if(expandSlot) expandSlot.style.transition='none';
+        // Allow expand to keep CSS transitions — GSAP controls it only during pin
 
         // ── Master Blueprint SVG ──
         // A simplified full-pipeline schematic: Raw Materials → Co-Packing → QA/Dev → Ship
@@ -1907,10 +1906,11 @@ if(false){(function(){
           cpTL.to(expandSlot,{
             scale:0.5,y:'-20vh',opacity:0.6,
             transformOrigin:'center center',
-            ease:'power2.inOut',duration:2
+            ease:'power2.inOut',duration:2,
+            immediateRender:false
           },1.5);
           // Then fade it out as blueprint takes over
-          cpTL.to(expandSlot,{opacity:0,duration:1,ease:'power2.in'},3.5);
+          cpTL.to(expandSlot,{opacity:0,duration:1,ease:'power2.in',immediateRender:false},3.5);
         }
 
         // ── Phase 3: Blueprint overlay fades in + lines draw (3 → 6) ──
