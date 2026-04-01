@@ -1757,7 +1757,7 @@ if(false){(function(){
 
         var container=cpSection.querySelector('.svc-container');
 
-        // ── Create barn door overlays (position:fixed on body) ──
+        // ── Create VERTICAL door overlays (close left/right) ──
         var doorLeft=document.createElement('div');
         doorLeft.className='fd-door fd-door-left';
         doorLeft.style.cssText='position:fixed;left:0;top:0;width:50.5%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);will-change:transform;';
@@ -1766,15 +1766,30 @@ if(false){(function(){
         doorRight.className='fd-door fd-door-right';
         doorRight.style.cssText='position:fixed;right:0;top:0;width:50.5%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(-90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(105%);will-change:transform;';
 
-        // Gold seam on inner edge of each door
+        // Gold seam on inner edge
         doorLeft.innerHTML='<div style="position:absolute;top:0;right:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
         doorRight.innerHTML='<div style="position:absolute;top:0;left:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
 
         document.body.appendChild(doorLeft);
         document.body.appendChild(doorRight);
 
-        // ── TRIGGER 1: Doors CLOSE over co-packing section ──
-        // Pinned on cpSection — scroll pauses while doors slide shut
+        // ── Create HORIZONTAL door overlays (open top/bottom) ──
+        var doorTop=document.createElement('div');
+        doorTop.className='fd-door fd-door-top';
+        doorTop.style.cssText='position:fixed;left:0;top:0;width:100%;height:50.5vh;z-index:10001;pointer-events:none;background:linear-gradient(180deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateY(0%);opacity:0;will-change:transform;';
+
+        var doorBottom=document.createElement('div');
+        doorBottom.className='fd-door fd-door-bottom';
+        doorBottom.style.cssText='position:fixed;left:0;bottom:0;width:100%;height:50.5vh;z-index:10001;pointer-events:none;background:linear-gradient(0deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateY(0%);opacity:0;will-change:transform;';
+
+        // Gold seam on inner edge (horizontal)
+        doorTop.innerHTML='<div style="position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
+        doorBottom.innerHTML='<div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
+
+        document.body.appendChild(doorTop);
+        document.body.appendChild(doorBottom);
+
+        // ── TRIGGER 1: Vertical doors CLOSE over co-packing ──
         var closeTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
@@ -1790,18 +1805,22 @@ if(false){(function(){
           }
         });
 
-        // Co-packing content fades/scales back while doors close
+        // Co-packing fades while vertical doors close from left/right
         closeTL.to(container,{
           scale:0.9,opacity:0,filter:'blur(3px)',
           transformOrigin:'center center',ease:'power2.in',
           duration:1.5,immediateRender:false
         },0);
-        // Doors slide in from sides
         closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:1.5},0.2);
         closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:1.5},0.2);
 
-        // ── TRIGGER 2: Doors OPEN to reveal supporting services ──
-        // Pinned on supSection when its top reaches the top of viewport
+        // At end of close: show horizontal doors (already in closed position) and hide vertical doors
+        closeTL.to(doorTop,{opacity:1,duration:0.01},1.7);
+        closeTL.to(doorBottom,{opacity:1,duration:0.01},1.7);
+        closeTL.to(doorLeft,{opacity:0,duration:0.01},1.7);
+        closeTL.to(doorRight,{opacity:0,duration:0.01},1.7);
+
+        // ── TRIGGER 2: Horizontal doors OPEN (up/down) to reveal supporting services ──
         var openTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
@@ -1810,13 +1829,20 @@ if(false){(function(){
             scrub:0.3,
             pin:true,
             pinSpacing:true,
-            anticipatePin:1
+            anticipatePin:1,
+            onLeaveBack:function(){
+              // Reset: show horizontal doors closed, vertical doors hidden
+              gsap.set(doorTop,{y:'0%',opacity:1});
+              gsap.set(doorBottom,{y:'0%',opacity:1});
+              gsap.set(doorLeft,{opacity:0});
+              gsap.set(doorRight,{opacity:0});
+            }
           }
         });
 
-        // Doors open to reveal the supporting services section underneath
-        openTL.to(doorLeft,{x:'-105%',ease:'power2.inOut',duration:1.5},0);
-        openTL.to(doorRight,{x:'105%',ease:'power2.inOut',duration:1.5},0);
+        // Horizontal doors slide open: top goes up, bottom goes down
+        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},0);
+        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},0);
 
       })();
 
