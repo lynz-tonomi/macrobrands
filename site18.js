@@ -1774,6 +1774,11 @@ if(false){(function(){
         doorLeft.innerHTML='<div style="position:absolute;top:0;right:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;right:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
         doorRight.innerHTML='<div style="position:absolute;top:0;left:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;left:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
 
+        // Black backdrop — sits behind doors, in front of content
+        var fdBackdrop=document.createElement('div');
+        fdBackdrop.className='fd-backdrop';
+        fdBackdrop.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:25;background:#111;opacity:0;pointer-events:none';
+        cpSection.appendChild(fdBackdrop);
         cpSection.appendChild(doorLeft);
         cpSection.appendChild(doorRight);
 
@@ -1798,16 +1803,22 @@ if(false){(function(){
         });
 
         // ── Phase 1 (0→3): Co-packing pushes back in Z-space ──
-        // Scale down + slight blur = walking away from the room
+        // Scale down + blur + fade to black = walking away from the room
         fdTL.to(container,{
           scale:0.7,
-          opacity:0.3,
-          filter:'blur(4px)',
+          opacity:0,
+          filter:'blur(6px)',
           transformOrigin:'center center',
           ease:'power2.in',
           duration:3,
           immediateRender:false
         },0);
+        // Black backdrop fades in behind the doors as content fades
+        fdTL.to(fdBackdrop,{
+          opacity:1,
+          ease:'power2.in',
+          duration:2.5
+        },0.5);
 
         // ── Phase 2 (1.5→4): Factory doors slide closed ──
         // Left door slides in from left
@@ -1826,7 +1837,7 @@ if(false){(function(){
         // ── Phase 3 (4→5.5): Hold on closed doors (darkness) ──
         fdTL.to({},{duration:1.5});
 
-        // ── Phase 4 (5.5→8): Doors open to reveal Supporting Services ──
+        // ── Phase 4 (5.5→8): Doors open to reveal black ──
         fdTL.to(doorLeft,{
           x:'-105%',
           ease:'power2.inOut',
