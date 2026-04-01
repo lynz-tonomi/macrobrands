@@ -1847,17 +1847,22 @@ if(false){(function(){
             }
           });
         });
-        // Ensure first panel is visible with proper styles
-        if(tabPanels[0]){
-          tabPanels[0].style.maxHeight='2000px';
-          tabPanels[0].style.opacity='1';
-        }
-        // Set inactive panels to hidden
-        for(var ti=1;ti<tabPanels.length;ti++){
+        // Default to PAL/Heat Pen tab (index 1)
+        var defaultTab=1;
+        tabBtns.forEach(function(b){b.classList.remove('is-active')});
+        if(tabBtns[defaultTab]) tabBtns[defaultTab].classList.add('is-active');
+        // Set all panels hidden first, then show the default
+        for(var ti=0;ti<tabPanels.length;ti++){
           tabPanels[ti].style.maxHeight='0';
           tabPanels[ti].style.opacity='0';
           tabPanels[ti].style.overflow='hidden';
           tabPanels[ti].style.transition='max-height .4s ease, opacity .3s ease';
+          tabPanels[ti].classList.remove('is-active');
+        }
+        if(tabPanels[defaultTab]){
+          tabPanels[defaultTab].classList.add('is-active');
+          tabPanels[defaultTab].style.maxHeight='2000px';
+          tabPanels[defaultTab].style.opacity='1';
         }
       }
 
