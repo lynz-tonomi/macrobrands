@@ -1782,67 +1782,27 @@ if(false){(function(){
         cpSection.appendChild(doorLeft);
         cpSection.appendChild(doorRight);
 
-        // Supporting Services — will be positioned fixed behind doors during transition
+        // Supporting Services — starts hidden, zooms in after doors open
+        gsap.set(supSection,{opacity:0});
         supSection.style.background='#111';
-        var supOriginalPosition=supSection.style.position||'';
-        var supOriginalZIndex=supSection.style.zIndex||'';
 
         // ── Build GSAP scroll-driven timeline ──
         var fdTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom',
-            end:'+=300%',
+            end:'+=400%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
-            onEnter:function(){
-              // Position Supporting Services fixed behind the doors
-              supSection.style.position='fixed';
-              supSection.style.top='0';
-              supSection.style.left='0';
-              supSection.style.right='0';
-              supSection.style.zIndex='28';
-              supSection.style.opacity='1';
-              supSection.style.paddingTop='60px';
-            },
             onLeaveBack:function(){
               if(container) gsap.set(container,{clearProps:'all'});
-              // Restore Supporting Services to normal flow
-              supSection.style.position=supOriginalPosition;
-              supSection.style.top='';
-              supSection.style.left='';
-              supSection.style.right='';
-              supSection.style.zIndex=supOriginalZIndex;
-              supSection.style.opacity='1';
-              supSection.style.paddingTop='';
-            },
-            onLeave:function(){
-              // Pin released — restore Supporting Services to normal flow
-              supSection.style.position=supOriginalPosition;
-              supSection.style.top='';
-              supSection.style.left='';
-              supSection.style.right='';
-              supSection.style.zIndex=supOriginalZIndex;
-              supSection.style.opacity='1';
-              supSection.style.paddingTop='';
-            },
-            onEnterBack:function(){
-              // Re-entering pin from below — fix position again
-              supSection.style.position='fixed';
-              supSection.style.top='0';
-              supSection.style.left='0';
-              supSection.style.right='0';
-              supSection.style.zIndex='28';
-              supSection.style.opacity='1';
-              supSection.style.paddingTop='60px';
             }
           }
         });
 
         // ── Phase 1 (0→3): Co-packing pushes back in Z-space ──
-        // Scale down + blur + fade to black = walking away from the room
         fdTL.to(container,{
           scale:0.7,
           opacity:0,
@@ -1874,7 +1834,7 @@ if(false){(function(){
         // ── Phase 3 (4→5.5): Hold on closed doors (darkness) ──
         fdTL.to({},{duration:1.5});
 
-        // ── Phase 4 (5.5→8): Doors open to reveal Supporting Services ──
+        // ── Phase 4 (5.5→8): Doors open to reveal black ──
         fdTL.to(doorLeft,{
           x:'-105%',
           ease:'power2.inOut',
@@ -1885,12 +1845,47 @@ if(false){(function(){
           ease:'power2.inOut',
           duration:2.5
         },5.5);
-        // Fade out backdrop to reveal supSection behind it
-        fdTL.to(fdBackdrop,{
-          opacity:0,
+
+        // ── Phase 5 (7→10): Supporting Services zooms in from center ──
+        // Starts scaled down + transparent, zooms to full size
+        gsap.set(supSection,{
+          position:'fixed',top:'0',left:'0',right:'0',
+          zIndex:28,opacity:0,scale:0.5,
+          transformOrigin:'center 40%',
+          filter:'blur(3px)'
+        });
+        // Fade in + scale up
+        fdTL.to(supSection,{
+          opacity:1,
+          scale:1,
+          filter:'blur(0px)',
           ease:'power2.out',
-          duration:2
-        },5.5);
+          duration:3
+        },7);
+
+        // ── Phase 6 (10→11): Hold on full Supporting Services ──
+        fdTL.to({},{duration:1});
+
+        // On pin leave — restore supSection to normal document flow
+        var supPinCleanup=function(){
+          supSection.style.position='';
+          supSection.style.top='';
+          supSection.style.left='';
+          supSection.style.right='';
+          supSection.style.zIndex='';
+          supSection.style.transformOrigin='';
+          gsap.set(supSection,{clearProps:'opacity,scale,filter,transform'});
+        };
+        ScrollTrigger.create({
+          trigger:cpSection,
+          start:'bottom bottom',
+          end:'+=400%',
+          onLeave:supPinCleanup,
+          onLeaveBack:function(){
+            supPinCleanup();
+            gsap.set(supSection,{opacity:0});
+          }
+        });
 
       })();
 
