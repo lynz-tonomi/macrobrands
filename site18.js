@@ -1759,30 +1759,28 @@ if(false){(function(){
         var container=cpSection.querySelector('.svc-container');
 
         // ── Create factory door overlays ──
+        // Doors are position:fixed on document.body so they share stacking context with supSection
         var doorLeft=document.createElement('div');
         doorLeft.className='fd-door fd-door-left';
-        doorLeft.style.cssText='position:absolute;left:0;bottom:0;width:50%;height:100vh;z-index:30;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);';
+        doorLeft.style.cssText='position:fixed;left:0;top:0;width:50%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);display:none;';
 
         var doorRight=document.createElement('div');
         doorRight.className='fd-door fd-door-right';
-        doorRight.style.cssText='position:absolute;right:0;bottom:0;width:50%;height:100vh;z-index:30;pointer-events:none;background:linear-gradient(-90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(105%);';
-
-        // Door edge detail — subtle gold industrial seam
-        var seamStyle='content:"";position:absolute;top:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)';
-        var seamStyleInner='position:absolute;top:10%;height:80%;width:1px;background:rgba(201,168,76,.08)';
+        doorRight.style.cssText='position:fixed;right:0;top:0;width:50%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(-90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(105%);display:none;';
 
         doorLeft.innerHTML='<div style="position:absolute;top:0;right:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;right:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
         doorRight.innerHTML='<div style="position:absolute;top:0;left:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;left:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
 
-        // Black backdrop — sits behind doors, in front of content
+        document.body.appendChild(doorLeft);
+        document.body.appendChild(doorRight);
+
+        // Black backdrop — position:fixed on body, behind doors (9999), in front of supSection
         var fdBackdrop=document.createElement('div');
         fdBackdrop.className='fd-backdrop';
-        fdBackdrop.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:25;background:#111;opacity:0;pointer-events:none';
-        cpSection.appendChild(fdBackdrop);
-        cpSection.appendChild(doorLeft);
-        cpSection.appendChild(doorRight);
+        fdBackdrop.style.cssText='position:fixed;left:0;top:0;right:0;height:100vh;z-index:9999;background:#111;opacity:0;pointer-events:none;display:none';
+        document.body.appendChild(fdBackdrop);
 
-        // Supporting Services — starts hidden, zooms in after doors open
+        // Supporting Services — starts hidden, appears behind doors
         gsap.set(supSection,{opacity:0});
         supSection.style.background='#111';
 
@@ -1796,8 +1794,26 @@ if(false){(function(){
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
+            onEnter:function(){
+              doorLeft.style.display='';
+              doorRight.style.display='';
+              fdBackdrop.style.display='';
+            },
             onLeaveBack:function(){
               if(container) gsap.set(container,{clearProps:'all'});
+              doorLeft.style.display='none';
+              doorRight.style.display='none';
+              fdBackdrop.style.display='none';
+            },
+            onLeave:function(){
+              doorLeft.style.display='none';
+              doorRight.style.display='none';
+              fdBackdrop.style.display='none';
+            },
+            onEnterBack:function(){
+              doorLeft.style.display='';
+              doorRight.style.display='';
+              fdBackdrop.style.display='';
             }
           }
         });
@@ -1851,7 +1867,7 @@ if(false){(function(){
         // Starts at scale 0.85 so it looks like it's already in the room, not flying in
         gsap.set(supSection,{
           position:'fixed',top:'0',left:'0',right:'0',
-          zIndex:28,opacity:0,scale:0.85,
+          zIndex:9998,opacity:0,scale:0.85,
           transformOrigin:'center 40%'
         });
         // Fade backdrop out + supSection in at the same time doors start opening
