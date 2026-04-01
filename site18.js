@@ -1803,11 +1803,12 @@ if(false){(function(){
         closeTL.to({},{duration:1});
 
         // ── TRIGGER 2: Doors OPEN to reveal supporting services ──
-        // Pinned on supSection — when it enters viewport, doors are still closed, then open
+        // Pinned on supSection when its top reaches the top of viewport
+        // (section fully fills the screen behind the closed doors before they open)
         var openTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
-            start:'top bottom',
+            start:'top top',
             end:'+=150%',
             scrub:0.3,
             pin:true,
@@ -1816,7 +1817,7 @@ if(false){(function(){
           }
         });
 
-        // Brief hold while doors are still closed (section just arrived)
+        // Brief hold while doors are still closed (section sitting behind them)
         openTL.to({},{duration:1});
         // Doors open to reveal the supporting services section underneath
         openTL.to(doorLeft,{x:'-105%',ease:'power2.inOut',duration:2.5},1);
