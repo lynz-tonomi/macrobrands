@@ -267,7 +267,7 @@ if(document.querySelector('.section-21')){
   // Use the existing Webflow nav-logo but fix its positioning and make parent transparent
   var nl=document.querySelector('.nav-logo');
   if(nl){
-    nl.setAttribute('style','height:auto;width:256px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
+    nl.setAttribute('style','height:auto;width:300px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9998;opacity:0;transition:opacity .3s,filter .3s;filter:brightness(0) invert(1)');
     // Make any parent container transparent
     var nlParent=nl.parentElement;
     if(nlParent&&nlParent!==document.body){
@@ -2527,9 +2527,9 @@ if(false){(function(){
   if(h1){
     h1.style.cssText='text-align:center;font-size:3.5rem;padding:80px 5% 0';
   }
-  // Match logo size to home page (180px instead of native 256px)
+  // Match logo size to home page (300px)
   var contactLogo=document.querySelector('.nav-logo');
-  if(contactLogo){contactLogo.style.width='256px';contactLogo.style.height='auto';}
+  if(contactLogo){contactLogo.style.width='300px';contactLogo.style.height='auto';}
 })();
 
 // ============ MOBILE RESPONSIVE OVERRIDES ============
