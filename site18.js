@@ -8,6 +8,10 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
 }
 
+// ── Hide duplicate "Get In Touch" bottom section on contact page ──
+var contactGrid=document.querySelector('.contact-grid');
+if(contactGrid) contactGrid.style.display='none';
+
 // ── No Lenis smooth scroll — it freezes when tab loses focus/GSAP ticker sleeps ──
 // Native scroll + GSAP ScrollTrigger scrub:0.3 provides smooth animation natively
 
