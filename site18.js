@@ -1779,7 +1779,7 @@ if(false){(function(){
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom',
-            end:'+=150%',
+            end:'+=80%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
@@ -1794,13 +1794,13 @@ if(false){(function(){
         closeTL.to(container,{
           scale:0.85,opacity:0,filter:'blur(4px)',
           transformOrigin:'center center',ease:'power2.in',
-          duration:3,immediateRender:false
+          duration:2,immediateRender:false
         },0);
         // Doors slide in from sides
-        closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:2.5},0.5);
-        closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:2.5},0.5);
+        closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:2},0.3);
+        closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:2},0.3);
         // Hold closed briefly
-        closeTL.to({},{duration:1});
+        closeTL.to({},{duration:0.5});
 
         // ── TRIGGER 2: Doors OPEN to reveal supporting services ──
         // Pinned on supSection when its top reaches the top of viewport
@@ -1809,7 +1809,7 @@ if(false){(function(){
           scrollTrigger:{
             trigger:supSection,
             start:'top top',
-            end:'+=150%',
+            end:'+=70%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
@@ -1818,10 +1818,10 @@ if(false){(function(){
         });
 
         // Brief hold while doors are still closed (section sitting behind them)
-        openTL.to({},{duration:1});
+        openTL.to({},{duration:0.5});
         // Doors open to reveal the supporting services section underneath
-        openTL.to(doorLeft,{x:'-105%',ease:'power2.inOut',duration:2.5},1);
-        openTL.to(doorRight,{x:'105%',ease:'power2.inOut',duration:2.5},1);
+        openTL.to(doorLeft,{x:'-105%',ease:'power2.inOut',duration:2},0.5);
+        openTL.to(doorRight,{x:'105%',ease:'power2.inOut',duration:2},0.5);
 
       })();
 
