@@ -1747,204 +1747,98 @@ if(false){(function(){
         setTimeout(function(){openSlot(0);},300);
       }
 
-      // ── 3b. BLUEPRINT ZOOM TRANSITION: CO-PACKING → SUPPORTING SERVICES ──
-      // Pin at bottom → scatter cards → process flow holds → master blueprint draws in →
-      // camera pulls back → fade to black → real Supporting Services fades in below
+      // ── 3b. FACTORY DOOR TRANSITION: CO-PACKING → SUPPORTING SERVICES ──
+      // Co-packing pushes back in Z-space (scale down + blur) → two dark panels slide in
+      // from left/right like factory doors closing → brief darkness → doors open to reveal
+      // Supporting Services at full scale — like walking into the next room of the facility
       (function(){
         var cpSection=document.querySelector('#svc-copacking');
         var supSection=document.querySelector('#svc-supporting');
         if(!cpSection||!supSection||typeof gsap==='undefined'||!gsap.registerPlugin)return;
 
-        var heroGrid=cpSection.querySelector('.svc-hero-grid');
-        var cpCards=cpSection.querySelectorAll('.cp-card');
-        var expandSlot=cpSection.querySelector('.cp-expand');
         var container=cpSection.querySelector('.svc-container');
 
-        // Clear CSS animations so GSAP controls transforms
-        cpCards.forEach(function(card){
-          card.style.animation='none';
-          card.style.opacity='1';
-          card.style.transform='translateY(0)';
-        });
+        // ── Create factory door overlays ──
+        var doorLeft=document.createElement('div');
+        doorLeft.className='fd-door fd-door-left';
+        doorLeft.style.cssText='position:absolute;left:0;bottom:0;width:50%;height:100vh;z-index:30;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);';
 
-        // Allow expand to keep CSS transitions — GSAP controls it only during pin
+        var doorRight=document.createElement('div');
+        doorRight.className='fd-door fd-door-right';
+        doorRight.style.cssText='position:absolute;right:0;bottom:0;width:50%;height:100vh;z-index:30;pointer-events:none;background:linear-gradient(-90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(105%);';
 
-        // ── Master Blueprint SVG ──
-        // A simplified full-pipeline schematic: Raw Materials → Co-Packing → QA/Dev → Ship
-        var blueprintSvg='<svg viewBox="0 0 1200 200" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:1100px">'+
-          '<defs><filter id="bpGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
-          // Main pipeline backbone
-          '<line x1="40" y1="100" x2="1160" y2="100" stroke="#C9A84C" stroke-width="1" stroke-opacity=".3" stroke-dasharray="1200" stroke-dashoffset="1200" class="bp-draw"/>'+
-          '<line x1="40" y1="100" x2="1160" y2="100" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".08" filter="url(#bpGlow)" stroke-dasharray="1200" stroke-dashoffset="1200" class="bp-draw"/>'+
-          // Stage 1: RAW MATERIALS
-          '<rect x="20" y="55" width="120" height="90" rx="8" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".6" stroke-dasharray="420" stroke-dashoffset="420" class="bp-draw"/>'+
-          '<circle cx="60" cy="85" r="12" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".5" stroke-dasharray="76" stroke-dashoffset="76" class="bp-draw"/>'+
-          '<circle cx="100" cy="85" r="12" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".5" stroke-dasharray="76" stroke-dashoffset="76" class="bp-draw"/>'+
-          '<rect x="50" y="108" width="40" height="20" rx="3" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".35" stroke-dasharray="120" stroke-dashoffset="120" class="bp-draw"/>'+
-          '<text x="80" y="165" fill="#C9A84C" fill-opacity=".7" font-family="monospace" font-size="9" text-anchor="middle">RAW MATERIALS</text>'+
-          // Arrow 1→2
-          '<polygon points="160,100 150,94 150,106" fill="#C9A84C" fill-opacity=".5" class="bp-fade"/>'+
-          // Stage 2: BATCHING
-          '<rect x="175" y="55" width="120" height="90" rx="8" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".6" stroke-dasharray="420" stroke-dashoffset="420" class="bp-draw"/>'+
-          '<path d="M210,70 L210,130 M235,65 Q235,60 235,65 L235,130 M260,70 L260,130" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".4" stroke-dasharray="70" stroke-dashoffset="70" class="bp-draw"/>'+
-          '<ellipse cx="235" cy="75" rx="30" ry="8" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".3" stroke-dasharray="100" stroke-dashoffset="100" class="bp-draw"/>'+
-          '<text x="235" y="165" fill="#C9A84C" fill-opacity=".7" font-family="monospace" font-size="9" text-anchor="middle">BATCHING</text>'+
-          // Arrow 2→3
-          '<polygon points="315,100 305,94 305,106" fill="#C9A84C" fill-opacity=".5" class="bp-fade"/>'+
-          // Stage 3: CO-PACKING (highlighted — "you are here")
-          '<rect x="330" y="40" width="200" height="120" rx="10" stroke="#C9A84C" stroke-width="2" fill="rgba(201,168,76,.06)" stroke-opacity="1" stroke-dasharray="640" stroke-dashoffset="640" class="bp-draw"/>'+
-          '<text x="430" y="65" fill="#C9A84C" fill-opacity=".9" font-family="monospace" font-size="10" text-anchor="middle" font-weight="bold">CO-PACKING</text>'+
-          // Mini process flow inside
-          '<rect x="348" y="78" width="28" height="32" rx="3" stroke="#fff" stroke-width=".7" fill="none" stroke-opacity=".5" stroke-dasharray="120" stroke-dashoffset="120" class="bp-draw"/>'+
-          '<rect x="386" y="78" width="28" height="32" rx="3" stroke="#fff" stroke-width=".7" fill="none" stroke-opacity=".5" stroke-dasharray="120" stroke-dashoffset="120" class="bp-draw"/>'+
-          '<rect x="424" y="74" width="44" height="40" rx="4" stroke="#fff" stroke-width=".7" fill="none" stroke-opacity=".5" stroke-dasharray="168" stroke-dashoffset="168" class="bp-draw"/>'+
-          '<rect x="478" y="78" width="28" height="32" rx="3" stroke="#fff" stroke-width=".7" fill="none" stroke-opacity=".5" stroke-dasharray="120" stroke-dashoffset="120" class="bp-draw"/>'+
-          '<line x1="376" y1="94" x2="386" y2="94" stroke="#f97316" stroke-width="1" stroke-opacity=".6" stroke-dasharray="10" stroke-dashoffset="10" class="bp-draw"/>'+
-          '<line x1="414" y1="94" x2="424" y2="94" stroke="#f97316" stroke-width="1" stroke-opacity=".6" stroke-dasharray="10" stroke-dashoffset="10" class="bp-draw"/>'+
-          '<line x1="468" y1="94" x2="478" y2="94" stroke="#f97316" stroke-width="1" stroke-opacity=".6" stroke-dasharray="10" stroke-dashoffset="10" class="bp-draw"/>'+
-          '<text x="430" y="135" fill="#C9A84C" fill-opacity=".5" font-family="monospace" font-size="7" text-anchor="middle">PASTEURIZE \u2022 FILL \u2022 SEAL \u2022 LABEL</text>'+
-          '<text x="430" y="177" fill="#C9A84C" fill-opacity=".9" font-family="monospace" font-size="9" text-anchor="middle">CO-PACKING</text>'+
-          // Arrow 3→4
-          '<polygon points="550,100 540,94 540,106" fill="#C9A84C" fill-opacity=".5" class="bp-fade"/>'+
-          // Stage 4: QA & PROCESS DEV (Supporting Services)
-          '<rect x="565" y="55" width="140" height="90" rx="8" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".6" stroke-dasharray="460" stroke-dashoffset="460" class="bp-draw"/>'+
-          '<circle cx="610" cy="90" r="14" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".4" stroke-dasharray="88" stroke-dashoffset="88" class="bp-draw"/>'+
-          '<path d="M605,85 L610,95 L620,80" stroke="#C9A84C" stroke-width="1" fill="none" stroke-opacity=".6" stroke-dasharray="25" stroke-dashoffset="25" class="bp-draw"/>'+
-          '<rect x="640" y="78" width="50" height="25" rx="3" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".35" stroke-dasharray="150" stroke-dashoffset="150" class="bp-draw"/>'+
-          '<line x1="648" y1="86" x2="682" y2="86" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".3" stroke-dasharray="34" stroke-dashoffset="34" class="bp-draw"/>'+
-          '<line x1="648" y1="93" x2="675" y2="93" stroke="#C9A84C" stroke-width=".5" stroke-opacity=".3" stroke-dasharray="27" stroke-dashoffset="27" class="bp-draw"/>'+
-          '<text x="635" y="165" fill="#C9A84C" fill-opacity=".7" font-family="monospace" font-size="9" text-anchor="middle">QA &amp; PROCESS DEV</text>'+
-          // Arrow 4→5
-          '<polygon points="725,100 715,94 715,106" fill="#C9A84C" fill-opacity=".5" class="bp-fade"/>'+
-          // Stage 5: SCALE-UP
-          '<rect x="740" y="55" width="120" height="90" rx="8" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".6" stroke-dasharray="420" stroke-dashoffset="420" class="bp-draw"/>'+
-          '<path d="M770,120 L770,80 L790,80 L790,75 L810,75 L810,70 L830,70" stroke="#C9A84C" stroke-width="1" fill="none" stroke-opacity=".5" stroke-dasharray="100" stroke-dashoffset="100" class="bp-draw"/>'+
-          '<text x="800" y="165" fill="#C9A84C" fill-opacity=".7" font-family="monospace" font-size="9" text-anchor="middle">SCALE-UP</text>'+
-          // Arrow 5→6
-          '<polygon points="880,100 870,94 870,106" fill="#C9A84C" fill-opacity=".5" class="bp-fade"/>'+
-          // Stage 6: SUPPLY CHAIN / SHIP
-          '<rect x="895" y="55" width="120" height="90" rx="8" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-opacity=".6" stroke-dasharray="420" stroke-dashoffset="420" class="bp-draw"/>'+
-          '<rect x="920" y="72" width="40" height="28" rx="3" stroke="#C9A84C" stroke-width=".8" fill="none" stroke-opacity=".4" stroke-dasharray="136" stroke-dashoffset="136" class="bp-draw"/>'+
-          '<rect x="925" y="60" width="30" height="16" rx="2" stroke="#C9A84C" stroke-width=".6" fill="none" stroke-opacity=".3" stroke-dasharray="92" stroke-dashoffset="92" class="bp-draw"/>'+
-          '<circle cx="930" cy="115" r="6" stroke="#C9A84C" stroke-width=".7" fill="none" stroke-opacity=".4" stroke-dasharray="38" stroke-dashoffset="38" class="bp-draw"/>'+
-          '<circle cx="955" cy="115" r="6" stroke="#C9A84C" stroke-width=".7" fill="none" stroke-opacity=".4" stroke-dasharray="38" stroke-dashoffset="38" class="bp-draw"/>'+
-          '<text x="955" y="165" fill="#C9A84C" fill-opacity=".7" font-family="monospace" font-size="9" text-anchor="middle">SUPPLY CHAIN</text>'+
-          '</svg>';
+        // Door edge detail — subtle gold industrial seam
+        var seamStyle='content:"";position:absolute;top:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)';
+        var seamStyleInner='position:absolute;top:10%;height:80%;width:1px;background:rgba(201,168,76,.08)';
 
-        // Create blueprint overlay (positioned in viewport during pin)
-        var bpOverlay=document.createElement('div');
-        bpOverlay.className='cp-blueprint-overlay';
-        bpOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:20;opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center;padding:0 40px';
-        bpOverlay.innerHTML=blueprintSvg;
-        cpSection.appendChild(bpOverlay);
+        doorLeft.innerHTML='<div style="position:absolute;top:0;right:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;right:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
+        doorRight.innerHTML='<div style="position:absolute;top:0;left:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;left:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
 
-        // Black overlay for final fade
-        var blackOverlay=document.createElement('div');
-        blackOverlay.className='cp-black-overlay';
-        blackOverlay.style.cssText='position:absolute;left:0;right:0;bottom:0;height:100vh;z-index:25;background:#111;opacity:0;pointer-events:none';
-        cpSection.appendChild(blackOverlay);
+        cpSection.appendChild(doorLeft);
+        cpSection.appendChild(doorRight);
 
-        // Inject blueprint draw animation CSS
-        var bpStyle=document.createElement('style');
-        bpStyle.textContent='.bp-draw{transition:stroke-dashoffset 0s}.bp-fade{opacity:0}';
-        document.head.appendChild(bpStyle);
-
-        // Style real Supporting Services — starts hidden, fades in after pin
+        // Style real Supporting Services — starts hidden, fades in after doors open
         gsap.set(supSection,{opacity:0});
         supSection.style.background='#111';
 
-        // Allow overflow for scatter
-        var cpWrapEl=cpSection.querySelector('.svc-container > div:last-child');
-        if(cpWrapEl) cpWrapEl.style.overflow='visible';
-        cpSection.querySelectorAll('.svc-container div[style*="grid-template"]').forEach(function(r){r.style.overflow='visible';});
-        if(container) container.style.overflow='visible';
-
-        // Scatter directions
-        var scatterDirs=[
-          {x:'-140%',y:'-40%',rotate:-12},
-          {x:'0%',y:'-130%',rotate:0},
-          {x:'140%',y:'-40%',rotate:12},
-          {x:'-140%',y:'40%',rotate:12},
-          {x:'0%',y:'130%',rotate:0},
-          {x:'140%',y:'40%',rotate:-12}
-        ];
-
-        // Build GSAP timeline
-        var cpTL=gsap.timeline({
+        // ── Build GSAP scroll-driven timeline ──
+        var fdTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom',
-            end:'+=500%',
-            scrub:0.4,
+            end:'+=300%',
+            scrub:0.3,
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
-            onEnter:function(){ cpSection.style.overflow='hidden'; },
             onLeaveBack:function(){
-              cpSection.style.overflow='';
-              cpCards.forEach(function(c){ gsap.set(c,{clearProps:'all'}); });
-              if(expandSlot) gsap.set(expandSlot,{clearProps:'all'});
-              if(heroGrid) gsap.set(heroGrid,{clearProps:'all'});
-              if(cpWrapEl) gsap.set(cpWrapEl,{clearProps:'all'});
+              if(container) gsap.set(container,{clearProps:'all'});
             }
           }
         });
 
-        // ── Phase 1: Cards scatter + heading fades (0 → 2.5) ──
-        cpCards.forEach(function(card,i){
-          cpTL.to(card,{
-            x:scatterDirs[i].x,y:scatterDirs[i].y,
-            rotation:scatterDirs[i].rotate,opacity:0,scale:0.6,
-            ease:'power2.in',duration:2
-          },0.1+i*0.12);
-        });
-        if(heroGrid) cpTL.to(heroGrid,{opacity:0,y:-80,duration:2,ease:'power2.in'},0);
-        if(cpWrapEl) cpTL.to(cpWrapEl,{opacity:0,duration:1},0.5);
+        // ── Phase 1 (0→3): Co-packing pushes back in Z-space ──
+        // Scale down + slight blur = walking away from the room
+        fdTL.to(container,{
+          scale:0.7,
+          opacity:0.3,
+          filter:'blur(4px)',
+          transformOrigin:'center center',
+          ease:'power2.in',
+          duration:3,
+          immediateRender:false
+        },0);
 
-        // ── Phase 2: Expand slot scales down + repositions to center (1.5 → 3.5) ──
-        if(expandSlot){
-          cpTL.to(expandSlot,{
-            scale:0.5,y:'-20vh',opacity:0.6,
-            transformOrigin:'center center',
-            ease:'power2.inOut',duration:2,
-            immediateRender:false
-          },1.5);
-          // Then fade it out as blueprint takes over
-          cpTL.to(expandSlot,{opacity:0,duration:1,ease:'power2.in',immediateRender:false},3.5);
-        }
+        // ── Phase 2 (1.5→4): Factory doors slide closed ──
+        // Left door slides in from left
+        fdTL.to(doorLeft,{
+          x:'0%',
+          ease:'power3.inOut',
+          duration:2.5
+        },1.5);
+        // Right door slides in from right
+        fdTL.to(doorRight,{
+          x:'0%',
+          ease:'power3.inOut',
+          duration:2.5
+        },1.5);
 
-        // ── Phase 3: Blueprint overlay fades in + lines draw (3 → 6) ──
-        cpTL.to(bpOverlay,{opacity:1,duration:1.5,ease:'power2.out'},3);
+        // ── Phase 3 (4→5.5): Hold on closed doors (darkness) ──
+        fdTL.to({},{duration:1.5});
 
-        // Animate all blueprint draw paths (stroke-dashoffset → 0)
-        var bpPaths=bpOverlay.querySelectorAll('.bp-draw');
-        bpPaths.forEach(function(p,i){
-          cpTL.to(p,{
-            strokeDashoffset:0,
-            duration:1.5,
-            ease:'power1.inOut'
-          },3.2+i*0.06);
-        });
-        // Fade in arrows
-        var bpFades=bpOverlay.querySelectorAll('.bp-fade');
-        bpFades.forEach(function(f,i){
-          cpTL.to(f,{opacity:0.5,duration:0.4,ease:'power2.out'},4+i*0.3);
-        });
+        // ── Phase 4 (5.5→8): Doors open to reveal Supporting Services ──
+        fdTL.to(doorLeft,{
+          x:'-105%',
+          ease:'power2.inOut',
+          duration:2.5
+        },5.5);
+        fdTL.to(doorRight,{
+          x:'105%',
+          ease:'power2.inOut',
+          duration:2.5
+        },5.5);
 
-        // ── Phase 4: Hold on full blueprint (6 → 8.5) ──
-        cpTL.to({},{duration:2.5});
-
-        // ── Phase 5: Blueprint scales down slightly + fades to black (8.5 → 10.5) ──
-        cpTL.to(bpOverlay,{
-          scale:0.85,opacity:0,
-          ease:'power2.in',duration:2
-        },8.5);
-        cpTL.to(blackOverlay,{opacity:1,duration:2,ease:'power2.inOut'},8.5);
-
-        // ── Phase 6: Hold on black (10.5 → 11.5) ──
-        cpTL.to({},{duration:1});
-
-        // Fade in real Supporting Services after pin releases
+        // ── Fade in real Supporting Services after pin releases ──
         gsap.to(supSection,{
           opacity:1,duration:0.5,ease:'power2.out',
           scrollTrigger:{
