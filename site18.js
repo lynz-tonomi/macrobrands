@@ -8,9 +8,24 @@ if(window.location.pathname==='/'||window.location.pathname==='/index.html'){
   try{if(window.Webflow&&window.Webflow.require){window.Webflow.require('ix2').destroy()}}catch(e){}
 }
 
-// ── Hide duplicate "Get In Touch" bottom section on contact page ──
-var contactGrid=document.querySelector('.contact-grid');
-if(contactGrid) contactGrid.style.display='none';
+// ── Contact page cleanup ──
+if(document.querySelector('.section-21')){
+  // Hide bottom duplicate "Get In Touch" + black form card
+  var contactGrid=document.querySelector('.contact-grid');
+  if(contactGrid) contactGrid.style.display='none';
+  // Hide Location + Certifications from top left column (keep just "Get In Touch" + description)
+  var container15=document.querySelector('.container-15');
+  if(container15){
+    var mainGrid=container15.children[1]; // the 2-column grid
+    if(mainGrid&&mainGrid.children[0]){
+      var infoCol=mainGrid.children[0];
+      // children: [0]=h2 "Get in Touch", [1]=p description, [2]=Location div, [3]=Certifications div
+      for(var ci=2;ci<infoCol.children.length;ci++){
+        infoCol.children[ci].style.display='none';
+      }
+    }
+  }
+}
 
 // ── No Lenis smooth scroll — it freezes when tab loses focus/GSAP ticker sleeps ──
 // Native scroll + GSAP ScrollTrigger scrub:0.3 provides smooth animation natively
