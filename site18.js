@@ -1880,7 +1880,14 @@ if(false){(function(){
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
-            onEnter:function(){ cpSection.style.overflow='hidden'; }
+            onEnter:function(){ cpSection.style.overflow='hidden'; },
+            onLeaveBack:function(){
+              cpSection.style.overflow='';
+              cpCards.forEach(function(c){ gsap.set(c,{clearProps:'all'}); });
+              if(expandSlot) gsap.set(expandSlot,{clearProps:'all'});
+              if(heroGrid) gsap.set(heroGrid,{clearProps:'all'});
+              if(cpWrapEl) gsap.set(cpWrapEl,{clearProps:'all'});
+            }
           }
         });
 
