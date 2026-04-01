@@ -1747,10 +1747,9 @@ if(false){(function(){
         setTimeout(function(){openSlot(0);},300);
       }
 
-      // ── 3b. FACTORY DOOR TRANSITION: CO-PACKING → SUPPORTING SERVICES ──
-      // Co-packing pushes back in Z-space (scale down + blur) → two dark panels slide in
-      // from left/right like factory doors closing → brief darkness → doors open to reveal
-      // Supporting Services at full scale — like walking into the next room of the facility
+      // ── 3b. BARN DOOR TRANSITION: CO-PACKING → SUPPORTING SERVICES ──
+      // Doors close over co-packing → scroll advances behind closed doors →
+      // doors open to reveal supporting services already in place
       (function(){
         var cpSection=document.querySelector('#svc-copacking');
         var supSection=document.querySelector('#svc-supporting');
@@ -1758,38 +1757,29 @@ if(false){(function(){
 
         var container=cpSection.querySelector('.svc-container');
 
-        // ── Create factory door overlays ──
-        // Doors are position:fixed on document.body so they share stacking context with supSection
+        // ── Create barn door overlays (position:fixed on body) ──
         var doorLeft=document.createElement('div');
         doorLeft.className='fd-door fd-door-left';
-        doorLeft.style.cssText='position:fixed;left:0;top:0;width:50%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);';
+        doorLeft.style.cssText='position:fixed;left:0;top:0;width:50.5%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);will-change:transform;';
 
         var doorRight=document.createElement('div');
         doorRight.className='fd-door fd-door-right';
-        doorRight.style.cssText='position:fixed;right:0;top:0;width:50%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(-90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(105%);';
+        doorRight.style.cssText='position:fixed;right:0;top:0;width:50.5%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(-90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(105%);will-change:transform;';
 
-        doorLeft.innerHTML='<div style="position:absolute;top:0;right:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;right:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
-        doorRight.innerHTML='<div style="position:absolute;top:0;left:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div><div style="position:absolute;top:10%;left:12px;height:80%;width:1px;background:rgba(201,168,76,.08)"></div>';
+        // Gold seam on inner edge of each door
+        doorLeft.innerHTML='<div style="position:absolute;top:0;right:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
+        doorRight.innerHTML='<div style="position:absolute;top:0;left:0;height:100%;width:2px;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
 
         document.body.appendChild(doorLeft);
         document.body.appendChild(doorRight);
 
-        // Black backdrop — position:fixed on body, behind doors (9999), in front of supSection
-        var fdBackdrop=document.createElement('div');
-        fdBackdrop.className='fd-backdrop';
-        fdBackdrop.style.cssText='position:fixed;left:0;top:0;right:0;height:100vh;z-index:9999;background:#111;opacity:0;pointer-events:none';
-        document.body.appendChild(fdBackdrop);
-
-        // Supporting Services — starts hidden, appears behind doors
-        gsap.set(supSection,{opacity:0});
-        supSection.style.background='#111';
-
-        // ── Build GSAP scroll-driven timeline ──
-        var fdTL=gsap.timeline({
+        // ── TRIGGER 1: Doors CLOSE over co-packing section ──
+        // Pinned on cpSection — scroll pauses while doors slide shut
+        var closeTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom',
-            end:'+=400%',
+            end:'+=150%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
@@ -1800,91 +1790,37 @@ if(false){(function(){
           }
         });
 
-        // ── Phase 1 (0→3): Co-packing pushes back in Z-space ──
-        fdTL.to(container,{
-          scale:0.7,
-          opacity:0,
-          filter:'blur(6px)',
-          transformOrigin:'center center',
-          ease:'power2.in',
-          duration:3,
-          immediateRender:false
+        // Co-packing content fades/scales back while doors close
+        closeTL.to(container,{
+          scale:0.85,opacity:0,filter:'blur(4px)',
+          transformOrigin:'center center',ease:'power2.in',
+          duration:3,immediateRender:false
         },0);
-        // Black backdrop fades in behind the doors as content fades
-        fdTL.to(fdBackdrop,{
-          opacity:1,
-          ease:'power2.in',
-          duration:2.5
-        },0.5);
+        // Doors slide in from sides
+        closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:2.5},0.5);
+        closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:2.5},0.5);
+        // Hold closed briefly
+        closeTL.to({},{duration:1});
 
-        // ── Phase 2 (1.5→4): Factory doors slide closed ──
-        fdTL.to(doorLeft,{
-          x:'0%',
-          ease:'power3.inOut',
-          duration:2.5
-        },1.5);
-        fdTL.to(doorRight,{
-          x:'0%',
-          ease:'power3.inOut',
-          duration:2.5
-        },1.5);
-
-        // ── Phase 3 (4→5.5): Hold on closed doors (darkness) ──
-        fdTL.to({},{duration:1.5});
-
-        // ── Phase 4 (5.5→8): Doors open ──
-        fdTL.to(doorLeft,{
-          x:'-105%',
-          ease:'power2.inOut',
-          duration:2.5
-        },5.5);
-        fdTL.to(doorRight,{
-          x:'105%',
-          ease:'power2.inOut',
-          duration:2.5
-        },5.5);
-
-        // ── Supporting Services sits behind doors, revealed as they open ──
-        // z-index 28 = behind doors (30) but in front of backdrop (25)
-        // Starts at scale 0.85 so it looks like it's already in the room, not flying in
-        gsap.set(supSection,{
-          position:'fixed',top:'0',left:'0',right:'0',
-          zIndex:9998,opacity:0,scale:0.85,
-          transformOrigin:'center 40%'
-        });
-        // Fade backdrop out + supSection in at the same time doors start opening
-        fdTL.to(fdBackdrop,{opacity:0,ease:'power1.out',duration:1.5},5.5);
-        fdTL.to(supSection,{opacity:1,ease:'power2.out',duration:1.2},5.5);
-        // Scale from 0.85→1 as doors finish opening — subtle zoom settle
-        fdTL.to(supSection,{
-          scale:1,
-          ease:'power1.out',
-          duration:2.5
-        },5.5);
-
-        // ── Phase 5 (8→9): Hold on full Supporting Services ──
-        fdTL.to({},{duration:1});
-
-        // On pin leave — restore supSection to normal document flow
-        var supPinCleanup=function(){
-          supSection.style.position='';
-          supSection.style.top='';
-          supSection.style.left='';
-          supSection.style.right='';
-          supSection.style.zIndex='';
-          supSection.style.transformOrigin='';
-          gsap.set(supSection,{clearProps:'opacity,scale,filter,transform'});
-        };
-        ScrollTrigger.create({
-          trigger:cpSection,
-          start:'bottom bottom',
-          end:'+=400%',
-          onLeave:supPinCleanup,
-          onLeaveBack:function(){
-            supPinCleanup();
-            gsap.set(supSection,{opacity:0});
+        // ── TRIGGER 2: Doors OPEN to reveal supporting services ──
+        // Pinned on supSection — when it enters viewport, doors are still closed, then open
+        var openTL=gsap.timeline({
+          scrollTrigger:{
+            trigger:supSection,
+            start:'top bottom',
+            end:'+=150%',
+            scrub:0.3,
+            pin:true,
+            pinSpacing:true,
+            anticipatePin:1
           }
         });
+
+        // Brief hold while doors are still closed (section just arrived)
+        openTL.to({},{duration:1});
+        // Doors open to reveal the supporting services section underneath
+        openTL.to(doorLeft,{x:'-105%',ease:'power2.inOut',duration:2.5},1);
+        openTL.to(doorRight,{x:'105%',ease:'power2.inOut',duration:2.5},1);
 
       })();
 
