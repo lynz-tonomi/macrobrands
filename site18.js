@@ -1839,7 +1839,11 @@ if(false){(function(){
         closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:1.5},0.2);
         closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:1.5},0.2);
 
-        // At end of close: show rotating seam (vertical), hide door seams
+        // At end of close: hide door seams, show rotating seam
+        var doorLeftSeam=doorLeft.children[0];
+        var doorRightSeam=doorRight.children[0];
+        closeTL.to(doorLeftSeam,{opacity:0,duration:0.15},1.5);
+        closeTL.to(doorRightSeam,{opacity:0,duration:0.15},1.5);
         closeTL.to(seamLine,{opacity:1,duration:0.01},1.7);
 
         // ── TRIGGER 2: Seam ROTATES then horizontal doors OPEN ──
@@ -1858,6 +1862,8 @@ if(false){(function(){
               gsap.set(doorBottom,{y:'0%',opacity:0});
               gsap.set(doorLeft,{opacity:1});
               gsap.set(doorRight,{opacity:1});
+              gsap.set(doorLeftSeam,{opacity:1});
+              gsap.set(doorRightSeam,{opacity:1});
               gsap.set(seamLine,{rotation:0,opacity:0});
             }
           }
