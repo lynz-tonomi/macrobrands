@@ -1792,7 +1792,7 @@ if(false){(function(){
         // ── Create standalone ROTATING SEAM line ──
         var seamLine=document.createElement('div');
         seamLine.className='fd-seam-rotate';
-        seamLine.style.cssText='position:fixed;left:50%;top:50%;width:2px;height:100vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.4) 50%,rgba(201,168,76,.15) 80%,transparent 95%);';
+        seamLine.style.cssText='position:fixed;left:50%;top:50%;width:3px;height:140vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 2%,rgba(201,168,76,.2) 15%,rgba(201,168,76,.5) 50%,rgba(201,168,76,.2) 85%,transparent 98%);box-shadow:0 0 8px 2px rgba(201,168,76,.15),0 0 20px 4px rgba(201,168,76,.08);';
         document.body.appendChild(seamLine);
 
         // ── TRIGGER 1: Vertical doors CLOSE over co-packing ──
@@ -1828,7 +1828,7 @@ if(false){(function(){
           scrollTrigger:{
             trigger:supSection,
             start:'top top',
-            end:'+=55%',
+            end:'+=80%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
@@ -1844,24 +1844,24 @@ if(false){(function(){
           }
         });
 
-        // Phase A (0→1.2): Seam rotates 90° from vertical to horizontal
+        // Phase A (0→2): Seam rotates 90° from vertical to horizontal — main scroll moment
         openTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
-          ease:'power2.inOut',
-          duration:1.2
+          ease:'power1.inOut',
+          duration:2
         },0);
 
-        // Phase B (1.0→1.1): Swap doors — hide vertical, show horizontal, hide seam
-        openTL.to(doorLeft,{opacity:0,duration:0.01},1.0);
-        openTL.to(doorRight,{opacity:0,duration:0.01},1.0);
-        openTL.to(doorTop,{opacity:1,duration:0.01},1.0);
-        openTL.to(doorBottom,{opacity:1,duration:0.01},1.0);
-        openTL.to(seamLine,{opacity:0,duration:0.1},1.1);
+        // Phase B (1.8→1.9): Swap doors — hide vertical, show horizontal, hide seam
+        openTL.to(doorLeft,{opacity:0,duration:0.01},1.8);
+        openTL.to(doorRight,{opacity:0,duration:0.01},1.8);
+        openTL.to(doorTop,{opacity:1,duration:0.01},1.8);
+        openTL.to(doorBottom,{opacity:1,duration:0.01},1.8);
+        openTL.to(seamLine,{opacity:0,duration:0.1},1.9);
 
-        // Phase C (1.2→2.7): Horizontal doors slide open
-        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},1.2);
-        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},1.2);
+        // Phase C (2→3.5): Horizontal doors slide open
+        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},2);
+        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},2);
 
       })();
 
