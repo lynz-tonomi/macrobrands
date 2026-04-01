@@ -1782,9 +1782,10 @@ if(false){(function(){
         cpSection.appendChild(doorLeft);
         cpSection.appendChild(doorRight);
 
-        // Style real Supporting Services — starts hidden, fades in after doors open
-        gsap.set(supSection,{opacity:0});
+        // Supporting Services — will be positioned fixed behind doors during transition
         supSection.style.background='#111';
+        var supOriginalPosition=supSection.style.position||'';
+        var supOriginalZIndex=supSection.style.zIndex||'';
 
         // ── Build GSAP scroll-driven timeline ──
         var fdTL=gsap.timeline({
@@ -1796,8 +1797,46 @@ if(false){(function(){
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
+            onEnter:function(){
+              // Position Supporting Services fixed behind the doors
+              supSection.style.position='fixed';
+              supSection.style.top='0';
+              supSection.style.left='0';
+              supSection.style.right='0';
+              supSection.style.zIndex='28';
+              supSection.style.opacity='1';
+              supSection.style.paddingTop='60px';
+            },
             onLeaveBack:function(){
               if(container) gsap.set(container,{clearProps:'all'});
+              // Restore Supporting Services to normal flow
+              supSection.style.position=supOriginalPosition;
+              supSection.style.top='';
+              supSection.style.left='';
+              supSection.style.right='';
+              supSection.style.zIndex=supOriginalZIndex;
+              supSection.style.opacity='1';
+              supSection.style.paddingTop='';
+            },
+            onLeave:function(){
+              // Pin released — restore Supporting Services to normal flow
+              supSection.style.position=supOriginalPosition;
+              supSection.style.top='';
+              supSection.style.left='';
+              supSection.style.right='';
+              supSection.style.zIndex=supOriginalZIndex;
+              supSection.style.opacity='1';
+              supSection.style.paddingTop='';
+            },
+            onEnterBack:function(){
+              // Re-entering pin from below — fix position again
+              supSection.style.position='fixed';
+              supSection.style.top='0';
+              supSection.style.left='0';
+              supSection.style.right='0';
+              supSection.style.zIndex='28';
+              supSection.style.opacity='1';
+              supSection.style.paddingTop='60px';
             }
           }
         });
@@ -1821,13 +1860,11 @@ if(false){(function(){
         },0.5);
 
         // ── Phase 2 (1.5→4): Factory doors slide closed ──
-        // Left door slides in from left
         fdTL.to(doorLeft,{
           x:'0%',
           ease:'power3.inOut',
           duration:2.5
         },1.5);
-        // Right door slides in from right
         fdTL.to(doorRight,{
           x:'0%',
           ease:'power3.inOut',
@@ -1837,7 +1874,7 @@ if(false){(function(){
         // ── Phase 3 (4→5.5): Hold on closed doors (darkness) ──
         fdTL.to({},{duration:1.5});
 
-        // ── Phase 4 (5.5→8): Doors open to reveal black ──
+        // ── Phase 4 (5.5→8): Doors open to reveal Supporting Services ──
         fdTL.to(doorLeft,{
           x:'-105%',
           ease:'power2.inOut',
@@ -1848,17 +1885,12 @@ if(false){(function(){
           ease:'power2.inOut',
           duration:2.5
         },5.5);
-
-        // ── Fade in real Supporting Services after pin releases ──
-        gsap.to(supSection,{
-          opacity:1,duration:0.5,ease:'power2.out',
-          scrollTrigger:{
-            trigger:supSection,
-            start:'top 95%',
-            end:'top 40%',
-            scrub:true
-          }
-        });
+        // Fade out backdrop to reveal supSection behind it
+        fdTL.to(fdBackdrop,{
+          opacity:0,
+          ease:'power2.out',
+          duration:2
+        },5.5);
 
       })();
 
