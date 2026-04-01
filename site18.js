@@ -1789,6 +1789,12 @@ if(false){(function(){
         document.body.appendChild(doorTop);
         document.body.appendChild(doorBottom);
 
+        // ── Create standalone ROTATING SEAM line ──
+        var seamLine=document.createElement('div');
+        seamLine.className='fd-seam-rotate';
+        seamLine.style.cssText='position:fixed;left:50%;top:50%;width:2px;height:100vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.4) 50%,rgba(201,168,76,.15) 80%,transparent 95%);';
+        document.body.appendChild(seamLine);
+
         // ── TRIGGER 1: Vertical doors CLOSE over co-packing ──
         var closeTL=gsap.timeline({
           scrollTrigger:{
@@ -1814,35 +1820,48 @@ if(false){(function(){
         closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:1.5},0.2);
         closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:1.5},0.2);
 
-        // At end of close: show horizontal doors (already in closed position) and hide vertical doors
-        closeTL.to(doorTop,{opacity:1,duration:0.01},1.7);
-        closeTL.to(doorBottom,{opacity:1,duration:0.01},1.7);
-        closeTL.to(doorLeft,{opacity:0,duration:0.01},1.7);
-        closeTL.to(doorRight,{opacity:0,duration:0.01},1.7);
+        // At end of close: show rotating seam (vertical), hide door seams
+        closeTL.to(seamLine,{opacity:1,duration:0.01},1.7);
 
-        // ── TRIGGER 2: Horizontal doors OPEN (up/down) to reveal supporting services ──
+        // ── TRIGGER 2: Seam ROTATES then horizontal doors OPEN ──
         var openTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
             start:'top top',
-            end:'+=40%',
+            end:'+=55%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
             onLeaveBack:function(){
-              // Reset: show horizontal doors closed, vertical doors hidden
-              gsap.set(doorTop,{y:'0%',opacity:1});
-              gsap.set(doorBottom,{y:'0%',opacity:1});
-              gsap.set(doorLeft,{opacity:0});
-              gsap.set(doorRight,{opacity:0});
+              // Reset: horizontal doors closed+hidden, vertical doors visible, seam hidden
+              gsap.set(doorTop,{y:'0%',opacity:0});
+              gsap.set(doorBottom,{y:'0%',opacity:0});
+              gsap.set(doorLeft,{opacity:1});
+              gsap.set(doorRight,{opacity:1});
+              gsap.set(seamLine,{rotation:0,opacity:0});
             }
           }
         });
 
-        // Horizontal doors slide open: top goes up, bottom goes down
-        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},0);
-        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},0);
+        // Phase A (0→1.2): Seam rotates 90° from vertical to horizontal
+        openTL.to(seamLine,{
+          rotation:90,
+          transformOrigin:'center center',
+          ease:'power2.inOut',
+          duration:1.2
+        },0);
+
+        // Phase B (1.0→1.1): Swap doors — hide vertical, show horizontal, hide seam
+        openTL.to(doorLeft,{opacity:0,duration:0.01},1.0);
+        openTL.to(doorRight,{opacity:0,duration:0.01},1.0);
+        openTL.to(doorTop,{opacity:1,duration:0.01},1.0);
+        openTL.to(doorBottom,{opacity:1,duration:0.01},1.0);
+        openTL.to(seamLine,{opacity:0,duration:0.1},1.1);
+
+        // Phase C (1.2→2.7): Horizontal doors slide open
+        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},1.2);
+        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},1.2);
 
       })();
 
