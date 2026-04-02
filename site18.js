@@ -1583,42 +1583,13 @@ if(false){(function(){
       // ── 2b. MICROTHERMIC DIAGRAM → #svc-microthermic (full original SVG) ──
       var mtSec=document.getElementById("svc-microthermic");
       if(mtSec){
-        // Build 2-column grid: text left, Equipment Capabilities right
-        var mtTextCol=mtSec.querySelector(".svc-text-right");
-        var mtCapsBox=mtSec.querySelector(".svc-caps-box"); // lives in .svc-img-row-mt natively
-        if(mtTextCol&&mtCapsBox){
-          // Grid must be set by JS (after wrapping children), not native — native grid splits h2/p before wrap
-          mtTextCol.style.cssText+=";display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;align-content:start";
-          // Create left wrapper for all existing text children
-          var mtLeftCol=document.createElement("div");
-          mtLeftCol.style.cssText="display:flex;flex-direction:column;gap:0";
-          var mtKids=Array.from(mtTextCol.children);
-          mtTextCol.insertBefore(mtLeftCol,mtTextCol.firstChild);
-          mtKids.forEach(function(k){if(k!==mtLeftCol)mtLeftCol.appendChild(k)});
-          // Move caps-box from img-row into text grid as 2nd column
-          mtTextCol.appendChild(mtCapsBox);
-          // Caps-box gold theme now native Webflow (svc-caps-box.is-gold combo class)
-          mtCapsBox.style.cssText+=";margin-top:0;overflow:visible";
-          // GSAP parallax scroll: caps slides in from right and moves at different rate
-          if(typeof gsap!=='undefined'){
-            gsap.set(mtCapsBox,{x:300,opacity:0});
-            gsap.to(mtCapsBox,{x:0,opacity:1,ease:'none',scrollTrigger:{trigger:mtSec,start:'top 80%',end:'top 30%',scrub:0.6}});
-            // Parallax vertical offset: caps moves slower than page scroll
-            gsap.to(mtCapsBox,{y:-60,ease:'none',scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:0.6}});
-          }
-        }
-        // After DOM restructure, force heading/desc visible (GSAP batch sets opacity:0 on h2/p)
-        setTimeout(function(){
-          var mtH2el=mtSec.querySelector(".svc-h2");
-          var mtDescEl=mtSec.querySelector(".svc-desc");
-          if(mtH2el)gsap.set(mtH2el,{opacity:1,y:0});
-          if(mtDescEl)gsap.set(mtDescEl,{opacity:1,y:0});
-          if(typeof ScrollTrigger!=='undefined')ScrollTrigger.refresh();
-        },1200);
-        // Make img-box full width with dark background for SVG
-        var mtImgRow=mtSec.querySelector(".svc-img-row-mt");
-        if(mtImgRow){
-          mtImgRow.style.cssText+=";display:block;width:100%";
+        // Layout is native Webflow: hero-grid.is-right.is-mt = 1fr 340px (text + caps), img-row-mt is sibling after hero-grid (full width)
+        // GSAP parallax scroll: caps slides in from right
+        var mtCapsBox=mtSec.querySelector(".svc-caps-box");
+        if(mtCapsBox&&typeof gsap!=='undefined'){
+          gsap.set(mtCapsBox,{x:300,opacity:0});
+          gsap.to(mtCapsBox,{x:0,opacity:1,ease:'none',scrollTrigger:{trigger:mtSec,start:'top 80%',end:'top 30%',scrub:0.6}});
+          gsap.to(mtCapsBox,{y:-60,ease:'none',scrollTrigger:{trigger:mtSec,start:'top bottom',end:'bottom top',scrub:0.6}});
         }
         var mtImgBox=mtSec.querySelector(".svc-img-box");
         if(mtImgBox){
