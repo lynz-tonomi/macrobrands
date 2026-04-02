@@ -2335,7 +2335,7 @@ if(false){(function(){
         // 5-6: cards drift + fade
         // 4.5-5.5: circuit bg in
         // 5.5-6: circuit bg out
-        // 6.5-8: fade to white + SVG gone
+        // 6.5-8: fade to black + SVG gone
 
         tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:5},0);
         tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:8},0);
@@ -2358,8 +2358,8 @@ if(false){(function(){
         }
         // Fade to white — starts at 65%, done by 80%
         tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
-        tl.to(pinSec,{backgroundColor:'#fff',ease:'power1.in',duration:1.5},6.5);
-        // 8-9.5: fade video in from white
+        tl.to(pinSec,{backgroundColor:'#000',ease:'power1.in',duration:1.5},6.5);
+        // 8-9.5: fade video in from black
         if(window._pinVidWrap){
           pinSec.appendChild(window._pinVidWrap);
           tl.to(window._pinVidWrap,{opacity:1,ease:'power2.out',duration:1.5,
