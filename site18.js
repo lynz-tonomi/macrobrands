@@ -2174,16 +2174,61 @@ if(false){(function(){
   var vidParent=vidWrap.closest('section')||vidWrap.parentElement;
   vidParent.style.display='none';
   scVid.pause();
-  // Create pin video container (fades in from white inside pinned section)
+  // Create pin video container with 7-segment ping-pong player
   var pinVidWrap=document.createElement('div');
   pinVidWrap.style.cssText='position:absolute;inset:0;z-index:20;overflow:hidden;opacity:0';
   pinVidWrap.className='pin-vid-wrap';
-  var pinVid=scVid.cloneNode(true);
-  pinVid.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
-  pinVid.muted=true;pinVid.loop=true;pinVid.playsInline=true;
-  pinVid.preload='auto';pinVid.load();
-  pinVidWrap.appendChild(pinVid);
-  window._pinVidEl=pinVid;
+
+  // 7 supply chain video segments — played back-to-back via two alternating video elements
+  var scBase='https://lynz-tonomi.github.io/macrobrands/';
+  var scSegments=[scBase+'sc_01.mp4',scBase+'sc_02.mp4',scBase+'sc_03.mp4',scBase+'sc_04.mp4',scBase+'sc_05.mp4',scBase+'sc_06.mp4',scBase+'sc_07.mp4'];
+  var scIdx=0; // current segment index
+
+  // Two video elements — "front" (visible) and "back" (preloading next)
+  var vidA=document.createElement('video');
+  var vidB=document.createElement('video');
+  [vidA,vidB].forEach(function(v){
+    v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;';
+    v.muted=true;v.playsInline=true;v.preload='auto';
+    v.setAttribute('muted','');v.setAttribute('playsinline','');
+    pinVidWrap.appendChild(v);
+  });
+  vidA.style.opacity='1';vidA.style.transition='opacity 0.3s';
+  vidB.style.opacity='0';vidB.style.transition='opacity 0.3s';
+  vidA.src=scSegments[0];vidA.load();
+
+  // Preload next segment into back element
+  function scPreloadNext(backVid){
+    var nextIdx=(scIdx+1)%scSegments.length;
+    if(backVid.getAttribute('data-seg')!==''+nextIdx){
+      backVid.src=scSegments[nextIdx];
+      backVid.setAttribute('data-seg',''+nextIdx);
+      backVid.load();
+    }
+  }
+
+  // When front video ends, swap to back and play next segment
+  var frontVid=vidA,backVid=vidB;
+  function scOnEnded(){
+    scIdx=(scIdx+1)%scSegments.length;
+    // Back video should already have this segment loaded
+    backVid.currentTime=0;
+    backVid.play().catch(function(){});
+    backVid.style.opacity='1';
+    frontVid.style.opacity='0';
+    // Swap roles
+    var tmp=frontVid;frontVid=backVid;backVid=tmp;
+    // Preload the NEXT segment into the now-back element
+    setTimeout(function(){scPreloadNext(backVid);},300);
+  }
+  vidA.addEventListener('ended',scOnEnded);
+  vidB.addEventListener('ended',scOnEnded);
+
+  // Preload segment 2 into back element
+  scPreloadNext(vidB);
+
+  window._pinVidEl=vidA;
+  window._pinVidFront=function(){return frontVid;};
   window._pinVidWrap=pinVidWrap;
   // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
@@ -2318,7 +2363,10 @@ if(false){(function(){
         if(window._pinVidWrap){
           pinSec.appendChild(window._pinVidWrap);
           tl.to(window._pinVidWrap,{opacity:1,ease:'power2.out',duration:1.5,
-            onStart:function(){window._pinVidEl.currentTime=0;window._pinVidEl.play().catch(function(){});}
+            onStart:function(){
+              var v=window._pinVidEl;
+              v.currentTime=0;v.play().catch(function(){});
+            }
           },8);
         }
         // Pad after video fade-in for viewing time before pin releases
