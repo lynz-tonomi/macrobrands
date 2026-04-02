@@ -2307,6 +2307,7 @@ if(false){(function(){
         var scFlowEl=document.querySelector('#sc-flow-viz');
         if(scFlowEl){scFlowEl.style.transformOrigin='50% 45%';scFlowEl.style.willChange='transform';}
         pinSec.style.overflow='clip';
+        pinSec.style.backgroundColor='#111';
         var juncs=scFlow.querySelectorAll('.ai-junc');
         var allNodes=scFlow.querySelectorAll('.ai-node-w,.ai-node-b');
         var mods=scFlow.querySelectorAll('.ai-mod-card');
