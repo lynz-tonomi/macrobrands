@@ -1232,11 +1232,8 @@ if(false){(function(){
         '.svc-card h3{text-transform:none !important;font-size:3rem !important;font-weight:800 !important;letter-spacing:-0.02em !important;line-height:1.15 !important}'+
         // Service descriptions — bright on dark bg, dark on light bg
         '.svc-desc{font-size:1.25rem !important;line-height:1.8 !important;color:rgba(255,255,255,0.85) !important;max-width:680px}'+
-        '#svc-microthermic{background:#111 !important}'+
-        '#svc-microthermic .svc-desc{color:rgba(255,255,255,0.85) !important}'+
-        '#svc-microthermic .svc-section p,#svc-microthermic p,#svc-microthermic span,#svc-microthermic li{color:rgba(255,255,255,0.7) !important}'+
-        '#svc-microthermic h3,#svc-microthermic h4{color:#fff !important}'+
-        '#svc-microthermic h2{color:#fff !important}'+
+        // microthermic: dark theme handled natively in Webflow (svc-section base class, no is-light combo)
+
         // Service labels
         '.svc-label{font-size:0.85rem !important;letter-spacing:0.12em !important;font-weight:600 !important;color:#C9A84C !important}'+
         // Service bullet items
@@ -1600,17 +1597,8 @@ if(false){(function(){
           mtKids.forEach(function(k){if(k!==mtLeftCol)mtLeftCol.appendChild(k)});
           // Move caps-box from img-row into text grid as 2nd column
           mtTextCol.appendChild(mtCapsBox);
-          // Style caps-box: yellow/gold theme
-          mtCapsBox.style.cssText+=";margin-top:0;background:linear-gradient(135deg,#c9a84c 0%,#a8872e 100%);border:none;border-radius:16px;padding:24px;color:#1a1a1a;font-size:13px;overflow:visible";
-          // Style caps heading + items for dark text on gold
-          var capsHeadings=mtCapsBox.querySelectorAll('h3,h4,[class*=caps-title],[class*=caps-heading]');
-          capsHeadings.forEach(function(ch){ch.style.cssText+=";color:#1a1a1a;font-weight:700"});
-          var capsAll=mtCapsBox.querySelectorAll('*');
-          capsAll.forEach(function(el){
-            var cs=getComputedStyle(el);
-            if(cs.color==='rgb(153, 153, 153)'||cs.color==='rgb(255, 255, 255)')el.style.color='#1a1a1a';
-            if(cs.borderBottomColor==='rgb(34, 34, 34)')el.style.borderColor='rgba(0,0,0,0.15)';
-          });
+          // Caps-box gold theme now native Webflow (svc-caps-box.is-gold combo class)
+          mtCapsBox.style.cssText+=";margin-top:0;overflow:visible";
           // GSAP parallax scroll: caps slides in from right and moves at different rate
           if(typeof gsap!=='undefined'){
             gsap.set(mtCapsBox,{x:300,opacity:0});
