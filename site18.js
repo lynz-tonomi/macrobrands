@@ -1811,13 +1811,6 @@ if(false){(function(){
         seamLine.style.cssText='position:fixed;left:50%;top:50%;width:3px;height:140vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 2%,rgba(201,168,76,.2) 15%,rgba(201,168,76,.5) 50%,rgba(201,168,76,.2) 85%,transparent 98%);box-shadow:0 0 8px 2px rgba(201,168,76,.15),0 0 20px 4px rgba(201,168,76,.08);';
         document.body.appendChild(seamLine);
 
-        // ── Scroll indicator on closed doors ──
-        var scrollHint=document.createElement('div');
-        scrollHint.className='fd-scroll-hint';
-        scrollHint.style.cssText='position:fixed;left:50%;top:50%;z-index:10003;pointer-events:none;opacity:0;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:12px;will-change:opacity;';
-        scrollHint.innerHTML='<div style="color:rgba(201,168,76,.7);font-family:Inter,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:600">Scroll to Continue</div><svg width="24" height="40" viewBox="0 0 24 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="22" height="38" rx="11" stroke="rgba(201,168,76,.5)" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="rgba(201,168,76,.8)"><animate attributeName="cy" values="12;26;12" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle></svg>';
-        document.body.appendChild(scrollHint);
-
         // ── TRIGGER 1: Vertical doors CLOSE over co-packing ──
         var closeTL=gsap.timeline({
           scrollTrigger:{
@@ -1849,15 +1842,13 @@ if(false){(function(){
         closeTL.to(doorLeftSeam,{opacity:0,duration:0.15},1.5);
         closeTL.to(doorRightSeam,{opacity:0,duration:0.15},1.5);
         closeTL.to(seamLine,{opacity:1,duration:0.01},1.7);
-        // Show scroll hint when doors fully closed
-        closeTL.to(scrollHint,{opacity:1,duration:0.3},1.5);
 
         // ── TRIGGER 2: Seam ROTATES then horizontal doors OPEN ──
         var openTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
             start:'top top',
-            end:'+=55%',
+            end:'+=120%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
@@ -1871,32 +1862,29 @@ if(false){(function(){
               gsap.set(doorLeftSeam,{opacity:1});
               gsap.set(doorRightSeam,{opacity:1});
               gsap.set(seamLine,{rotation:0,opacity:0});
-              gsap.set(scrollHint,{opacity:1});
+
             }
           }
         });
 
-        // Hide scroll hint immediately when opening starts
-        openTL.to(scrollHint,{opacity:0,duration:0.2},0);
-
-        // Phase A (0→2): Seam rotates 90° from vertical to horizontal — main scroll moment
+        // Phase A (0→4): Seam rotates 90° — long dramatic turn
         openTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
-          ease:'power1.inOut',
-          duration:2
+          ease:'power2.inOut',
+          duration:4
         },0);
 
-        // Phase B (1.8→1.9): Swap doors — hide vertical, show horizontal, hide seam
-        openTL.to(doorLeft,{opacity:0,duration:0.01},1.8);
-        openTL.to(doorRight,{opacity:0,duration:0.01},1.8);
-        openTL.to(doorTop,{opacity:1,duration:0.01},1.8);
-        openTL.to(doorBottom,{opacity:1,duration:0.01},1.8);
-        openTL.to(seamLine,{opacity:0,duration:0.1},1.9);
+        // Phase B (3.8→3.9): Swap doors — hide vertical, show horizontal, hide seam
+        openTL.to(doorLeft,{opacity:0,duration:0.01},3.8);
+        openTL.to(doorRight,{opacity:0,duration:0.01},3.8);
+        openTL.to(doorTop,{opacity:1,duration:0.01},3.8);
+        openTL.to(doorBottom,{opacity:1,duration:0.01},3.8);
+        openTL.to(seamLine,{opacity:0,duration:0.1},3.9);
 
-        // Phase C (2→3.5): Horizontal doors slide open
-        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},2);
-        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},2);
+        // Phase C (4→5.5): Horizontal doors slide open
+        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},4);
+        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},4);
 
       })();
 
