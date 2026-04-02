@@ -1583,6 +1583,9 @@ if(false){(function(){
       // ── 2b. MICROTHERMIC DIAGRAM → #svc-microthermic (full original SVG) ──
       var mtSec=document.getElementById("svc-microthermic");
       if(mtSec){
+        // Dark theme: force black background (Webflow is-light combo may still be on section)
+        mtSec.style.backgroundColor='#000';
+        mtSec.style.color='#fff';
         // Layout is native Webflow: hero-grid.is-right.is-mt = 1fr 340px (text + caps), img-row-mt is sibling after hero-grid (full width)
         // GSAP parallax scroll: caps slides in from right
         var mtCapsBox=mtSec.querySelector(".svc-caps-box");
