@@ -1811,6 +1811,13 @@ if(false){(function(){
         seamLine.style.cssText='position:fixed;left:50%;top:50%;width:3px;height:140vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 2%,rgba(201,168,76,.2) 15%,rgba(201,168,76,.5) 50%,rgba(201,168,76,.2) 85%,transparent 98%);box-shadow:0 0 8px 2px rgba(201,168,76,.15),0 0 20px 4px rgba(201,168,76,.08);';
         document.body.appendChild(seamLine);
 
+        // ── Scroll indicator on closed doors ──
+        var scrollHint=document.createElement('div');
+        scrollHint.className='fd-scroll-hint';
+        scrollHint.style.cssText='position:fixed;left:50%;top:50%;z-index:10003;pointer-events:none;opacity:0;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:12px;will-change:opacity;';
+        scrollHint.innerHTML='<div style="color:rgba(201,168,76,.7);font-family:Inter,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:600">Scroll to Continue</div><svg width="24" height="40" viewBox="0 0 24 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="22" height="38" rx="11" stroke="rgba(201,168,76,.5)" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="rgba(201,168,76,.8)"><animate attributeName="cy" values="12;26;12" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle></svg>';
+        document.body.appendChild(scrollHint);
+
         // ── TRIGGER 1: Vertical doors CLOSE over co-packing ──
         var closeTL=gsap.timeline({
           scrollTrigger:{
@@ -1842,13 +1849,15 @@ if(false){(function(){
         closeTL.to(doorLeftSeam,{opacity:0,duration:0.15},1.5);
         closeTL.to(doorRightSeam,{opacity:0,duration:0.15},1.5);
         closeTL.to(seamLine,{opacity:1,duration:0.01},1.7);
+        // Show scroll hint when doors fully closed
+        closeTL.to(scrollHint,{opacity:1,duration:0.3},1.5);
 
         // ── TRIGGER 2: Seam ROTATES then horizontal doors OPEN ──
         var openTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
             start:'top top',
-            end:'+=80%',
+            end:'+=55%',
             scrub:0.3,
             pin:true,
             pinSpacing:true,
@@ -1862,9 +1871,13 @@ if(false){(function(){
               gsap.set(doorLeftSeam,{opacity:1});
               gsap.set(doorRightSeam,{opacity:1});
               gsap.set(seamLine,{rotation:0,opacity:0});
+              gsap.set(scrollHint,{opacity:1});
             }
           }
         });
+
+        // Hide scroll hint immediately when opening starts
+        openTL.to(scrollHint,{opacity:0,duration:0.2},0);
 
         // Phase A (0→2): Seam rotates 90° from vertical to horizontal — main scroll moment
         openTL.to(seamLine,{
