@@ -1587,7 +1587,8 @@ if(false){(function(){
         var mtTextCol=mtSec.querySelector(".svc-text-right");
         var mtCapsBox=mtSec.querySelector(".svc-caps-box"); // lives in .svc-img-row-mt natively
         if(mtTextCol&&mtCapsBox){
-          // 2-col grid layout now native Webflow (svc-text-right.is-mt-grid combo class)
+          // Grid must be set by JS (after wrapping children), not native — native grid splits h2/p before wrap
+          mtTextCol.style.cssText+=";display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;align-content:start";
           // Create left wrapper for all existing text children
           var mtLeftCol=document.createElement("div");
           mtLeftCol.style.cssText="display:flex;flex-direction:column;gap:0";
