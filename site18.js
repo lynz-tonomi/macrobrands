@@ -1232,9 +1232,11 @@ if(false){(function(){
         '.svc-card h3{text-transform:none !important;font-size:3rem !important;font-weight:800 !important;letter-spacing:-0.02em !important;line-height:1.15 !important}'+
         // Service descriptions — bright on dark bg, dark on light bg
         '.svc-desc{font-size:1.25rem !important;line-height:1.8 !important;color:rgba(255,255,255,0.85) !important;max-width:680px}'+
-        '#svc-microthermic .svc-desc{color:#333 !important}'+
-        '#svc-microthermic .svc-section p,#svc-microthermic p,#svc-microthermic span,#svc-microthermic li{color:#444 !important}'+
-        '#svc-microthermic h3,#svc-microthermic h4{color:#111 !important}'+
+        '#svc-microthermic{background:#111 !important}'+
+        '#svc-microthermic .svc-desc{color:rgba(255,255,255,0.85) !important}'+
+        '#svc-microthermic .svc-section p,#svc-microthermic p,#svc-microthermic span,#svc-microthermic li{color:rgba(255,255,255,0.7) !important}'+
+        '#svc-microthermic h3,#svc-microthermic h4{color:#fff !important}'+
+        '#svc-microthermic h2{color:#fff !important}'+
         // Service labels
         '.svc-label{font-size:0.85rem !important;letter-spacing:0.12em !important;font-weight:600 !important;color:#C9A84C !important}'+
         // Service bullet items
