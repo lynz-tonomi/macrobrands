@@ -1843,7 +1843,11 @@ if(false){(function(){
         // The real supporting section stays in flow for after the pin releases.
         var supClone=supSection.cloneNode(true);
         supClone.id='svc-supporting-clone';
-        supClone.style.cssText='position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;overflow:auto;opacity:0;pointer-events:none;background:#0a0a0a;padding-top:80px;';
+        supClone.style.cssText='position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;overflow:auto;opacity:0;pointer-events:none;background:#0a0a0a;padding-top:80px;color:#fff;';
+        // Force light text on clone (Webflow default is dark, invisible on dark bg)
+        var cloneStyle=document.createElement('style');
+        cloneStyle.textContent='#svc-supporting-clone,#svc-supporting-clone *{color:#fff !important}#svc-supporting-clone .svc-tabs-btn.is-active{color:#C9A84C !important}';
+        document.head.appendChild(cloneStyle);
         document.body.appendChild(supClone);
 
         var doorTL=gsap.timeline({
@@ -2094,6 +2098,7 @@ if(false){(function(){
       sects.forEach(function(sec2){
         if(sec2.closest('.video-hero-wrap'))return;
         if(sec2.classList.contains('sc-section'))return;
+        if(sec2.id==='svc-supporting')return; // door transition handles this section's reveal
         sec2.querySelectorAll('h2').forEach(function(h){gsap.set(h,{y:80,opacity:0});revealH.push(h)});
         sec2.querySelectorAll('p').forEach(function(p){gsap.set(p,{y:50,opacity:0});revealP.push(p)});
         sec2.querySelectorAll('.card-light,.service-card').forEach(function(c){
