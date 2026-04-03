@@ -1818,7 +1818,7 @@ if(false){(function(){
         var doorTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
-            start:'bottom bottom',
+            start:'bottom 40%',
             end:'+=280%',
             scrub:0.1,
             pin:true,
