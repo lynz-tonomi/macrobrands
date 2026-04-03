@@ -1783,8 +1783,13 @@ if(false){(function(){
 
         var container=cpSection.querySelector('.svc-container');
 
+        // ── Eliminate gap between co-packing and supporting ──
+        cpSection.style.marginBottom='0';
+        cpSection.style.paddingBottom='0';
+        supSection.style.marginTop='0';
+        supSection.style.paddingTop='100px';
+
         // ── Create VERTICAL door overlays (close left/right) ──
-        // Remove any existing doors first (prevent duplicates on re-init)
         document.querySelectorAll('.fd-door,.fd-seam-rotate').forEach(function(el){el.remove()});
 
         var doorLeft=document.createElement('div');
@@ -1811,7 +1816,6 @@ if(false){(function(){
         doorBottom.className='fd-door fd-door-bottom';
         doorBottom.style.cssText='position:fixed;left:0;bottom:0;width:100%;height:50.5vh;z-index:10001;pointer-events:none;background:linear-gradient(0deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateY(0%);opacity:0;will-change:transform;';
 
-        // Gold seam on inner edge (horizontal)
         doorTop.innerHTML='<div style="position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
         doorBottom.innerHTML='<div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent 5%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.3) 50%,rgba(201,168,76,.15) 80%,transparent 95%)"></div>';
 
@@ -1828,16 +1832,18 @@ if(false){(function(){
         var doorLeftSeam=doorLeft.children[0];
         var doorRightSeam=doorRight.children[0];
 
-        // Force overflow visible even when GSAP pin sets overflow:hidden
+        // Dark bg on pin-spacer so no white gap shows; overflow visible for card visibility
         var cpPinStyle=document.createElement('style');
-        cpPinStyle.textContent='#svc-copacking,#svc-copacking .svc-container,.pin-spacer:has(>#svc-copacking){overflow:visible !important}';
+        cpPinStyle.textContent=
+          '#svc-copacking,#svc-copacking .svc-container,.pin-spacer:has(>#svc-copacking){overflow:visible !important}'+
+          '.pin-spacer:has(>#svc-copacking){background:#0a0a0a}';
         document.head.appendChild(cpPinStyle);
 
         var doorTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom',
-            end:'+=100%',
+            end:'+=200%',
             scrub:0.1,
             pin:true,
             pinSpacing:true,
@@ -1855,37 +1861,37 @@ if(false){(function(){
           }
         });
 
-        // Phase 0 (0→0.4): Breathing room — nothing happens, user reads co-packing
-        // (empty gap in timeline)
+        // Phase 0 (0→0.15): Breathing room — nothing happens, user reads co-packing
+        // (empty gap in timeline — 15% of 200vh = 30vh of scroll before anything moves)
 
-        // Phase 1 (0.4→1.0): Co-packing fades, doors close from left/right
-        doorTL.to(container,{opacity:0,filter:'blur(4px)',ease:'power2.in',duration:0.6,immediateRender:false},0.4);
-        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.6},0.4);
-        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.6},0.4);
+        // Phase 1 (0.15→0.5): Co-packing fades, doors close from left/right
+        doorTL.to(container,{opacity:0,filter:'blur(4px)',ease:'power2.in',duration:0.35,immediateRender:false},0.15);
+        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.35},0.15);
+        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.35},0.15);
 
-        // Phase 2 (0.9→1.0): Transition seams
-        doorTL.to(doorLeftSeam,{opacity:0,duration:0.05},0.9);
-        doorTL.to(doorRightSeam,{opacity:0,duration:0.05},0.9);
-        doorTL.to(seamLine,{opacity:1,duration:0.01},0.98);
+        // Phase 2 (0.45→0.5): Transition door seams to rotating seam
+        doorTL.to(doorLeftSeam,{opacity:0,duration:0.03},0.45);
+        doorTL.to(doorRightSeam,{opacity:0,duration:0.03},0.45);
+        doorTL.to(seamLine,{opacity:1,duration:0.01},0.49);
 
-        // Phase 3 (1.0→2.6): Seam rotates 90° — mechanical, linear, 1:1 with scroll
+        // Phase 3 (0.5→0.8): Seam rotates 90° — mechanical, linear, 1:1 with scroll
         doorTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
           ease:'none',
-          duration:1.6
-        },1.0);
+          duration:0.3
+        },0.5);
 
-        // Phase 4 (2.5→2.6): Swap vertical→horizontal doors, hide seam
-        doorTL.to(doorLeft,{opacity:0,duration:0.01},2.5);
-        doorTL.to(doorRight,{opacity:0,duration:0.01},2.5);
-        doorTL.to(doorTop,{opacity:1,duration:0.01},2.5);
-        doorTL.to(doorBottom,{opacity:1,duration:0.01},2.5);
-        doorTL.to(seamLine,{opacity:0,duration:0.1},2.6);
+        // Phase 4 (0.78→0.8): Swap vertical→horizontal doors, hide seam
+        doorTL.to(doorLeft,{opacity:0,duration:0.01},0.78);
+        doorTL.to(doorRight,{opacity:0,duration:0.01},0.78);
+        doorTL.to(doorTop,{opacity:1,duration:0.01},0.78);
+        doorTL.to(doorBottom,{opacity:1,duration:0.01},0.78);
+        doorTL.to(seamLine,{opacity:0,duration:0.02},0.8);
 
-        // Phase 5 (2.6→3.2): Horizontal doors slide open — reveals supporting section
-        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.6},2.6);
-        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.6},2.6);
+        // Phase 5 (0.8→1.0): Horizontal doors slide open — reveals supporting section
+        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.2},0.8);
+        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.2},0.8);
 
         ScrollTrigger.refresh();
       };
