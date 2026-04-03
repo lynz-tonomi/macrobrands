@@ -1650,7 +1650,14 @@ if(false){(function(){
 
       // ── 3. CO-PACKING EXPANDABLE CARDS → #svc-copacking ──
       var cpSection2=document.getElementById('svc-copacking');
-      if(cpSection2){cpSection2.style.overflow='visible';cpSection2.style.height='auto';cpSection2.style.minHeight='auto';}
+      if(cpSection2){
+        cpSection2.style.setProperty('overflow','visible','important');
+        cpSection2.style.height='auto';cpSection2.style.minHeight='auto';
+        // Force overflow visible even after GSAP pin (pin sets overflow:hidden)
+        var cpOverrideStyle=document.createElement('style');
+        cpOverrideStyle.textContent='#svc-copacking,#svc-copacking .svc-container,.pin-spacer:has(>#svc-copacking){overflow:visible !important}';
+        document.head.appendChild(cpOverrideStyle);
+      }
       var cpSec=document.querySelector('#svc-copacking .svc-container');
       if(cpSec){
         cpSec.style.overflow='visible';
