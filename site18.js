@@ -1909,15 +1909,15 @@ if(false){(function(){
         doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.2},0.8);
         doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.2},0.8);
 
-        // Phase 6: Clone persists after doors open — fades via separate trigger
-        // when the REAL supporting section enters viewport (uses inline style
-        // to avoid scrubbed timeline overwrite conflicts)
+        // Phase 6: Clone persists after doors open — fades gradually as real
+        // section scrolls up (uses inline style to avoid scrub conflicts)
         ScrollTrigger.create({
           trigger:supSection,
           start:'top bottom',
-          end:'top 30%',
-          onEnter:function(){ supClone.style.transition='opacity .35s';supClone.style.opacity='0'; },
-          onLeaveBack:function(){ supClone.style.transition='opacity .25s';supClone.style.opacity='1'; }
+          end:'top top',
+          onUpdate:function(self){ supClone.style.opacity=String(1-self.progress); },
+          onLeaveBack:function(){ supClone.style.opacity='1'; },
+          onLeave:function(){ supClone.style.opacity='0'; }
         });
 
         ScrollTrigger.refresh();
