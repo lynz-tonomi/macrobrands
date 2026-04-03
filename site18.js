@@ -1787,7 +1787,6 @@ if(false){(function(){
         cpSection.style.marginBottom='0';
         cpSection.style.paddingBottom='0';
         supSection.style.marginTop='0';
-        supSection.style.paddingTop='100px';
 
         // ── Create VERTICAL door overlays (close left/right) ──
         document.querySelectorAll('.fd-door,.fd-seam-rotate').forEach(function(el){el.remove()});
@@ -1840,9 +1839,12 @@ if(false){(function(){
         document.head.appendChild(cpPinStyle);
 
         // ── Supporting section "behind the doors" layer ──
-        // During the animation, supporting is fixed behind the doors (z below doors).
-        // When doors open it's revealed. On pin release, supporting returns to flow.
-        var supContainer=supSection.querySelector('.svc-container');
+        // Create a fixed clone of supporting that sits behind doors (z below 10000).
+        // The real supporting section stays in flow for after the pin releases.
+        var supClone=supSection.cloneNode(true);
+        supClone.id='svc-supporting-clone';
+        supClone.style.cssText='position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;overflow:auto;opacity:0;pointer-events:none;background:#0a0a0a;padding-top:80px;';
+        document.body.appendChild(supClone);
 
         var doorTL=gsap.timeline({
           scrollTrigger:{
@@ -1853,39 +1855,7 @@ if(false){(function(){
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
-            onEnter:function(){
-              // Position supporting behind the doors
-              supSection.style.position='fixed';
-              supSection.style.top='0';
-              supSection.style.left='0';
-              supSection.style.width='100%';
-              supSection.style.height='100vh';
-              supSection.style.zIndex='9999';
-              supSection.style.overflow='hidden';
-              supSection.style.opacity='1';
-              if(supContainer)supContainer.style.paddingTop='100px';
-            },
-            onLeave:function(){
-              // Restore supporting to normal flow
-              supSection.style.position='';
-              supSection.style.top='';
-              supSection.style.left='';
-              supSection.style.width='';
-              supSection.style.height='';
-              supSection.style.zIndex='';
-              supSection.style.overflow='';
-              if(supContainer)supContainer.style.paddingTop='';
-            },
             onLeaveBack:function(){
-              // Restore supporting + reset all doors
-              supSection.style.position='';
-              supSection.style.top='';
-              supSection.style.left='';
-              supSection.style.width='';
-              supSection.style.height='';
-              supSection.style.zIndex='';
-              supSection.style.overflow='';
-              if(supContainer)supContainer.style.paddingTop='';
               if(container) gsap.set(container,{clearProps:'all'});
               gsap.set(doorTop,{y:'0%',opacity:0});
               gsap.set(doorBottom,{y:'0%',opacity:0});
@@ -1894,6 +1864,7 @@ if(false){(function(){
               gsap.set(doorLeftSeam,{opacity:1});
               gsap.set(doorRightSeam,{opacity:1});
               gsap.set(seamLine,{rotation:0,opacity:0});
+              gsap.set(supClone,{opacity:0});
             }
           }
         });
@@ -1926,9 +1897,15 @@ if(false){(function(){
         doorTL.to(doorBottom,{opacity:1,duration:0.01},0.78);
         doorTL.to(seamLine,{opacity:0,duration:0.02},0.8);
 
+        // Phase 4b (0.5): Show supporting clone behind closed doors (invisible until doors open)
+        doorTL.to(supClone,{opacity:1,duration:0.01},0.5);
+
         // Phase 5 (0.8→1.0): Horizontal doors slide open — reveals supporting section behind
         doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.2},0.8);
         doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.2},0.8);
+
+        // Phase 6 (1.0): Hide clone as pin releases and real supporting section scrolls in
+        doorTL.to(supClone,{opacity:0,duration:0.01},0.99);
 
         ScrollTrigger.refresh();
       };
