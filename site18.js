@@ -1814,31 +1814,15 @@ if(false){(function(){
         seamLine.style.cssText='position:fixed;left:50%;top:50%;width:3px;height:140vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 2%,rgba(201,168,76,.2) 15%,rgba(201,168,76,.5) 50%,rgba(201,168,76,.2) 85%,transparent 98%);box-shadow:0 0 8px 2px rgba(201,168,76,.15),0 0 20px 4px rgba(201,168,76,.08);';
         document.body.appendChild(seamLine);
 
-        // ── PHASE 1: Doors CLOSE as co-packing scrolls out ──
+        // ── SINGLE TIMELINE: close → rotate → open (pinned on supporting section) ──
         var doorLeftSeam=doorLeft.children[0];
         var doorRightSeam=doorRight.children[0];
 
-        var closeTL=gsap.timeline({
-          scrollTrigger:{
-            trigger:cpSection,
-            start:'bottom 80%',
-            end:'bottom -10%',
-            scrub:0.1
-          }
-        });
-
-        closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:1},0);
-        closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:1},0);
-        closeTL.to(doorLeftSeam,{opacity:0,duration:0.1},0.9);
-        closeTL.to(doorRightSeam,{opacity:0,duration:0.1},0.9);
-        closeTL.to(seamLine,{opacity:1,duration:0.01},1.0);
-
-        // ── PHASE 2: Seam ROTATES + doors OPEN — pinned on supporting section ──
-        var openTL=gsap.timeline({
+        var doorTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
             start:'top bottom',
-            end:'+=150%',
+            end:'+=200%',
             scrub:0.1,
             pin:true,
             pinSpacing:true,
@@ -1846,33 +1830,42 @@ if(false){(function(){
             onLeaveBack:function(){
               gsap.set(doorTop,{y:'0%',opacity:0});
               gsap.set(doorBottom,{y:'0%',opacity:0});
-              gsap.set(doorLeft,{x:'0%',opacity:1});
-              gsap.set(doorRight,{x:'0%',opacity:1});
+              gsap.set(doorLeft,{x:'-105%',opacity:1});
+              gsap.set(doorRight,{x:'105%',opacity:1});
               gsap.set(doorLeftSeam,{opacity:1});
               gsap.set(doorRightSeam,{opacity:1});
-              gsap.set(seamLine,{rotation:0,opacity:1});
+              gsap.set(seamLine,{rotation:0,opacity:0});
             }
           }
         });
 
-        // Seam rotates 90° — mechanical, linear, 1:1 with scroll
-        openTL.to(seamLine,{
+        // Phase 1 (0→1.2): Doors close from left/right
+        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:1.2},0);
+        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:1.2},0);
+
+        // Phase 2 (1.0→1.2): Transition seams
+        doorTL.to(doorLeftSeam,{opacity:0,duration:0.1},1.0);
+        doorTL.to(doorRightSeam,{opacity:0,duration:0.1},1.0);
+        doorTL.to(seamLine,{opacity:1,duration:0.01},1.15);
+
+        // Phase 3 (1.2→4.2): Seam rotates 90° — mechanical, linear, 1:1 with scroll
+        doorTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
           ease:'none',
           duration:3
-        },0);
+        },1.2);
 
-        // Swap vertical→horizontal doors, hide seam
-        openTL.to(doorLeft,{opacity:0,duration:0.01},2.9);
-        openTL.to(doorRight,{opacity:0,duration:0.01},2.9);
-        openTL.to(doorTop,{opacity:1,duration:0.01},2.9);
-        openTL.to(doorBottom,{opacity:1,duration:0.01},2.9);
-        openTL.to(seamLine,{opacity:0,duration:0.1},3.0);
+        // Phase 4 (4.1→4.2): Swap vertical→horizontal doors, hide seam
+        doorTL.to(doorLeft,{opacity:0,duration:0.01},4.1);
+        doorTL.to(doorRight,{opacity:0,duration:0.01},4.1);
+        doorTL.to(doorTop,{opacity:1,duration:0.01},4.1);
+        doorTL.to(doorBottom,{opacity:1,duration:0.01},4.1);
+        doorTL.to(seamLine,{opacity:0,duration:0.1},4.2);
 
-        // Horizontal doors slide open
-        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},3.0);
-        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},3.0);
+        // Phase 5 (4.2→5.7): Horizontal doors slide open
+        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},4.2);
+        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},4.2);
 
       })();
 
