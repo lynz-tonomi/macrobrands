@@ -1839,6 +1839,11 @@ if(false){(function(){
           '.pin-spacer:has(>#svc-copacking){background:#0a0a0a}';
         document.head.appendChild(cpPinStyle);
 
+        // ── Supporting section "behind the doors" layer ──
+        // During the animation, supporting is fixed behind the doors (z below doors).
+        // When doors open it's revealed. On pin release, supporting returns to flow.
+        var supContainer=supSection.querySelector('.svc-container');
+
         var doorTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
@@ -1848,7 +1853,39 @@ if(false){(function(){
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
+            onEnter:function(){
+              // Position supporting behind the doors
+              supSection.style.position='fixed';
+              supSection.style.top='0';
+              supSection.style.left='0';
+              supSection.style.width='100%';
+              supSection.style.height='100vh';
+              supSection.style.zIndex='9999';
+              supSection.style.overflow='hidden';
+              supSection.style.opacity='1';
+              if(supContainer)supContainer.style.paddingTop='100px';
+            },
+            onLeave:function(){
+              // Restore supporting to normal flow
+              supSection.style.position='';
+              supSection.style.top='';
+              supSection.style.left='';
+              supSection.style.width='';
+              supSection.style.height='';
+              supSection.style.zIndex='';
+              supSection.style.overflow='';
+              if(supContainer)supContainer.style.paddingTop='';
+            },
             onLeaveBack:function(){
+              // Restore supporting + reset all doors
+              supSection.style.position='';
+              supSection.style.top='';
+              supSection.style.left='';
+              supSection.style.width='';
+              supSection.style.height='';
+              supSection.style.zIndex='';
+              supSection.style.overflow='';
+              if(supContainer)supContainer.style.paddingTop='';
               if(container) gsap.set(container,{clearProps:'all'});
               gsap.set(doorTop,{y:'0%',opacity:0});
               gsap.set(doorBottom,{y:'0%',opacity:0});
@@ -1889,7 +1926,7 @@ if(false){(function(){
         doorTL.to(doorBottom,{opacity:1,duration:0.01},0.78);
         doorTL.to(seamLine,{opacity:0,duration:0.02},0.8);
 
-        // Phase 5 (0.8→1.0): Horizontal doors slide open — reveals supporting section
+        // Phase 5 (0.8→1.0): Horizontal doors slide open — reveals supporting section behind
         doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.2},0.8);
         doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.2},0.8);
 
