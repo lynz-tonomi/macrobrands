@@ -1821,8 +1821,8 @@ if(false){(function(){
         var doorTL=gsap.timeline({
           scrollTrigger:{
             trigger:supSection,
-            start:'top bottom',
-            end:'+=200%',
+            start:'top top',
+            end:'+=180%',
             scrub:0.1,
             pin:true,
             pinSpacing:true,
