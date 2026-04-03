@@ -1649,8 +1649,11 @@ if(false){(function(){
       }
 
       // ── 3. CO-PACKING EXPANDABLE CARDS → #svc-copacking ──
+      var cpSection2=document.getElementById('svc-copacking');
+      if(cpSection2){cpSection2.style.overflow='visible';cpSection2.style.height='auto';cpSection2.style.minHeight='auto';}
       var cpSec=document.querySelector('#svc-copacking .svc-container');
       if(cpSec){
+        cpSec.style.overflow='visible';
         // Inject CSS keyframes and classes
         var cpStyle=document.createElement('style');
         cpStyle.textContent='@keyframes cpDraw{to{stroke-dashoffset:0}}'+
@@ -1818,7 +1821,7 @@ if(false){(function(){
         var doorTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
-            start:'bottom 40%',
+            start:'bottom bottom',
             end:'+=280%',
             scrub:0.1,
             pin:true,
