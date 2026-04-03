@@ -1767,16 +1767,26 @@ if(false){(function(){
       }
 
       // ── 3b. BARN DOOR TRANSITION: CO-PACKING → SUPPORTING SERVICES ──
-      // Doors close over co-packing → scroll advances behind closed doors →
-      // doors open to reveal supporting services already in place
-      (function(){
+      // Deferred to run AFTER all other ScrollTriggers are set up (avoids ordering conflicts)
+      window._initBarnDoor=function(){
         var cpSection=document.querySelector('#svc-copacking');
         var supSection=document.querySelector('#svc-supporting');
-        if(!cpSection||!supSection||typeof gsap==='undefined'||!gsap.registerPlugin)return;
+        if(!cpSection||!supSection||typeof gsap==='undefined'||typeof ScrollTrigger==='undefined')return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Kill any stale pin on supporting section from previous code versions
+        ScrollTrigger.getAll().forEach(function(st){
+          if(st.pin&&st.pin.id==='svc-supporting'&&st.vars&&st.vars.start==='top top'&&st.vars.end==='+=100%'){
+            st.kill();
+          }
+        });
 
         var container=cpSection.querySelector('.svc-container');
 
         // ── Create VERTICAL door overlays (close left/right) ──
+        // Remove any existing doors first (prevent duplicates on re-init)
+        document.querySelectorAll('.fd-door,.fd-seam-rotate').forEach(function(el){el.remove()});
+
         var doorLeft=document.createElement('div');
         doorLeft.className='fd-door fd-door-left';
         doorLeft.style.cssText='position:fixed;left:0;top:0;width:50.5%;height:100vh;z-index:10000;pointer-events:none;background:linear-gradient(90deg,#0a0a0a 0%,#111 85%,#1a1a1a 100%);transform:translateX(-105%);will-change:transform;';
@@ -1877,7 +1887,8 @@ if(false){(function(){
         doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.6},2.6);
         doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.6},2.6);
 
-      })();
+        ScrollTrigger.refresh();
+      };
 
       // ── 4. SUPPORTING SERVICES TAB SWITCHING ──
       var supSec=document.getElementById('svc-supporting');
@@ -2717,6 +2728,9 @@ if(false){(function(){
     '}';
   document.head.appendChild(mq);
 })();
+
+// ── DEFERRED BARN DOOR INIT — runs after all other ScrollTriggers are set up ──
+setTimeout(function(){if(window._initBarnDoor)window._initBarnDoor();},1500);
 
 })(); // end run
 
