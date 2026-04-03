@@ -1909,15 +1909,15 @@ if(false){(function(){
         doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.2},0.8);
         doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.2},0.8);
 
-        // Phase 6: Clone stays visible after pin releases — separate trigger fades it
-        // when the REAL supporting section scrolls into the viewport
+        // Phase 6: Clone persists after doors open — fades via separate trigger
+        // when the REAL supporting section enters viewport (uses inline style
+        // to avoid scrubbed timeline overwrite conflicts)
         ScrollTrigger.create({
           trigger:supSection,
-          start:'top 95%',
-          end:'top 20%',
-          scrub:0.1,
-          onEnter:function(){ gsap.to(supClone,{opacity:0,duration:0.3}); },
-          onLeaveBack:function(){ gsap.to(supClone,{opacity:1,duration:0.2}); }
+          start:'top bottom',
+          end:'top 30%',
+          onEnter:function(){ supClone.style.transition='opacity .35s';supClone.style.opacity='0'; },
+          onLeaveBack:function(){ supClone.style.transition='opacity .25s';supClone.style.opacity='1'; }
         });
 
         ScrollTrigger.refresh();
