@@ -1814,20 +1814,26 @@ if(false){(function(){
         seamLine.style.cssText='position:fixed;left:50%;top:50%;width:3px;height:140vh;z-index:10002;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(0deg);will-change:transform;background:linear-gradient(180deg,transparent 2%,rgba(201,168,76,.2) 15%,rgba(201,168,76,.5) 50%,rgba(201,168,76,.2) 85%,transparent 98%);box-shadow:0 0 8px 2px rgba(201,168,76,.15),0 0 20px 4px rgba(201,168,76,.08);';
         document.body.appendChild(seamLine);
 
-        // ── SINGLE TIMELINE: close → rotate → open (pinned on supporting section) ──
+        // ── PIN CO-PACKING: lock → breathe → close → rotate → open → resume ──
         var doorLeftSeam=doorLeft.children[0];
         var doorRightSeam=doorRight.children[0];
 
+        // Force overflow visible even when GSAP pin sets overflow:hidden
+        var cpPinStyle=document.createElement('style');
+        cpPinStyle.textContent='#svc-copacking,#svc-copacking .svc-container,.pin-spacer:has(>#svc-copacking){overflow:visible !important}';
+        document.head.appendChild(cpPinStyle);
+
         var doorTL=gsap.timeline({
           scrollTrigger:{
-            trigger:supSection,
-            start:'top top',
+            trigger:cpSection,
+            start:'bottom bottom',
             end:'+=100%',
             scrub:0.1,
             pin:true,
             pinSpacing:true,
             anticipatePin:1,
             onLeaveBack:function(){
+              if(container) gsap.set(container,{clearProps:'all'});
               gsap.set(doorTop,{y:'0%',opacity:0});
               gsap.set(doorBottom,{y:'0%',opacity:0});
               gsap.set(doorLeft,{x:'-105%',opacity:1});
@@ -1839,22 +1845,26 @@ if(false){(function(){
           }
         });
 
-        // Phase 1 (0→0.6): Doors close from left/right (fast)
-        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.6},0);
-        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.6},0);
+        // Phase 0 (0→0.4): Breathing room — nothing happens, user reads co-packing
+        // (empty gap in timeline)
 
-        // Phase 2 (0.5→0.6): Transition seams
-        doorTL.to(doorLeftSeam,{opacity:0,duration:0.05},0.5);
-        doorTL.to(doorRightSeam,{opacity:0,duration:0.05},0.5);
-        doorTL.to(seamLine,{opacity:1,duration:0.01},0.58);
+        // Phase 1 (0.4→1.0): Co-packing fades, doors close from left/right
+        doorTL.to(container,{opacity:0,filter:'blur(4px)',ease:'power2.in',duration:0.6,immediateRender:false},0.4);
+        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.6},0.4);
+        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.6},0.4);
 
-        // Phase 3 (0.6→2.6): Seam rotates 90° — mechanical, linear, 1:1 with scroll
+        // Phase 2 (0.9→1.0): Transition seams
+        doorTL.to(doorLeftSeam,{opacity:0,duration:0.05},0.9);
+        doorTL.to(doorRightSeam,{opacity:0,duration:0.05},0.9);
+        doorTL.to(seamLine,{opacity:1,duration:0.01},0.98);
+
+        // Phase 3 (1.0→2.6): Seam rotates 90° — mechanical, linear, 1:1 with scroll
         doorTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
           ease:'none',
-          duration:2
-        },0.6);
+          duration:1.6
+        },1.0);
 
         // Phase 4 (2.5→2.6): Swap vertical→horizontal doors, hide seam
         doorTL.to(doorLeft,{opacity:0,duration:0.01},2.5);
@@ -1863,9 +1873,9 @@ if(false){(function(){
         doorTL.to(doorBottom,{opacity:1,duration:0.01},2.5);
         doorTL.to(seamLine,{opacity:0,duration:0.1},2.6);
 
-        // Phase 5 (2.6→3.4): Horizontal doors slide open (fast)
-        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.8},2.6);
-        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.8},2.6);
+        // Phase 5 (2.6→3.2): Horizontal doors slide open — reveals supporting section
+        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.6},2.6);
+        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.6},2.6);
 
       })();
 
