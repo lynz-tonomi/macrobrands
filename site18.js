@@ -1836,7 +1836,8 @@ if(false){(function(){
         cpPinStyle.textContent=
           '#svc-copacking,#svc-copacking .svc-container,.pin-spacer:has(>#svc-copacking){overflow:visible !important}'+
           '.pin-spacer:has(>#svc-copacking){background:#0a0a0a}'+
-          '.pin-spacer:has(>#autonomi-ai){background:#000}';
+          '.pin-spacer:has(>#autonomi-ai){background:#000;z-index:1;position:relative}'+
+          '#autonomi-ai{z-index:1}';
         document.head.appendChild(cpPinStyle);
 
         // ── Supporting section "behind the doors" layer ──
