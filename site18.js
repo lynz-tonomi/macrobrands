@@ -1822,7 +1822,7 @@ if(false){(function(){
           scrollTrigger:{
             trigger:supSection,
             start:'top top',
-            end:'+=180%',
+            end:'+=100%',
             scrub:0.1,
             pin:true,
             pinSpacing:true,
@@ -1839,33 +1839,33 @@ if(false){(function(){
           }
         });
 
-        // Phase 1 (0→1.2): Doors close from left/right
-        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:1.2},0);
-        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:1.2},0);
+        // Phase 1 (0→0.6): Doors close from left/right (fast)
+        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.6},0);
+        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.6},0);
 
-        // Phase 2 (1.0→1.2): Transition seams
-        doorTL.to(doorLeftSeam,{opacity:0,duration:0.1},1.0);
-        doorTL.to(doorRightSeam,{opacity:0,duration:0.1},1.0);
-        doorTL.to(seamLine,{opacity:1,duration:0.01},1.15);
+        // Phase 2 (0.5→0.6): Transition seams
+        doorTL.to(doorLeftSeam,{opacity:0,duration:0.05},0.5);
+        doorTL.to(doorRightSeam,{opacity:0,duration:0.05},0.5);
+        doorTL.to(seamLine,{opacity:1,duration:0.01},0.58);
 
-        // Phase 3 (1.2→4.2): Seam rotates 90° — mechanical, linear, 1:1 with scroll
+        // Phase 3 (0.6→2.6): Seam rotates 90° — mechanical, linear, 1:1 with scroll
         doorTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
           ease:'none',
-          duration:3
-        },1.2);
+          duration:2
+        },0.6);
 
-        // Phase 4 (4.1→4.2): Swap vertical→horizontal doors, hide seam
-        doorTL.to(doorLeft,{opacity:0,duration:0.01},4.1);
-        doorTL.to(doorRight,{opacity:0,duration:0.01},4.1);
-        doorTL.to(doorTop,{opacity:1,duration:0.01},4.1);
-        doorTL.to(doorBottom,{opacity:1,duration:0.01},4.1);
-        doorTL.to(seamLine,{opacity:0,duration:0.1},4.2);
+        // Phase 4 (2.5→2.6): Swap vertical→horizontal doors, hide seam
+        doorTL.to(doorLeft,{opacity:0,duration:0.01},2.5);
+        doorTL.to(doorRight,{opacity:0,duration:0.01},2.5);
+        doorTL.to(doorTop,{opacity:1,duration:0.01},2.5);
+        doorTL.to(doorBottom,{opacity:1,duration:0.01},2.5);
+        doorTL.to(seamLine,{opacity:0,duration:0.1},2.6);
 
-        // Phase 5 (4.2→5.7): Horizontal doors slide open
-        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1.5},4.2);
-        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1.5},4.2);
+        // Phase 5 (2.6→3.4): Horizontal doors slide open (fast)
+        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.8},2.6);
+        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.8},2.6);
 
       })();
 
