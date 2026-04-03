@@ -1835,7 +1835,8 @@ if(false){(function(){
         var cpPinStyle=document.createElement('style');
         cpPinStyle.textContent=
           '#svc-copacking,#svc-copacking .svc-container,.pin-spacer:has(>#svc-copacking){overflow:visible !important}'+
-          '.pin-spacer:has(>#svc-copacking){background:#0a0a0a}';
+          '.pin-spacer:has(>#svc-copacking){background:#0a0a0a}'+
+          '.pin-spacer:has(>#autonomi-ai){background:#000}';
         document.head.appendChild(cpPinStyle);
 
         // ── Supporting section "behind the doors" layer ──
@@ -2501,6 +2502,12 @@ if(false){(function(){
         });
         // Force ScrollTrigger to recalculate after dynamic content injection
         ScrollTrigger.refresh();
+        // Ensure pin-spacer wrapper gets dark bg to prevent white gap between supporting → supply chain
+        requestAnimationFrame(function(){
+          if(pinSec.parentElement&&pinSec.parentElement.classList.contains('pin-spacer')){
+            pinSec.parentElement.style.backgroundColor='#000';
+          }
+        });
       },200);
 
       // Parallax header elements removed — timeline controls their opacity now
