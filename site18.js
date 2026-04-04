@@ -2328,6 +2328,9 @@ if(false){(function(){
     });
 
     // ── GSAP SCROLL-DRIVEN CIRCUIT EXPANSION ──
+    // Deferred to 2000ms so barn door pin-spacer (created at 1500ms) exists
+    // before this pin calculates its position — otherwise start/end are off
+    // by the barn door scroll distance
     if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){
       setTimeout(function(){
         var paths=scFlow.querySelectorAll('.ai-trace');
@@ -2516,7 +2519,7 @@ if(false){(function(){
             pinSec.parentElement.style.backgroundColor='#000';
           }
         });
-      },200);
+      },2000);
 
       // Parallax header elements removed — timeline controls their opacity now
     }
