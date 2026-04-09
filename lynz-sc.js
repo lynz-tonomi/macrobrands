@@ -74,7 +74,7 @@ document.body.style.backgroundColor='#000';
     sec.appendChild(vidWrap);
   }
   // Hide the original video section — only the pin video will be used
-  var vidParent=vidWrap.closest('section')||vidWrap.parentElement;
+  var vidParent=sec.querySelector(".sc-video-frame")||vidWrap;
   vidParent.style.display='none';
   scVid.pause();
   // Create pin video container with 7-segment ping-pong player
