@@ -26,16 +26,49 @@
   var origVid=sec.querySelector('video');
   if(origVid&&origVid.parentElement)origVid.parentElement.style.display='none';
 
-  /* Video overlay */
+  /* Video overlay — 7-segment ping-pong with two alternating video elements */
   var pinVid=document.createElement('div');
   pinVid.style.cssText='position:absolute;inset:0;z-index:20;overflow:hidden;opacity:0;background:#000';
-  var vidEl=document.createElement('video');
-  vidEl.src='https://lynz-tonomi.github.io/macrobrands/sc_01.mp4';
-  vidEl.muted=true;vidEl.loop=true;vidEl.playsInline=true;vidEl.preload='auto';
-  vidEl.style.cssText='width:100%;height:100%;object-fit:cover';
-  vidEl.load();
-  pinVid.appendChild(vidEl);
   sec.appendChild(pinVid);
+
+  var scBase='https://lynz-tonomi.github.io/macrobrands/';
+  var scSegments=[scBase+'sc_01.mp4',scBase+'sc_02.mp4',scBase+'sc_03.mp4',scBase+'sc_04.mp4',scBase+'sc_05.mp4',scBase+'sc_06.mp4',scBase+'sc_07.mp4'];
+  var scIdx=0;
+
+  var vidA=document.createElement('video');
+  var vidB=document.createElement('video');
+  [vidA,vidB].forEach(function(v){
+    v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;';
+    v.muted=true;v.playsInline=true;v.preload='auto';
+    v.setAttribute('muted','');v.setAttribute('playsinline','');
+    pinVid.appendChild(v);
+  });
+  vidA.style.opacity='1';vidA.style.transition='opacity 0.3s';
+  vidB.style.opacity='0';vidB.style.transition='opacity 0.3s';
+  vidA.src=scSegments[0];vidA.load();
+
+  function scPreloadNext(backV){
+    var nextIdx=(scIdx+1)%scSegments.length;
+    if(backV.getAttribute('data-seg')!==''+nextIdx){
+      backV.src=scSegments[nextIdx];
+      backV.setAttribute('data-seg',''+nextIdx);
+      backV.load();
+    }
+  }
+  var frontVid=vidA,backVid=vidB;
+  function scOnEnded(){
+    scIdx=(scIdx+1)%scSegments.length;
+    backVid.currentTime=0;
+    backVid.play().catch(function(){});
+    backVid.style.opacity='1';
+    frontVid.style.opacity='0';
+    var tmp=frontVid;frontVid=backVid;backVid=tmp;
+    setTimeout(function(){scPreloadNext(backVid);},300);
+  }
+  vidA.addEventListener('ended',scOnEnded);
+  vidB.addEventListener('ended',scOnEnded);
+  scPreloadNext(vidB);
+  var vidEl=vidA;
 
   /* Chip container — centered in viewport */
   var scFlow=document.getElementById('sc-flow-viz');
