@@ -73,7 +73,7 @@
   /* Chip container — centered in viewport */
   var scFlow=document.getElementById('sc-flow-viz');
   if(!scFlow){scFlow=document.createElement('div');scFlow.id='sc-flow-viz';sec.appendChild(scFlow)}
-  scFlow.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;max-width:1200px;overflow:visible;z-index:3;transform-origin:center center';
+  scFlow.style.cssText='position:absolute;top:58%;left:50%;transform:translate(-50%,-50%);width:100%;max-width:1200px;overflow:visible;z-index:3;transform-origin:center center';
 
   /* Load the LIVE SVG from GitHub */
   fetch('https://lynz-tonomi.github.io/macrobrands/ai-chip-live.svg?v=1')
