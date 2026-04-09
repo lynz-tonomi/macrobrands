@@ -30,7 +30,7 @@
   var pinVid=document.createElement('div');
   pinVid.style.cssText='position:absolute;inset:0;z-index:20;overflow:hidden;opacity:0;background:#000';
   var vidEl=document.createElement('video');
-  vidEl.src='https://lynz-tonomi.github.io/macrobrands/schero-web3.mp4';
+  vidEl.src='https://lynz-tonomi.github.io/macrobrands/sc_01.mp4';
   vidEl.muted=true;vidEl.loop=true;vidEl.playsInline=true;vidEl.preload='auto';
   vidEl.style.cssText='width:100%;height:100%;object-fit:cover';
   vidEl.load();
