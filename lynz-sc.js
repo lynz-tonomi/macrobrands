@@ -1,4 +1,4 @@
-/* LynZ SC v19 - dashboard cards + hero + site-wide GSAP scroll animations */
+/* LynZ SC v20 - dashboard cards + hero + safe site-wide GSAP scroll animations */
 (function(){
 var I={
 flask:"<svg viewBox='0 0 64 64' width='48' height='48' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='lzflg' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#60a5fa'/><stop offset='1' stop-color='#2563eb'/></linearGradient></defs><path d='M26 8h12' stroke='#ffffff' stroke-width='2.5' stroke-linecap='round' fill='none'/><path d='M28 8v18L14 52q-2 6 4 6h28q6 0 4-6L36 26V8' stroke='#ffffff' stroke-width='2.5' stroke-linejoin='round' fill='none'/><path d='M20 44h24q10 14 2 14H18q-10 0 2-14z' fill='url(#lzflg)' opacity='.85'/><circle cx='26' cy='48' r='1.5' fill='#dbeafe'><animate attributeName='cy' values='54;40' dur='2s' repeatCount='indefinite'/><animate attributeName='opacity' values='0;1;0' dur='2s' repeatCount='indefinite'/></circle><circle cx='32' cy='50' r='1.2' fill='#dbeafe'><animate attributeName='cy' values='55;42' dur='2.3s' begin='.4s' repeatCount='indefinite'/><animate attributeName='opacity' values='0;1;0' dur='2.3s' begin='.4s' repeatCount='indefinite'/></circle><circle cx='28' cy='48' r='1' fill='#dbeafe'><animate attributeName='cy' values='56;38' dur='2.6s' begin='.8s' repeatCount='indefinite'/><animate attributeName='opacity' values='0;1;0' dur='2.6s' begin='.8s' repeatCount='indefinite'/></circle></svg>",
@@ -157,9 +157,13 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
     // ---------- 1. Word-split headings ----------
     document.querySelectorAll("h1, h2, .lynz-hero h3, .au-section-header h2").forEach(function(h){
       if(h.querySelector("svg")) return; // skip if contains svg
+      // skip if heading is already in viewport on load (avoids stuck-hidden state)
+      var rect = h.getBoundingClientRect();
+      var initiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
       splitWords(h);
       var words = h.querySelectorAll(".lz-word");
       if(!words.length) return;
+      if(initiallyVisible) return; // leave hero/above-fold headings as-is
       g.set(words, { yPercent: 110, opacity: 0, rotate: 6 });
       g.to(words, {
         yPercent: 0,
@@ -168,21 +172,14 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
         duration: 0.9,
         stagger: 0.045,
         ease: "expo.out",
-        scrollTrigger: { trigger: h, start: "top 88%", toggleActions: "play none none reverse" }
+        clearProps: "opacity,transform",
+        scrollTrigger: { trigger: h, start: "top 95%", once: true }
       });
     });
 
-    // ---------- 2. Paragraph fade-up ----------
-    document.querySelectorAll("p, .lynz-hero-sub, .au-section p, blockquote").forEach(function(p){
-      if(p.closest(".lynz-nav")) return;
-      g.from(p, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: { trigger: p, start: "top 90%", toggleActions: "play none none reverse" }
-      });
-    });
+    // ---------- 2. Paragraph subtle slide (no opacity to avoid hiding content) ----------
+    // intentionally skipped — opacity-based fades caused content to disappear when ScrollTriggers
+    // mis-fired. Paragraphs stay in their natural visible state.
 
     // ---------- 3. Section card reveals (stagger children) ----------
     document.querySelectorAll(".lynz-trio-grid, .lynz-feat-section, .au-section, .lynz-stats-section, .lynz-faq, .lynz-cta-section").forEach(function(sec){
@@ -195,7 +192,9 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
         duration: 0.9,
         stagger: 0.1,
         ease: "power3.out",
-        scrollTrigger: { trigger: sec, start: "top 80%", toggleActions: "play none none reverse" }
+        clearProps: "opacity,transform",
+        immediateRender: false,
+        scrollTrigger: { trigger: sec, start: "top 95%", once: true }
       });
     });
 
@@ -207,7 +206,9 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
         opacity: 0,
         duration: 0.7,
         ease: "power3.out",
-        scrollTrigger: { trigger: row, start: "top 92%", toggleActions: "play none none reverse" }
+        clearProps: "opacity,transform",
+        immediateRender: false,
+        scrollTrigger: { trigger: row, start: "top 95%", once: true }
       });
     });
 
@@ -291,7 +292,9 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
           opacity: 0,
           duration: 1.1,
           ease: "power3.out",
-          scrollTrigger: { trigger: sec, start: "top 75%", toggleActions: "play none none reverse" }
+          clearProps: "opacity,transform",
+          immediateRender: false,
+          scrollTrigger: { trigger: sec, start: "top 95%", once: true }
         });
       }
       if(text){
@@ -300,7 +303,9 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
           opacity: 0,
           duration: 1.1,
           ease: "power3.out",
-          scrollTrigger: { trigger: sec, start: "top 75%", toggleActions: "play none none reverse" }
+          clearProps: "opacity,transform",
+          immediateRender: false,
+          scrollTrigger: { trigger: sec, start: "top 95%", once: true }
         });
       }
     });
@@ -323,7 +328,9 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
         opacity: 0,
         duration: 0.7,
         ease: "back.out(2)",
-        scrollTrigger: { trigger: btn, start: "top 95%", toggleActions: "play none none reverse" }
+        clearProps: "opacity,transform",
+        immediateRender: false,
+        scrollTrigger: { trigger: btn, start: "top 98%", once: true }
       });
     });
 
