@@ -2265,7 +2265,9 @@ if(false){(function(){
 
   window._pinVidEl=vidA;
   window._pinVidFront=function(){return frontVid;};
-  window._pinVidWrap=pinVidWrap;
+  // PATCH (LynZ): do NOT expose pinVidWrap — prevents timeline from appending it
+  // onto #autonomi-ai and obscuring the chip at t=8.
+  // window._pinVidWrap=pinVidWrap;
   // Hide original sc-header paragraphs (replaced by moved native desc above)
   if(hdr){
     var pars=hdr.querySelectorAll('p.sc-desc');
@@ -2352,53 +2354,31 @@ if(false){(function(){
         var mods=scFlow.querySelectorAll('.ai-mod-card');
         var spawns=scFlow.querySelectorAll('.ai-spawn');
 
+        // PATCH (LynZ): non-pinned, non-scrubbed reveal timeline. Plays once when
+        // the section enters the viewport. Removed: scale:6 zoom, opacity:0 fade,
+        // pin, scrub, backgroundColor sweep, header fade — these were tuned for a
+        // different page layout and broke the supply-chain section on this site.
+        pinSec.style.backgroundColor='#111';
         var tl=gsap.timeline({
           scrollTrigger:{
             trigger:pinSec,
-            start:'top top',
-            end:'+=200%',
-            scrub:0.3,
-            pin:true,
-            pinSpacing:true,
-            anticipatePin:1
+            start:'top 70%',
+            once:true
           }
         });
 
-        // Timeline positions (out of 10 total):
-        // 0-5: traces draw
-        // 0-8: zoom
-        // 1-4: spawns
-        // 1.5-4.5: junctions
-        // 2-3.5: fade text
-        // 3-5.5: endpoint nodes
-        // 4-5.5: module cards in
-        // 5-6: cards drift + fade
-        // 4.5-5.5: circuit bg in
-        // 5.5-6: circuit bg out
-        // 6.5-8: fade to black + SVG gone
-
-        tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:5},0);
-        tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:8},0);
-        tl.to(spawns,{opacity:1,ease:'none',stagger:.012,duration:3},1);
-        tl.to(juncs,{opacity:.6,ease:'none',stagger:.003,duration:3},1.5);
-        tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:1},4.5);
-        tl.to(allNodes,{opacity:1,ease:'none',duration:2.5},3);
-        // Module cards with parallax depth
-        var depths=[1.2,0.7,1.5,0.9,1.3,0.6,1.1,0.8,1.4];
+        tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:2.5},0);
+        tl.to(spawns,{opacity:1,ease:'none',stagger:.012,duration:1.5},0.5);
+        tl.to(juncs,{opacity:.6,ease:'none',stagger:.003,duration:1.5},0.8);
+        tl.to(allNodes,{opacity:1,ease:'none',duration:1.2},1.2);
+        // Module cards fade in (no parallax drift/fade-out)
         mods.forEach(function(card,i){
-          var d=depths[i%depths.length];
-          tl.to(card,{opacity:1,y:-12*d,ease:'none',duration:1.5},3.8+i*0.08);
-          tl.to(card,{y:-30*d,scale:1+d*0.3,ease:'power1.in',duration:1.5},5);
-          tl.to(card,{opacity:0,duration:0.8},5.5+i*0.03);
+          tl.to(card,{opacity:1,y:0,ease:'power2.out',duration:0.8},1.5+i*0.05);
         });
-        // Circuit background: quick flash
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
         if(circBgEl){
-          tl.to(circBgEl,{opacity:.4,ease:'power1.in',duration:1},4.5);
+          tl.to(circBgEl,{opacity:.4,ease:'power1.in',duration:1},1.5);
         }
-        // Fade to white — starts at 65%, done by 80%
-        tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
-        tl.to(pinSec,{backgroundColor:'#000',ease:'power1.in',duration:1.5},6.5);
         // 8-9.5: fade video in from black
         if(window._pinVidWrap){
           pinSec.appendChild(window._pinVidWrap);
