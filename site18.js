@@ -1840,99 +1840,79 @@ if(false){(function(){
           '#autonomi-ai{z-index:1}';
         document.head.appendChild(cpPinStyle);
 
-        // ── Supporting section "behind the doors" layer ──
-        // Create a fixed clone of supporting that sits behind doors (z below 10000).
-        // The real supporting section stays in flow for after the pin releases.
-        var supClone=supSection.cloneNode(true);
-        supClone.id='svc-supporting-clone';
-        supClone.style.cssText='position:fixed;top:0;left:0;width:100%;height:100vh;z-index:9999;overflow:auto;opacity:0;pointer-events:none;background:#0a0a0a;padding-top:80px;color:#fff;';
-        // Force light text on clone (Webflow default is dark, invisible on dark bg)
-        var cloneStyle=document.createElement('style');
-        cloneStyle.textContent='#svc-supporting-clone,#svc-supporting-clone *{color:#fff !important}#svc-supporting-clone .svc-tabs-btn.is-active{color:#C9A84C !important}';
-        document.head.appendChild(cloneStyle);
-        document.body.appendChild(supClone);
-
-        var doorTL=gsap.timeline({
+        // ── PHASE 1: PIN co-packing while doors close + seam rotates + swap ──
+        // pinSpacing:true so the page is locked while doors close — otherwise
+        // supporting services would float up behind the doors before they
+        // finished closing. No supClone — the doors themselves act as the
+        // transition curtain over the natural scroll into supporting.
+        var closeTL=gsap.timeline({
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom-=100',
-            endTrigger:supSection,
-            end:'top top',
+            end:'+=80%',
             scrub:0.1,
             pin:true,
-            // pinSpacing:false — critical: pinSpacing:true would add the pin
-            // distance as layout padding, pushing supSection further down by
-            // exactly the pin distance, which forces an unavoidable post-pin
-            // dead-scroll gap. With pinSpacing:false, cpSection becomes fixed
-            // in place while supSection scrolls up naturally underneath it,
-            // so the pin actually releases the moment supSection top hits
-            // viewport top.
-            pinSpacing:false,
+            pinSpacing:true,
             anticipatePin:1,
-            onLeave:function(){
-              // Belt-and-suspenders: hide clone the instant pin releases.
-              if(supClone) supClone.style.opacity='0';
-            },
-            onEnterBack:function(){
-              if(supClone) supClone.style.opacity='1';
-            },
             onLeaveBack:function(){
               if(container) gsap.set(container,{clearProps:'all'});
-              gsap.set(doorTop,{y:'0%',opacity:0});
-              gsap.set(doorBottom,{y:'0%',opacity:0});
               gsap.set(doorLeft,{x:'-105%',opacity:1});
               gsap.set(doorRight,{x:'105%',opacity:1});
               gsap.set(doorLeftSeam,{opacity:1});
               gsap.set(doorRightSeam,{opacity:1});
+              gsap.set(doorTop,{y:'0%',opacity:0});
+              gsap.set(doorBottom,{y:'0%',opacity:0});
               gsap.set(seamLine,{rotation:0,opacity:0});
-              gsap.set(supClone,{opacity:0});
             }
           }
         });
 
-        // Phase 0 (0→0.15): Breathing room — nothing happens, user reads co-packing
-        // (empty gap in timeline — 15% of 200vh = 30vh of scroll before anything moves)
+        // Phase 1 (0→0.4): Co-packing fades, vertical doors close from sides
+        closeTL.to(container,{opacity:0,filter:'blur(4px)',ease:'power2.in',duration:0.4,immediateRender:false},0);
+        closeTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.4},0);
+        closeTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.4},0);
 
-        // Phase 1 (0.15→0.5): Co-packing fades, doors close from left/right
-        doorTL.to(container,{opacity:0,filter:'blur(4px)',ease:'power2.in',duration:0.35,immediateRender:false},0.15);
-        doorTL.to(doorLeft,{x:'0%',ease:'power3.inOut',duration:0.35},0.15);
-        doorTL.to(doorRight,{x:'0%',ease:'power3.inOut',duration:0.35},0.15);
+        // Phase 2 (0.4→0.45): Transition door seams to rotating seam
+        closeTL.to(doorLeftSeam,{opacity:0,duration:0.03},0.4);
+        closeTL.to(doorRightSeam,{opacity:0,duration:0.03},0.4);
+        closeTL.to(seamLine,{opacity:1,duration:0.01},0.43);
 
-        // Phase 2 (0.45→0.5): Transition door seams to rotating seam
-        doorTL.to(doorLeftSeam,{opacity:0,duration:0.03},0.45);
-        doorTL.to(doorRightSeam,{opacity:0,duration:0.03},0.45);
-        doorTL.to(seamLine,{opacity:1,duration:0.01},0.49);
-
-        // Phase 3 (0.5→0.8): Seam rotates 90° — mechanical, linear, 1:1 with scroll
-        doorTL.to(seamLine,{
+        // Phase 3 (0.45→0.85): Seam rotates 90° — mechanical, linear with scroll
+        closeTL.to(seamLine,{
           rotation:90,
           transformOrigin:'center center',
           ease:'none',
-          duration:0.3
-        },0.5);
+          duration:0.4
+        },0.45);
 
-        // Phase 4 (0.78→0.8): Swap vertical→horizontal doors, hide seam
-        doorTL.to(doorLeft,{opacity:0,duration:0.01},0.78);
-        doorTL.to(doorRight,{opacity:0,duration:0.01},0.78);
-        doorTL.to(doorTop,{opacity:1,duration:0.01},0.78);
-        doorTL.to(doorBottom,{opacity:1,duration:0.01},0.78);
-        doorTL.to(seamLine,{opacity:0,duration:0.02},0.8);
+        // Phase 4 (0.85→0.9): Swap vertical→horizontal doors, hide rotating seam
+        closeTL.to(doorLeft,{opacity:0,duration:0.01},0.85);
+        closeTL.to(doorRight,{opacity:0,duration:0.01},0.85);
+        closeTL.to(doorTop,{opacity:1,duration:0.01},0.85);
+        closeTL.to(doorBottom,{opacity:1,duration:0.01},0.85);
+        closeTL.to(seamLine,{opacity:0,duration:0.02},0.87);
 
-        // Phase 4b (0.5): Show supporting clone behind closed doors (invisible until doors open)
-        doorTL.to(supClone,{opacity:1,duration:0.01},0.5);
+        // ── PHASE 2: NATURAL SCROLL under closed horizontal doors ──
+        // No pin. cpSection scrolls up off-screen, supSection scrolls in from
+        // below — all hidden behind the fixed-position closed horizontal
+        // doors which serve as the transition curtain.
 
-        // Phase 5 (0.8→1.0): Horizontal doors slide open — reveals supporting section behind
-        doorTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.2},0.8);
-        doorTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.2},0.8);
-
-        // Phase 6: Clone stays fully opaque until real section fills viewport,
-        // then hides instantly (no gradual fade — semi-transparency lets
-        // supply chain bleed through behind the clone)
+        // ── PHASE 3: OPEN doors when supSection top reaches viewport top ──
+        // Non-scrubbed quick animation so the user can immediately scroll the
+        // supporting services section once the doors open. No pin on
+        // supSection — the user can scroll right through.
         ScrollTrigger.create({
           trigger:supSection,
           start:'top top',
-          onEnter:function(){ supClone.style.opacity='0'; },
-          onLeaveBack:function(){ supClone.style.opacity='1'; }
+          onEnter:function(){
+            gsap.timeline()
+              .to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.7},0)
+              .to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.7},0);
+          },
+          onLeaveBack:function(){
+            gsap.set(doorTop,{y:'0%',opacity:1});
+            gsap.set(doorBottom,{y:'0%',opacity:1});
+          }
         });
 
         ScrollTrigger.refresh();
@@ -2377,11 +2357,13 @@ if(false){(function(){
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
 
         if(!isLynzLayout){
-          // ─────── ORIGINAL MACROBRANDS TIMELINE (unchanged) ───────
+          // ─────── ORIGINAL MACROBRANDS TIMELINE ───────
+          // Pin starts at 'bottom bottom' so the supply chain section can
+          // scroll fully into view BEFORE the pin engages — no premature pin.
           var tl=gsap.timeline({
             scrollTrigger:{
               trigger:pinSec,
-              start:'top top',
+              start:'bottom bottom',
               end:'+=200%',
               scrub:0.3,
               pin:true,
