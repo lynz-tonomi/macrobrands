@@ -1856,7 +1856,8 @@ if(false){(function(){
           scrollTrigger:{
             trigger:cpSection,
             start:'bottom bottom-=100',
-            end:'+=200%',
+            endTrigger:supSection,
+            end:'top top',
             scrub:0.1,
             pin:true,
             pinSpacing:true,
