@@ -31,6 +31,12 @@ if(document.querySelector('.section-21')){
 // Native scroll + GSAP ScrollTrigger scrub:0.3 provides smooth animation natively
 
 // ============ 1. FRAME SCRUBBER ============
+// Driven by GSAP ScrollTrigger with scrub:0.3 — previously used a raw
+// scroll listener, which depended on Lenis to feel smooth. After Lenis
+// was removed, raw scroll events fire in big discrete steps (trackpad /
+// wheel), so the hero intro went from buttery to steppy. GSAP's scrub
+// interpolator restores the smoothed feel without reintroducing Lenis's
+// tab-focus freeze bug.
 (function(){
   var w=document.querySelector('.video-hero-wrap');
   var s=document.querySelector('.video-hero-sticky');
@@ -49,11 +55,16 @@ if(document.querySelector('.section-21')){
   // Lazy loader — only fetch frames near current scroll position (not all 850 at once)
   var loadedSet={};
   var loadBuf=40;
+  var curIdx=0;
   function loadFrame(idx){
     if(idx<0||idx>=tot||loadedSet[idx])return;
     loadedSet[idx]=true;
     var img=new Image();
-    img.onload=function(){imgs[idx]=img;if(idx===0)draw(0)};
+    img.onload=function(){
+      imgs[idx]=img;
+      // Redraw if this is the frame we're currently trying to show
+      if(idx===curIdx)draw(idx);
+    };
     img.src=base+pad(idx+1)+'.jpg';
   }
   function loadRange(center){
@@ -70,13 +81,39 @@ if(document.querySelector('.section-21')){
     ctx.drawImage(imgs[idx],(c.width-nw)/2,(c.height-nh)/2,nw,nh);
   }
   var vm=s.querySelector('.video-hero-media');if(vm)vm.style.display='none';
-  function up(){
-    var h=window.innerHeight;var p=window.scrollY/(w.offsetHeight-h);
-    if(p<0)p=0;if(p>1)p=1;
-    var idx=Math.min(Math.floor(p*tot),tot-1);loadRange(idx);draw(idx);
+
+  // ── Scrubbed frame advance via GSAP ScrollTrigger ──
+  function initScrubber(){
+    if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined'){
+      // GSAP/ScrollTrigger not loaded yet — retry shortly
+      return setTimeout(initScrubber,50);
+    }
+    gsap.registerPlugin(ScrollTrigger);
+    var state={frame:0};
+    gsap.to(state,{
+      frame:tot-1,
+      ease:'none',
+      scrollTrigger:{
+        trigger:w,
+        start:'top top',
+        end:'bottom bottom',
+        scrub:0.3,
+        invalidateOnRefresh:true
+      },
+      onUpdate:function(){
+        var idx=Math.round(state.frame);
+        if(idx<0)idx=0;if(idx>=tot)idx=tot-1;
+        curIdx=idx;
+        loadRange(idx);
+        draw(idx);
+      }
+    });
+    // Initial paint of frame 0 (in case ScrollTrigger doesn't fire onUpdate immediately)
+    draw(0);
   }
-  window.addEventListener('scroll',up,{passive:true});
-  window.addEventListener('resize',up);up();
+  initScrubber();
+  // Redraw current frame at new canvas dimensions on resize
+  window.addEventListener('resize',function(){draw(curIdx);});
 })();
 
 // ============ 2. HERO ANIMATION (logo + fade overlays) ============
