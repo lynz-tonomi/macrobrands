@@ -1860,8 +1860,22 @@ if(false){(function(){
             end:'top top',
             scrub:0.1,
             pin:true,
-            pinSpacing:true,
+            // pinSpacing:false — critical: pinSpacing:true would add the pin
+            // distance as layout padding, pushing supSection further down by
+            // exactly the pin distance, which forces an unavoidable post-pin
+            // dead-scroll gap. With pinSpacing:false, cpSection becomes fixed
+            // in place while supSection scrolls up naturally underneath it,
+            // so the pin actually releases the moment supSection top hits
+            // viewport top.
+            pinSpacing:false,
             anticipatePin:1,
+            onLeave:function(){
+              // Belt-and-suspenders: hide clone the instant pin releases.
+              if(supClone) supClone.style.opacity='0';
+            },
+            onEnterBack:function(){
+              if(supClone) supClone.style.opacity='1';
+            },
             onLeaveBack:function(){
               if(container) gsap.set(container,{clearProps:'all'});
               gsap.set(doorTop,{y:'0%',opacity:0});
