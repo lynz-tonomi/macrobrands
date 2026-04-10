@@ -2167,17 +2167,18 @@ if(false){(function(){
   }
   // Look for native Webflow bg video in sc-section or the section-dark-alt sibling below it
   var vidWrap=null;var scVid=null;
-  // When GSAP pins sc-section, it wraps it in a pin-spacer div — walk from pin-spacer if needed
-  var darkAlt=sec.nextElementSibling||(sec.parentElement.classList.contains('pin-spacer')?sec.parentElement.nextElementSibling:null);
-  // Walk siblings to find section-dark-alt with a video
-  while(darkAlt&&!darkAlt.querySelector('video')){darkAlt=darkAlt.nextElementSibling}
-  // Hide the old "How It Works" content-wrapper text inside section-dark-alt, keep only the video
-  if(darkAlt){
-    var cw=darkAlt.querySelector('.content-wrapper');
-    if(cw)cw.style.display='none';
-    // Remove section padding so video is full-bleed
-    darkAlt.style.padding='0';
-    darkAlt.style.overflow='hidden';
+  // PATCH: if video is already nested inside #autonomi-ai (LynZ layout), skip the sibling walk
+  // entirely so we don't mangle unrelated sections (e.g. au-cta-section).
+  var darkAlt=null;
+  if(!sec.querySelector('video')){
+    darkAlt=sec.nextElementSibling||(sec.parentElement.classList.contains('pin-spacer')?sec.parentElement.nextElementSibling:null);
+    while(darkAlt&&!darkAlt.querySelector('video')){darkAlt=darkAlt.nextElementSibling}
+    if(darkAlt){
+      var cw=darkAlt.querySelector('.content-wrapper');
+      if(cw)cw.style.display='none';
+      darkAlt.style.padding='0';
+      darkAlt.style.overflow='hidden';
+    }
   }
   var nativeVid=sec.querySelector('video')||(darkAlt?darkAlt.querySelector('video'):null);
   if(nativeVid){
@@ -2205,8 +2206,9 @@ if(false){(function(){
     sec.appendChild(vidWrap);
   }
   // Hide the original video section — only the pin video will be used
+  // PATCH: skip hiding when vidParent IS #autonomi-ai (LynZ layout has video nested inside the section)
   var vidParent=vidWrap.closest('section')||vidWrap.parentElement;
-  vidParent.style.display='none';
+  if(vidParent!==sec) vidParent.style.display='none';
   scVid.pause();
   // Create pin video container with 7-segment ping-pong player
   var pinVidWrap=document.createElement('div');
