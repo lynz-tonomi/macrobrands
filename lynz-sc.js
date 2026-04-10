@@ -1,4 +1,4 @@
-/* LynZ SC v20 - dashboard cards + hero + safe site-wide GSAP scroll animations */
+/* LynZ SC v21 - dashboard cards + hero + safe scroll animations + AI chip */
 (function(){
 var I={
 flask:"<svg viewBox='0 0 64 64' width='48' height='48' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='lzflg' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#60a5fa'/><stop offset='1' stop-color='#2563eb'/></linearGradient></defs><path d='M26 8h12' stroke='#ffffff' stroke-width='2.5' stroke-linecap='round' fill='none'/><path d='M28 8v18L14 52q-2 6 4 6h28q6 0 4-6L36 26V8' stroke='#ffffff' stroke-width='2.5' stroke-linejoin='round' fill='none'/><path d='M20 44h24q10 14 2 14H18q-10 0 2-14z' fill='url(#lzflg)' opacity='.85'/><circle cx='26' cy='48' r='1.5' fill='#dbeafe'><animate attributeName='cy' values='54;40' dur='2s' repeatCount='indefinite'/><animate attributeName='opacity' values='0;1;0' dur='2s' repeatCount='indefinite'/></circle><circle cx='32' cy='50' r='1.2' fill='#dbeafe'><animate attributeName='cy' values='55;42' dur='2.3s' begin='.4s' repeatCount='indefinite'/><animate attributeName='opacity' values='0;1;0' dur='2.3s' begin='.4s' repeatCount='indefinite'/></circle><circle cx='28' cy='48' r='1' fill='#dbeafe'><animate attributeName='cy' values='56;38' dur='2.6s' begin='.8s' repeatCount='indefinite'/><animate attributeName='opacity' values='0;1;0' dur='2.6s' begin='.8s' repeatCount='indefinite'/></circle></svg>",
@@ -334,7 +334,172 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
       });
     });
 
-    // ---------- 13. Refresh after images load ----------
+    // ---------- 13. AI Chip animation in #sc-flow-viz (Agentic Supply Chain) ----------
+    (function buildAiChip(){
+      var host = document.getElementById("sc-flow-viz");
+      if(!host || host.dataset.lzChip) return;
+      host.dataset.lzChip = "1";
+      host.innerHTML = "";
+      host.style.cssText = "position:relative;width:100%;max-width:980px;margin:24px auto 8px;aspect-ratio:5/2;overflow:visible";
+
+      var NS = "http://www.w3.org/2000/svg";
+      var svg = document.createElementNS(NS,"svg");
+      svg.setAttribute("viewBox","0 0 1000 400");
+      svg.setAttribute("preserveAspectRatio","xMidYMid meet");
+      svg.style.cssText = "width:100%;height:100%;display:block;overflow:visible";
+
+      // background glow
+      var defs = document.createElementNS(NS,"defs");
+      defs.innerHTML =
+        '<radialGradient id="lzChipGlow" cx="50%" cy="50%" r="50%">' +
+          '<stop offset="0%" stop-color="#00BFFF" stop-opacity=".35"/>' +
+          '<stop offset="60%" stop-color="#00BFFF" stop-opacity=".05"/>' +
+          '<stop offset="100%" stop-color="#00BFFF" stop-opacity="0"/>' +
+        '</radialGradient>' +
+        '<linearGradient id="lzChipFill" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0%" stop-color="#0a1428"/>' +
+          '<stop offset="100%" stop-color="#020610"/>' +
+        '</linearGradient>' +
+        '<filter id="lzChipBlur" x="-50%" y="-50%" width="200%" height="200%">' +
+          '<feGaussianBlur stdDeviation="6"/>' +
+        '</filter>';
+      svg.appendChild(defs);
+
+      // ambient halo
+      var halo = document.createElementNS(NS,"circle");
+      halo.setAttribute("cx","500"); halo.setAttribute("cy","200"); halo.setAttribute("r","260");
+      halo.setAttribute("fill","url(#lzChipGlow)");
+      svg.appendChild(halo);
+
+      // outer chip body (rounded square)
+      var chip = document.createElementNS(NS,"rect");
+      chip.setAttribute("x","380"); chip.setAttribute("y","80");
+      chip.setAttribute("width","240"); chip.setAttribute("height","240");
+      chip.setAttribute("rx","28"); chip.setAttribute("ry","28");
+      chip.setAttribute("fill","url(#lzChipFill)");
+      chip.setAttribute("stroke","#00BFFF"); chip.setAttribute("stroke-width","2");
+      svg.appendChild(chip);
+
+      // inner die
+      var die = document.createElementNS(NS,"rect");
+      die.setAttribute("x","430"); die.setAttribute("y","130");
+      die.setAttribute("width","140"); die.setAttribute("height","140");
+      die.setAttribute("rx","12"); die.setAttribute("ry","12");
+      die.setAttribute("fill","none");
+      die.setAttribute("stroke","#ffffff"); die.setAttribute("stroke-width","1.5");
+      die.setAttribute("stroke-opacity",".7");
+      svg.appendChild(die);
+
+      // center "AI" label
+      var label = document.createElementNS(NS,"text");
+      label.setAttribute("x","500"); label.setAttribute("y","210");
+      label.setAttribute("text-anchor","middle"); label.setAttribute("dominant-baseline","middle");
+      label.setAttribute("font-family","Inter, system-ui, sans-serif");
+      label.setAttribute("font-size","48"); label.setAttribute("font-weight","800");
+      label.setAttribute("fill","#00BFFF"); label.setAttribute("letter-spacing","2");
+      label.textContent = "AI";
+      svg.appendChild(label);
+
+      // grid lines inside die
+      for(var gx=0; gx<5; gx++){
+        var l = document.createElementNS(NS,"line");
+        l.setAttribute("x1", 430 + gx*35); l.setAttribute("y1","130");
+        l.setAttribute("x2", 430 + gx*35); l.setAttribute("y2","270");
+        l.setAttribute("stroke","#00BFFF"); l.setAttribute("stroke-opacity",".15"); l.setAttribute("stroke-width","1");
+        svg.appendChild(l);
+      }
+      for(var gy=0; gy<5; gy++){
+        var l2 = document.createElementNS(NS,"line");
+        l2.setAttribute("x1","430"); l2.setAttribute("y1", 130 + gy*35);
+        l2.setAttribute("x2","570"); l2.setAttribute("y2", 130 + gy*35);
+        l2.setAttribute("stroke","#00BFFF"); l2.setAttribute("stroke-opacity",".15"); l2.setAttribute("stroke-width","1");
+        svg.appendChild(l2);
+      }
+
+      // 16 pins per side, each with a trace running outward to a node
+      var sides = [
+        {axis:"top",    fixed:"y", from:80,  outward:-1, count:8},
+        {axis:"bottom", fixed:"y", from:320, outward: 1, count:8},
+        {axis:"left",   fixed:"x", from:380, outward:-1, count:8},
+        {axis:"right",  fixed:"x", from:620, outward: 1, count:8}
+      ];
+      var traces = [];
+      var nodes = [];
+      sides.forEach(function(side){
+        for(var i=0;i<side.count;i++){
+          var t = (i+0.5)/side.count;
+          var px,py,nx,ny;
+          if(side.axis==="top" || side.axis==="bottom"){
+            px = 380 + t*240; py = side.from;
+            nx = px; ny = py + side.outward*70;
+          } else {
+            py = 80 + t*240; px = side.from;
+            nx = px + side.outward*70; ny = py;
+          }
+          // pin (small rect on chip edge)
+          var pin = document.createElementNS(NS,"rect");
+          var pw = (side.axis==="top"||side.axis==="bottom") ? 6 : 14;
+          var ph = (side.axis==="top"||side.axis==="bottom") ? 14 : 6;
+          var poff = side.outward*7;
+          pin.setAttribute("x", (px - pw/2));
+          pin.setAttribute("y", (py - ph/2 + (side.axis==="top"||side.axis==="bottom"? poff : 0)));
+          if(side.axis==="left"||side.axis==="right"){
+            pin.setAttribute("x", (px - pw/2 + poff));
+            pin.setAttribute("y", (py - ph/2));
+          }
+          pin.setAttribute("width", pw); pin.setAttribute("height", ph);
+          pin.setAttribute("fill","#00BFFF"); pin.setAttribute("opacity",".8");
+          svg.appendChild(pin);
+
+          // trace line
+          var tr = document.createElementNS(NS,"line");
+          tr.setAttribute("x1", px); tr.setAttribute("y1", py);
+          tr.setAttribute("x2", nx); tr.setAttribute("y2", ny);
+          tr.setAttribute("stroke","#00BFFF"); tr.setAttribute("stroke-width","1.5");
+          tr.setAttribute("stroke-opacity",".5");
+          svg.appendChild(tr);
+          traces.push(tr);
+
+          // node at trace end
+          var nd = document.createElementNS(NS,"circle");
+          nd.setAttribute("cx", nx); nd.setAttribute("cy", ny); nd.setAttribute("r","4");
+          nd.setAttribute("fill","#ffffff"); nd.setAttribute("opacity",".9");
+          svg.appendChild(nd);
+          nodes.push(nd);
+        }
+      });
+
+      host.appendChild(svg);
+
+      // Animations
+      g.set([chip, die, label], { transformOrigin: "500px 200px" });
+      g.from(chip, { scale: 0.6, opacity: 0, duration: 1.0, ease: "back.out(1.6)",
+        scrollTrigger: { trigger: host, start: "top 90%", once: true }, immediateRender: false, clearProps: "all" });
+      g.from(die,  { scale: 0.6, opacity: 0, duration: 0.9, ease: "back.out(1.6)", delay: 0.15,
+        scrollTrigger: { trigger: host, start: "top 90%", once: true }, immediateRender: false, clearProps: "all" });
+      g.from(label,{ scale: 0.4, opacity: 0, duration: 0.9, ease: "back.out(2)", delay: 0.25,
+        scrollTrigger: { trigger: host, start: "top 90%", once: true }, immediateRender: false, clearProps: "all" });
+      g.from(traces, { opacity: 0, stagger: 0.03, duration: 0.6, ease: "power2.out", delay: 0.4,
+        scrollTrigger: { trigger: host, start: "top 90%", once: true }, immediateRender: false, clearProps: "all" });
+      g.from(nodes,  { scale: 0, opacity: 0, stagger: 0.02, duration: 0.4, ease: "back.out(2)", delay: 0.6, transformOrigin: "center center",
+        scrollTrigger: { trigger: host, start: "top 90%", once: true }, immediateRender: false, clearProps: "all" });
+
+      // Pulse loop on the AI label
+      g.to(label, { scale: 1.06, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+      // Subtle floating halo
+      g.to(halo, { scale: 1.08, transformOrigin: "500px 200px", duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+      // Traveling pulse along traces (random nodes light up)
+      function pulse(){
+        var idx = Math.floor(Math.random()*nodes.length);
+        var nd = nodes[idx];
+        g.fromTo(nd, { r: 4, fill: "#ffffff" }, { r: 8, fill: "#00BFFF", duration: 0.45, yoyo: true, repeat: 1, ease: "sine.out" });
+      }
+      setInterval(pulse, 350);
+    })();
+
+    // ---------- 14. Refresh after images load ----------
     window.addEventListener("load", function(){ ST.refresh(); });
   }
 
