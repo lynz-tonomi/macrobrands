@@ -2356,77 +2356,132 @@ if(false){(function(){
         var mods=scFlow.querySelectorAll('.ai-mod-card');
         var spawns=scFlow.querySelectorAll('.ai-spawn');
 
-        // PATCH (LynZ): scroll-driven cinematic timeline.
-        //  - Section pins at 100% view (start: top top)
-        //  - Phase 1: circuit traces expand outward
-        //  - Phase 2: zoom into chip begins as scroll continues
-        //  - Phase 3: background image appears at full-zoom view
-        //  - Phase 4: continue zoom + fade to white
-        //  - Phase 5: video section fades in over the white
-        pinSec.style.backgroundColor='#111';
-        if(getComputedStyle(pinSec).position==='static') pinSec.style.position='relative';
-
-        // White overlay used for fade-to-white at the end of the zoom.
-        // z-index sits above the chip but below the pin video wrap (z-index 20).
-        var whiteOverlay=document.createElement('div');
-        whiteOverlay.className='ai-white-overlay';
-        whiteOverlay.style.cssText='position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:15;';
-        pinSec.appendChild(whiteOverlay);
-
-        var tl=gsap.timeline({
-          scrollTrigger:{
-            trigger:pinSec,
-            start:'top top',
-            end:'+=250%',
-            scrub:0.5,
-            pin:true,
-            pinSpacing:true,
-            anticipatePin:1,
-            invalidateOnRefresh:true
-          }
-        });
-
-        // Phase 1 (0–2): circuit traces expand outward
-        tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:2},0);
-        tl.to(spawns,{opacity:1,ease:'none',stagger:.012,duration:1.5},0.5);
-        tl.to(juncs,{opacity:.6,ease:'none',stagger:.003,duration:1.5},0.8);
-        tl.to(allNodes,{opacity:1,ease:'none',duration:1.2},1);
-
-        // Module cards fade in alongside trace completion
-        mods.forEach(function(card,i){
-          tl.to(card,{opacity:1,y:0,ease:'power2.out',duration:0.8},1.5+i*0.05);
-        });
-
-        // Phase 2 (2–5): begin zoom into the chip
-        tl.to(scFlowEl,{scale:2.8,ease:'power1.in',duration:3},2);
-
-        // Phase 3 (3–4.5): background circuit image fades in at full-view zoom
+        // Detect site layout: LynZ has the video element nested inside #autonomi-ai;
+        // macrobrands has it in a sibling section. Pick the right cinematic per layout.
+        var isLynzLayout=!!sec.querySelector('video');
         var circBgEl=scFlow.querySelector('.ai-circ-bg');
-        if(circBgEl){
-          tl.to(circBgEl,{opacity:.6,ease:'power1.out',duration:1.5},3);
-        }
 
-        // Phase 4 (4.5–7): continue zoom + fade out module cards + fade to white
-        tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:2.5},4.5);
-        mods.forEach(function(card,i){
-          tl.to(card,{opacity:0,duration:0.8},4.5+i*0.04);
-        });
-        tl.to(whiteOverlay,{opacity:1,ease:'power2.in',duration:2},5.5);
-
-        // Phase 5 (7.5–9): video section fades in over the white
-        if(window._pinVidWrap){
-          pinSec.appendChild(window._pinVidWrap);
-          tl.to(window._pinVidWrap,{opacity:1,ease:'power2.out',duration:1.5,
-            onStart:function(){
-              var v=window._pinVidEl;
-              if(v){v.currentTime=0;v.play().catch(function(){});}
+        if(!isLynzLayout){
+          // ─────── ORIGINAL MACROBRANDS TIMELINE (unchanged) ───────
+          var tl=gsap.timeline({
+            scrollTrigger:{
+              trigger:pinSec,
+              start:'top top',
+              end:'+=200%',
+              scrub:0.3,
+              pin:true,
+              pinSpacing:true,
+              anticipatePin:1
             }
-          },7.5);
-          tl.to(whiteOverlay,{opacity:0,ease:'power2.out',duration:1.5},7.5);
-        }
+          });
 
-        // Pad after video fade-in for viewing time before pin releases
-        tl.to({},{duration:1},9.5);
+          // Timeline positions (out of 10 total):
+          // 0-5: traces draw
+          // 0-8: zoom
+          // 1-4: spawns
+          // 1.5-4.5: junctions
+          // 2-3.5: fade text
+          // 3-5.5: endpoint nodes
+          // 4-5.5: module cards in
+          // 5-6: cards drift + fade
+          // 4.5-5.5: circuit bg in
+          // 5.5-6: circuit bg out
+          // 6.5-8: fade to black + SVG gone
+
+          tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:5},0);
+          tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:8},0);
+          tl.to(spawns,{opacity:1,ease:'none',stagger:.012,duration:3},1);
+          tl.to(juncs,{opacity:.6,ease:'none',stagger:.003,duration:3},1.5);
+          tl.to(hdr.querySelectorAll('h2, p, .sc-badge, .sc-learn-more-btn'),{opacity:0,duration:1},4.5);
+          tl.to(allNodes,{opacity:1,ease:'none',duration:2.5},3);
+          // Module cards with parallax depth
+          var depths=[1.2,0.7,1.5,0.9,1.3,0.6,1.1,0.8,1.4];
+          mods.forEach(function(card,i){
+            var d=depths[i%depths.length];
+            tl.to(card,{opacity:1,y:-12*d,ease:'none',duration:1.5},3.8+i*0.08);
+            tl.to(card,{y:-30*d,scale:1+d*0.3,ease:'power1.in',duration:1.5},5);
+            tl.to(card,{opacity:0,duration:0.8},5.5+i*0.03);
+          });
+          if(circBgEl){
+            tl.to(circBgEl,{opacity:.4,ease:'power1.in',duration:1},4.5);
+          }
+          tl.to(scFlowEl,{opacity:0,ease:'power2.in',duration:1.5},6.5);
+          tl.to(pinSec,{backgroundColor:'#000',ease:'power1.in',duration:1.5},6.5);
+          if(window._pinVidWrap){
+            pinSec.appendChild(window._pinVidWrap);
+            tl.to(window._pinVidWrap,{opacity:1,ease:'power2.out',duration:1.5,
+              onStart:function(){
+                var v=window._pinVidEl;
+                v.currentTime=0;v.play().catch(function(){});
+              }
+            },8);
+          }
+          tl.to({},{duration:1},9.5);
+        } else {
+          // ─────── LYNZ CINEMATIC TIMELINE ───────
+          // Traces expand → zoom into chip → bg image appears → continue zoom +
+          // fade-to-white → video section fades in over white.
+          if(getComputedStyle(pinSec).position==='static') pinSec.style.position='relative';
+
+          // Use a unique class to avoid colliding with the .pin-vid-wrap class
+          // already present on the LynZ Webflow Designer's video wrapper.
+          var whiteOverlay=document.createElement('div');
+          whiteOverlay.className='lz-ai-white-overlay';
+          whiteOverlay.style.cssText='position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:15;';
+          pinSec.appendChild(whiteOverlay);
+
+          var tl=gsap.timeline({
+            scrollTrigger:{
+              trigger:pinSec,
+              start:'top top',
+              end:'+=250%',
+              scrub:0.5,
+              pin:true,
+              pinSpacing:true,
+              anticipatePin:1,
+              invalidateOnRefresh:true
+            }
+          });
+
+          // Phase 1 (0–2): circuit traces expand outward
+          tl.to(paths,{strokeDashoffset:0,ease:'none',stagger:.003,duration:2},0);
+          tl.to(spawns,{opacity:1,ease:'none',stagger:.012,duration:1.5},0.5);
+          tl.to(juncs,{opacity:.6,ease:'none',stagger:.003,duration:1.5},0.8);
+          tl.to(allNodes,{opacity:1,ease:'none',duration:1.2},1);
+          mods.forEach(function(card,i){
+            tl.to(card,{opacity:1,y:0,ease:'power2.out',duration:0.8},1.5+i*0.05);
+          });
+
+          // Phase 2 (2–5): begin zoom into the chip
+          tl.to(scFlowEl,{scale:2.8,ease:'power1.in',duration:3},2);
+
+          // Phase 3 (3–4.5): background circuit image fades in at full-view zoom
+          if(circBgEl){
+            tl.to(circBgEl,{opacity:.6,ease:'power1.out',duration:1.5},3);
+          }
+
+          // Phase 4 (4.5–7): continue zoom + fade out module cards + fade to white
+          tl.to(scFlowEl,{scale:6,ease:'power2.in',duration:2.5},4.5);
+          mods.forEach(function(card,i){
+            tl.to(card,{opacity:0,duration:0.8},4.5+i*0.04);
+          });
+          tl.to(whiteOverlay,{opacity:1,ease:'power2.in',duration:2},5.5);
+
+          // Phase 5 (7.5–9): video section fades in over the white
+          if(window._pinVidWrap){
+            pinSec.appendChild(window._pinVidWrap);
+            // fromTo guarantees pinVidWrap starts hidden even after scrub-reverse
+            tl.fromTo(window._pinVidWrap,{opacity:0},{opacity:1,ease:'power2.out',duration:1.5,
+              onStart:function(){
+                var v=window._pinVidEl;
+                if(v){v.currentTime=0;v.play().catch(function(){});}
+              }
+            },7.5);
+            tl.to(whiteOverlay,{opacity:0,ease:'power2.out',duration:1.5},7.5);
+          }
+
+          tl.to({},{duration:1},9.5);
+        }
 
 
         // LED nodes: fade in with background, then blink randomly
