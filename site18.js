@@ -1988,23 +1988,29 @@ if(false){(function(){
         // below — all hidden behind the fixed-position closed horizontal
         // doors which serve as the transition curtain.
 
-        // ── PHASE 3: OPEN doors when supSection top reaches viewport top ──
-        // Non-scrubbed quick animation so the user can immediately scroll the
-        // supporting services section once the doors open. No pin on
-        // supSection — the user can scroll right through.
-        ScrollTrigger.create({
-          trigger:supSection,
-          start:'top top',
-          onEnter:function(){
-            gsap.timeline()
-              .to(doorTop,{y:'-105%',ease:'power2.inOut',duration:0.7},0)
-              .to(doorBottom,{y:'105%',ease:'power2.inOut',duration:0.7},0);
-          },
-          onLeaveBack:function(){
-            gsap.set(doorTop,{y:'0%',opacity:1});
-            gsap.set(doorBottom,{y:'0%',opacity:1});
+        // ── PHASE 3: PIN supSection at viewport top, open doors DURING the pin ──
+        // When the user reaches the top of Supporting Services, pin it at
+        // viewport top, then animate the horizontal doors open via scroll scrub
+        // while the section stays pinned. Pin releases only after the doors are
+        // fully open, so the doors finish their reveal before the user can
+        // continue scrolling Supporting Services content.
+        var openTL=gsap.timeline({
+          scrollTrigger:{
+            trigger:supSection,
+            start:'top top',
+            end:'+=60%',           // 60% of viewport scroll pins supSection + opens doors
+            scrub:0.3,
+            pin:true,
+            pinSpacing:true,
+            anticipatePin:1,
+            onLeaveBack:function(){
+              gsap.set(doorTop,{y:'0%',opacity:1});
+              gsap.set(doorBottom,{y:'0%',opacity:1});
+            }
           }
         });
+        openTL.to(doorTop,{y:'-105%',ease:'power2.inOut',duration:1},0);
+        openTL.to(doorBottom,{y:'105%',ease:'power2.inOut',duration:1},0);
 
         ScrollTrigger.refresh();
       };
