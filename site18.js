@@ -94,6 +94,19 @@ if(document.querySelector('.section-21')){
   }
   var vm=s.querySelector('.video-hero-media');if(vm)vm.style.display='none';
 
+  // Neutralize the Webflow background video the canvas replaces — its MP4 returns 503
+  // and stalls ~15s if left alone. Strip <source> tags + src, then load() to abort fetch.
+  (function(){
+    var heroBg=document.querySelector('.video-hero-media video');
+    if(!heroBg)return;
+    heroBg.pause();
+    heroBg.removeAttribute('autoplay');
+    heroBg.preload='none';
+    heroBg.querySelectorAll('source').forEach(function(sr){sr.remove();});
+    heroBg.removeAttribute('src');
+    try{heroBg.load();}catch(e){}
+  })();
+
   // ── Scrubbed frame advance via GSAP ScrollTrigger ──
   function initScrubber(){
     if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined'){
@@ -2258,8 +2271,13 @@ if(false){(function(){
     scVid=nativeVid;
     nativeVid.muted=true;nativeVid.loop=true;nativeVid.playsInline=true;
     nativeVid.autoplay=false;nativeVid.removeAttribute('autoplay');
-    nativeVid.preload='auto';nativeVid.setAttribute('preload','auto');
-    nativeVid.load();
+    // Broken Webflow MP4 returns 503 and hangs ~15s — strip its sources; pin-vid-wrap
+    // shows the real supply chain video anyway. We still need the <video> element as
+    // a layout/positioning anchor for vidWrap.
+    nativeVid.preload='none';nativeVid.setAttribute('preload','none');
+    nativeVid.querySelectorAll('source').forEach(function(sr){sr.remove();});
+    nativeVid.removeAttribute('src');
+    try{nativeVid.load();}catch(e){}
     nativeVid.pause();
     // Override Webflow's background-video CSS (z-index:-100, top/left/right/bottom:-100%)
     nativeVid.style.cssText='position:relative !important;z-index:0 !important;width:100% !important;height:auto !important;display:block !important;top:0 !important;left:0 !important;right:auto !important;bottom:auto !important;min-width:0 !important;min-height:0 !important;aspect-ratio:16/9';
