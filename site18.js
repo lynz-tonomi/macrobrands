@@ -57,14 +57,17 @@ if(document.querySelector('.section-21')){
   var loadBuf=40;
   var curIdx=0;
   function loadFrame(idx){
-    if(idx<0||idx>=tot||loadedSet[idx])return;
+    if(idx<0||idx>=tot)return;
+    if(imgs[idx]&&imgs[idx].complete)return;        // already fully loaded
+    if(loadedSet[idx])return;                        // in-flight, avoid duplicate fetch
     loadedSet[idx]=true;
     var img=new Image();
     img.onload=function(){
       imgs[idx]=img;
-      // Redraw if this is the frame we're currently trying to show
-      if(idx===curIdx)draw(idx);
+      // Redraw if the user is currently on (or near) this frame — fixes mid-scrub freeze
+      if(Math.abs(idx-curIdx)<=1)draw(curIdx);
     };
+    img.onerror=function(){loadedSet[idx]=false;};   // allow retry on failure/cancel
     img.src=base+pad(idx+1)+'.jpg';
   }
   function loadRange(center){
@@ -73,12 +76,21 @@ if(document.querySelector('.section-21')){
   // Load first 20 frames immediately for fast first paint
   for(var i=0;i<20;i++)loadFrame(i);
   function draw(idx){
-    if(!imgs[idx]||!imgs[idx].complete)return;
+    // If target frame isn't loaded yet, walk outward for the nearest loaded frame
+    // so the scrubber never freezes mid-scroll when in-flight loads lag behind.
+    var src=imgs[idx];
+    if(!src||!src.complete){
+      for(var d=1;d<=60;d++){
+        if(idx-d>=0&&imgs[idx-d]&&imgs[idx-d].complete){src=imgs[idx-d];break;}
+        if(idx+d<tot&&imgs[idx+d]&&imgs[idx+d].complete){src=imgs[idx+d];break;}
+      }
+      if(!src)return;
+    }
     c.width=s.offsetWidth;c.height=s.offsetHeight;
-    var iw=imgs[idx].width,ih=imgs[idx].height;
+    var iw=src.width,ih=src.height;
     var sc=Math.max(c.width/iw,c.height/ih);
     var nw=iw*sc,nh=ih*sc;
-    ctx.drawImage(imgs[idx],(c.width-nw)/2,(c.height-nh)/2,nw,nh);
+    ctx.drawImage(src,(c.width-nw)/2,(c.height-nh)/2,nw,nh);
   }
   var vm=s.querySelector('.video-hero-media');if(vm)vm.style.display='none';
 
@@ -430,9 +442,14 @@ if(false){(function(){
       })();
       /* Carousel — fetch image list from GitHub carousel/ folder dynamically.
          To add images: drop any .png/.jpg into the repo's carousel/ folder.
-         They will appear automatically on next page load (no code changes needed). */
+         They will appear automatically on next page load (no code changes needed).
+         Deferred + short-circuited if DOM targets don't exist so we never burn
+         a GitHub API quota on a carousel that isn't on the page. */
       (function(){
         var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel';
+        function initCarousel(){
+        // Short-circuit before the network fetch if DOM targets aren't built
+        if(!document.getElementById('carousel-img-a')||!document.getElementById('carousel-img-b'))return;
         fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
           .then(function(r){return r.json();})
           .then(function(files){
@@ -446,6 +463,9 @@ if(false){(function(){
               var j=Math.floor(Math.random()*(i+1));
               var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;
             }
+            // Preload into cached Image objects so the 500ms crossfade swaps from memory
+            var preloaded={};
+            urls.forEach(function(u){var im=new Image();im.src=u;preloaded[u]=im;});
             var idx=0,aActive=true;
             var a=document.getElementById('carousel-img-a');
             var b=document.getElementById('carousel-img-b');
@@ -469,6 +489,13 @@ if(false){(function(){
             },500);
           })
           .catch(function(e){console.warn('Carousel fetch failed:',e);});
+        }
+        // Defer until after page is interactive
+        if(window.requestIdleCallback){
+          requestIdleCallback(initCarousel,{timeout:4000});
+        }else{
+          setTimeout(initCarousel,2000);
+        }
       })();
     } else if(i===1){
       // MicroThermic tab — full-width top info, then photo left + specs right
@@ -1580,8 +1607,11 @@ if(false){(function(){
         })();
 
         // Carousel — fetch images from GitHub API
+        // Deferred: below-the-fold, so wait until browser is idle to avoid
+        // competing with hero frame scrubber + critical assets on first paint.
         (function(){
           var apiUrl='https://api.github.com/repos/lynz-tonomi/macrobrands/contents/carousel';
+          function initCarousel(){
           fetch(apiUrl,{headers:{'Accept':'application/vnd.github.v3+json'}})
             .then(function(r){return r.json();})
             .then(function(files){
@@ -1593,6 +1623,10 @@ if(false){(function(){
                 var j=Math.floor(Math.random()*(i+1));
                 var tmp=urls[i];urls[i]=urls[j];urls[j]=tmp;
               }
+              // Preload all carousel images into cached Image objects so the
+              // 500ms crossfade swaps from memory instead of re-fetching each tick.
+              var preloaded={};
+              urls.forEach(function(u){var im=new Image();im.src=u;preloaded[u]=im;});
               var idx=0,aActive=true;
               var a=document.getElementById('svc-carousel-img-a');
               var b=document.getElementById('svc-carousel-img-b');
@@ -1614,6 +1648,13 @@ if(false){(function(){
               },500);
             })
             .catch(function(e){console.warn('Carousel fetch failed:',e);});
+          }
+          // Defer until after page is interactive so hero frames/critical assets win bandwidth first.
+          if(window.requestIdleCallback){
+            requestIdleCallback(initCarousel,{timeout:4000});
+          }else{
+            setTimeout(initCarousel,2000);
+          }
         })();
       }
 
