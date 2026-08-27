@@ -2707,9 +2707,6 @@ if(false){(function(){
 // ============ 7b. SECTION-DARK-ALT (native Webflow Background Video) ============
 // Video lives natively in Webflow's section-dark-alt — JS must NOT touch/remove it
 
-// ============ 7c. HIDE PHONE NUMBER + "WE MAKE BEVERAGES" SECTION ============
-// Now hidden natively via Webflow "is-hidden" combo class
-
 // ============ 7d. FAQ COPY UPDATES ============
 // All FAQ answers are now native Webflow — no JS overrides needed
 
